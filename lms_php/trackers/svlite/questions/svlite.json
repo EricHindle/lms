@@ -1,0 +1,217 @@
+{    
+      "noQuestions": 30,
+      "noSections": 7,
+      "sectionNames":["Exterior", "Entrance", "Security", "Customer Area", "Counter Area", "Health and Safety", "Customer"],
+      "sectionTimes":[],
+      "questions":[
+             {
+             "question":"Are the windows, including the front door and entrance area clean?",
+             "info":"Check that the area is free of:<br>•     weeds<br>•     litter<br>•     cigarette butts<br>Are Interserve cleaning the windows regularly?",
+             "section":"1",
+             "id":"1",
+             "type":"num2"
+             },
+             {
+             "question":"Is the shop displaying the correct marketing?",
+             "info":"Please check ALBOS for the latest marketing display.",
+             "section":"1",
+             "id":"2",
+             "type":"yn"
+             },
+             {
+             "question":"Is the Responsible Gambling window cling on display?",
+             "info":"Is the window cling in good condition? If on display but in a poor condition please ask the Duty Manager to order a new one.",
+             "section":"1",
+             "id":"3",
+             "type":"yn"
+             },
+             {
+             "question":"Are all relevant notices displayed correctly?",
+             "info":"<b><u>Statutory Notices</u></b><br>These notices must be positioned adjacent to the front door so that they are clearly visible to everyone either entering or leaving the premises.<br><br>1) Slim A2 Security notice, which covers No Smoking, No Under 18’s, No Alcohol, No Helmets, Security Alarm, Time Locked Safe and CCTV<br>2) Responsible Gambling Dispenser and Leaflets<br><br><b><u>Information Notices</u></b><br>Information notices should be displayed in the least prominent non-selling area of the shop.<br><br>•     Slim A2 poster Excellence in Customer Service<br>•     Crime Stoppers Dispenser and Flyers<br>•     Good Neighbour Dispenser and Leaflets<br><br>Additional notices may be displayed if agreed with your Line Manager or Security.<br>",
+             "section":"2",
+             "id":"4",
+             "type":"yn2"
+             },
+             {
+             "question":"Is the Buddy Shop system in use every hour?",
+             "info":"Reason documented if none/few with evidence logged in the LBO diary of calls made and received.<br>Check that the process is being followed by ringing the relevant buddy shop and checking they are comfortable with the call frequency.",
+             "section":"3",
+             "id":"5",
+             "type":"yn2"
+             },
+             {
+             "question":"Are toilet checks completed and recorded in the diary?",
+             "info":"",
+             "section":"3",
+             "id":"6",
+             "type":"yn"
+             },
+             {
+             "question":"Is the shop floor clean and tidy?",
+             "info":"Are the papers displayed neatly?<br>Are all marketing materials neatly displayed with no sellotape visible?<br>Are all magnetic strips clean and clear from finger marks?",
+             "section":"4",
+             "id":"7",
+             "type":"num2"
+             },
+             {
+             "question":"Are slip and pen dispensers fully stocked?",
+             "info":"",
+             "section":"4",
+             "id":"8",
+             "type":"yn2"
+             },
+             {
+             "question":"Is the audio volume at a high enough level to be heard clearly in the customer area?",
+             "info":"Discuss the importance of the audio volume to the atmosphere in shop.",
+             "section":"4",
+             "id":"9",
+             "type":"yn2"
+             },
+             {
+             "question":"Are all the gantry screens in working order with all text visible on each screen?",
+             "info":"",
+             "section":"4",
+             "id":"10",
+             "type":"yn2"
+             },
+             {
+             "question":"Are all the correct marketing, promotions and coupons on display?",
+             "info":"Please check ALBOS for the latest Marketing display",
+             "section":"4",
+             "id":"11",
+             "type":"yn2"
+             },
+             {
+             "question":"Are all functions of the Gaming Machines & SSBTs in working order? ",
+             "info":"Note reader, lights and screens all in fully working order?<br>Are the machines free from rocking and neatly positioned with wires tidy and behind the machine?<br>Is the area clean and clear with the correct number of stools (in addition are any damaged)? If not has it been reported?",
+             "section":"4",
+             "id":"12",
+             "type":"yn2"
+             },
+             {
+             "question":"Are the customer toilets clean?",
+             "info":"Toilet paper & hand soap available and in dispensers?",
+             "section":"4",
+             "id":"13",
+             "type":"yn2"
+             },
+             {
+             "question":"Are the counter and all colleague areas tidy?",
+             "info":"",
+             "section":"5",
+             "id":"14",
+             "type":"num2"
+             },
+             {
+             "question":"Is all equipment in working order?",
+             "info":"If no but reported please score N/A.",
+             "section":"5",
+             "id":"15",
+             "type":"yn"
+             },
+             {
+             "question":"Is the IS checklist up to date?",
+             "info":"",
+             "section":"6",
+             "id":"16",
+             "type":"yn2"
+             },
+             {
+             "question":"Is the Fire Exit(s) unlocked?",
+             "info":"Free from obstruction and the escape route leads to the designated Fire Meeting Point with no obstructions (walk the route)?",
+             "section":"6",
+             "id":"17",
+             "type":"yn"
+             },
+             {
+             "question":"Is rubbish (internal & external) being stored correctly?",
+             "info":"All rubbish to be stored as neatly as possible ensuring it is clear from customers view and not blocking any exit points.",
+             "section":"6",
+             "id":"18",
+             "type":"yn2"
+             },
+             {
+             "question":"Is the Fire Alarm being tested weekly?",
+             "info":"Recorded on the Inspection Section in the H&S Manual? Duty Manager able to talk you through the process for testing the Fire Alarm.",
+             "section":"6",
+             "id":"19",
+             "type":"yn"
+             },
+             {
+             "question":"Is the emergency lighting being tested monthly?",
+             "info":"Recorded on the Inspection Section in the H&S Manual?",
+             "section":"6",
+             "id":"20",
+             "type":"yn"
+             },
+             {
+             "question":"Are colleagues able to demonstrate a comprehensive understanding of current/upcoming promotions?",
+             "info":"Detail included in the focus of the week.",
+             "section":"7",
+             "id":"21",
+             "type":"num2"
+             },
+             {
+             "question":"Are colleagues offering customers promotions?",
+             "info":"A gaming machine demonstration?<br>A gaming machine tournament offer?<br>Any other betting opportunity?",
+             "section":"7",
+             "id":"22",
+             "type":"num2"
+             },
+             {
+             "question":"Are colleagues able to show you the latest game available on the Gaming Machines?",
+             "info":"Clear understanding of how the game works and its features?",
+             "section":"7",
+             "id":"23",
+             "type":"num2"
+             },
+             {
+             "question":"Are colleagues able to demonstrate how to use the SSBT & show the latest content?",
+             "info":"",
+             "section":"7",
+             "id":"24",
+             "type":"num2"
+             },
+             {
+             "question":"Are colleagues able to demonstrate how to complete a PLUS card sign up?",
+             "info":"",
+             "section":"7",
+             "id":"25",
+             "type":"num2"
+             },
+             {
+             "question":"Are customers aware that there is Wi-Fi available?",
+             "info":"",
+             "section":"7",
+             "id":"26",
+             "type":"yn"
+             },
+             {
+             "question":"Are all customers being welcomed on entry during visit?",
+             "info":"",
+             "section":"7",
+             "id":"27",
+             "type":"num"
+             },
+             {
+             "question":"Are all customers being offered tea and coffee during visit?",
+             "info":"",
+             "section":"7",
+             "id":"28",
+             "type":"num"
+             },
+             {
+             "question":"Is the Daily Focus up to date? ",
+             "info":"",
+             "section":"7",
+             "id":"29",
+             "type":"yn2"
+             },
+             {
+             "question":"Are all alien and manual bets settled and up to date?",
+             "section":"7",
+             "id":"30",
+             "type":"yn2"
+             }
+      ]
+}
