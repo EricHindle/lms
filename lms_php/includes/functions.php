@@ -32,7 +32,7 @@ function sec_session_start()
 }
 
 function login($username, $password, $mypdo) {
-	$sql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email FROM lms_player WHERE lms_player_login = :username LIMIT 1";
+	$sql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access FROM lms_player WHERE lms_player_login = :username LIMIT 1";
     $query = $mypdo->prepare($sql);
     $query->execute(array(
         ':username' => $username
@@ -47,6 +47,7 @@ function login($username, $password, $mypdo) {
         $sname = $fetch['lms_player_surname'];
         $email =  $fetch['lms_player_email'];
         $nickname = $fetch['lms_player_screen_name'];
+        $retaccess = $fetch['lms_access'];
         // check if the account is locked
         // from too many login attempts
 
@@ -74,7 +75,7 @@ function login($username, $password, $mypdo) {
                 $_SESSION['email'] = $email;
                 $nickname = preg_replace("/[^a-zA-Z0-9_\-\ ]+/", "", $nickname);
                 $_SESSION['nickname'] = $nickname;
-
+                $_SESSION['retaccess'] = $retaccess;
 				$hash = password_hash($_SERVER['HTTP_X_REAL_IP'] . $_SERVER['HTTP_USER_AGENT'], PASSWORD_DEFAULT,  ['cost' => 5]);
                 $_SESSION['login_string'] = $hash;
 

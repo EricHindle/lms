@@ -36,7 +36,7 @@ if ($currentlevel == $levelneeded) {
 echo '
 							</ul>
 							<ul class="nav navbar-nav navbar-right">
-								<li><a href="#"><span class="glyphicon glyphicon-user"></span> ' . $_SESSION['fname'] . '</a></li>
+								<li><a href="#"><span class="glyphicon glyphicon-user"></span> ' . $_SESSION['nickname'] . '</a></li>
 								<li><a href="' . $myPath . 'logout.php"><span class="glyphicon glyphicon-log-in"></span> Sign out</a></li>
 							</ul>
 						</div>

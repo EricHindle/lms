@@ -39,24 +39,24 @@
 			        <div class="container">
 			            <div class="row">
 			                <div class="col-md-12">
-			                    <h1><strong>Focus</strong></h1>
+			                    <h1><strong>Games</strong></h1>
 			                    <br>
 			                </div>
 			            </div>
 			            <div class="row">
 			            	<div class="col-sm-4">
 			                    <div class="tile red">
-		                    		<h3 class="title" >1.&nbsp&nbsp&nbsp&nbspJoin a Game</h3>
+		                    		<h3 class="title" >Join a Game</h3>
 			          			</div>
 			                </div>
 			                <div class="col-sm-4">
 			                    <div class="tile blue">
-		                    		<h3 class="title" >2.&nbsp&nbsp&nbsp&nbspCreate a Game</h3>
+		                    		<h3 class="title" >Create a Game</h3>
 			          			</div>
 			                </div>
 			                <div class="col-sm-4">
 			                    <div class="tile green">
-		                    		<h3 class="title" >3.&nbsp&nbsp&nbsp&nbspManage a Game</h3>
+		                    		<h3 class="title" >Manage a Game</h3>
 			          			</div>
 			                </div>
 			      		</div>

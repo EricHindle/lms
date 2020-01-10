@@ -8,26 +8,11 @@
 		$formKey = new formKey();
 		$key = $formKey->outputKey();
 
-		$areachangesql = "SELECT id, username, fname, division, region, area, cluster, role, active FROM members ORDER BY fname ASC";
+		$areachangesql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access FROM lms_player ORDER BY lms_player_screen_name ASC";
 		$areachangequery = $mypdo->prepare($areachangesql);
 		$areachangequery->execute();
 		$cafetch = $areachangequery->fetchAll(PDO::FETCH_ASSOC);
 
-
-		$clusterSql = "SELECT DISTINCT cluster FROM lbos ORDER BY cluster ASC";
-		$clusterQuery = $mypdo->prepare($clusterSql);
-		$clusterQuery->execute();
-		$clusterFetch = $clusterQuery->fetchAll(PDO::FETCH_ASSOC);
-
-		$areaSql = "SELECT DISTINCT area FROM lbos ORDER BY area ASC";
-		$areaQuery = $mypdo->prepare($areaSql);
-		$areaQuery->execute();
-		$areaFetch = $areaQuery->fetchAll(PDO::FETCH_ASSOC);
-
-		$regionSql = "SELECT DISTINCT region FROM lbos ORDER BY region ASC";
-		$regionQuery = $mypdo->prepare($regionSql);
-		$regionQuery->execute();
-		$regionFetch = $regionQuery->fetchAll(PDO::FETCH_ASSOC);
 
 		$html="";
 
@@ -61,61 +46,6 @@
 					});
 				</script>
 				<script>
-					function toggleFields() {
-						switch ($("#role").val()) {
-							case "BPM":
-								$("#cluster").show();
-								$("#lbl_cluster").show();
-								$("#area").hide();
-								$("#lbl_area").hide();
-								$("#region").hide();
-								$("#lbl_region").hide();
-								$("#division").hide();
-								$("#lbl_division").hide();
-								break;
-							case "AM":
-								$("#cluster").hide();
-								$("#lbl_cluster").hide();
-								$("#area").show();
-								$("#lbl_area").show();
-								$("#region").hide();
-								$("#lbl_region").hide();
-								$("#division").hide();
-								$("#lbl_division").hide();
-								break;
-							case "RM":
-								$("#cluster").hide();
-								$("#lbl_cluster").hide();
-								$("#area").hide();
-								$("#lbl_area").hide();
-								$("#region").show();
-								$("#lbl_region").show();
-								$("#division").hide();
-								$("#lbl_division").hide();
-								break;
-							case "DD":
-								$("#cluster").hide();
-								$("#lbl_cluster").hide();
-								$("#area").hide();
-								$("#lbl_area").hide();
-								$("#region").hide();
-								$("#lbl_region").hide();
-								$("#division").show();
-								$("#lbl_division").show();
-								break;
-							case "Admin":
-								$("#cluster").hide();
-								$("#lbl_cluster").hide();
-								$("#area").hide();
-								$("#lbl_area").hide();
-								$("#region").hide();
-								$("#lbl_region").hide();
-								$("#division").hide();
-								$("#lbl_division").hide();
-								break;
-
-						}
-					}
 
 					function validatePassReset(){
                             var canSubmit = false;
@@ -166,7 +96,7 @@
 			        <div class="container">
 			        	<div class="row">
 			                <div class="col-md-12">
-			                    <h1><strong>User Admin</strong></h1>
+			                    <h1><strong>Player Admin</strong></h1>
 			                    <br>
 			                </div>
 			      		</div>
@@ -175,7 +105,7 @@
 		$html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
 			                	<form class="form-horizontal" role="form" name ="adduser" method="post" action="add-user.php">';
 		$html .= $key;
-		$html .= '					<h3 class="text-center">Add User</h3>
+		$html .= '					<h3 class="text-center">Add Player</h3>
 			                    	<br>
 				                    <div class="form-group">
 				                    	<label for="username">Username (no spaces or special characters. MAX 20):</label>
@@ -184,47 +114,10 @@
 					                    <input type="text" class="form-control" id="password" name="password" placeholder="password" /><br>
 					                    <label for="fname">Full Name (no special characters):</label>
 					                    <input type="text" class="form-control" id="fname" name="fname" placeholder="Full Name" /><br>
-					                    <label for="email">Email (MUST BE AN @williamhill.co.uk ADDRESS):</label>
+					                    <label for="email">Email:</label>
 					                    <input type="text" class="form-control" name="email" id="email" placeholder="email"><br>
-					                    <label for="role">Role:</label>
-					                    <select class="form-control" id="role" name="role">
-						                    <option>BPM</option>
-						                    <option>AM</option>
-						                    <option>RM</option>
-						                    <option>DD</option>
-						                    <option>Admin</option>
-					                    </select>
 					                    <br>';
-		$html.='	                    <label id="lbl_division" for="division">Division:</label>
-			                            <select class="form-control" id="division" name="division">
-			                            	<option>North</option>
-			                            	<option>South</option>
-			                            </select>
-		';
 
-		$html.='	                    <label id="lbl_region" for="region">Region:</label>
-			                            <select class="form-control" id="region" name="region">';
-		foreach ($regionFetch as $myregion) {
-			$html.=						'<option>'.$myregion['region'].'</option>';
-		}
-		$html .='	                    </select>
-		';
-
-		$html.='	                    <label id="lbl_area" for="area">Area:</label>
-			                            <select class="form-control" id="area" name="area">';
-		foreach ($areaFetch as $myarea) {
-			$html.=						'<option>'.$myarea['area'].'</option>';
-		}
-		$html .='	                    </select>
-		';
-
-		$html.='	                    <label id="lbl_cluster" for="cluster">Cluster:</label>
-			                            <select class="form-control" id="cluster" name="cluster">';
-		foreach ($clusterFetch as $myCluster) {
-			$html.=						'<option>'.$myCluster['cluster'].'</option>';
-		}
-		$html .='	                    </select>
-			                            ';
 		$html.='	                 
 										<br>   
 				                    </div>
@@ -239,13 +132,13 @@
 		$html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
 			                	<form class="form-horizontal" role="form" name ="edituser" method="post" action="edit-user.php">';
 		$html .= $key;
-		$html .= '					<h3 class="text-center">Edit User</h3>
+		$html .= '					<h3 class="text-center">Edit Player</h3>
 			                    	<br>
 				                    <div class="form-group">
-			                        	<label for="user">Choose User:</label>
+			                        	<label for="user">Choose Player:</label>
 			                            <select class="form-control" id="user" name="user">';
 		foreach ($cafetch as $myUser) {
-			$html.=						'<option value="'.$myUser['id'].'">'.$myUser['fname'].' <small>('.$myUser['username'].'   :'.$myUser['role'].')<small></option>';
+			$html.=						'<option value="'.$myUser['lms_player_screen_name'].'">'.$myUser['lms_player_forename'].' <small>('.$myUser['lms_player_email'].'   :'.$myUser['role'].')<small></option>';
 		}
 		$html .='	                    </select>
 				                    </div>
@@ -264,7 +157,7 @@
 									<h5>Password must contain at least 8 characters, including UPPERCASE, lowercase and numbers.</h5>
 			                    	<br>
 				                    <div class="form-group">
-			                        	<label for="user">Choose User:</label>
+			                        	<label for="user">Choose Player:</label>
 			                            <select class="form-control" id="user" name="user">';
 		foreach ($cafetch as $myUser) {
 			$html.=						'<option value="'.$myUser['id'].'">'.$myUser['fname'].' <small>('.$myUser['username'].'   :'.$myUser['role'].')<small></option>';
@@ -295,7 +188,7 @@
 		$html .='		</div>
 						<div class = "row">
 				        	<div class="well col-md-10 col-md-offset-1 textDark">
-				        		<h3>All Users</h3>
+				        		<h3>All Players</h3>
 					        	<table class="table table-bordered" id="keywords">
 									<thead>
 									<tr class="info">

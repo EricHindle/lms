@@ -37,24 +37,16 @@
 			            	<div class="col-sm-4">
 			                    <div class="tile red">
 			                    	<a href="'.$myPath.'struct/user/user-main.php">
-			                    		<h3 class="title" >Users</h3>
-			                            <p>User Management</p>
-			                        </a>	
-			          			</div>
-			                </div>
-			                <div class="col-sm-4">
-			                    <div class="tile blue">
-			                    	<a href="'.$myPath.'struct/lbo/lbo-main.php">
-			                    		<h3 class="title" >LBO</h3>
-			                            <p>LBO Management.</p>
+			                    		<h3 class="title" >Players</h3>
+			                            <p>Player Management</p>
 			                        </a>	
 			          			</div>
 			                </div>
 			                <div class="col-sm-4">
 			                    <div class="tile green">
 			                    	<a href="'.$myPath.'struct/focus/focus-admin.php">
-			                    		<h3 class="title" >Focus</h3>
-			                            <p>Focus Management.</p>
+			                    		<h3 class="title" >Games</h3>
+			                            <p>Game Management.</p>
 			                        </a>	
 			          			</div>
 			                </div>
@@ -64,23 +56,7 @@
 			                    <div class="tile orange">
 			                    	<a href="'.$myPath.'struct/data/data-main.php">
 			                    		<h3 class="title" >Data</h3>
-			                            <p>View/Export Data</p>
-			                        </a>	
-			          			</div>
-			                </div>
-			                <div class="col-sm-4">
-			                    <div class="tile purple">
-			                    	<a href="'.$myPath.'struct/report/uload.php">
-			                    		<h3 class="title" >Completion report</h3>
-			                            <p>Completion report for SV and SVL</p>
-			                        </a>	
-			          			</div>
-			                </div>
-			                <div class="col-sm-4">
-			                    <div class="tile teal">
-			                    	<a href="'.$myPath.'struct/questions/question-main.php">
-			                    		<h3 class="title" >Questions</h3>
-			                            <p>Create and Edit Survey Questions</p>
+			                            <p>View/Data Management</p>
 			                        </a>	
 			          			</div>
 			                </div>

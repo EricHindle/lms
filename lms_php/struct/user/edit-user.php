@@ -24,7 +24,7 @@
 	                {
 
 	                	$html="";
-	                	$usersql = "SELECT username, fname, division, region, area, cluster, role, active FROM members WHERE id = :id";
+	                	$usersql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access FROM lms_player WHERE lms_player_id = :id";
 						$userquery = $mypdo->prepare($usersql);
 						$userquery->execute(array(':id' => $id));
 						$usercount = $userquery->rowCount();
