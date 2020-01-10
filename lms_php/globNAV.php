@@ -19,8 +19,8 @@ echo '
 						<div id="navbarCollapse" class="collapse navbar-collapse">
 							<ul class="nav navbar-nav">
 								<li><a href="' . $myPath . 'menus/home.php">Home</a></li>
-								<li><a href="' . $myPath . 'trackers/sv/sv-main.php">Smart Visit</a></li>
-								<li><a href="' . $myPath . 'trackers/focus/focus-main.php">Focus</a></li>
+								<li><a href="' . $myPath . 'trackers/sv/sv-main.php">Picks</a></li>
+								<li><a href="' . $myPath . 'trackers/focus/focus-main.php">Games</a></li>
 								
 
 					';

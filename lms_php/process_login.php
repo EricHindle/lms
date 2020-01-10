@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	} else {
 		if (isset($_POST['username'], $_POST['password'])) {
 			if ((strlen($_POST['username']) <= 20) && (strlen($_POST['password']) <= 20)) {
-				$username = sanitize_paranoid_string($_POST['username']);
+				$username = sanitize_email_string($_POST['username']);
 				$password = sanitize_message_string($_POST['password']);
 
 				if (login($username, $password, $mypdo) == true) {

@@ -39,8 +39,6 @@ function login($username, $password, $mypdo) {
     ));
     $fetch = $query->fetch(PDO::FETCH_ASSOC);
     
-    $passwordhash = password_hash($password, PASSWORD_DEFAULT, ['cost' => 11]);
-
     if ($fetch) {
         $user_id = $fetch['lms_player_id'];
         $username = $fetch['lms_player_login'];
@@ -154,6 +152,17 @@ function sanitize_paranoid_string($string, $min = '', $max = '')
         return FALSE;
     }
 
+    return $string;
+}
+
+function sanitize_email_string($string, $min = '', $max = '')
+{
+    $string = preg_replace("/[^a-zA-Z0-9@.\ ]/", "", $string);
+    $len = strlen($string);
+    if ((($min != '') && ($len < $min)) || (($max != '') && ($len > $max))) {
+        return FALSE;
+    }
+    
     return $string;
 }
 

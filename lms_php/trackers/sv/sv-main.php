@@ -34,7 +34,7 @@
 			        <div class="container">
 			            <div class="row">
 			                <div class="col-md-12">
-			                    <h3 class="addShad"><strong>Smart Visit</strong></h3>
+			                    <h3 class="addShad"><strong>Picks</strong></h3>
 			                    <br>
 			                </div>
 			            </div>
@@ -42,7 +42,7 @@
 			            	<div class="col-sm-4">
 			                    <div class="tile red">
 			                    	<a href="'.$myPath.'trackers/sv/sv-start.php">
-			                    		<h3 class="title" >New Survey</h3>
+			                    		<h3 class="title" >Make a pick</h3>
 			                        </a>	
 			          			</div>
 			                </div>
@@ -50,7 +50,7 @@
 			                <div class="col-sm-4">
 			                    <div class="tile blue">
 			                    	<a href="'.$myPath.'trackers/sv/sv-incomplete.php">
-			                    		<h3 class="title" >Continue Survey</h3>
+			                    		<h3 class="title" >See my picks</h3>
 			                        </a>	
 			          			</div>
 			                </div>

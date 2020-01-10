@@ -36,7 +36,7 @@
 			            <div class="row">
 			                <div class="col-md-12">
 			                    <h1><strong>Welcome ';
-			$arr=explode(' ', trim($_SESSION['fname']));
+			$arr=explode(' ', trim($_SESSION['nickname']));
 			$firstName=sanitize_paranoid_string($arr[0]);
 			if($firstName){echo $firstName;}
 								echo '</strong></h1>
@@ -47,14 +47,14 @@
 			            	<div class="col-sm-4">
 			                    <div class="tile red">
 			                    	<a href="'.$myPath.'trackers/sv/sv-main.php">
-			                    		<h3 class="title" >Smart Visit</h3>
+			                    		<h3 class="title" >Weekly Picks</h3>
 			                        </a>	
 			          			</div>
 			                </div>
 			                <div class="col-sm-4">
 			                    <div class="tile green">
 			                    	<a href="'.$myPath.'trackers/focus/focus-main.php">
-			                    		<h3 class="title" >Focus</h3>
+			                    		<h3 class="title" >Games</h3>
 			                        </a>	
 			          			</div>
 			                </div>
