@@ -36,7 +36,7 @@
 			            <div class="row">
 			            	<div class="col-sm-4">
 			                    <div class="tile red">
-			                    	<a href="'.$myPath.'struct/user/user-main.php">
+			                    	<a href="'.$myPath.'struct/player/player-main.php">
 			                    		<h3 class="title" >Players</h3>
 			                            <p>Player Management</p>
 			                        </a>	
