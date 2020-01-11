@@ -36,7 +36,7 @@ if (login_check($mypdo) == true) {
                                     <br>
                                     <div class="form-group">
                                         <div class="inner-addon left-addon">
-                                            <i class="glyphicon glyphicon-user"></i>
+                                            <i class="glyphicon glyphicon-envelope"></i>
                                             <input type="text" class="form-control input-lg" name="username"  id="username" placeholder="email">
                                         </div>
                                     </div>
@@ -48,7 +48,9 @@ if (login_check($mypdo) == true) {
                                         <br>
                                     </div>
                                         <button class="btn btn-primary btn-md" type="submit">Sign in <span class="glyphicon glyphicon-log-in"></button>
-                                        <button style="float: right" class="btn btn-primary btn-md" onclick="add-user.php">Create account <span class="glyphicon glyphicon-globe"></button>
+
+                                        <a href="struct/player/new-player.php" class="btn btn-primary btn-small" role="button" style="float:right">Create Account <span class="glyphicon glyphicon-globe"></a>
+
                                 </form>
                                 ';
 	if (isset($_GET['error'])) {$html .= '<div class="alert alert-danger">There has been a problem</div>';}
