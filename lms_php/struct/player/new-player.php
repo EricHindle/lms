@@ -122,24 +122,21 @@
 
                                     <div class="form-group">
                                         <div class="inner-addon left-addon">
-<i class="glyphicon glyphicon-user"></i>
-					                    <input type="text" class="form-control" id="fname" name="fname" placeholder="forename" />
+                                           <i class="glyphicon glyphicon-user"></i>
+					                       <input type="text" class="form-control" id="fname" name="fname" placeholder="forename" />
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="inner-addon left-addon">
-<i class="glyphicon glyphicon-user"></i>
-					                    <input type="text" class="form-control" id="sname" name="sname" placeholder="surname" />
+                                           <i class="glyphicon glyphicon-user"></i>
+					                       <input type="text" class="form-control" id="sname" name="sname" placeholder="surname" />
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="inner-addon left-addon">
-<i class="glyphicon glyphicon-modal-window"></i>
-					                    <input type="text" class="form-control" id="screenname" name="screenname" placeholder="screen name" />
-
-
+                                           <i class="glyphicon glyphicon-modal-window"></i>
+					                       <input type="text" class="form-control" id="screenname" name="screenname" placeholder="screen name" />
 					                    <input type="hidden" name="isadmin" value="false">';
-
 		$html.='	                 
 				                       </div>
                                     </div>

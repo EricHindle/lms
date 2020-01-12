@@ -53,8 +53,8 @@
 					            $stmtadduser = $mypdo->prepare($sqladduser);
 					            $stmtadduser->bindParam(':username', $email);
 					            $stmtadduser->bindParam(':password', $hash);
-					            $stmtadduser->bindParam(':fname', $sname);
-					            $stmtadduser->bindParam(':sname', $fname);
+					            $stmtadduser->bindParam(':fname', $fname);
+					            $stmtadduser->bindParam(':sname', $sname);
 					            $stmtadduser->bindParam(':screenname', $screenname);
 					            $stmtadduser->bindParam(':email', $email);
 					            $stmtadduser->bindParam(':retaccess', $myaccess, PDO::PARAM_INT);

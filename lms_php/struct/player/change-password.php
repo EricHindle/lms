@@ -46,10 +46,10 @@
 		            	date_default_timezone_set('Europe/London');
 		            	$phptime = time();
 						$mysqltime = date("Y-m-d H:i:s", $phptime);
-		            	$sql2="UPDATE members SET password = :password, mod_by = :mod_by, mod_on = :mod_on WHERE id = :id";
+		            	$sql2="UPDATE lms_player SET lms_player_password = :password WHERE lms_player_id = :id";
 		            	$query2 = $mypdo->prepare($sql2);
 		            	$hash = password_hash($pass1, PASSWORD_DEFAULT, ['cost' => 10]);
-                		$query2->execute(array(':password'=>$hash, ':mod_by'=>"SELF", ':mod_on'=>$mysqltime, ':id'=>$userid));
+                		$query2->execute(array(':password'=>$hash, ':id'=>$userid));
                 		allowUser();
 				    } else {
                 		patchUser($passwordErr);
@@ -70,7 +70,7 @@
 		$html.= '
 				<script>
 					alert("'.$error.'");
-					window.location.href="user-main.php";
+					window.location.href="player-main.php";
 				</script>
 				';
 		echo $html;
@@ -79,7 +79,7 @@
 		$html = "";
 		$html.= "<script>
 					alert('Password changed. If this is your account you will be logged out.');
-					window.location.href='user-main.php';
+					window.location.href='player-main.php';
 				</script>";
 		echo $html;
 	}

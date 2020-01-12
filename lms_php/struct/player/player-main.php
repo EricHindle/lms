@@ -106,23 +106,19 @@
 			                	<form class="form-horizontal" role="form" name ="addplayer" method="post" action="add-player.php">';
 		$html .= $key;
 		$html .= '					<h3 class="text-center">Add Player</h3>
-			                    	<br>
 				                    <div class="form-group">
 				                    	<label for="email">Email address :</label>
-				                    	<input type="text" class="form-control" id="email" name="email" maxlength="100" placeholder="email" /><br>
+				                    	<input type="text" class="form-control" id="email" name="email" maxlength="100" placeholder="email" />
 				                    	<label for="password">Password (no spaces or special characters):</label>
-					                    <input type="text" class="form-control" id="password" name="password" placeholder="password" /><br>
+					                    <input type="text" class="form-control" id="password" name="password" placeholder="password" />
 					                    <label for="fname">Forename (no special characters):</label>
-					                    <input type="text" class="form-control" id="fname" name="fname" placeholder="forename" /><br>
+					                    <input type="text" class="form-control" id="fname" name="fname" placeholder="forename" />
 					                    <label for="sname">Surname (no special characters):</label>
-					                    <input type="text" class="form-control" id="sname" name="sname" placeholder="surname" /><br>
+					                    <input type="text" class="form-control" id="sname" name="sname" placeholder="surname" />
 					                    <label for="screenname">Screen name (no special characters):</label>
-					                    <input type="text" class="form-control" id="screenname" name="screenname" placeholder="screen name" /><br>
-					                    <input type="checkbox" name="isadmin" value="true"> Administrator<br>
-					                    <br>';
-
+					                    <input type="text" class="form-control" id="screenname" name="screenname" placeholder="screen name" />
+					                    <input type="checkbox" name="isadmin" value="true"> Administrator<br>';
 		$html.='	                 
-										<br>   
 				                    </div>
 				                    <div class="form-group">
 				                    	<br>
@@ -133,20 +129,20 @@
 			            ';
 
 		$html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
-			                	<form class="form-horizontal" role="form" name ="edituser" method="post" action="edit-user.php">';
+			                	<form class="form-horizontal" role="form" name ="edituser" method="post" action="edit-player.php">';
 		$html .= $key;
 		$html .= '					<h3 class="text-center">Edit Player</h3>
-			                    	<br>
+			                  
 				                    <div class="form-group">
 			                        	<label for="user">Choose Player:</label>
 			                            <select class="form-control" id="user" name="user">';
 		foreach ($cafetch as $myUser) {
-			$html.=						'<option value="'.$myUser['lms_player_screen_name'].'">'.$myUser['lms_player_forename'].' <small>('.$myUser['lms_player_email'].'   :'.$myUser['role'].')<small></option>';
+			$html.=						'<option value="'.$myUser['lms_player_id'].'">'.$myUser['lms_player_screen_name'].' <small>('.$myUser['lms_player_email'].')<small></option>';
 		}
 		$html .='	                    </select>
 				                    </div>
 				                    <div class="form-group">
-				                    	<br>
+				                    
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
 				                    </div>
 				                </form>
@@ -163,22 +159,19 @@
 			                        	<label for="user">Choose Player:</label>
 			                            <select class="form-control" id="user" name="user">';
 		foreach ($cafetch as $myUser) {
-			$html.=						'<option value="'.$myUser['id'].'">'.$myUser['fname'].' <small>('.$myUser['username'].'   :'.$myUser['role'].')<small></option>';
+		    $html.=						'<option value="'.$myUser['lms_player_id'].'">'.$myUser['lms_player_screen_name'].' <small>('.$myUser['lms_player_email'].')<small></option>';
 		}
 		$html .='	                    </select>
 									</div>
-                                    <br>
                                     <div class="form-group">
-                                        <h4>New password:</h4>
+                                        <label for="pwd1">New password:</label>
                                         <input name="pwd1" id="pwd1" class="form-control" title="Password must contain at least 8 characters, including UPPERCASE, lowercase and numbers." type="password" onChange="checkPasswordMatch()">
                                     </div>
                                     <div class="form-group">
-                                        <h4>Confirm password:</h4>
+                                        <label for="pwd1">Confirm password:</label>
                                         <input id="pwd2" name="pwd2" class="form-control" title="Please enter the same Password as above." type="password" onChange="checkPasswordMatch()">
-                                        <br>
                                     </div>
 				                    <div class="form-group">
-				                    	<br>
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
 				                    </div>
 				                </form>
@@ -195,14 +188,12 @@
 					        	<table class="table table-bordered" id="keywords">
 									<thead>
 									<tr class="info">
-										<th>Username</th>
-										<th>Name</th>
-										<th>Division</th>
-										<th>Region</th>
-										<th>Area</th>
-										<th>Cluster</th>
-										<th>Role</th>
-										<th>Active</th>
+										<th>Login</th>
+										<th>Forename</th>
+										<th>Surname</th>
+										<th>Screen Name</th>
+										<th>Email Address</th>
+										<th>Access</th>
 									</tr>
 									</thead>
 									<tbody>
@@ -215,14 +206,12 @@
 								}
 								$html .='
 									<tr>
-										<td>' . $rs['username'] . '</td>
-										<td>' . $rs['fname'] . '</td>
-										<td>' . $rs['division'] . '</td>
-										<td>' . $rs['region'] . '</td>
-										<td>' . $rs['area'] . '</td>
-										<td>' . $rs['cluster'] . '</td>
-										<td>' . $rs['role'] . '</td>
-										<td>' . $active . '</td>
+										<td>' . $rs['lms_player_login'] . '</td>
+										<td>' . $rs['lms_player_forename'] . '</td>
+										<td>' . $rs['lms_player_surname'] . '</td>
+										<td>' . $rs['lms_player_screen_name'] . '</td>
+										<td>' . $rs['lms_player_email'] . '</td>
+										<td>' . $rs['lms_access'] . '</td>
 									</tr>';
 							}
 							$html .='
