@@ -17,25 +17,25 @@
 	        }
 	        else
 	        {
-	            if (isset($_POST['user']))
+	            if (isset($_POST['team']))
 	            {
-	                $id = sanitize_int($_POST['user']);
+	                $id = sanitize_int($_POST['team']);
 	                if($id)
 	                {
 
 	                	$html="";
-	                	$usersql = "SELECT shop, cluster, active FROM lbos WHERE id = :id";
-						$userquery = $mypdo->prepare($usersql);
-						$userquery->execute(array(':id' => $id));
-						$usercount = $userquery->rowCount();
+	                	$teamsql = "SELECT lms_team_id, lms_team_name, lms_team_active FROM lms_team WHERE lms_team_id = :id";
+	                	$teamquery = $mypdo->prepare($teamsql);
+	                	$teamquery->execute(array(':id' => $id));
+	                	$teamcount = $teamquery->rowCount();
 
-						if( $usercount>0){
-							$clusterSql = "SELECT DISTINCT cluster FROM lbos ORDER BY cluster ASC";
-							$clusterQuery = $mypdo->prepare($clusterSql);
-							$clusterQuery->execute();
-							$clusterFetch = $clusterQuery->fetchAll(PDO::FETCH_ASSOC);
+	                	if( $teamcount>0){
 							$key = $formKey->outputKey();
-							$userfetch=$userquery->fetch(PDO::FETCH_ASSOC);
+							$teamfetch=$teamquery->fetch(PDO::FETCH_ASSOC);
+							$isactive = "";
+							if($teamfetch["lms_team_active"] == 1) {
+							    $isactive = "checked";
+							}
 							echo '
 								<!doctype html>
 								<html>
@@ -44,7 +44,7 @@
 									    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
 									    <meta charset="UTF-8">
 									    
-									    <title>Edit LBO</title>
+									    <title>Edit Team</title>
 									    
 									    <meta name="viewport" content="width=device-width, initial-scale=1">
 									    <link rel="stylesheet" href="'.$myPath.'css/bootstrap.min.css">
@@ -60,35 +60,28 @@
 									    <br><br>
 									        <div class="container">
 									        	<div class="row">
-									                <div class="col-md-12">
-									                    <h1><strong>Edit LBO</strong></h1>
-									                    <br>
+									                <div class="col-md-8">
+									                    <h1><strong>Edit Team</strong></h1>
 									                </div>
 									      		</div>
 									        	<div class = "row">';
 
-								$html .= '			<div class="well col-md-10 col-md-offset-1 textDark">
-									                	<form class="form-horizontal" role="form" name ="edit" method="post" action="process-edit-lbo.php">';
+								$html .= '			<div class="well col-md-6 col-md-offset-1 textDark">
+									                	<form class="form-horizontal" role="form" name ="edit" method="post" action="process-edit-team.php">';
 								$html .= $key;
-								$html .= '					<h3 class="text-center">Edit LBO</h3>
+								$html .= '					<h3 class="text-center">Edit Team</h3>
 									                    	<br>
 									                    	<div class="form-group">
 																<label class="control-label col-sm-2" for="name">Name:</label>
-																<div class="col-sm-10">
-																 	<p class="form-control-static" name="name">'.$userfetch['shop'].'</p>
+																<div class="col-sm-4">
+																 	<p class="form-control-static" name="name">'.$teamfetch['lms_team_name'].'</p>
 																</div>
 															</div>
+
 															<div class="form-group">
-																<label class="control-label col-sm-2" for="ocluster">Current Cluster:</label>
-																<div class="col-sm-10">
-																 	<p class="form-control-static" name="ocluster">'.$userfetch['cluster'].'</p>
-																</div>
-															</div>
-															<input type= "hidden" name= "id" value="'.$id.'" />
-															<div class="form-group">
-																<label class="control-label col-sm-2" for="oactive">Current Status:</label>
-																<div class="col-sm-10">';
-									if ($userfetch['active']==1) {
+																<label class="control-label col-sm-2" for="oactive">Status:</label>
+																<div class="col-sm-4">';
+									if ($teamfetch['lms_team_active']==1) {
 										$html.='					<p class="form-control-static" name="ooactive">Active</p>';
 									}else{
 										$html.='					<p class="form-control-static" name="ooactive">Inactive</p>';
@@ -97,35 +90,12 @@
 									$html.='					</div>
 															</div>
 										                    <div class="form-group">
-										                    	<label class="control-label col-sm-2" for="cluster"> New cluster:</label>
-										                    	<div class="col-sm-10">
-										                            <select class="form-control" id="cluster" name="cluster">';
-									foreach ($clusterFetch as $myCluster) {
-										if ($myCluster['cluster']==$userfetch['cluster']) {
-											$html.=						'<option selected="selected">'.$myCluster['cluster'].'</option>';
-										}else{
-											$html.=						'<option>'.$myCluster['cluster'].'</option>';
-										}
-									}
-									$html .='	                    </select>
-																</div>
-										                    </div>
-										                    <div class="form-group">
-										                    	<label class="control-label col-sm-2" for="active"> New status:</label>
-										                    	<div class="col-sm-10">
-										                    		<select class="form-control" id="active" name="active">';
-	                    			if ($userfetch['active']==1) {
-											$html.='					<option selected="selected" value="1">Active</option>
-																		<option value="0">Inactive</option>
-											';
-									}else{
-											$html.='					<option value="1">Active</option>
-																		<option selected="selected" value="0">Inactive</option>
-											';
-									}
-
-									$html .='	                    </select>
-										                    	</div>
+										                    	
+                                                               <label for="teamname">New name:</label>
+                    					                       <input type="text" class="form-control" id="teamname" name="teamname" value="'.$teamfetch['lms_team_name'].'"><br>
+                                                               <input type="checkbox" style="margin-left:20px;" name="isactive" id="isactive" value="true" '.$isactive.' >
+                                                               <label for="isactive">&nbsp is Active</label>
+															   <input type= "hidden" name= "id" value="'.$id.'" />
 										                    </div>
 										                    <div class="form-group">
 										                    	<br>
@@ -137,7 +107,7 @@
 										        <div class="row">
 													<br>
 													<div class="col-xs-6">
-														<a href="'.$myPath.'struct/lbo/lbo-main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
+														<a href="'.$myPath.'struct/team/team-main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
 														<br>
 													</div>
 												</div>
@@ -150,7 +120,7 @@
 	                	} else {
 	                		$html.= "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='lbo-main.php';
+										window.location.href='team-main.php';
 									</script>";
 	                	}
 	                	
@@ -159,7 +129,7 @@
 	                } else {
 	                	echo "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='lbo-main.php';
+										window.location.href='team-main.php';
 									</script>";
 	            	}
 	            } else {

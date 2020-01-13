@@ -8,16 +8,10 @@
 		$formKey = new formKey();
 		$key = $formKey->outputKey();
 
-		$areachangesql = "SELECT id, shop, cluster, active FROM lbos ORDER BY shop ASC";
-		$areachangequery = $mypdo->prepare($areachangesql);
-		$areachangequery->execute();
-		$cafetch = $areachangequery->fetchAll(PDO::FETCH_ASSOC);
-
-
-		$clusterSql = "SELECT DISTINCT cluster FROM lbos ORDER BY cluster ASC";
-		$clusterQuery = $mypdo->prepare($clusterSql);
-		$clusterQuery->execute();
-		$clusterFetch = $clusterQuery->fetchAll(PDO::FETCH_ASSOC);
+		$infosql = "SELECT * FROM lms_info";
+		$infoquery = $mypdo->prepare($infosql);
+		$infoquery->execute();
+		$infofetch = $infoquery->fetchAll(PDO::FETCH_ASSOC);
 
 		$html="";
 
@@ -29,7 +23,7 @@
 			    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
 			    <meta charset="UTF-8">
 			    
-			    <title>LBO Admin</title>
+			    <title>Configuration</title>
 			    
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
 			    <link rel="stylesheet" href="'.$myPath.'css/bootstrap.min.css">
@@ -52,52 +46,42 @@
 			        <div class="container">
 			        	<div class="row">
 			                <div class="col-md-12">
-			                    <h1><strong>LBO Admin</strong></h1>
+			                    <h1><strong>Info Admin</strong></h1>
 			                    <br>
 			                </div>
 			      		</div>
 			        	<div class = "row">';
 
-		$html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
-			                	<form class="form-horizontal" role="form" name ="adduser" method="post" action="add-lbo.php">';
+		$html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
+			                	<form class="form-horizontal" role="form" name ="addinfo" method="post" action="add-info.php">';
 		$html .= $key;
-		$html .= '					<h3 class="text-center">Add LBO</h3>
-			                    	<br>
+		$html .= '					<h3 class="text-center">Add Value</h3>
 				                    <div class="form-group">
-				                    	<label for="lbonum">LBO Number (6 digits):</label>
-				                    	<input type="text" class="form-control" id="lbonum" name="lbonum" maxlength="6" placeholder="LBO No." onkeyup="this.value=this.value.replace(/[^0-9]/g, \'\')" />
-				                    	<label for="lboname">LBO Name:</label>
-					                    <input type="text" class="form-control" id="lboname" name="lboname" placeholder="LBO name" /><br>
-			                        	<label for="cluster">Cluster:</label>
-			                            <select class="form-control" id="cluster" name="cluster">';
-		foreach ($clusterFetch as $myCluster) {
-			$html.=						'<option>'.$myCluster['cluster'].'</option>';
-		}
-		$html .='	                    </select>
+				                    	<label for="infoid">Value Name:</label>
+					                    <input type="text" class="form-control" id="infoid" name="infoid" placeholder="Value name" />
+				                    	<label for="infovalue">Value:</label>
+					                    <input type="text" class="form-control" id="infovalue" name="infovalue" placeholder="Value" />
 				                    </div>
 				                    <div class="form-group">
-				                    	<br>
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
 				                    </div>
 				                </form>
 				            </div>
 			            ';
 
-		$html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
-			                	<form class="form-horizontal" role="form" name ="edituser" method="post" action="edit-lbo.php">';
+		$html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
+			                	<form class="form-horizontal" role="form" name ="editinfo" method="post" action="edit-info.php">';
 		$html .= $key;
-		$html .= '					<h3 class="text-center">Edit LBO</h3>
-			                    	<br>
+		$html .= '					<h3 class="text-center">Edit Value</h3>
 				                    <div class="form-group">
-			                        	<label for="user">Choose LBO:</label>
-			                            <select class="form-control" id="user" name="user">';
-		foreach ($cafetch as $myLbo) {
-			$html.=						'<option value="'.$myLbo['id'].'">'.$myLbo['shop'].'</option>';
+			                        	<label for="user">Choose value:</label>
+			                            <select class="form-control" id="infoid" name="infoid">';
+		foreach ($infofetch as $myinfo) {
+			$html.=						'<option value="'.$myinfo['lms_info_id'].'">'.$myinfo['lms_info_id'].'</option>';
 		}
 		$html .='	                    </select>
 				                    </div>
 				                    <div class="form-group">
-				                    	<br>
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
 				                    </div>
 				                </form>
@@ -107,29 +91,22 @@
 		
 		$html .='		</div>
 						<div class = "row">
-				        	<div class="well col-md-10 col-md-offset-1 textDark">
-				        		<h3>All LBOs</h3>
+				        	<div class="well col-md-7 col-md-offset-1 textDark">
+				        		<h3>All values</h3>
 					        	<table class="table table-bordered" id="keywords">
 									<thead>
 									<tr class="info">
 										<th>Name</th>
-										<th>Cluster</th>
-										<th>Active</th>
+										<th>Value</th>
 									</tr>
 									</thead>
 									<tbody>
 									';
-							foreach ($cafetch as $rs) {
-								if ($rs['active']==1) {
-									$active='Yes';
-								} else {
-									$active='No';
-								}
+							foreach ($infofetch as $rs) {
 								$html .='
 									<tr>
-										<td>' . $rs['shop'] . '</td>
-										<td>' . $rs['cluster'] . '</td>
-										<td>' . $active . '</td>
+										<td>' . $rs['lms_info_id'] . '</td>
+										<td>' . $rs['lms_info_value'] . '</td>
 									</tr>';
 							}
 							$html .='

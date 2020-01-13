@@ -17,39 +17,38 @@
 	        }
 	        else
 	        {
-	            if (isset($_POST['id'], $_POST['cluster'], $_POST['active']))
+	            if (isset($_POST['id'], $_POST['infovalue']))
 	            {
-	                $id = sanitize_int($_POST['id']);
-	                $cluster = sanitize_int($_POST['cluster']);
-	                $active = sanitize_int($_POST['active']);
-	                if($id && $cluster)
+	                $id = $_POST['id'];
+	                $infovalue = $_POST['infovalue'];
+	                if($id && $infovalue)
 	                {
 	                	$html="";
 
-	                	$areasql = "SELECT division, region, area FROM lbos WHERE cluster = :cluster LIMIT 1";
-						$areaquery = $mypdo->prepare($areasql);
-						$areaquery->execute(array(':cluster' => $cluster));
-						$areacount = $areaquery->rowCount();
-						if ($areacount>0) {
-								$areafetch=$areaquery->fetch(PDO::FETCH_ASSOC);
-
-								$name=$_SESSION['username'];
+	                	$infosql = "SELECT lms_info_id, lms_info_value FROM lms_info WHERE lms_info_id = :id LIMIT 1";
+						$infoquery = $mypdo->prepare($infosql);
+						$infoquery->bindParam(':id', $id);
+						$infoquery->execute();
+						$infocount = $infoquery->rowCount();
+						if ($infocount>0) {
 								date_default_timezone_set('Europe/London');
 								$phptime = time();
 								$mysqltime = date("Y-m-d H:i:s", $phptime);
-								$upsql = "UPDATE lbos SET division = :division, region = :region, area = :area, cluster = :cluster, active = :active, mod_by = :mod_by, mod_on = :mod_on WHERE id = :id";
+								$upsql = "UPDATE lms_info SET lms_info_value = :infovalue WHERE lms_info_id = :id";
 								$upquery = $mypdo->prepare($upsql);
-								$upquery->execute(array(':division'=>$areafetch['division'], ':region'=>$areafetch['region'], ':area'=>$areafetch['area'], ':cluster'=>$cluster, ':active'=>$active, ':mod_by'=>$name, ':mod_on'=>$mysqltime, ':id'=>$id));
+								$upquery->bindParam(':id', $id);
+								$upquery->bindParam(':infovalue', $infovalue);
+								$upquery->execute();
 								$upcount = $upquery->rowCount();
 								if( $upcount >0){
 									$html.= "<script>
 												alert('Details updated successfully.');
-												window.location.href='lbo-main.php';
+												window.location.href='info-main.php';
 											</script>";
 			                	} else {
 			                		$html.= "<script>
-										alert('There was a problem. Please check details and try again.');
-										window.location.href='lbo-main.php';
+										alert('Details not altered.');
+										window.location.href='info-main.php';
 									</script>";
 								}
 								
@@ -57,7 +56,7 @@
 						}else{
 							$html.= "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='lbo-main.php';
+										window.location.href='info-main.php';
 									</script>";
 						}
 	                	
@@ -66,7 +65,7 @@
 	                } else {
 	                	echo "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='lbo-main.php';
+										window.location.href='info-main.php';
 									</script>";
 	            	}
 	            } else {
