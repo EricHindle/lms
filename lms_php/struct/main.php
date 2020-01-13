@@ -70,6 +70,19 @@
 			                </div>
 			      		</div>
 			      		<div class="row">
+			            	<div class="col-sm-4">
+			                    <div class="tile teal">
+			                    	<a href="'.$myPath.'struct/week/week-main.php">
+			                    		<h3 class="title" >Weeks</h3>
+			                            <p>Calendar Management</p>
+			                        </a>	
+			          			</div>
+			                </div>
+			      		</div>
+
+
+
+			      		<div class="row">
 							<br>
 							<div class="col-xs-6">
 								<a href="'.$myPath.'menus/home.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
