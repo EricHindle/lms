@@ -37,8 +37,17 @@
 			            <div class="row">
 			            	<div class="col-sm-4">
 			                    <div class="tile red">
-			                    	<a href="'.$myPath.'struct/data/data-sv-date.php">
-			                    		<h3 class="title" >Smart Visit</h3>
+			                    	<a href="'.$myPath.'struct/player/player-main.php">
+			                    		<h3 class="title" >Players</h3>
+			                            <p>Player Management</p>
+			                        </a>	
+			          			</div>
+			                </div>
+			            	<div class="col-sm-4">
+			                    <div class="tile orange">
+			                    	<a href="'.$myPath.'struct/data/data-main.php">
+			                    		<h3 class="title" >Data</h3>
+			                            <p>View/Data Management</p>
 			                        </a>	
 			          			</div>
 			                </div>

@@ -50,7 +50,7 @@
 								$phptime = time();
 								$mysqltime = date("Y-m-d H:i:s", $phptime);
 			                	$hash = password_hash($password, PASSWORD_DEFAULT, ['cost' => 11]);
-			                	$sqladduser = "INSERT INTO lms_player (lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access) VALUES (:username, :password, :fname, :sname, :screenname, :email, :retaccess)";
+			                	$sqladduser = "INSERT INTO lms_player (lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active) VALUES (:username, :password, :fname, :sname, :screenname, :email, :retaccess, 1)";
 					            $stmtadduser = $mypdo->prepare($sqladduser);
 					            $stmtadduser->bindParam(':username', $email);
 					            $stmtadduser->bindParam(':password', $hash);

@@ -200,7 +200,7 @@
 									<tbody>
 									';
 							foreach ($cafetch as $rs) {
-								if ($rs['active']==1) {
+								if ($rs['lms_active']==1) {
 									$active='Yes';
 								} else {
 									$active='No';
@@ -213,7 +213,7 @@
 										<td>' . $rs['lms_player_screen_name'] . '</td>
 										<td>' . $rs['lms_player_email'] . '</td>
 										<td>' . $rs['lms_access'] . '</td>
-                                        <td>' . $rs['lms_active'] . '</td>
+                                        <td>' . $active . '</td>
 									</tr>';
 							}
 							$html .='

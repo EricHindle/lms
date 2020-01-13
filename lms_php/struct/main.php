@@ -44,7 +44,7 @@
 			                </div>
 			                <div class="col-sm-4">
 			                    <div class="tile green">
-			                    	<a href="'.$myPath.'struct/focus/focus-admin.php">
+			                    	<a href="'.$myPath.'struct/game/game-main.php">
 			                    		<h3 class="title" >Games</h3>
 			                            <p>Game Management.</p>
 			                        </a>	
@@ -54,9 +54,17 @@
 			      		<div class="row">
 			            	<div class="col-sm-4">
 			                    <div class="tile orange">
-			                    	<a href="'.$myPath.'struct/data/data-main.php">
-			                    		<h3 class="title" >Data</h3>
-			                            <p>View/Data Management</p>
+			                    	<a href="'.$myPath.'struct/team/team-main.php">
+			                    		<h3 class="title" >Teams</h3>
+			                            <p>Team Management</p>
+			                        </a>	
+			          			</div>
+			                </div>
+			            	<div class="col-sm-4">
+			                    <div class="tile purple">
+			                    	<a href="'.$myPath.'struct/info/info-main.php">
+			                    		<h3 class="title" >Info</h3>
+			                            <p>Configuration Management</p>
 			                        </a>	
 			          			</div>
 			                </div>
