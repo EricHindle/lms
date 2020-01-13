@@ -24,7 +24,7 @@
 	                {
 
 	                	$html="";
-	                	$usersql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access FROM lms_player WHERE lms_player_id = :id";
+	                	$usersql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active FROM lms_player WHERE lms_player_id = :id";
 						$userquery = $mypdo->prepare($usersql);
 						$userquery->execute(array(':id' => $id));
 						$usercount = $userquery->rowCount();
@@ -37,7 +37,10 @@
 							if($userfetch['lms_access'] == '999'){
 							    $isadmin = 'checked';
 							}
-							
+							$isactive = '';
+							if($userfetch['lms_active'] == '1'){
+							    $isactive = 'checked';
+							}
 							
 							echo '
 								<!doctype html>
@@ -96,7 +99,10 @@
 					                       <input type="text" class="form-control" id="sname" name="sname" value="'.$userfetch['lms_player_surname'].'">
                                            <label for="screenname">Screen name:</label>
 					                       <input type="text" class="form-control" id="screenname" name="screenname" value="'.$userfetch['lms_player_screen_name'].'"><br>
-                                           <input type="checkbox" name="isadmin" value="true" '.$isadmin.' > Administrator
+                                           <input type="checkbox" style="margin-left:20px;" name="isadmin" id= "isadmin" value="true" '.$isadmin.' > 
+                                           <label for="isadmin">&nbsp is Administrator</label>
+                                           <input type="checkbox" style="margin-left:20px;" name="isactive" id="isactive" value="true" '.$isactive.' >
+                                           <label for="isactive">&nbsp is Active</label>
                                            <input type= "hidden" name= "id" value="'.$id.'" />
                                      </div>
 									 <div class="form-group">

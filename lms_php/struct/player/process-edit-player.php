@@ -25,6 +25,7 @@
 	                $screenname = sanitize_paranoid_string($_POST['screenname']);
 	                $email = sanitize_email_string($_POST['email']);
 	                $isadmin = $_POST['isadmin'];
+	                $isactive = $_POST['isactive'];
 	                if($id)
 	                {
 	                	$html="";
@@ -32,8 +33,12 @@
                         if($isadmin == "true"){
                             $myaccess = 999;
                         }
+                        $myactive = 0;
+                        if($isactive == "true"){
+                            $myactive = 1;
+                        }
 								$mysqltime = date("Y-m-d H:i:s", $phptime);
-								$upsql = "UPDATE lms_player SET lms_player_email = :email, lms_player_login = :username, lms_player_forename = :forename,  lms_player_surname = :surname, lms_player_screen_name = :screenname, lms_access = :access WHERE lms_player_id = :id";
+								$upsql = "UPDATE lms_player SET lms_player_email = :email, lms_player_login = :username, lms_player_forename = :forename,  lms_player_surname = :surname, lms_player_screen_name = :screenname, lms_access = :access, lms_active = :active WHERE lms_player_id = :id";
 								$upduser = $mypdo->prepare($upsql);
 								$upduser->bindParam(':username', $email);
 								$upduser->bindParam(':forename', $fname);
@@ -41,9 +46,9 @@
 								$upduser->bindParam(':screenname', $screenname);
 								$upduser->bindParam(':email', $email);
 								$upduser->bindParam(':access', $myaccess, PDO::PARAM_INT);
+								$upduser->bindParam(':active', $myactive, PDO::PARAM_INT);
 								$upduser->bindParam(':id', $id, PDO::PARAM_INT);
 								$upduser->execute();
-								
 								$upcount = $upduser->rowCount();
 								if( $upcount >0){
 									$html.= "<script>
@@ -52,7 +57,7 @@
 											</script>";
 			                	} else {
 			                		$html.= "<script>
-										alert('There was a problem. Please check details and try again.');
+										alert('Record not changed');
 										window.location.href='player-main.php';
 									</script>";
 								}

@@ -8,7 +8,7 @@
 		$formKey = new formKey();
 		$key = $formKey->outputKey();
 
-		$playerchangesql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access FROM lms_player ORDER BY lms_player_screen_name ASC";
+		$playerchangesql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active FROM lms_player ORDER BY lms_player_screen_name ASC";
 		$playerchangequery = $mypdo->prepare($playerchangesql);
 		$playerchangequery->execute();
 		$cafetch = $playerchangequery->fetchAll(PDO::FETCH_ASSOC);
@@ -194,6 +194,7 @@
 										<th>Screen Name</th>
 										<th>Email Address</th>
 										<th>Access</th>
+                                        <th>Active</th>
 									</tr>
 									</thead>
 									<tbody>
@@ -212,6 +213,7 @@
 										<td>' . $rs['lms_player_screen_name'] . '</td>
 										<td>' . $rs['lms_player_email'] . '</td>
 										<td>' . $rs['lms_access'] . '</td>
+                                        <td>' . $rs['lms_active'] . '</td>
 									</tr>';
 							}
 							$html .='
