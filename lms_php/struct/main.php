@@ -62,9 +62,9 @@
 			                </div>
 			            	<div class="col-sm-4">
 			                    <div class="tile purple">
-			                    	<a href="'.$myPath.'struct/info/info-main.php">
-			                    		<h3 class="title" >Info</h3>
-			                            <p>Configuration Management</p>
+			                    	<a href="'.$myPath.'struct/match/match-main.php">
+			                    		<h3 class="title" >Match</h3>
+			                            <p>Match Management</p>
 			                        </a>	
 			          			</div>
 			                </div>
@@ -73,11 +73,20 @@
 			            	<div class="col-sm-4">
 			                    <div class="tile teal">
 			                    	<a href="'.$myPath.'struct/week/week-main.php">
-			                    		<h3 class="title" >Pick Periods</h3>
+			                    		<h3 class="title" >Periods</h3>
 			                            <p>Calendar Management</p>
 			                        </a>	
 			          			</div>
 			                </div>
+			            	<div class="col-sm-4">
+			                    <div class="tile grey">
+			                    	<a href="'.$myPath.'struct/info/info-main.php">
+			                    		<h3 class="title" >Info</h3>
+			                            <p>Configuration Management</p>
+			                        </a>	
+			          			</div>
+			                </div>
+
 			      		</div>
 
 

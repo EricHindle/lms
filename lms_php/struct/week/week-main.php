@@ -46,7 +46,7 @@
 			        <div class="container">
 			        	<div class="row">
 			                <div class="col-md-12">
-			                    <h1><strong>Pick Period Admin</strong></h1>
+			                    <h1><strong>Period Admin</strong></h1>
 			                    <br>
 			                </div>
 			      		</div>
