@@ -22,14 +22,8 @@
 	                $id = $_POST['weekid'];
 	                if($id)
 	                {
-
 	                	$html="";
-	                	$matchsql = "SELECT * FROM v_lms_match WHERE lms_week_no = :id";
-	                	$matchquery = $mypdo->prepare($matchsql);
-	                	$matchquery->execute(array(':id' => $id));
-	                	$matchcount = $matchquery->rowCount();
-
-	                	$teamsql = "SELECT lms_team_name FROM lms_team WHERE lms_team_active = 1";
+	                	$teamsql = "SELECT lms_team_name, lms_team_id, lms_team_active FROM lms_team WHERE lms_team_active = 1";
 	                	$teamquery = $mypdo->prepare($teamsql);
 	                	$teamquery->execute();
 	                	$teamcount = $teamquery->rowCount();
@@ -80,7 +74,7 @@
 									        <div class="container">
 									        	<div class="row">
 									                <div class="col-md-8">
-									                    <h1><strong>Generater Matches for Period '.$year.'/'.$week.'</strong></h1>
+									                    <h1><strong>Generate Matches for Period '.$year.'/'.$week.'</strong></h1>
 									                </div>
 									      		</div>
 									        	<div class = "row">';
@@ -100,14 +94,23 @@
 									</thead>
 									<tbody>
 									';
-							foreach ($teamfetch as $rs) {
 
+							foreach ($teamfetch as $rs) {
+							    $matchsql = "SELECT * FROM lms_match WHERE lms_match_weekno = :id and lms_match_team = :team LIMIT 1";
+							    $matchquery = $mypdo->prepare($matchsql);
+							    $matchquery->bindParam(':id', $id);
+							    $matchquery->bindParam(':team', $rs['lms_team_id']);
+							    $matchquery->execute();
+							    $matchcount = $matchquery->rowCount();
+							    if ($matchcount==0){
+							    
 								$html .='
 									<tr>
 										<td><input type="checkbox" style="margin-left:20px;" name="upd-'.$rs['lms_team_id'].'" id="upd-'.$rs['lms_team_id'].'" value="true" checked ></td>
                                         <td>' . $rs['lms_team_name'] . '</td>
 										<td><input type="text" class="form-control" id="mdt-'.$rs['lms_team_id'].'" name="mdt-'.$rs['lms_team_id'].'" value="'.$kodate.'" placeholder="yyyy-mm-dd"></td>
 									</tr>';
+							    }
 							}
 							$html .='
 									</tbody>
