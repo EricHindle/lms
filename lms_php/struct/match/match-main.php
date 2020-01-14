@@ -92,7 +92,7 @@
 				            </div>
                         </div>
 						<div class = "row">
-				        	<div class="well col-md-7 col-md-offset-1 textDark">
+				        	<div class="well col-md-9 col-md-offset-1 textDark">
 				        		<h3>All matches</h3>
 					        	<table class="table table-bordered" id="keywords">
 									<thead>

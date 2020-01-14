@@ -106,7 +106,7 @@
 							    
 								$html .='
 									<tr>
-										<td><input type="checkbox" style="margin-left:20px;" name="upd-'.$rs['lms_team_id'].'" id="upd-'.$rs['lms_team_id'].'" value="true" checked ></td>
+										<td><input type="checkbox" style="margin-left:20px;" name="add-'.$rs['lms_team_id'].'" id="add-'.$rs['lms_team_id'].'" value="true" checked ></td>
                                         <td>' . $rs['lms_team_name'] . '</td>
 										<td><input type="text" class="form-control" id="mdt-'.$rs['lms_team_id'].'" name="mdt-'.$rs['lms_team_id'].'" value="'.$kodate.'" placeholder="yyyy-mm-dd"></td>
 									</tr>';
@@ -116,7 +116,9 @@
 									</tbody>
 								</table>
 </div>
-									                    	
+										                    <div class="form-group">
+										                        <input type= "hidden" name= "weekid" value="'.$id.'" />
+										                    </div>									                    	
 										                    <div class="form-group">
 										                    	<br>
 										                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
