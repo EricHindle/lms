@@ -78,10 +78,10 @@
 		$html .= $key;
 		$html .= '					<h3 class="text-center">Edit Match</h3>
 				                    <div class="form-group">
-			                        	<label for="weekid">Choose period:</label>
-			                            <select class="form-control" id="weekid" name="weekid">';
-		foreach ($weekfetch as $myweek) {
-		    $html.=						'<option value="'.$myweek['lms_week_no'].'">'.$myweek['lms_year'].'/'.sprintf('%02d',$myweek['lms_week']).'&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp'. date_format(date_create($myweek['lms_week_start']),'d-M-Y').'</option>';
+			                        	<label for="weekid">Choose match:</label>
+			                            <select class="form-control" id="matchid" name="matchid">';
+		foreach ($matchfetch as $mymatch) {
+		    $html.=						'<option value="'.$mymatch['lms_match_id'].'">'.$mymatch['lms_team_name'].'&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp'. date_format(date_create($mymatch['lms_match_date']),'d-M-Y').'</option>';
 		}
 		$html .='	                    </select>
 				                    </div>
@@ -112,9 +112,6 @@
 							        case 'w':
 							            $result = 'win';
 							            break;
-							        case 'w':
-							            $result = 'win';
-							            break;
 							        case 'l':
 						                $result = 'lose';
 						                break;
@@ -123,7 +120,7 @@
 					                    break;
 							    }
 
-							    $stDate = date_format(date_create($rs['lms_match_result']),'d-M-Y');
+							    $stDate = date_format(date_create($rs['lms_match_date']),'d-M-Y');
 								$html .='
 									<tr>
 										<td>' . $rs['lms_week'] . '</td>

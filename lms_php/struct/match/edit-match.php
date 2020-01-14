@@ -17,21 +17,41 @@
 	        }
 	        else
 	        {
-	            if (isset($_POST['weekid']))
+	            if (isset($_POST['matchid']))
 	            {
-	                $id = $_POST['weekid'];
+	                $id = $_POST['matchid'];
 	                if($id)
 	                {
 
 	                	$html="";
-	                	$weeksql = "SELECT * FROM lms_week WHERE lms_week_no = :id";
-	                	$weekquery = $mypdo->prepare($weeksql);
-	                	$weekquery->execute(array(':id' => $id));
-	                	$weekcount = $weekquery->rowCount();
-
-	                	if( $weekcount>0){
+	                	$matchsql = "SELECT * FROM v_lms_match WHERE lms_match_id = :id";
+	                	$matchquery = $mypdo->prepare($matchsql);
+	                	$matchquery->execute(array(':id' => $id));
+	                	$matchcount = $matchquery->rowCount();
+	                	$wresult = '';
+                        $lresult = '';
+                        $dresult = '';
+                        $nresult = '';
+	                	
+	                	
+	                	if( $matchcount>0){
 							$key = $formKey->outputKey();
-							$weekfetch=$weekquery->fetch(PDO::FETCH_ASSOC);
+							$matchfetch=$matchquery->fetch(PDO::FETCH_ASSOC);
+							
+							switch($matchfetch['lms_match_result']) {
+							    case 'w':
+							        $wresult = 'selected';
+							        break;
+							    case 'l':
+							        $lresult = 'selected';
+							        break;
+							    case 'd':
+							        $dresult = 'selected';
+							        break;
+							    case '':
+							        $nresult = 'selected';
+							        break;
+							}
 							echo '
 								<!doctype html>
 								<html>
@@ -40,7 +60,7 @@
 									    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
 									    <meta charset="UTF-8">
 									    
-									    <title>Edit Pick Period</title>
+									    <title>Edit Match</title>
 									    
 									    <meta name="viewport" content="width=device-width, initial-scale=1">
 									    <link rel="stylesheet" href="'.$myPath.'css/bootstrap.min.css">
@@ -57,37 +77,45 @@
 									        <div class="container">
 									        	<div class="row">
 									                <div class="col-md-8">
-									                    <h1><strong>Edit Pick Period</strong></h1>
+									                    <h1><strong>Edit Match</strong></h1>
 									                </div>
 									      		</div>
 									        	<div class = "row">';
 
-								$html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
-									                	<form class="form-horizontal" role="form" name ="edit" method="post" action="process-edit-week.php">';
+								$html .= '			<div class="well col-md-8 col-md-offset-1 textDark">
+									                	<form class="form-horizontal" role="form" name ="edit" method="post" action="process-edit-match.php">';
 								$html .= $key;
 								$html .= '					<h3 class="text-center">Period Dates</h3>
 									                    	<br>
 									                    	<div class="form-group">
-																<label class="col-sm-2" for="season">Season:</label>
-																<div class="col-sm-2">
-																 	<p class="form-control-static" name="season" id="season">'.$weekfetch['lms_year'].'</p>
+																<label class="col-sm-1" for="season">Season:</label>
+																<div class="col-sm-1">
+																 	<p class="form-control-static" name="season" id="season">'.$matchfetch['lms_year'].'</p>
 																</div>
-																<label class="col-sm-2" for="period">Period:</label>
-																<div class="col-sm-2">
-																 	<p class="form-control-static" name="period" id="period">'.$weekfetch['lms_week'].'</p>
+																<label class="col-sm-1" for="period">Period:</label>
+																<div class="col-sm-1">
+																 	<p class="form-control-static" name="period" id="period">'.$matchfetch['lms_week'].'</p>
 																</div>
-
+																<label class="col-sm-1" for="team">Team:</label>
+																<div class="col-sm-3">
+																 	<p class="form-control-static" name="team" id="team">'.$matchfetch['lms_team_name'].'</p>
+																</div>
+																<label class="col-sm-1" for="odate">Date:</label>
+																<div class="col-sm-2">
+																 	<p class="form-control-static" name="odate" id="odate">'.date_format(date_create($matchfetch['lms_match_date']),'d-M-Y').'</p>
+																</div>
 															</div>
 
 										                    <div class="form-group">
 										                    	
-                                                               <label for="startdate">New start date:</label>
-                    					                       <input type="text" class="form-control" id="startdate" name="startdate" value="'.date_format(date_create($weekfetch['lms_week_start']),'Y-m-d').'" placeholder="yyyy-mm-dd"><br>
-                                                               <label for="deadline">New deadline:</label>
-                    					                       <input type="text" class="form-control" id="deadline" name="deadline" value="'.date_format(date_create($weekfetch['lms_week_deadline']),'Y-m-d').'" placeholder="yyyy-mm-dd"><br>
-                                                               <label for="enddate">New end date:</label>
-                    					                       <input type="text" class="form-control" id="enddate" name="enddate" value="'.date_format(date_create($weekfetch['lms_week_end']),'Y-m-d').'" placeholder="yyyy-mm-dd"><br>
-
+                                                               <label for="matchdate">New match date:</label>
+                    					                       <input type="text" class="form-control" id="matchdate" name="matchdate" value="'.date_format(date_create($matchfetch['lms_match_date']),'Y-m-d').'" placeholder="yyyy-mm-dd"><br>
+                                                               <select class="form-control" id="result" name="result">
+                                                                    <option '.$wresult.' value="w">Win</option>
+                                                                    <option '.$dresult.' value="d">Draw</option>
+                                                                    <option '.$lresult.' value="l">Lose</option>
+                                                                    <option '.$nresult.' value="">No result</option>
+                                                               </select>
 															   <input type= "hidden" name= "id" value="'.$id.'" />
 										                    </div>
 										                    <div class="form-group">
@@ -100,7 +128,7 @@
 										        <div class="row">
 													<br>
 													<div class="col-xs-6">
-														<a href="'.$myPath.'struct/week/week-main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
+														<a href="'.$myPath.'struct/match/match-main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
 														<br>
 													</div>
 												</div>
@@ -113,7 +141,7 @@
 	                	} else {
 	                		$html.= "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='week-main.php';
+										window.location.href='match-main.php';
 									</script>";
 	                	}
 	                	
@@ -122,7 +150,7 @@
 	                } else {
 	                	echo "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='week-main.php';
+										window.location.href='match-main.php';
 									</script>";
 	            	}
 	            } else {

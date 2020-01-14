@@ -17,43 +17,41 @@
 	        }
 	        else
 	        {
-	            if (isset($_POST['id'], $_POST['startdate'], $_POST['enddate'], $_POST['deadline'] ))
+	            if (isset($_POST['id'], $_POST['matchdate'], $_POST['result']))
 	            {
 	                $id = $_POST['id'];
-	                $startdate = sanitize_datetime($_POST['startdate']);
-	                $enddate = sanitize_datetime($_POST['enddate']);
-	                $deadline = sanitize_datetime($_POST['deadline']);
+	                $matchdate = sanitize_datetime($_POST['matchdate']);
+	                $result = $_POST['result'];
 	                
-	                if($id && $startdate && $enddate && $deadline)
+	                if($id && $matchdate && $result)
 	                {
 	                	$html="";
 
-	                	$weeksql = "SELECT lms_week_no FROM lms_week WHERE lms_week_no = :id LIMIT 1";
-						$weekquery = $mypdo->prepare($weeksql);
-						$weekquery->bindParam(':id', $id);
-						$weekquery->execute();
-						$weekcount = $weekquery->rowCount();
-						if ($weekcount>0) {
+	                	$matchsql = "SELECT lms_match_id FROM lms_match WHERE lms_match_id = :id LIMIT 1";
+						$matchquery = $mypdo->prepare($matchsql);
+						$matchquery->bindParam(':id', $id);
+						$matchquery->execute();
+						$matchcount = $matchquery->rowCount();
+						if ($matchcount>0) {
 								date_default_timezone_set('Europe/London');
 								$phptime = time();
 								$mysqltime = date("Y-m-d H:i:s", $phptime);
-								$upsql = "UPDATE lms_week SET lms_week_start = :startdt, lms_week_deadline = :deadln, lms_week_end = :enddt  WHERE lms_week_no = :id";
+								$upsql = "UPDATE lms_match SET lms_match_date = :matchdt, lms_match_result = :result WHERE lms_match_id = :id";
 								$upquery = $mypdo->prepare($upsql);
 								$upquery->bindParam(':id', $id);
-								$upquery->bindParam(':startdt', $startdate);
-								$upquery->bindParam(':deadln', $deadline);
-								$upquery->bindParam(':enddt', $enddate);
+								$upquery->bindParam(':matchdt', $matchdate);
+								$upquery->bindParam(':result', $result);
 								$upquery->execute();
 								$upcount = $upquery->rowCount();
 								if( $upcount >0){
 									$html.= "<script>
 												alert('Details updated successfully.');
-												window.location.href='week-main.php';
+												window.location.href='match-main.php';
 											</script>";
 			                	} else {
 			                		$html.= "<script>
 										alert('Details not altered.');
-										window.location.href='week-main.php';
+										window.location.href='match-main.php';
 									</script>";
 								}
 								
@@ -61,7 +59,7 @@
 						}else{
 							$html.= "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='week-main.php';
+										window.location.href='match-main.php';
 									</script>";
 						}
 	                	
@@ -70,7 +68,7 @@
 	                } else {
 	                	echo "<script>
 										alert('Missing/invalid values. Please check details and try again.');
-										window.location.href='week-main.php';
+										window.location.href='match-main.php';
 									</script>";
 	            	}
 	            } else {
