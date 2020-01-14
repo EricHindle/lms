@@ -8,11 +8,14 @@
 		$formKey = new formKey();
 		$key = $formKey->outputKey();
 
+		$matchsql = "SELECT * FROM v_lms_match ORDER BY lms_match_date, lms_match_team ASC ";
+		$matchquery = $mypdo->prepare($matchsql);
+		$matchquery->execute();
+		$matchfetch = $matchquery->fetchAll(PDO::FETCH_ASSOC);
 		$weeksql = "SELECT * FROM lms_week ORDER BY lms_week_no ASC ";
 		$weekquery = $mypdo->prepare($weeksql);
 		$weekquery->execute();
 		$weekfetch = $weekquery->fetchAll(PDO::FETCH_ASSOC);
-
 		$html="";
 
 		echo '
@@ -23,7 +26,7 @@
 			    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
 			    <meta charset="UTF-8">
 			    
-			    <title>Game Weeks</title>
+			    <title>Game matchs</title>
 			    
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
 			    <link rel="stylesheet" href="'.$myPath.'css/bootstrap.min.css">
@@ -46,37 +49,34 @@
 			        <div class="container">
 			        	<div class="row">
 			                <div class="col-md-12">
-			                    <h1><strong>Period Admin</strong></h1>
+			                    <h1><strong>Match Admin</strong></h1>
 			                    <br>
 			                </div>
 			      		</div>
-			        	<div class = "row">';
-
+                        <div class="row">';
 		$html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
-			                	<form class="form-horizontal" role="form" name ="addweek" method="post" action="add-week.php">';
+			                	<form class="form-horizontal" role="form" name ="genmatch" method="post" action="gen-match.php">';
 		$html .= $key;
-		$html .= '					<h3 class="text-center">Add Period</h3>
+		$html .= '					<h3 class="text-center">Generate Matches</h3>
 				                    <div class="form-group">
-				                    	<label for="weekyear">Year number:</label>
-					                    <input type="text" class="form-control" id="weekyear" name="weekyear" placeholder="Year" />
-				                    	<label for="weeknumber">Week number:</label>
-					                    <input type="text" class="form-control" id="weeknumber" name="weeknumber" placeholder="Week" />
-                                     	<label for="weekstart">Start date:</label>
-                                        <input type="text" class="form-control" id="weekstart" name="weekstart" placeholder="yyyy-mm-dd" />
-                                     	<label for="weekcount">No. of periods to generate:</label>
-                                        <input type="text" class="form-control" id="weekcount" name="weekcount" placeholder="##" value = 1 />
+			                        	<label for="weekid">Choose period:</label>
+			                            <select class="form-control" id="weekid" name="weekid">';
+		foreach ($weekfetch as $myweek) {
+		    $html.=						'<option value="'.$myweek['lms_week_no'].'">'.$myweek['lms_year'].'/'.sprintf('%02d',$myweek['lms_week']).'&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp'. date_format(date_create($myweek['lms_week_start']),'d-M-Y').'</option>';
+		}
+		$html .='	                    </select>
 				                    </div>
 				                    <div class="form-group">
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
 				                    </div>
-				                </form>
-				            </div>
+                                </form>
+                            </div>
 			            ';
 
 		$html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
-			                	<form class="form-horizontal" role="form" name ="editweek" method="post" action="edit-week.php">';
+			                	<form class="form-horizontal" role="form" name ="editmatch" method="post" action="edit-match.php">';
 		$html .= $key;
-		$html .= '					<h3 class="text-center">Edit Period</h3>
+		$html .= '					<h3 class="text-center">Edit Match</h3>
 				                    <div class="form-group">
 			                        	<label for="weekid">Choose period:</label>
 			                            <select class="form-control" id="weekid" name="weekid">';
@@ -90,36 +90,47 @@
 				                    </div>
 				                </form>
 				            </div>
-			            ';
-
-		
-		$html .='		</div>
+                        </div>
 						<div class = "row">
 				        	<div class="well col-md-7 col-md-offset-1 textDark">
-				        		<h3>All periods</h3>
+				        		<h3>All matches</h3>
 					        	<table class="table table-bordered" id="keywords">
 									<thead>
-									<tr class="week">
+									<tr class="match">
 										<th>Period No.</th>
 										<th>Season</th>
-                                        <th>Start Date</th>
-                                        <th>Pick Deadline</th>
-                                        <th>End Date</th>
+                                        <th>Team</th>
+                                        <th>Match Date</th>
+                                        <th>Result</th>
 									</tr>
 									</thead>
 									<tbody>
 									';
-							foreach ($weekfetch as $rs) {
-							    $stDate = date_format(date_create($rs['lms_week_start']),'d-M-Y');
-							    $enDate = date_format(date_create($rs['lms_week_end']),'d-M-Y');
-							    $dlDate = date_format(date_create($rs['lms_week_deadline']),'d-M-Y');
+							foreach ($matchfetch as $rs) {
+							    $result = 'no result';							    
+							    switch($rs['lms_match_result']) {
+							        case 'w':
+							            $result = 'win';
+							            break;
+							        case 'w':
+							            $result = 'win';
+							            break;
+							        case 'l':
+						                $result = 'lose';
+						                break;
+							        case 'd':
+					                    $result = 'draw';
+					                    break;
+							    }
+
+							    $stDate = date_format(date_create($rs['lms_match_result']),'d-M-Y');
 								$html .='
 									<tr>
 										<td>' . $rs['lms_week'] . '</td>
 										<td>' . $rs['lms_year'] . '</td>
+                                        <td>' . $rs['lms_team_name'] . '</td>
 										<td>' . $stDate . '</td>
-										<td>' . $dlDate . '</td>
-										<td>' . $enDate . '</td>
+										<td>' . $result . '</td>
 									</tr>';
 							}
 							$html .='
