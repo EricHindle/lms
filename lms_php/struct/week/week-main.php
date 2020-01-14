@@ -46,7 +46,7 @@
 			        <div class="container">
 			        	<div class="row">
 			                <div class="col-md-12">
-			                    <h1><strong>Week Admin</strong></h1>
+			                    <h1><strong>Pick Period Admin</strong></h1>
 			                    <br>
 			                </div>
 			      		</div>
@@ -55,7 +55,7 @@
 		$html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
 			                	<form class="form-horizontal" role="form" name ="addweek" method="post" action="add-week.php">';
 		$html .= $key;
-		$html .= '					<h3 class="text-center">Add Week</h3>
+		$html .= '					<h3 class="text-center">Add Period</h3>
 				                    <div class="form-group">
 				                    	<label for="weekyear">Year number:</label>
 					                    <input type="text" class="form-control" id="weekyear" name="weekyear" placeholder="Year" />
@@ -63,6 +63,8 @@
 					                    <input type="text" class="form-control" id="weeknumber" name="weeknumber" placeholder="Week" />
                                      	<label for="weekstart">Start date:</label>
                                         <input type="text" class="form-control" id="weekstart" name="weekstart" placeholder="yyyy-mm-dd" />
+                                     	<label for="weekcount">No. of periods to generate:</label>
+                                        <input type="text" class="form-control" id="weekcount" name="weekcount" placeholder="##" value = 1 />
 				                    </div>
 				                    <div class="form-group">
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
@@ -74,12 +76,12 @@
 		$html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
 			                	<form class="form-horizontal" role="form" name ="editweek" method="post" action="edit-week.php">';
 		$html .= $key;
-		$html .= '					<h3 class="text-center">Edit Value</h3>
+		$html .= '					<h3 class="text-center">Edit Period</h3>
 				                    <div class="form-group">
-			                        	<label for="user">Choose value:</label>
+			                        	<label for="user">Choose period:</label>
 			                            <select class="form-control" id="weekid" name="weekid">';
 		foreach ($weekfetch as $myweek) {
-			$html.=						'<option value="'.$myweek['lms_week_id'].'">'.$myweek['lms_week_id'].'</option>';
+		    $html.=						'<option value="'.$myweek['lms_week_no'].'">'.$myweek['lms_year'].'/'.sprintf('%02d',$myweek['lms_week']).'&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp'. date_format(date_create($myweek['lms_week_start']),'d-M-Y').'</option>';
 		}
 		$html .='	                    </select>
 				                    </div>
@@ -94,12 +96,12 @@
 		$html .='		</div>
 						<div class = "row">
 				        	<div class="well col-md-7 col-md-offset-1 textDark">
-				        		<h3>All weeks</h3>
+				        		<h3>All periods</h3>
 					        	<table class="table table-bordered" id="keywords">
 									<thead>
 									<tr class="week">
-										<th>Week No.</th>
-										<th>Year</th>
+										<th>Period No.</th>
+										<th>Season</th>
                                         <th>Start Date</th>
                                         <th>Pick Deadline</th>
                                         <th>End Date</th>
@@ -108,13 +110,9 @@
 									<tbody>
 									';
 							foreach ($weekfetch as $rs) {
-							    $stDate = date_format(date_create($rs['lms_week_start']),'d-m-Y');
-							    $enDate = date_format(date_create($rs['lms_week_end_pick']),'d-m-Y');
-							    $dlDate = date_format(date_create($rs['lms_week_deadline']),'d-m-Y');
-							    
-							    
-							    
-							    
+							    $stDate = date_format(date_create($rs['lms_week_start']),'d-M-Y');
+							    $enDate = date_format(date_create($rs['lms_week_end']),'d-M-Y');
+							    $dlDate = date_format(date_create($rs['lms_week_deadline']),'d-M-Y');
 								$html .='
 									<tr>
 										<td>' . $rs['lms_week'] . '</td>

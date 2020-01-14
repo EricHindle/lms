@@ -73,7 +73,7 @@
 			            	<div class="col-sm-4">
 			                    <div class="tile teal">
 			                    	<a href="'.$myPath.'struct/week/week-main.php">
-			                    		<h3 class="title" >Weeks</h3>
+			                    		<h3 class="title" >Pick Periods</h3>
 			                            <p>Calendar Management</p>
 			                        </a>	
 			          			</div>

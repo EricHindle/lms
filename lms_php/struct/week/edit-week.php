@@ -17,25 +17,21 @@
 	        }
 	        else
 	        {
-	            if (isset($_POST['infoid']))
+	            if (isset($_POST['weekid']))
 	            {
-	                $id = $_POST['infoid'];
+	                $id = $_POST['weekid'];
 	                if($id)
 	                {
 
 	                	$html="";
-	                	$infosql = "SELECT lms_info_id, lms_info_value FROM lms_info WHERE lms_info_id = :id";
-	                	$infoquery = $mypdo->prepare($infosql);
-	                	$infoquery->execute(array(':id' => $id));
-	                	$infocount = $infoquery->rowCount();
+	                	$weeksql = "SELECT * FROM lms_week WHERE lms_week_no = :id";
+	                	$weekquery = $mypdo->prepare($weeksql);
+	                	$weekquery->execute(array(':id' => $id));
+	                	$weekcount = $weekquery->rowCount();
 
-	                	if( $infocount>0){
+	                	if( $weekcount>0){
 							$key = $formKey->outputKey();
-							$infofetch=$infoquery->fetch(PDO::FETCH_ASSOC);
-							$isactive = "";
-							if($infofetch["lms_info_active"] == 1) {
-							    $isactive = "checked";
-							}
+							$weekfetch=$weekquery->fetch(PDO::FETCH_ASSOC);
 							echo '
 								<!doctype html>
 								<html>
@@ -44,7 +40,7 @@
 									    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
 									    <meta charset="UTF-8">
 									    
-									    <title>Edit info</title>
+									    <title>Edit Pick Period</title>
 									    
 									    <meta name="viewport" content="width=device-width, initial-scale=1">
 									    <link rel="stylesheet" href="'.$myPath.'css/bootstrap.min.css">
@@ -61,27 +57,37 @@
 									        <div class="container">
 									        	<div class="row">
 									                <div class="col-md-8">
-									                    <h1><strong>Edit Configuration Value</strong></h1>
+									                    <h1><strong>Edit Pick Period</strong></h1>
 									                </div>
 									      		</div>
 									        	<div class = "row">';
 
-								$html .= '			<div class="well col-md-6 col-md-offset-1 textDark">
-									                	<form class="form-horizontal" role="form" name ="edit" method="post" action="process-edit-info.php">';
+								$html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
+									                	<form class="form-horizontal" role="form" name ="edit" method="post" action="process-edit-week.php">';
 								$html .= $key;
-								$html .= '					<h3 class="text-center">Edit value</h3>
+								$html .= '					<h3 class="text-center">Period Dates</h3>
 									                    	<br>
 									                    	<div class="form-group">
-																<label class="col-sm-3" for="name">Value name:</label>
-																<div class="col-sm-3">
-																 	<p class="form-control-static" name="name">'.$infofetch['lms_info_id'].'</p>
+																<label class="col-sm-2" for="season">Season:</label>
+																<div class="col-sm-2">
+																 	<p class="form-control-static" name="season" id="season">'.$weekfetch['lms_year'].'</p>
 																</div>
+																<label class="col-sm-2" for="period">Period:</label>
+																<div class="col-sm-2">
+																 	<p class="form-control-static" name="period" id="period">'.$weekfetch['lms_week'].'</p>
+																</div>
+
 															</div>
 
 										                    <div class="form-group">
 										                    	
-                                                               <label for="infoname">New value:</label>
-                    					                       <input type="text" class="form-control" id="infovalue" name="infovalue" value="'.$infofetch['lms_info_value'].'"><br>
+                                                               <label for="startdate">New start date:</label>
+                    					                       <input type="text" class="form-control" id="startdate" name="startdate" value="'.date_format(date_create($weekfetch['lms_week_start']),'Y-m-d').'" placeholder="yyyy-mm-dd"><br>
+                                                               <label for="deadline">New deadline:</label>
+                    					                       <input type="text" class="form-control" id="deadline" name="deadline" value="'.date_format(date_create($weekfetch['lms_week_deadline']),'Y-m-d').'" placeholder="yyyy-mm-dd"><br>
+                                                               <label for="enddate">New end date:</label>
+                    					                       <input type="text" class="form-control" id="enddate" name="enddate" value="'.date_format(date_create($weekfetch['lms_week_end']),'Y-m-d').'" placeholder="yyyy-mm-dd"><br>
+
 															   <input type= "hidden" name= "id" value="'.$id.'" />
 										                    </div>
 										                    <div class="form-group">
@@ -94,7 +100,7 @@
 										        <div class="row">
 													<br>
 													<div class="col-xs-6">
-														<a href="'.$myPath.'struct/info/info-main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
+														<a href="'.$myPath.'struct/week/week-main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
 														<br>
 													</div>
 												</div>
@@ -107,7 +113,7 @@
 	                	} else {
 	                		$html.= "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='info-main.php';
+										window.location.href='week-main.php';
 									</script>";
 	                	}
 	                	
@@ -116,7 +122,7 @@
 	                } else {
 	                	echo "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='info-main.php';
+										window.location.href='week-main.php';
 									</script>";
 	            	}
 	            } else {

@@ -17,38 +17,43 @@
 	        }
 	        else
 	        {
-	            if (isset($_POST['id'], $_POST['infovalue']))
+	            if (isset($_POST['id'], $_POST['startdate'], $_POST['enddate'], $_POST['deadline'] ))
 	            {
 	                $id = $_POST['id'];
-	                $infovalue = $_POST['infovalue'];
-	                if($id && $infovalue)
+	                $startdate = sanitize_datetime($_POST['startdate']);
+	                $enddate = sanitize_datetime($_POST['enddate']);
+	                $deadline = sanitize_datetime($_POST['deadline']);
+	                
+	                if($id && $startdate && $enddate && $deadline)
 	                {
 	                	$html="";
 
-	                	$infosql = "SELECT lms_info_id, lms_info_value FROM lms_info WHERE lms_info_id = :id LIMIT 1";
-						$infoquery = $mypdo->prepare($infosql);
-						$infoquery->bindParam(':id', $id);
-						$infoquery->execute();
-						$infocount = $infoquery->rowCount();
-						if ($infocount>0) {
+	                	$weeksql = "SELECT lms_week_no FROM lms_week WHERE lms_week_no = :id LIMIT 1";
+						$weekquery = $mypdo->prepare($weeksql);
+						$weekquery->bindParam(':id', $id);
+						$weekquery->execute();
+						$weekcount = $weekquery->rowCount();
+						if ($weekcount>0) {
 								date_default_timezone_set('Europe/London');
 								$phptime = time();
 								$mysqltime = date("Y-m-d H:i:s", $phptime);
-								$upsql = "UPDATE lms_info SET lms_info_value = :infovalue WHERE lms_info_id = :id";
+								$upsql = "UPDATE lms_week SET lms_week_start = :startdt, lms_week_deadline = :deadln, lms_week_end = :enddt  WHERE lms_week_no = :id";
 								$upquery = $mypdo->prepare($upsql);
 								$upquery->bindParam(':id', $id);
-								$upquery->bindParam(':infovalue', $infovalue);
+								$upquery->bindParam(':startdt', $startdate);
+								$upquery->bindParam(':deadln', $deadline);
+								$upquery->bindParam(':enddt', $enddate);
 								$upquery->execute();
 								$upcount = $upquery->rowCount();
 								if( $upcount >0){
 									$html.= "<script>
 												alert('Details updated successfully.');
-												window.location.href='info-main.php';
+												window.location.href='week-main.php';
 											</script>";
 			                	} else {
 			                		$html.= "<script>
 										alert('Details not altered.');
-										window.location.href='info-main.php';
+										window.location.href='week-main.php';
 									</script>";
 								}
 								
@@ -56,7 +61,7 @@
 						}else{
 							$html.= "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='info-main.php';
+										window.location.href='week-main.php';
 									</script>";
 						}
 	                	
@@ -64,8 +69,8 @@
 			            
 	                } else {
 	                	echo "<script>
-										alert('There was a problem. Please check details and try again.');
-										window.location.href='info-main.php';
+										alert('Missing/invalid values. Please check details and try again.');
+										window.location.href='week-main.php';
 									</script>";
 	            	}
 	            } else {
