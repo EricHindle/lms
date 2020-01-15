@@ -23,10 +23,11 @@
 	                if($id)
 	                {
 	                	$html="";
-	                	$teamsql = "SELECT lms_team_name, lms_team_id, lms_team_active FROM lms_team WHERE lms_team_active = 1";
-	                	$teamquery = $mypdo->prepare($teamsql);
-	                	$teamquery->execute();
-	                	$teamcount = $teamquery->rowCount();
+	                	$matchsql = "SELECT lms_match_id, lms_match_date, lms_match_result, lms_team_name FROM v_lms_match WHERE lms_match_weekno = :matchwk";
+	                	$matchquery = $mypdo->prepare($matchsql);
+	                	$matchquery->bindParam(':matchwk',$id);
+	                	$matchquery->execute();
+	                	$matchcount = $matchquery->rowCount();
 	                	
 	                	$weeksql = "SELECT * FROM lms_week WHERE lms_week_no = :id LIMIT 1";
 	                	$weekquery = $mypdo->prepare($weeksql);
@@ -36,19 +37,18 @@
 	                	
 	                	$week = 0;
 	                	$year = 0;	
-                        $kodate = '';
+ ;
 	                	if( $weekcount>0){
 	                	    $key = $formKey->outputKey();
 	                	    $weekfetch=$weekquery->fetch(PDO::FETCH_ASSOC);
 	                	    $week = $weekfetch['lms_week'];
 	                	    $year = $weekfetch['lms_year'];
-	                	    $md = date_create($weekfetch['lms_week_end']);
-	                	    $kodate = date_format($md,'Y-m-d');
+
 	                	}
 	                	
-	                	if( $teamcount>0){
+	                	if( $matchcount>0){
 							$key = $formKey->outputKey();
-							$teamfetch=$teamquery->fetchAll(PDO::FETCH_ASSOC);
+							$matchfetch=$matchquery->fetchAll(PDO::FETCH_ASSOC);
 							echo '
 								<!doctype html>
 								<html>
@@ -57,7 +57,7 @@
 									    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
 									    <meta charset="UTF-8">
 									    
-									    <title>Generate Matches</title>
+									    <title>Enter Results</title>
 									    
 									    <meta name="viewport" content="width=device-width, initial-scale=1">
 									    <link rel="stylesheet" href="'.$myPath.'css/bootstrap.min.css">
@@ -74,43 +74,58 @@
 									        <div class="container">
 									        	<div class="row">
 									                <div class="col-md-8">
-									                    <h1><strong>Generate Matches for Period '.$year.'/'.$week.'</strong></h1>
+									                    <h1><strong>Enter Results for Period '.$year.'/'.$week.'</strong></h1>
 									                </div>
 									      		</div>
 									        	<div class = "row">';
 
 								$html .= '			<div class="well col-md-8 col-md-offset-1 textDark">
-									                	<form class="form-horizontal" role="form" name ="gen" method="post" action="process-gen-match.php">';
+									                	<form class="form-horizontal" role="form" name ="gen" method="post" action="process-results.php">';
 								$html .= $key;
-								$html .= '					<h3 class="text-center">Matches</h3>
+								$html .= '					<h3 class="text-center">Results</h3>
      <div class="form-group">
 					        	<table class="table table-bordered" id="matchtable">
 									<thead>
 									<tr class="match">
-										<th>Select</th>
                                         <th>Team</th>
                                         <th>Match Date</th>
+                                        <th>Result</th>
 									</tr>
 									</thead>
 									<tbody>
 									';
 
-							foreach ($teamfetch as $rs) {
-							    $matchsql = "SELECT * FROM lms_match WHERE lms_match_weekno = :id and lms_match_team = :team LIMIT 1";
-							    $matchquery = $mypdo->prepare($matchsql);
-							    $matchquery->bindParam(':id', $id);
-							    $matchquery->bindParam(':team', $rs['lms_team_id']);
-							    $matchquery->execute();
-							    $matchcount = $matchquery->rowCount();
-							    if ($matchcount==0){
-							    
+							foreach ($matchfetch as $rs) {
+							    $wresult = '';
+							    $lresult = '';
+							    $dresult = '';
+							    $nresult = '';
+							    switch($rs['lms_match_result']) {
+							        case 'w':
+							            $wresult = 'selected';
+							            break;
+							        case 'l':
+							            $lresult = 'selected';
+							            break;
+							        case 'd':
+							            $dresult = 'selected';
+							            break;
+							        case '':
+							            $nresult = 'selected';
+							            break;
+							    }
+							    $md = date_create($matchfetch['lms_match_date']);
+							    $kodate = date_format($md,'d-M-Y');
 								$html .='
 									<tr>
-										<td><input type="checkbox" style="margin-left:20px;" name="add-'.$rs['lms_team_id'].'" id="add-'.$rs['lms_team_id'].'" value="true" checked ></td>
-                                        <td>' . $rs['lms_team_name'] . '</td>
-										<td><input type="text" class="form-control" id="mdt-'.$rs['lms_team_id'].'" name="mdt-'.$rs['lms_team_id'].'" value="'.$kodate.'" placeholder="yyyy-mm-dd"></td>
-									</tr>';
-							    }
+                                        <td>'.$rs['lms_team_name'].'</td>
+										<td>'.$kodate.'</td>
+                                       <td><select class="form-control" name="res-'.$rs['lms_match_id'].'" id="res-'.$rs['lms_match_id'].'">
+                                            <option '.$wresult.' value="w">Win</option>
+                                            <option '.$dresult.' value="d">Draw</option>
+                                            <option '.$lresult.' value="l">Lose</option>
+                                            <option '.$nresult.' value="">No result</option>
+                                       </select></tr>';
 							}
 							$html .='
 									</tbody>
@@ -141,7 +156,7 @@
 									            ';
 	                	} else {
 	                		$html.= "<script>
-										alert('There was a problem. Please check details and try again.');
+										alert('There are no matches for this period.');
 										window.location.href='match-main.php';
 									</script>";
 	                	}

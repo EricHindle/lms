@@ -60,7 +60,7 @@
                                         <th>Total Players</th>
                                         <th>Active Players</th>
                                         <th>My Status</th>
-                                        <th>Current Pick</th>
+                                        <th>Current Selection</th>
 									</tr>
 									</thead>
 									<tbody>
@@ -73,11 +73,15 @@
 							    $pickquery->bindParam(':game', $rs['lms_game_id'],PDO::PARAM_INT);
 							    $pickquery->bindParam(':matchwk',$matchwk);
 							    $pickquery->execute();
-							   
-							    $currentpick = '';
-							    if ($pickquery->rowCount() > 0){
-							        $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
-							        $currentpick = $pickfetch['lms_team_name'];
+							    if($rs['lms_game_player_status'] == 'out'){
+    							    $currentpick = '';
+							    }else{
+    							    if ($pickquery->rowCount() > 0){
+    							        $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
+    							        $currentpick = $pickfetch['lms_team_name'];
+    							    }else{
+    							        $currentpick = '(waiting)';
+    							    }
 							    }
 								$html .='
 									<tr>
@@ -100,7 +104,7 @@
 			            	<div class="col-sm-4">
 			                    <div class="tile red">
 			                    	<a href="'.$myPath.'trackers/sv/sv-main.php">
-			                    		<h3 class="title" >Weekly Picks</h3>
+			                    		<h3 class="title" >Team Selection</h3>
 			                        </a>	
 			          			</div>
 			                </div>
