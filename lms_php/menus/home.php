@@ -53,7 +53,7 @@
 			                </div>
 			                <div class="col-sm-4">
 			                    <div class="tile green">
-			                    	<a href="'.$myPath.'trackers/focus/focus-main.php">
+			                    	<a href="'.$myPath.'struct/game/game-main.php">
 			                    		<h3 class="title" >Games</h3>
 			                        </a>	
 			          			</div>

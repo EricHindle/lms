@@ -1,6 +1,7 @@
 <?php
 $currentlevel = $_SESSION['retaccess'];
 $levelneeded = 999;
+
 echo '
 		   <section>
 				<nav role="navigation" class="navbar navbar-default navbar-fixed-top">
@@ -20,7 +21,7 @@ echo '
 							<ul class="nav navbar-nav">
 								<li><a href="' . $myPath . 'menus/home.php">Home</a></li>
 								<li><a href="' . $myPath . 'trackers/sv/sv-main.php">Picks</a></li>
-								<li><a href="' . $myPath . 'trackers/focus/focus-main.php">Games</a></li>
+								<li><a href="' . $myPath . 'struct/game/game-main.php">Games</a></li>
 								
 
 					';
@@ -31,11 +32,11 @@ if ($currentlevel == $levelneeded) {
 
 					';
 }
-/////////////////////////////////////////////////////////////////////////////////////
 
 echo '
 							</ul>
 							<ul class="nav navbar-nav navbar-right">
+                                <li><a href="#">Period: ' . $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'] . '</a></li>
 								<li><a href="#"><span class="glyphicon glyphicon-user"></span> ' . $_SESSION['nickname'] . '</a></li>
 								<li><a href="' . $myPath . 'logout.php"><span class="glyphicon glyphicon-log-in"></span> Sign out</a></li>
 							</ul>
