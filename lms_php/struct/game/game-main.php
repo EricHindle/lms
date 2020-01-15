@@ -30,11 +30,6 @@
 
 			<body>';
 				include $myPath.'globNAV.php';
-				$gamesql = "SELECT * FROM v_lms_player_games WHERE lms_player_id = :player ORDER BY lms_game_name ASC";
-				$gamequery = $mypdo->prepare($gamesql);
-				$gamequery->bindParam(':player', $_SESSION['user_id'],PDO::PARAM_INT);
-				$gamequery->execute();
-				$gamefetch = $gamequery->fetchAll(PDO::FETCH_ASSOC);
 		$html .= '
 				<section id="homeSection">
 			    <br><br>
@@ -45,44 +40,6 @@
 			                    <br>
 			                </div>
 			            </div>
-			            <div class="row">
-			            	<div class="well col-md-10 col-md-offset-1 textDark">
-				        		<h3>My Games</h3>
-					        	<table class="table table-bordered" id="keywords">
-									<thead>
-									<tr class="game">
-										<th>Name</th>
-										<th>Start Wk</th>
-                                        <th>Status</th>
-                                        <th>Active</th>
-									</tr>
-									</thead>
-									<tbody>
-									';
-							foreach ($gamefetch as $rs) {
-							    $isactive = '';						    
-							    switch($rs['lms_game_still_active']) {
-							        case 0:
-							            $isactive = 'no';
-							            break;
-							        case 1:
-							            $isactive = 'yes';
-						                break;
-							    }
-
-								$html .='
-									<tr>
-										<td>' . $rs['lms_game_name'] . '</td>
-										<td>' . $rs['lms_game_start_wkno'] . '</td>
-                                        <td>' . $rs['lms_game_status'] . '</td>
-										<td>' . $isactive . '</td>
-									</tr>';
-							}
-							$html .='
-									</tbody>
-								</table>
-							</div>
-						</div>
 			            <div class="row">
 			            	<div class="col-sm-4">
 			                    <div class="tile red">

@@ -9,6 +9,14 @@
 	if (isset($_SESSION['svsec'])) {
 		unset($_SESSION['svsec']);
 	}
+	$matchwk = $_SESSION['currentseason'].$_SESSION['currentweek'];
+	$picksql = "SELECT lms_team_name FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game and lms_match_weekno = :matchwk LIMIT 1";
+	$gamesql = "SELECT * FROM v_lms_player_games WHERE lms_player_id = :player ORDER BY lms_game_name ASC";
+	$gamequery = $mypdo->prepare($gamesql);
+	$gamequery->bindParam(':player', $_SESSION['user_id'],PDO::PARAM_INT);
+	$gamequery->execute();
+	$gamefetch = $gamequery->fetchAll(PDO::FETCH_ASSOC);
+	$html = '';
 	if(login_check($mypdo) == true) {
 		echo '
 		<!doctype html>
@@ -35,14 +43,59 @@
 			        <div class="container">
 			            <div class="row">
 			                <div class="col-md-12">
-			                    <h1><strong>Welcome ';
-			$arr=explode(' ', trim($_SESSION['nickname']));
-			$firstName=sanitize_paranoid_string($arr[0]);
-			if($firstName){echo $firstName;}
-								echo '</strong></h1>
+			                    <h1><strong>Welcome '. $_SESSION['nickname']. '</strong></h1>
 			                    <br>
 			                </div>
-			            </div>
+			            </div>';
+								
+			$html .='            <div class="row">
+			            	<div class="well col-md-10  textDark">
+				        		<h3>'. $_SESSION['nickname']. ' Games</h3>
+					        	<table class="table table-bordered" id="keywords">
+									<thead>
+									<tr class="game">
+										<th>Name</th>
+										<th>Start Wk</th>
+                                        <th>Game Status</th>
+                                        <th>Total Players</th>
+                                        <th>Active Players</th>
+                                        <th>My Status</th>
+                                        <th>Current Pick</th>
+									</tr>
+									</thead>
+									<tbody>
+									';
+		
+							foreach ($gamefetch as $rs) {
+							    
+							    $pickquery = $mypdo->prepare($picksql);
+							    $pickquery->bindParam(':player', $_SESSION['user_id'],PDO::PARAM_INT);
+							    $pickquery->bindParam(':game', $rs['lms_game_id'],PDO::PARAM_INT);
+							    $pickquery->bindParam(':matchwk',$matchwk);
+							    $pickquery->execute();
+							   
+							    $currentpick = '';
+							    if ($pickquery->rowCount() > 0){
+							        $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
+							        $currentpick = $pickfetch['lms_team_name'];
+							    }
+								$html .='
+									<tr>
+										<td>' . $rs['lms_game_name'] . '</td>
+										<td>' . $rs['lms_game_start_wkno'] . '</td>
+                                        <td>' . $rs['lms_game_status'] . '</td>
+                                        <td>' . $rs['lms_game_total_players'] . '</td>
+                                        <td>' . $rs['lms_game_still_active'] . '</td>
+                                        <td>' . $rs['lms_game_player_status'] . '</td>
+                                        <td>' . $currentpick . '</td>
+									</tr>';
+							}
+							$html .='
+									</tbody>
+								</table>
+							</div>
+						</div>
+
 			            <div class="row">
 			            	<div class="col-sm-4">
 			                    <div class="tile red">
@@ -60,8 +113,6 @@
 			                </div>
 			      		</div>
 			      		<div class="row">
-			';
-			echo '
 			                <div class="col-sm-4">
 			                    <div class="tile orange">
 			                    	<a href="'.$myPath.'menus/reports.php">
@@ -77,6 +128,7 @@
 	</html>
 
 		';
+							echo $html;
 	} else { 
 	        header('Location: '.$myPath.'index.php?error=1');
 	}
