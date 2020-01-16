@@ -1,5 +1,7 @@
 <?php
-date_default_timezone_set('Europe/London');
+
+    require 'db_connect.php';
+    date_default_timezone_set('Europe/London');
 
 function isSecure()
 {
@@ -224,7 +226,7 @@ function sanitize_location($string, $min = '', $max = '')
     return $string;
 }
 
-function get_current_period($phptime, $mypdo)
+function get_current_period($phptime,$mypdo)
 {
     $mytime = date("Y-m-d", $phptime);
     $periodsql = "SELECT period FROM periods WHERE startdate <= :mydate AND stopdate >= :mydate LIMIT 1";
@@ -242,8 +244,9 @@ function get_current_period_start()
     return date("Y-m", $phptime) . '-01 00:00:00';
 }
 
-function get_global_value($valuename, $mypdo)
+function get_global_value($valuename)
 {
+    global $mypdo;
     $infosql = "SELECT lms_info_value FROM lms_info WHERE lms_info_id = :valname";
     $infoquery = $mypdo->prepare($infosql);
     $infoquery->bindParam(':valname', $valuename);

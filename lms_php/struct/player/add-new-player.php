@@ -4,6 +4,7 @@
 	require $myPath.'includes/db_connect.php';
     require $myPath.'includes/functions.php';
     require $myPath.'includes/formkey.class.php';
+    require $myPath.'includes/mail-util.php';
 
 	sec_session_start();
 	$formKey = new formKey();
@@ -61,9 +62,14 @@
 
 					            $stmtadduser->execute();
 					            $added = $stmtadduser->rowCount();
-								$html.= "<script>
+					            $body = 'A new LMS account has been created for "'.$screenname.'" at email address: ' . $email;
+					            $bcclist = '';
+					            if ($added == 1){
+					                sendmail($email, get_global_value('create_email_subject'), $body, $fname.' '.$sname, $bcclist);
+					            }
+								$html .= "<script>
 											alert('Account added.');
-											window.location.href='.$myPath.'index.php';
+											window.location.href='".$myPath."index.php';
 										</script>";
 
 	                	}

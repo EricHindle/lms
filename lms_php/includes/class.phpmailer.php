@@ -1,4 +1,5 @@
 <?php
+require 'class.smtp.php';
 /**
  * PHPMailer - PHP email creation and transport class.
  * PHP Version 5
