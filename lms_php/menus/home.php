@@ -103,7 +103,7 @@
 			            <div class="row">
 			            	<div class="col-sm-4">
 			                    <div class="tile red">
-			                    	<a href="'.$myPath.'trackers/sv/sv-main.php">
+			                    	<a href="'.$myPath.'struct/picks/pick-main.php">
 			                    		<h3 class="title" >Team Selection</h3>
 			                        </a>	
 			          			</div>

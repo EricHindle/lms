@@ -43,7 +43,9 @@
 			            <div class="row">
 			            	<div class="col-sm-4">
 			                    <div class="tile red">
-		                    		<h3 class="title" >Join a Game</h3>
+                                    <a href="'.$myPath.'struct/game/join-game.php">
+		                    		    <h3 class="title" >Join a Game</h3>
+                                    </a>
 			          			</div>
 			                </div>
 			                <div class="col-sm-4">
