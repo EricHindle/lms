@@ -23,7 +23,7 @@
 			    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
 			    <meta charset="UTF-8">
 			    
-			    <title>LBO Admin</title>
+			    <title>Team Admin</title>
 			    
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
 			    <link rel="stylesheet" href="'.$myPath.'css/bootstrap.min.css">

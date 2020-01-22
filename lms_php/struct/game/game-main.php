@@ -2,7 +2,9 @@
 	$myPath='../../';
 	require $myPath.'includes/db_connect.php';
     require $myPath.'includes/functions.php';
+    require $myPath.'includes/formkey.class.php';
 	sec_session_start(); 
+	$formKey = new formKey();
 	if (isset($_SESSION['svid'])) {
 		unset($_SESSION['svid']);
 	}
@@ -10,7 +12,13 @@
 		unset($_SESSION['svsec']);
 	}
 	if(login_check($mypdo) == true) {
+	    $gamesql = "SELECT lms_game_id, lms_game_name FROM lms_game WHERE lms_game_manager = :manager and lms_game_status = 'starting' ORDER BY lms_game_start_wkno, lms_game_name";
+	    $gamequery = $mypdo->prepare($gamesql);
+	    $gamequery->bindParam(":manager", $_SESSION['user_id'], PDO::PARAM_INT);
+	    $gamequery->execute();
+	    $gamefetch = $gamequery->fetchAll(PDO::FETCH_ASSOC);
 	    $html = "";
+	    $key = $formKey->outputKey();
 	echo '
       <!doctype html>
 		<html>
@@ -43,19 +51,41 @@
 			            <div class="row">
 			            	<div class="col-sm-4">
 			                    <div class="tile red">
-                                    <a href="'.$myPath.'struct/game/join-game.php">
 		                    		    <h3 class="title" >Join a Game</h3>
-                                    </a>
+					                	<form role="form" name ="edit" method="post" action="process-join-game.php">';
+				$html .= $key;
+				$html .= '                  <div class="form-group " style="margin-left:24px;margin-right:24px">
+    					                        <input type="text" class="form-control" id="gamecode" name="gamecode" placeholder="game code">
+						                    </div>
+						                    <div class="form-group">
+    					                    	<br>
+    					                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+						                    </div>
+						                </form>
 			          			</div>
 			                </div>
 			                <div class="col-sm-4">
 			                    <div class="tile blue">
-		                    		<h3 class="title" >Create a Game</h3>
+                                    <a href="'.$myPath.'struct/game/create-game.php">
+                                        <h3 class="title" >Create a Game</h3>
+                                    </a>
 			          			</div>
 			                </div>
 			                <div class="col-sm-4">
 			                    <div class="tile green">
-		                    		<h3 class="title" >Manage a Game</h3>
+			                	<form class="form-horizontal" role="form" name ="editgame" method="post" action="edit-game.php">';
+		$html .= $key;
+		$html .= '					<h3 class="title">Manage Game</h3>
+				                    <div class="form-group">
+			                            <select class="form-control" id="gameid" name="gameid">';
+		foreach ($gamefetch as $myGame) {
+			$html.=						'<option value="'.$myGame['lms_game_id'].'">'.$myGame['lms_game_name'].'</option>';
+		}
+		$html .='	                    </select>
+				                    </div>
+				                    <div class="form-group">
+				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+				                    </div>
 			          			</div>
 			                </div>
 			      		</div>

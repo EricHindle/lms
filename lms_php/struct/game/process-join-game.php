@@ -116,20 +116,20 @@ if (login_check($mypdo) == true) {
                             } else {
                                 $html .= "<script>
 										alert('Game not open to new players. Please check the code and try again.');
-										window.location.href='join-game.php';
+										window.location.href='game-main.php';
 									</script>";
                             }
                         
                     } else {
                         $html .= "<script>
 										alert('You are already in this game. Please check the code and try again.');
-										window.location.href='join-game.php';
+										window.location.href='game-main.php';
 									</script>";
                     }
                 } else {
                     $html .= "<script>
 										alert('Game not found. Please check the code and try again.');
-										window.location.href='join-game.php';
+										window.location.href='game-main.php';
 									</script>";
                 }
 
