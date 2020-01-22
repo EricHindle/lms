@@ -70,7 +70,7 @@ if (login_check($mypdo) == true) {
                         $html .= '					       <h3 class="text-center">Edit Game</h3>
 								                     	    <div class="row">
 																<label class="control-label col-sm-4" for="name">Name:</label>
-																<div class="col-sm-4 form-control-static" name="name">' . $gamefetch['lms_game_name'] . '
+																<div class="col-sm-6 form-control-static" name="name">' . $gamefetch['lms_game_name'] . '
 																</div>
                                                             </div>
                                                             <div class="row">
@@ -99,6 +99,12 @@ if (login_check($mypdo) == true) {
                         $html .= '	                           </select>
 															   <input type= "hidden" name= "id" value="' . $id . '" />
 										                    </div>
+<div class="row">
+<br>
+                                           <label for="iscancel">&nbsp Cancel this game</label>
+                                           <input type="checkbox" style="margin-left:20px;" name="iscancel" id="iscancel" value="true">
+</div>
+
 										                    <div class="form-group">
 										                    	<br>
 										                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
