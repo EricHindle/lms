@@ -32,7 +32,7 @@ if (login_check($mypdo) == true) {
 
                         $gamecode = generate_game_code();
                         $sqladdgame = "INSERT INTO lms_game (lms_game_start_wkno, lms_game_name, lms_game_status, lms_game_week_count, lms_game_total_players, lms_game_still_active, lms_game_manager, lms_game_code) 
-                                                    VALUES (:startwkno, :gamename, 'starting', 0, 0, 0, :playerid, :gamecode)";
+                                                    VALUES (:startwkno, :gamename, 1, 0, 0, 0, :playerid, :gamecode)";
                         $stmtaddgame = $mypdo->prepare($sqladdgame);
                         $stmtaddgame->bindParam(":startwkno", $gamestartweek);
                         $stmtaddgame->bindParam(":gamename", $gamename);

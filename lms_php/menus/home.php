@@ -73,7 +73,7 @@
 							    $pickquery->bindParam(':game', $rs['lms_game_id'],PDO::PARAM_INT);
 							    $pickquery->bindParam(':matchwk',$matchwk);
 							    $pickquery->execute();
-							    if($rs['lms_game_player_status'] == 'out'){
+							    if($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3){
     							    $currentpick = '';
 							    }else{
     							    if ($pickquery->rowCount() > 0){
@@ -87,10 +87,10 @@
 									<tr>
 										<td>' . $rs['lms_game_name'] . '</td>
 										<td>' . $rs['lms_game_start_wkno'] . '</td>
-                                        <td>' . $rs['lms_game_status'] . '</td>
+                                        <td>' . $rs['lms_game_status_text'] . '</td>
                                         <td>' . $rs['lms_game_total_players'] . '</td>
                                         <td>' . $rs['lms_game_still_active'] . '</td>
-                                        <td>' . $rs['lms_game_player_status'] . '</td>
+                                        <td>' . $rs['lms_game_player_status_text'] . '</td>
                                         <td>' . $currentpick . '</td>
 									</tr>';
 							}
@@ -104,7 +104,7 @@
 			            	<div class="col-sm-4">
 			                    <div class="tile red">
 			                    	<a href="'.$myPath.'struct/picks/pick-main.php">
-			                    		<h3 class="title" >Team Selection</h3>
+			                    		<h3 class="title" >Team Selections</h3>
 			                        </a>	
 			          			</div>
 			                </div>
@@ -116,16 +116,6 @@
 			          			</div>
 			                </div>
 			      		</div>
-			      		<div class="row">
-			                <div class="col-sm-4">
-			                    <div class="tile orange">
-			                    	<a href="'.$myPath.'menus/reports.php">
-			                    		<h3 class="title" >Reports</h3>
-			                        </a>	
-			          			</div>
-			                </div>
-			      		</div>
-			      		<br><br><br><br>
 		    	</div>
 		    </section>
 		</body>

@@ -17,7 +17,7 @@ if (login_check($mypdo) == true) {
                 if ($gameid) {
 
                     $html = "";
-                    $gamesql = "SELECT lms_game_id, lms_game_name, lms_game_manager, lms_game_status, lms_player_screen_name, lms_game_start_wkno FROM v_lms_game WHERE lms_game_id = :id";
+                    $gamesql = "SELECT lms_game_id, lms_game_name, lms_game_manager, lms_game_status, lms_game_status_text, lms_player_screen_name, lms_game_start_wkno FROM v_lms_game WHERE lms_game_id = :id";
                     $gamequery = $mypdo->prepare($gamesql);
                     $gamequery->execute(array(
                         ':id' => $gameid
@@ -38,7 +38,7 @@ if (login_check($mypdo) == true) {
                             $key = $formKey->outputKey();
 
                             $isactive = "";
-                            if ($gamefetch["lms_game_status"] == 'starting') {
+                            if ($gamefetch["lms_game_status"] == 1) {
                                 echo '
 								<!doctype html>
 								<html>

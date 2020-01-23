@@ -5,14 +5,8 @@ require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
 sec_session_start();
 $formKey = new formKey();
-if (isset($_SESSION['svid'])) {
-    unset($_SESSION['svid']);
-}
-if (isset($_SESSION['svsec'])) {
-    unset($_SESSION['svsec']);
-}
 if (login_check($mypdo) == true) {
-    $gamesql = "SELECT lms_game_id, lms_game_name FROM lms_game WHERE lms_game_manager = :manager and lms_game_status = 1 ORDER BY lms_game_start_wkno, lms_game_name";
+    $gamesql = "SELECT lms_game_id, lms_game_name FROM lms_game WHERE lms_game_manager = :manager and lms_game_status = 'starting' ORDER BY lms_game_start_wkno, lms_game_name";
     $gamequery = $mypdo->prepare($gamesql);
     $gamequery->bindParam(":manager", $_SESSION['user_id'], PDO::PARAM_INT);
     $gamequery->execute();
@@ -58,15 +52,15 @@ if (login_check($mypdo) == true) {
 			        <div class="container">
 			            <div class="row">
 			                <div class="col-md-12">
-			                    <h1><strong>Games</strong></h1>
+			                    <h1><strong>Selections</strong></h1>
 			                    <br>
 			                </div>
 			            </div>
 			            <div class="row">
 			            	<div class="col-sm-4">
 			                    <div class="tile red">
-		                    		    <h3 class="title" >Join a Game</h3>
-					                	<form role="form" name ="edit" method="post" action="process-join-game.php">';
+		                    		    <h3 class="title" >Select a Team</h3>
+					                	<form role="form" name ="select" method="post" action="process-join-game.php">';
     $html .= $key;
     $html .= '                  <div class="form-group " style="margin-left:16px;margin-right:16px">
     					                        <input type="text" class="form-control" id="gamecode" name="gamecode" placeholder="game code">

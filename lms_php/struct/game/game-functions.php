@@ -7,7 +7,7 @@ date_default_timezone_set('Europe/London');
 function add_player_to_game($gameid, $playerid)
 {
     global $mypdo;
-    $sqljoingame = "INSERT INTO lms_game_player (lms_game_id, lms_player_id, lms_game_player_status) VALUES (:gameid, :playerid, 'active')";
+    $sqljoingame = "INSERT INTO lms_game_player (lms_game_id, lms_player_id, lms_game_player_status) VALUES (:gameid, :playerid, 1)";
     $stmtjoingame = $mypdo->prepare($sqljoingame);
     $stmtjoingame->bindParam(":gameid", $gameid, PDO::PARAM_INT);
     $stmtjoingame->bindParam(":playerid", $playerid, PDO::PARAM_INT);
@@ -57,7 +57,7 @@ function remove_player_from_game($gameid, $playerid)
 {
     global $mypdo;
     $leaveok = false;
-    $sqlleavegame = "UPDATE lms_game_player SET lms_game_player_status = 'quit' WHERE lms_game_id = :gameid and lms_player_id = :playerid";
+    $sqlleavegame = "UPDATE lms_game_player SET lms_game_player_status = 3 WHERE lms_game_id = :gameid and lms_player_id = :playerid";
     $stmtleavegame = $mypdo->prepare($sqlleavegame);
     $stmtleavegame->bindParam(":gameid", $gameid, PDO::PARAM_INT);
     $stmtleavegame->bindParam(":playerid", $playerid, PDO::PARAM_INT);

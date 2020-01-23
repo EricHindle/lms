@@ -34,7 +34,7 @@
 						if ($gamecount>0) {
 						    $upsql = "";
 						    if ($iscancel == "true") {
-						        $upsql = "UPDATE lms_game SET lms_game_name = :gamename, lms_game_start_wkno = :startwk, lms_game_status = 'cancelled' WHERE lms_game_id = :id";
+						        $upsql = "UPDATE lms_game SET lms_game_name = :gamename, lms_game_start_wkno = :startwk, lms_game_status = 4 WHERE lms_game_id = :id";
 						    }else{
 						        $upsql = "UPDATE lms_game SET lms_game_name = :gamename, lms_game_start_wkno = :startwk WHERE lms_game_id = :id";
 						    }

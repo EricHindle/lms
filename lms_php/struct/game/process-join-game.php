@@ -38,7 +38,7 @@ if (login_check($mypdo) == true) {
                             $key = $formKey->outputKey();
 
                             $isactive = "";
-                            if ($gamefetch["lms_game_status"] == 'starting') {
+                            if ($gamefetch["lms_game_status"] == 1) {
                                 echo '
 								<!doctype html>
 								<html>
