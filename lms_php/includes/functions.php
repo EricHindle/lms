@@ -261,7 +261,4 @@ function bootOut($rootPath, $user = 'UNKNOWN', $page = 'UNKNOWN', $error = 'UNKN
     return header('Location: ' . $rootPath . 'index.php?error=1');
 }
 
-function generate_game_code(){
-    return "gamecd";
-}
 ?>

@@ -52,4 +52,48 @@ function add_player_to_game($gameid, $playerid)
     return $joinok;
 }
 
+
+function remove_player_from_game($gameid, $playerid)
+{
+    global $mypdo;
+    $leaveok = false;
+    $sqlleavegame = "UPDATE lms_game_player SET lms_game_player_status = 'quit' WHERE lms_game_id = :gameid and lms_player_id = :playerid";
+    $stmtleavegame = $mypdo->prepare($sqlleavegame);
+    $stmtleavegame->bindParam(":gameid", $gameid, PDO::PARAM_INT);
+    $stmtleavegame->bindParam(":playerid", $playerid, PDO::PARAM_INT);
+    $stmtleavegame->execute();
+    $leavecount = $stmtleavegame->rowCount();
+    if ($leavecount > 0) {
+        $leaveok = true;
+        $gamesql = "SELECT lms_game_id, lms_game_total_players, lms_game_still_active FROM lms_game WHERE lms_game_id = :id";
+        $gamequery = $mypdo->prepare($gamesql);
+        $gamequery->execute(array(
+            ':id' => $gameid
+        ));
+        $gamecount = $gamequery->rowCount();
+        
+        if ($gamecount > 0) {
+        
+            $gamefetch = $gamequery->fetch(PDO::FETCH_ASSOC);
+            $active = $gamefetch['lms_game_still_active'] - 1;
+            $upsql = "UPDATE lms_game SET lms_game_still_active = :active WHERE lms_game_id = :id";
+            $upquery = $mypdo->prepare($upsql);
+            $upquery->bindParam(':id', $gameid, PDO::PARAM_INT);
+            $upquery->bindParam(':active', $active, PDO::PARAM_INT);
+            $upquery->execute();
+        }
+    }
+    return $leaveok;
+}
+
+function generate_game_code(){
+    $allchars = "abcdefghijklmnopqrstuvwxyz0123456789";
+    $randstr = str_shuffle($allchars);
+    $gamecode ="";
+    for($i=1; $i<7; $i++){
+        $gamecode .= substr($randstr,0,1);
+        $randstr = str_shuffle($randstr);
+    }
+    return $gamecode;
+}
 ?>

@@ -17,12 +17,20 @@ if (login_check($mypdo) == true) {
     $gamequery->bindParam(":manager", $_SESSION['user_id'], PDO::PARAM_INT);
     $gamequery->execute();
     $gamefetch = $gamequery->fetchAll(PDO::FETCH_ASSOC);
+    
     $weeksql = "SELECT lms_week_no, lms_week, lms_week, lms_week_start FROM lms_week WHERE lms_week > :week and lms_year = :season";
     $weekquery = $mypdo->prepare($weeksql);
     $weekquery->bindParam(":week", $_SESSION['currentweek'], PDO::PARAM_INT);
     $weekquery->bindParam(":season", $_SESSION['currentseason'], PDO::PARAM_INT);
     $weekquery->execute();
     $weekfetch = $weekquery->fetchAll(PDO::FETCH_ASSOC);
+    
+    $mygamessql = "SELECT lms_game_id, lms_game_id, lms_game_name FROM v_lms_player_games WHERE lms_player_id = :player and lms_game_player_status = 'active' ORDER BY lms_game_name";
+    $mygamesquery = $mypdo->prepare($mygamessql);
+    $mygamesquery->bindParam(":player", $_SESSION['user_id'], PDO::PARAM_INT);
+    $mygamesquery->execute();
+    $mygamesfetch = $mygamesquery->fetchAll(PDO::FETCH_ASSOC);
+    
     $html = "";
     $key = $formKey->outputKey();
     echo '
@@ -70,8 +78,30 @@ if (login_check($mypdo) == true) {
 						                </form>
 			          			</div>
 			                </div>
+
+			            	<div class="col-sm-4">
+			                    <div class="tile orange">
+			                	<form class="form-horizontal" role="form" name ="editgame" method="post" action="process-leave-game.php">';
+    $html .= $key;
+    $html .= '					<h3 class="title">Leave a Game</h3>
+				                    <div class="form-group" style="margin-left:16px;margin-right:16px">
+			                            <select class="form-control" id="gameid" name="gameid">';
+    foreach ($mygamesfetch as $myGame) {
+        $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
+    }
+    $html .= '	                    </select>
+				                    </div>
+				                    <div class="form-group" style="margin-left:16px;margin-right:16px">
+                                        <br>
+				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+				                    </div>
+                                    </form>
+			          			</div>
+			                </div>
+                        </div>
+                        <div class="row">
 			                <div class="col-sm-4">
-			                    <div class="tile blue">
+			                    <div class="tile teal">
                                     <h3 class="title" >Create a Game</h3>
                                     <form class="form-horizontal" role="form" name ="addteam" method="post" action="add-game.php">';
     $html .= $key;
@@ -110,6 +140,7 @@ if (login_check($mypdo) == true) {
                                         <br>
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
 				                    </div>
+                                    </form>
 			          			</div>
 			                </div>
 			      		</div>
