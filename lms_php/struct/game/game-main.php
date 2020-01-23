@@ -5,12 +5,6 @@ require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
 sec_session_start();
 $formKey = new formKey();
-if (isset($_SESSION['svid'])) {
-    unset($_SESSION['svid']);
-}
-if (isset($_SESSION['svsec'])) {
-    unset($_SESSION['svsec']);
-}
 if (login_check($mypdo) == true) {
     $gamesql = "SELECT lms_game_id, lms_game_name FROM lms_game WHERE lms_game_manager = :manager and lms_game_status = 1 ORDER BY lms_game_start_wkno, lms_game_name";
     $gamequery = $mypdo->prepare($gamesql);
@@ -95,7 +89,7 @@ if (login_check($mypdo) == true) {
                                         <br>
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
 				                    </div>
-                                    </form>
+                                 </form>
 			          			</div>
 			                </div>
                         </div>

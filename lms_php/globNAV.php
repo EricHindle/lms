@@ -20,7 +20,6 @@ echo '
 						<div id="navbarCollapse" class="collapse navbar-collapse">
 							<ul class="nav navbar-nav">
 								<li><a href="' . $myPath . 'menus/home.php">Home</a></li>
-								<li><a href="' . $myPath . 'struct/picks/pick-main.php">Selections</a></li>
 								<li><a href="' . $myPath . 'struct/game/game-main.php">Games</a></li>
 								
 
