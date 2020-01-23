@@ -6,7 +6,7 @@ require $myPath . 'includes/formkey.class.php';
 sec_session_start();
 $formKey = new formKey();
 $matchwk = $_SESSION['currentseason'] . $_SESSION['currentweek'];
-$picksql = "SELECT lms_team_name FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game and lms_match_weekno = :matchwk LIMIT 1";
+$picksql = "SELECT lms_team_name, lms_match_date  FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game and lms_match_weekno = :matchwk LIMIT 1";
 $gamesql = "SELECT * FROM v_lms_player_games WHERE lms_player_id = :player ORDER BY lms_game_name ASC";
 $gamequery = $mypdo->prepare($gamesql);
 $gamequery->bindParam(':player', $_SESSION['user_id'], PDO::PARAM_INT);
@@ -75,7 +75,7 @@ if (login_check($mypdo) == true) {
         } else {
             if ($pickquery->rowCount() > 0) {
                 $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
-                $currentpick = $pickfetch['lms_team_name'];
+                $currentpick = $pickfetch['lms_team_name'] . ' ('.date_format(date_create($pickfetch['lms_match_date']), 'd-M-Y').')';
             } else {
                 $currentpick = '(waiting)';
             }

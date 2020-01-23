@@ -4,6 +4,7 @@ $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
+require $myPath . 'struct/game/game-functions.php';
 
 sec_session_start();
 $formKey = new formKey();
@@ -17,11 +18,8 @@ if (login_check($mypdo) == true) {
                 if ($gamecode) {
 
                     $html = "";
-                    $gamesql = "SELECT lms_game_id, lms_game_name, lms_game_manager, lms_game_status, lms_player_screen_name, lms_game_start_wkno FROM v_lms_game WHERE lms_game_code = :id";
-                    $gamequery = $mypdo->prepare($gamesql);
-                    $gamequery->execute(array(
-                        ':id' => $gamecode
-                    ));
+
+                    $gamequery = find_game_by_code($gamecode);
                     $gamecount = $gamequery->rowCount();
 
                     if ($gamecount > 0) {

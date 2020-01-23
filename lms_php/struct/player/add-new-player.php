@@ -19,7 +19,7 @@
 	        {
 	            if (isset($_POST['email'], $_POST['password'], $_POST['fname'], $_POST['sname'], $_POST['screenname']))
 	            {
-	                $email = sanitize_email_string($_POST['email']);
+	                $email = $_POST['email'];
 	                $password = $_POST['password'];
 	                $fname = sanitize_message_string($_POST['fname']);
 	                $sname = sanitize_message_string($_POST['sname']);

@@ -52,7 +52,6 @@ function add_player_to_game($gameid, $playerid)
     return $joinok;
 }
 
-
 function remove_player_from_game($gameid, $playerid)
 {
     global $mypdo;
@@ -71,9 +70,9 @@ function remove_player_from_game($gameid, $playerid)
             ':id' => $gameid
         ));
         $gamecount = $gamequery->rowCount();
-        
+
         if ($gamecount > 0) {
-        
+
             $gamefetch = $gamequery->fetch(PDO::FETCH_ASSOC);
             $active = $gamefetch['lms_game_still_active'] - 1;
             $upsql = "UPDATE lms_game SET lms_game_still_active = :active WHERE lms_game_id = :id";
@@ -86,14 +85,34 @@ function remove_player_from_game($gameid, $playerid)
     return $leaveok;
 }
 
-function generate_game_code(){
+function generate_game_code()
+{
     $allchars = "abcdefghijklmnopqrstuvwxyz0123456789";
     $randstr = str_shuffle($allchars);
-    $gamecode ="";
-    for($i=1; $i<7; $i++){
-        $gamecode .= substr($randstr,0,1);
-        $randstr = str_shuffle($randstr);
-    }
+    $gamecode = "";
+    $gamecount = -1;
+    do {
+        for ($i = 1; $i < 7; $i ++) {
+            $gamecode .= substr($randstr, 0, 1);
+            $randstr = str_shuffle($randstr);
+        }
+        $gamequery = find_game_by_code($gamecode);
+        $gamecount = $gamequery->rowCount();
+        
+    } while ($gamecount <> 0);
+    
     return $gamecode;
+}
+
+function find_game_by_code($gamecode)
+{
+    global $mypdo;
+    $gamesql = "SELECT lms_game_id, lms_game_name, lms_game_manager, lms_game_status, lms_player_screen_name, lms_game_start_wkno FROM v_lms_game WHERE lms_game_code = :id";
+    $gamequery = $mypdo->prepare($gamesql);
+    $gamequery->execute(array(
+        ':id' => $gamecode
+    ));
+
+    return $gamequery;
 }
 ?>

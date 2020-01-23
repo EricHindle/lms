@@ -23,7 +23,7 @@
 	                $fname = sanitize_paranoid_string($_POST['fname']);
 	                $sname = sanitize_paranoid_string($_POST['sname']);
 	                $screenname = sanitize_paranoid_string($_POST['screenname']);
-	                $email = sanitize_email_string($_POST['email']);
+	                $email = $_POST['email'];
 	                $isadmin = $_POST['isadmin'];
 	                $isactive = $_POST['isactive'];
 	                if($id)

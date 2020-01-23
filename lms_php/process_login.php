@@ -10,9 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		header('Location: index.php?error=1');
 	} else {
 		if (isset($_POST['username'], $_POST['password'])) {
-			if ((strlen($_POST['username']) <= 20) && (strlen($_POST['password']) <= 20)) {
-				$username = sanitize_email_string($_POST['username']);
-				$password = sanitize_message_string($_POST['password']);
+				$username = $_POST['username'];
+				$password = $_POST['password'];
 
 				if (login($username, $password, $mypdo) == true) {
 					header('Location: menus/home.php');
@@ -20,10 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 					header('Location: index.php?error=1');
 				}
-			} else {
-
-				header('Location: index.php?error=1');
-			}
 		} else {
 
 			header('Location: index.php?error=1');

@@ -1,5 +1,4 @@
 <?php
-
 require 'includes/db_connect.php';
 require 'includes/functions.php';
 require 'includes/formkey.class.php';
@@ -8,12 +7,12 @@ sec_session_start();
 $formKey = new formKey();
 
 if (login_check($mypdo) == true) {
-	header('Location: logout.php');
+    header('Location: logout.php');
 } else {
-    
+
     $_SESSION['currentweek'] = get_global_value('currweek', $mypdo);
     $_SESSION['currentseason'] = get_global_value('currseason', $mypdo);
-	$html = '
+    $html = '
         <!DOCTYPE html>
         <html>
             <head>
@@ -33,8 +32,8 @@ if (login_check($mypdo) == true) {
                                 <img class="img-responsive center-block" src="img/logo_big.png">
                                 <form role="form" autocomplete="off" name="form1" method="post" action="process_login.php" class="form-group">
     ';
-	$html .= $formKey->outputKey();
-	$html .= '
+    $html .= $formKey->outputKey();
+    $html .= '
                                     <h1 class="text-center">Welcome</h1>
                                     <br>
                                     <div class="form-group">
@@ -56,15 +55,16 @@ if (login_check($mypdo) == true) {
 
                                 </form>
                                 ';
-	if (isset($_GET['error'])) {$html .= '<div class="alert alert-danger">There has been a problem</div>';}
-	$html .= '            </div>
+    if (isset($_GET['error'])) {
+        $html .= '<div class="alert alert-danger">There has been a problem</div>';
+    }
+    $html .= '            </div>
                         </section>
                     </div>
                 </div>
             </body>
         </html>
     ';
-	echo $html;
-
+    echo $html;
 }
 ?>

@@ -18,6 +18,7 @@ if (login_check($mypdo) == true) {
                 if ($id) {
                     $player = $_SESSION['user_id'];
                     $gamename = get_game_name($id);
+                    $weekno = $_SESSION['currentseason'] . $_SESSION['currentweek'];
                     $gps = get_game_player_status($id, $player);
 
                     $picksql = "SELECT lms_match_result,lms_week, lms_year,lms_match_date,lms_team_name FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game";
@@ -26,8 +27,15 @@ if (login_check($mypdo) == true) {
                     $pickquery->bindParam(':game', $id, PDO::PARAM_INT);
                     $pickquery->execute();
                     $pickfetch = $pickquery->fetchAll(PDO::FETCH_ASSOC);
-                    
-                   
+
+                    $availsql = "SELECT lms_match_id, lms_team_name, lms_match_date FROM lms.v_lms_match where lms_match_team in (SELECT lms_available_picks_team FROM v_lms_available_picks WHERE lms_available_picks_player_id = :player and lms_available_picks_game = :game) and lms_match_weekno = :weekno";
+                    $availquery = $mypdo->prepare($availsql);
+                    $availquery->bindParam(':player', $player, PDO::PARAM_INT);
+                    $availquery->bindParam(':game', $id, PDO::PARAM_INT);
+                    $availquery->bindParam(':weekno', $weekno);
+                    $availquery->execute();
+                    $availfetch = $availquery->fetchAll(PDO::FETCH_ASSOC);
+
                     $html = "";
                     $key = $formKey->outputKey();
                     echo '
@@ -101,24 +109,25 @@ if (login_check($mypdo) == true) {
 								</table>
 							</div>
 						</div>';
-          
+
                     if ($gps['lms_game_player_status'] == "1") {
                         $html .= '    <div class="row">
 			            	<div class="col-sm-6">
 			                    <div class="tile red">
 		                    		    <h3 class="title" >Select a Team for This Week</h3>
 					                	
-			                	<form class="form-horizontal" role="form" name ="editpick" method="post" action="edit-pick.php">';
+			                	<form class="form-horizontal" role="form" name ="editpick" method="post" action="process-pick.php">';
                         $html .= $key;
                         $html .= '
 				                    <div class="col-sm-9">
-			                            <select class="form-control" id="pickid" name="pickid">';
-                        foreach ($pickfetch as $mypick) {
-                            $html .= '<option value="' . $mypick['lms_pick_id'] . '">' . $mypick['lms_pick_name'] . '</option>';
+			                            <select class="form-control" id="matchid" name="matchid">';
+                        foreach ($availfetch as $mypick) {
+                            $html .= '<option value="' . $mypick['lms_match_id'] . '">' . $mypick['lms_team_name'] . ' ' . date_format(date_create($mypick['lms_match_date']), 'd-M-Y') . '</option>';
                         }
                         $html .= '	                    </select>
 				                    </div>
 				                    <div class="col-sm-2 col-sm-offset-1">
+                                        <input type= "hidden" name= "gameid" value="' . $id . '" />
                                         <br>
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
 				                    </div>
