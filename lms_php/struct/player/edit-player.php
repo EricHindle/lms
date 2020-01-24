@@ -19,14 +19,14 @@
 	        {
 	            if (isset($_POST['user']))
 	            {
-	                $id = sanitize_int($_POST['user']);
-	                if($id)
+	                $gameid = sanitize_int($_POST['user']);
+	                if($gameid)
 	                {
 
 	                	$html="";
 	                	$usersql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active FROM lms_player WHERE lms_player_id = :id";
 						$userquery = $mypdo->prepare($usersql);
-						$userquery->execute(array(':id' => $id));
+						$userquery->execute(array(':id' => $gameid));
 						$usercount = $userquery->rowCount();
 
 						if( $usercount>0){
@@ -103,7 +103,7 @@
                                            <label for="isadmin">&nbsp is Administrator</label>
                                            <input type="checkbox" style="margin-left:20px;" name="isactive" id="isactive" value="true" '.$isactive.' >
                                            <label for="isactive">&nbsp is Active</label>
-                                           <input type= "hidden" name= "id" value="'.$id.'" />
+                                           <input type= "hidden" name= "id" value="'.$gameid.'" />
                                      </div>
 									 <div class="form-group">
 				                    	<br>

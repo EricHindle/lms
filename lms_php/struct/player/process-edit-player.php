@@ -19,14 +19,14 @@
 	        {
 	            if (isset($_POST['id'], $_POST['email'], $_POST['fname'], $_POST['sname'], $_POST['screenname']))
 	            {
-	                $id = sanitize_int($_POST['id']);
+	                $gameid = sanitize_int($_POST['id']);
 	                $fname = sanitize_paranoid_string($_POST['fname']);
 	                $sname = sanitize_paranoid_string($_POST['sname']);
 	                $screenname = sanitize_paranoid_string($_POST['screenname']);
 	                $email = $_POST['email'];
 	                $isadmin = $_POST['isadmin'];
 	                $isactive = $_POST['isactive'];
-	                if($id)
+	                if($gameid)
 	                {
 	                	$html="";
                         $myaccess = 0;
@@ -47,7 +47,7 @@
 								$upduser->bindParam(':email', $email);
 								$upduser->bindParam(':access', $myaccess, PDO::PARAM_INT);
 								$upduser->bindParam(':active', $myactive, PDO::PARAM_INT);
-								$upduser->bindParam(':id', $id, PDO::PARAM_INT);
+								$upduser->bindParam(':id', $gameid, PDO::PARAM_INT);
 								$upduser->execute();
 								$upcount = $upduser->rowCount();
 								if( $upcount >0){

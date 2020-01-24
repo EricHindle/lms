@@ -19,14 +19,14 @@
 	        {
 	            if (isset($_POST['team']))
 	            {
-	                $id = sanitize_int($_POST['team']);
-	                if($id)
+	                $gameid = sanitize_int($_POST['team']);
+	                if($gameid)
 	                {
 
 	                	$html="";
 	                	$teamsql = "SELECT lms_team_id, lms_team_name, lms_team_active FROM lms_team WHERE lms_team_id = :id";
 	                	$teamquery = $mypdo->prepare($teamsql);
-	                	$teamquery->execute(array(':id' => $id));
+	                	$teamquery->execute(array(':id' => $gameid));
 	                	$teamcount = $teamquery->rowCount();
 
 	                	if( $teamcount>0){
@@ -95,7 +95,7 @@
                     					                       <input type="text" class="form-control" id="teamname" name="teamname" value="'.$teamfetch['lms_team_name'].'"><br>
                                                                <input type="checkbox" style="margin-left:20px;" name="isactive" id="isactive" value="true" '.$isactive.' >
                                                                <label for="isactive">&nbsp is Active</label>
-															   <input type= "hidden" name= "id" value="'.$id.'" />
+															   <input type= "hidden" name= "id" value="'.$gameid.'" />
 										                    </div>
 										                    <div class="form-group">
 										                    	<br>

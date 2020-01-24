@@ -19,17 +19,17 @@
 	        {
 	            if (isset($_POST['id'], $_POST['matchdate'], $_POST['result']))
 	            {
-	                $id = $_POST['id'];
+	                $gameid = $_POST['id'];
 	                $matchdate = sanitize_datetime($_POST['matchdate']);
 	                $result = $_POST['result'];
 	                
-	                if($id && $matchdate && $result)
+	                if($gameid && $matchdate && $result)
 	                {
 	                	$html="";
 
 	                	$matchsql = "SELECT lms_match_id FROM lms_match WHERE lms_match_id = :id LIMIT 1";
 						$matchquery = $mypdo->prepare($matchsql);
-						$matchquery->bindParam(':id', $id);
+						$matchquery->bindParam(':id', $gameid);
 						$matchquery->execute();
 						$matchcount = $matchquery->rowCount();
 						if ($matchcount>0) {
@@ -38,7 +38,7 @@
 								$mysqltime = date("Y-m-d H:i:s", $phptime);
 								$upsql = "UPDATE lms_match SET lms_match_date = :matchdt, lms_match_result = :result WHERE lms_match_id = :id";
 								$upquery = $mypdo->prepare($upsql);
-								$upquery->bindParam(':id', $id);
+								$upquery->bindParam(':id', $gameid);
 								$upquery->bindParam(':matchdt', $matchdate);
 								$upquery->bindParam(':result', $result);
 								$upquery->execute();

@@ -19,18 +19,18 @@
 	        {
 	            if (isset($_POST['id'], $_POST['startdate'], $_POST['enddate'], $_POST['deadline'] ))
 	            {
-	                $id = $_POST['id'];
+	                $gameid = $_POST['id'];
 	                $startdate = sanitize_datetime($_POST['startdate']);
 	                $enddate = sanitize_datetime($_POST['enddate']);
 	                $deadline = sanitize_datetime($_POST['deadline']);
 	                
-	                if($id && $startdate && $enddate && $deadline)
+	                if($gameid && $startdate && $enddate && $deadline)
 	                {
 	                	$html="";
 
 	                	$weeksql = "SELECT lms_week_no FROM lms_week WHERE lms_week_no = :id LIMIT 1";
 						$weekquery = $mypdo->prepare($weeksql);
-						$weekquery->bindParam(':id', $id);
+						$weekquery->bindParam(':id', $gameid);
 						$weekquery->execute();
 						$weekcount = $weekquery->rowCount();
 						if ($weekcount>0) {
@@ -39,7 +39,7 @@
 								$mysqltime = date("Y-m-d H:i:s", $phptime);
 								$upsql = "UPDATE lms_week SET lms_week_start = :startdt, lms_week_deadline = :deadln, lms_week_end = :enddt  WHERE lms_week_no = :id";
 								$upquery = $mypdo->prepare($upsql);
-								$upquery->bindParam(':id', $id);
+								$upquery->bindParam(':id', $gameid);
 								$upquery->bindParam(':startdt', $startdate);
 								$upquery->bindParam(':deadln', $deadline);
 								$upquery->bindParam(':enddt', $enddate);

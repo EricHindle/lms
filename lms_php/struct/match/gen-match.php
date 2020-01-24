@@ -19,8 +19,8 @@
 	        {
 	            if (isset($_POST['weekid']))
 	            {
-	                $id = $_POST['weekid'];
-	                if($id)
+	                $gameid = $_POST['weekid'];
+	                if($gameid)
 	                {
 	                	$html="";
 	                	$teamsql = "SELECT lms_team_name, lms_team_id, lms_team_active FROM lms_team WHERE lms_team_active = 1";
@@ -30,7 +30,7 @@
 	                	
 	                	$weeksql = "SELECT * FROM lms_week WHERE lms_week_no = :id LIMIT 1";
 	                	$weekquery = $mypdo->prepare($weeksql);
-	                	$weekquery->bindParam(':id',$id);
+	                	$weekquery->bindParam(':id',$gameid);
 	                	$weekquery->execute();
 	                	$weekcount = $weekquery->rowCount();
 	                	
@@ -98,7 +98,7 @@
 							foreach ($teamfetch as $rs) {
 							    $matchsql = "SELECT * FROM lms_match WHERE lms_match_weekno = :id and lms_match_team = :team LIMIT 1";
 							    $matchquery = $mypdo->prepare($matchsql);
-							    $matchquery->bindParam(':id', $id);
+							    $matchquery->bindParam(':id', $gameid);
 							    $matchquery->bindParam(':team', $rs['lms_team_id']);
 							    $matchquery->execute();
 							    $matchcount = $matchquery->rowCount();
@@ -117,7 +117,7 @@
 								</table>
 </div>
 										                    <div class="form-group">
-										                        <input type= "hidden" name= "weekid" value="'.$id.'" />
+										                        <input type= "hidden" name= "weekid" value="'.$gameid.'" />
 										                    </div>									                    	
 										                    <div class="form-group">
 										                    	<br>

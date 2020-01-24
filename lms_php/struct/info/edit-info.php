@@ -19,14 +19,14 @@
 	        {
 	            if (isset($_POST['infoid']))
 	            {
-	                $id = $_POST['infoid'];
-	                if($id)
+	                $gameid = $_POST['infoid'];
+	                if($gameid)
 	                {
 
 	                	$html="";
 	                	$infosql = "SELECT lms_info_id, lms_info_value FROM lms_info WHERE lms_info_id = :id";
 	                	$infoquery = $mypdo->prepare($infosql);
-	                	$infoquery->execute(array(':id' => $id));
+	                	$infoquery->execute(array(':id' => $gameid));
 	                	$infocount = $infoquery->rowCount();
 
 	                	if( $infocount>0){
@@ -82,7 +82,7 @@
 										                    	
                                                                <label for="infoname">New value:</label>
                     					                       <input type="text" class="form-control" id="infovalue" name="infovalue" value="'.$infofetch['lms_info_value'].'"><br>
-															   <input type= "hidden" name= "id" value="'.$id.'" />
+															   <input type= "hidden" name= "id" value="'.$gameid.'" />
 										                    </div>
 										                    <div class="form-group">
 										                    	<br>

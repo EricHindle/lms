@@ -68,4 +68,17 @@ function insert_pick($playerid, $gameid, $matchid) {
     
 }
 
+function get_current_player_pick($gameid, $playerid) {
+    global $mypdo;
+    $matchwk = $_SESSION['currentseason'] . $_SESSION['currentweek'];
+    $picksql = "SELECT lms_team_name, lms_match_date  FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game and lms_match_weekno = :matchwk LIMIT 1";
+    $pickquery = $mypdo->prepare($picksql);
+    $pickquery->bindParam(':player', $playerid, PDO::PARAM_INT);
+    $pickquery->bindParam(':game', $gameid, PDO::PARAM_INT);
+    $pickquery->bindParam(':matchwk', $matchwk);
+    $pickquery->execute();
+    $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
+    return $pickfetch;
+}
+
 ?>

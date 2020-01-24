@@ -19,14 +19,14 @@
 	        {
 	            if (isset($_POST['weekid']))
 	            {
-	                $id = $_POST['weekid'];
-	                if($id)
+	                $gameid = $_POST['weekid'];
+	                if($gameid)
 	                {
 
 	                	$html="";
 	                	$weeksql = "SELECT * FROM lms_week WHERE lms_week_no = :id";
 	                	$weekquery = $mypdo->prepare($weeksql);
-	                	$weekquery->execute(array(':id' => $id));
+	                	$weekquery->execute(array(':id' => $gameid));
 	                	$weekcount = $weekquery->rowCount();
 
 	                	if( $weekcount>0){
@@ -88,7 +88,7 @@
                                                                <label for="enddate">New end date:</label>
                     					                       <input type="text" class="form-control" id="enddate" name="enddate" value="'.date_format(date_create($remainingweeks['lms_week_end']),'Y-m-d').'" placeholder="yyyy-mm-dd"><br>
 
-															   <input type= "hidden" name= "id" value="'.$id.'" />
+															   <input type= "hidden" name= "id" value="'.$gameid.'" />
 										                    </div>
 										                    <div class="form-group">
 										                    	<br>

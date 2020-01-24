@@ -4,6 +4,8 @@ $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
+require $myPath . 'includes/lookup-functions.php';
+require $myPath . 'struct/picks/pick-functions.php';
 
 sec_session_start();
 $formKey = new formKey();
@@ -13,11 +15,12 @@ if (login_check($mypdo) == true) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
             if (isset($_POST['gameid'])) {
+
                 $gameid = sanitize_int($_POST['gameid']);
                 if ($gameid) {
-
+                    $deadline = get_deadline_date();
                     $html = "";
-                    $gamesql = "SELECT lms_game_id, lms_game_name, lms_game_start_wkno, lms_week, lms_year, lms_week_start FROM v_lms_game WHERE lms_game_id = :id";
+                    $gamesql = "SELECT lms_game_start_wkno, lms_game_name, lms_week, lms_year, lms_game_status_text FROM v_lms_game WHERE lms_game_id = :id";
                     $gamequery = $mypdo->prepare($gamesql);
                     $gamequery->execute(array(
                         ':id' => $gameid
@@ -27,13 +30,15 @@ if (login_check($mypdo) == true) {
                     if ($gamecount > 0) {
                         $key = $formKey->outputKey();
                         $gamefetch = $gamequery->fetch(PDO::FETCH_ASSOC);
+                        $gamename = $gamefetch['lms_game_name'];
+                        $remainingweeks = get_remaining_weeks();
 
-                        $weeksql = "SELECT lms_week_no, lms_week, lms_week, lms_week_start FROM lms_week WHERE lms_week > :week and lms_year = :season";
-                        $weekquery = $mypdo->prepare($weeksql);
-                        $weekquery->bindParam(":week", $_SESSION['currentweek'], PDO::PARAM_INT);
-                        $weekquery->bindParam(":season", $_SESSION['currentseason'], PDO::PARAM_INT);
-                        $weekquery->execute();
-                        $remainingweeks = $weekquery->fetchAll(PDO::FETCH_ASSOC);
+                        $gameplayersql = "SELECT lms_game_player_status, lms_player_screen_name, lms_game_player_status_text, lms_player_id FROM v_lms_player_games WHERE lms_game_id = :game";
+                        $gameplayerquery = $mypdo->prepare($gameplayersql);
+                        $gameplayerquery->bindParam(":game", $gameid, PDO::PARAM_INT);
+                        $gameplayerquery->execute();
+                        $gameplayerfetch = $gameplayerquery->fetchAll(PDO::FETCH_ASSOC);
+
                         echo '
 								<!doctype html>
 								<html>
@@ -59,33 +64,77 @@ if (login_check($mypdo) == true) {
 									        <div class="container">
 									        	<div class="row">
 									                <div class="col-md-8">
-									                    <h1><strong>Edit Game</strong></h1>
+									                    <h1><strong>' . $gamename . '</strong></h1>
 									                </div>
 									      		</div>
+                        <div class="row">
+			            	<div class="well col-md-8  textDark">
+                                <div class="row">
+                                    <div class="col-sm-2"><b>Start week:</b> </div>
+                                    <div class="col-sm-2">' . sprintf("%02d", $gamefetch['lms_week']) . '</div>
+                                    <div class="col-sm-2"><b>Start date:</b></div>
+                                    <div class="col-sm-2"> ' . date_format(date_create($gamefetch['lms_week_start']), 'd M Y') . '</div>
+                                    <div class="col-sm-2 col-sm-offset-1"  style="color:blue"><b>' . $gamefetch['lms_game_status_text'] . '</b></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4"><b>Current week:</b> </div>
+                                    <div class="col-sm-2"><b>Deadline:</b> </div>
+                                    <div class="col-sm-2">' . date_format(date_create($deadline), 'd M Y') . '</div>
+                                </div>
+                                <div class="row">
+    					        	<table class="table table-bordered" id="keywords">
+    									<thead>
+    									<tr>
+    										<th>Player Name</th>
+    										<th>Player Status</th>
+                                            <th>Current pick</th>
+     									</tr>
+    									</thead>
+    									<tbody>
+    									';
+
+                        foreach ($gameplayerfetch as $rs) {
+                            $pickfetch = get_current_player_pick($gameid, $rs['lms_player_id']);
+                            $currentpick = '';
+                            $rowcolor = 'black';
+                            $selcolor = 'black';
+                            if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
+                                $currentpick = '';
+                                $rowcolor = 'silver';
+                            } else {
+                                if (count($pickfetch) > 0) {
+                                    $currentpick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd M Y') . ')';
+                                } else {
+                                    $currentpick = '(waiting)';
+                                    $selcolor = 'crimson';
+                                }
+                            }
+
+                            if ($rs['lms_game_player_status'] > 1) {
+                                $rowcolor = 'silver';
+                            }
+                            $html .= '
+									<tr style="color:' . $rowcolor . '">
+										<td>' . $rs['lms_player_screen_name'] . '</td>
+                                        <td>' . $rs['lms_game_player_status_text'] . '</td>
+                                        <td style="color:' . $selcolor . '">' . $currentpick . '</td>
+									</tr>';
+                        }
+                        $html .= '
+									</tbody>
+								</table>
+                            </div>
+						</div>
+                    </div>
+
+
+
 									        	<div class = "row">';
 
                         $html .= '			       <div class="well col-md-6 col-md-offset-1 textDark">
 									                	<form class="form-horizontal" style="margin-left:24px; margin-right:30px" role="form" name ="edit" method="post" action="process-edit-game.php">';
                         $html .= $key;
                         $html .= '					       <h3 class="text-center">Edit Game</h3>
-								                     	    <div class="row">
-																<label class="control-label col-sm-4" for="name">Name:</label>
-																<div class="col-sm-6 form-control-static" name="name">' . $gamefetch['lms_game_name'] . '
-																</div>
-                                                            </div>
-                                                            <div class="row">
-																<label class="control-label col-sm-4" for="oweek">Start week:</label>
-																<div class="col-sm-4">
-					                                               <p class="form-control-static" name="oweek">' . $gamefetch['lms_week'] . '</p>
-				                                                </div>
-                                                            </div>
-                                                            <div class="row">
-																<label class="control-label col-sm-4" for="odate">Start date:</label>
-																<div class="col-sm-4">
-					                                               <p class="form-control-static" name="odate">' . date_format(date_create($gamefetch['lms_week_start']), 'd-M-Y') . '</p>
-				                                                </div>
-															</div>
-                                                            <br>
 										                    <div class="row">
                                                                <label for="gamename">New name:</label>
                     					                       <input type="text" class="form-control" id="gamename" name="gamename" value="' . $gamefetch['lms_game_name'] . '"><br>

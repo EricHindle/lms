@@ -18,18 +18,18 @@
 	        {
 	            if (isset($_POST['id'], $_POST['gamename'], $_POST['gamestartweek']))
 	            {
-	                $id = sanitize_int($_POST['id']);
+	                $gameid = sanitize_int($_POST['id']);
 	                $gamename = $_POST['gamename'];
 	                $gamestartweek = $_POST['gamestartweek'];
 	                $iscancel = $_POST['iscancel'];
 
-	                if($id && $gamename)
+	                if($gameid && $gamename)
 	                {
 	                	$html="";
 
 	                	$gamesql = "SELECT lms_game_id, lms_game_name FROM lms_game WHERE lms_game_id = :id LIMIT 1";
 						$gamequery = $mypdo->prepare($gamesql);
-						$gamequery->execute(array(':id' => $id));
+						$gamequery->execute(array(':id' => $gameid));
 						$gamecount = $gamequery->rowCount();
 						if ($gamecount>0) {
 						    $upsql = "";
@@ -39,7 +39,7 @@
 						        $upsql = "UPDATE lms_game SET lms_game_name = :gamename, lms_game_start_wkno = :startwk WHERE lms_game_id = :id";
 						    }
 								$upquery = $mypdo->prepare($upsql);
-								$upquery->bindParam(':id', $id, PDO::PARAM_INT);
+								$upquery->bindParam(':id', $gameid, PDO::PARAM_INT);
 								$upquery->bindParam(':gamename', $gamename);
 								$upquery->bindParam(':startwk', $gamestartweek);
 								$upquery->execute();

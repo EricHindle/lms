@@ -19,7 +19,7 @@
 	        {
 	            if (isset($_POST['weekid'])){
 
-                $id = $_POST['weekid'];
+                $gameid = $_POST['weekid'];
 
                 $teamsql = "SELECT lms_team_name, lms_team_id, lms_team_active FROM lms_team WHERE lms_team_active = 1";
                 $teamquery = $mypdo->prepare($teamsql);
@@ -46,14 +46,14 @@
 							    if ($postadd == "true"){
 								    $matchsql = "SELECT lms_match_id FROM lms_match WHERE lms_match_weekno = :id and lms_match_team = :team LIMIT 1";
 								    $matchquery = $mypdo->prepare($matchsql);
-								    $matchquery->bindParam(':id', $id);
+								    $matchquery->bindParam(':id', $gameid);
 								    $matchquery->bindParam(':team', $rs['lms_team_id']);
 								    $matchquery->execute();
 								    $matchcount = $matchquery->rowCount();
 								    if ($matchcount==0){
 								        $addsql = "INSERT INTO lms_match (lms_match_weekno , lms_match_team , lms_match_date , lms_match_result) VALUES (:weekno, :team, :kodate, '')";
 								        $addquery = $mypdo->prepare($addsql);
-								        $addquery->bindParam(':weekno', $id);
+								        $addquery->bindParam(':weekno', $gameid);
 								        $addquery->bindParam(':team', $teamid, PDO::PARAM_INT);
 								        $addquery->bindParam(':kodate', $postmatchdate);
 								        $addquery->execute();

@@ -19,15 +19,15 @@
 	        {
 	            if (isset($_POST['id'], $_POST['infovalue']))
 	            {
-	                $id = $_POST['id'];
+	                $gameid = $_POST['id'];
 	                $infovalue = $_POST['infovalue'];
-	                if($id && $infovalue)
+	                if($gameid && $infovalue)
 	                {
 	                	$html="";
 
 	                	$infosql = "SELECT lms_info_id, lms_info_value FROM lms_info WHERE lms_info_id = :id LIMIT 1";
 						$infoquery = $mypdo->prepare($infosql);
-						$infoquery->bindParam(':id', $id);
+						$infoquery->bindParam(':id', $gameid);
 						$infoquery->execute();
 						$infocount = $infoquery->rowCount();
 						if ($infocount>0) {
@@ -36,7 +36,7 @@
 								$mysqltime = date("Y-m-d H:i:s", $phptime);
 								$upsql = "UPDATE lms_info SET lms_info_value = :infovalue WHERE lms_info_id = :id";
 								$upquery = $mypdo->prepare($upsql);
-								$upquery->bindParam(':id', $id);
+								$upquery->bindParam(':id', $gameid);
 								$upquery->bindParam(':infovalue', $infovalue);
 								$upquery->execute();
 								$upcount = $upquery->rowCount();

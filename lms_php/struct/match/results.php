@@ -19,19 +19,19 @@
 	        {
 	            if (isset($_POST['weekid']))
 	            {
-	                $id = $_POST['weekid'];
-	                if($id)
+	                $gameid = $_POST['weekid'];
+	                if($gameid)
 	                {
 	                	$html="";
 	                	$matchsql = "SELECT lms_match_id, lms_match_date, lms_match_result, lms_team_name FROM v_lms_match WHERE lms_match_weekno = :matchwk";
 	                	$matchquery = $mypdo->prepare($matchsql);
-	                	$matchquery->bindParam(':matchwk',$id);
+	                	$matchquery->bindParam(':matchwk',$gameid);
 	                	$matchquery->execute();
 	                	$matchcount = $matchquery->rowCount();
 	                	
 	                	$weeksql = "SELECT * FROM lms_week WHERE lms_week_no = :id LIMIT 1";
 	                	$weekquery = $mypdo->prepare($weeksql);
-	                	$weekquery->bindParam(':id',$id);
+	                	$weekquery->bindParam(':id',$gameid);
 	                	$weekquery->execute();
 	                	$weekcount = $weekquery->rowCount();
 	                	
@@ -132,7 +132,7 @@
 								</table>
 </div>
 										                    <div class="form-group">
-										                        <input type= "hidden" name= "weekid" value="'.$id.'" />
+										                        <input type= "hidden" name= "weekid" value="'.$gameid.'" />
 										                    </div>									                    	
 										                    <div class="form-group">
 										                    	<br>

@@ -14,10 +14,10 @@
         	            header('Location: '.$myPath.'index.php?error=1');
         	} else {
 	            if (isset($_POST['weekid'])){
-                    $id = $_POST['weekid'];
+                    $gameid = $_POST['weekid'];
                     $matchsql = "SELECT lms_match_id, lms_match_date, lms_match_result, lms_team_name FROM v_lms_match WHERE lms_match_weekno = :matchwk";
                     $matchquery = $mypdo->prepare($matchsql);
-                    $matchquery->bindParam(':matchwk',$id);
+                    $matchquery->bindParam(':matchwk',$gameid);
                     $matchquery->execute();
                     $matchcount = $matchquery->rowCount();
                 	$html="";

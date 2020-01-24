@@ -19,20 +19,20 @@
 	        {
 	            if (isset($_POST['id'], $_POST['teamname']))
 	            {
-	                $id = sanitize_int($_POST['id']);
+	                $gameid = sanitize_int($_POST['id']);
 	                $teamname = $_POST['teamname'];
 	                $isactive = $_POST['isactive'];
 	                $myactive = 0;
 	                if($isactive == "true"){
 	                    $myactive = 1;
 	                }
-	                if($id && $teamname)
+	                if($gameid && $teamname)
 	                {
 	                	$html="";
 
 	                	$teamsql = "SELECT lms_team_id, lms_team_name, lms_team_active FROM lms_team WHERE lms_team_id = :id LIMIT 1";
 						$teamquery = $mypdo->prepare($teamsql);
-						$teamquery->execute(array(':id' => $id));
+						$teamquery->execute(array(':id' => $gameid));
 						$teamcount = $teamquery->rowCount();
 						if ($teamcount>0) {
 								date_default_timezone_set('Europe/London');
@@ -40,7 +40,7 @@
 								$mysqltime = date("Y-m-d H:i:s", $phptime);
 								$upsql = "UPDATE lms_team SET lms_team_name = :teamname, lms_team_active = :active WHERE lms_team_id = :id";
 								$upquery = $mypdo->prepare($upsql);
-								$upquery->bindParam(':id', $id, PDO::PARAM_INT);
+								$upquery->bindParam(':id', $gameid, PDO::PARAM_INT);
 								$upquery->bindParam(':teamname', $teamname);
 								$upquery->bindParam(':active', $myactive, PDO::PARAM_INT);
 								$upquery->execute();

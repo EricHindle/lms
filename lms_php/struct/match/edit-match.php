@@ -19,14 +19,14 @@
 	        {
 	            if (isset($_POST['matchid']))
 	            {
-	                $id = $_POST['matchid'];
-	                if($id)
+	                $gameid = $_POST['matchid'];
+	                if($gameid)
 	                {
 
 	                	$html="";
 	                	$matchsql = "SELECT * FROM v_lms_match WHERE lms_match_id = :id";
 	                	$matchquery = $mypdo->prepare($matchsql);
-	                	$matchquery->execute(array(':id' => $id));
+	                	$matchquery->execute(array(':id' => $gameid));
 	                	$matchcount = $matchquery->rowCount();
 	                	$wresult = '';
                         $lresult = '';
@@ -116,7 +116,7 @@
                                                                     <option '.$lresult.' value="l">Lose</option>
                                                                     <option '.$nresult.' value="">No result</option>
                                                                </select>
-															   <input type= "hidden" name= "id" value="'.$id.'" />
+															   <input type= "hidden" name= "id" value="'.$gameid.'" />
 										                    </div>
 										                    <div class="form-group">
 										                    	<br>

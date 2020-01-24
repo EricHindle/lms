@@ -7,21 +7,20 @@ require $myPath . 'includes/lookup-functions.php';
 sec_session_start();
 $formKey = new formKey();
 if (login_check($mypdo) == true) {
-    $gamesql = "SELECT lms_game_id, lms_game_start_wkno, lms_game_name, lms_game_code, lms_game_status_text, lms_game_total_players, lms_game_still_active FROM v_lms_game WHERE lms_game_manager = :manager and lms_game_status = 1 ORDER BY lms_game_start_wkno, lms_game_name";
+    $gamesql = "SELECT lms_game_id, lms_game_start_wkno, lms_game_name, lms_game_code, lms_game_status_text, lms_game_total_players, lms_game_still_active, lms_week, lms_year FROM v_lms_game WHERE lms_game_manager = :manager and lms_game_status = 1 ORDER BY lms_game_start_wkno, lms_game_name";
     $gamequery = $mypdo->prepare($gamesql);
     $gamequery->bindParam(":manager", $_SESSION['user_id'], PDO::PARAM_INT);
     $gamequery->execute();
     $gamefetch = $gamequery->fetchAll(PDO::FETCH_ASSOC);
-    
 
     $remainingweeks = get_remaining_weeks();
-    
+
     $mygamessql = "SELECT lms_game_id, lms_game_id, lms_game_name FROM v_lms_player_games WHERE lms_player_id = :player and lms_game_player_status = 1 ORDER BY lms_game_name";
     $mygamesquery = $mypdo->prepare($mygamessql);
     $mygamesquery->bindParam(":player", $_SESSION['user_id'], PDO::PARAM_INT);
     $mygamesquery->execute();
     $mygamesfetch = $mygamesquery->fetchAll(PDO::FETCH_ASSOC);
-    
+
     $html = "";
     $key = $formKey->outputKey();
     echo '
@@ -78,9 +77,9 @@ if (login_check($mypdo) == true) {
             $rowcolor = 'silver';
         }
         $html .= '
-									<tr style="color:'.$rowcolor.'">
+									<tr style="color:' . $rowcolor . '">
 										<td>' . $rs['lms_game_name'] . '</td>
-										<td>' . $rs['lms_game_start_wkno'] . '</td>
+										<td>' . sprintf('%02d', $rs['lms_week']) . '/' . $rs['lms_year'] . '</td>
                                         <td>' . $rs['lms_game_status_text'] . '</td>
                                         <td>' . $rs['lms_game_total_players'] . '</td>
                                         <td>' . $rs['lms_game_still_active'] . '</td>
@@ -99,7 +98,7 @@ if (login_check($mypdo) == true) {
                         <div class="row">
 			                <div class="col-sm-4">
 			                    <div class="tile green">
-			                	<form class="form-horizontal" role="form" name ="editgame" method="post" action="edit-game.php">';
+			                	<form class="form-horizontal" role="form" name ="showgame" method="post" action="show-game.php">';
     $html .= $key;
     $html .= '					<h3 class="title">Show a Game</h3>
 				                    <div class="form-group" style="margin-left:16px;margin-right:16px">
@@ -129,7 +128,7 @@ if (login_check($mypdo) == true) {
                                                <label for="gamestartweek">Start week:</label>
                                                <select class="form-control" id="gamestartweek" name="gamestartweek">';
     foreach ($remainingweeks as $wk) {
-        $html .= '<option value="' . $wk['lms_week_no'] . '">' . sprintf('%02d',$wk['lms_week']) . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
+        $html .= '<option value="' . $wk['lms_week_no'] . '">' . sprintf('%02d', $wk['lms_week']) . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
     }
     $html .= '	                               </select>
 										 </div>
