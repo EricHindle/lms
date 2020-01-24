@@ -23,16 +23,16 @@ if (login_check($mypdo) == true) {
 
                     /*
                      * Get all the players picks for the selected game
-                     */   
+                     */
                     $picksql = "SELECT lms_pick_match_id, lms_match_result, lms_match_weekno, lms_week, lms_year,lms_match_date, lms_team_id, lms_team_name FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game ORDER BY lms_match_weekno";
                     $pickquery = $mypdo->prepare($picksql);
                     $pickquery->bindParam(':player', $player, PDO::PARAM_INT);
                     $pickquery->bindParam(':game', $gameid, PDO::PARAM_INT);
                     $pickquery->execute();
                     $pickfetch = $pickquery->fetchAll(PDO::FETCH_ASSOC);
-                    /* 
+                    /*
                      * Get the current picked match id
-                     */                    
+                     */
                     $currentpickmatch = 0;
                     $currentpickteam = 0;
                     foreach ($pickfetch as $rs) {
@@ -41,10 +41,10 @@ if (login_check($mypdo) == true) {
                             $currentpickteam = $rs['lms_team_id'];
                             break;
                         }
-                     }
-                     /*
-                      * Get all the matches for the current week featuring the available teams left in this game for the player 
-                      */
+                    }
+                    /*
+                     * Get all the matches for the current week featuring the available teams left in this game for the player
+                     */
                     $availsql = "SELECT lms_match_id, lms_team_name, lms_match_date FROM lms.v_lms_match where lms_match_team in 
                                     (SELECT lms_available_picks_team FROM v_lms_available_picks WHERE lms_available_picks_player_id = :player and lms_available_picks_game = :game)
                                          and lms_match_weekno = :weekno and lms_match_id <> :currentpick ORDER BY lms_team_name, lms_match_date";
@@ -118,7 +118,7 @@ if (login_check($mypdo) == true) {
 
                         $html .= '
 									<tr>
-										<td>' . $rs['lms_week'] . '/' . $rs['lms_year'] . '</td>
+										<td>' . sprintf('%02d', $rs['lms_week']) . '/' . $rs['lms_year'] . '</td>
                                         <td>' . date_format(date_create($rs['lms_match_date']), 'd-M-Y') . '</td>
                                         <td>' . $rs['lms_team_name'] . '</td>
                                         <td>' . $result . '</td>
@@ -129,22 +129,22 @@ if (login_check($mypdo) == true) {
 								</table>
 							</div>
 						</div>';
-
-                    if ($gps['lms_game_player_status'] == "1") {
-                        $html .= '    <div class="row">
+                    if (time() < strtotime(get_deadline_date())) {
+                        if ($gps['lms_game_player_status'] == "1") {
+                            $html .= '    <div class="row">
 			            	<div class="col-sm-6">
 			                    <div class="tile red">
 		                    		    <h3 class="title" >Select a Team for This Week</h3>
 					                	
 			                	<form class="form-horizontal" role="form" name ="editpick" method="post" action="process-pick.php">';
-                        $html .= $key;
-                        $html .= '
+                            $html .= $key;
+                            $html .= '
 				                    <div class="col-sm-9">
 			                            <select class="form-control" id="matchid" name="matchid">';
-                        foreach ($availfetch as $mypick) {
-                            $html .= '<option value="' . $mypick['lms_match_id'] . '">' . $mypick['lms_team_name'] . ' ' . date_format(date_create($mypick['lms_match_date']), 'd-M-Y') . '</option>';
-                        }
-                        $html .= '	                    </select>
+                            foreach ($availfetch as $mypick) {
+                                $html .= '<option value="' .  $mypick['lms_match_id'] . '">'. date_format(date_create($mypick['lms_match_date']), 'd-M'). '&nbsp;&nbsp;&nbsp;&nbsp;' . $mypick['lms_team_name'].  '</option>';
+                            }
+                            $html .= '	                    </select>
 				                    </div>
 				                    <div class="col-sm-2 col-sm-offset-1">
                                         <input type= "hidden" name= "gameid" value="' . $gameid . '" />
@@ -156,6 +156,7 @@ if (login_check($mypdo) == true) {
 			          			</div>
 			                </div>
                         </div>';
+                        }
                     }
                     $html .= '		<div class="row">
 							<div class="col-xs-6">

@@ -40,9 +40,9 @@
  ;
 	                	if( $weekcount>0){
 	                	    $key = $formKey->outputKey();
-	                	    $weekfetch=$weekquery->fetch(PDO::FETCH_ASSOC);
-	                	    $week = $weekfetch['lms_week'];
-	                	    $year = $weekfetch['lms_year'];
+	                	    $remainingweeks=$weekquery->fetch(PDO::FETCH_ASSOC);
+	                	    $week = $remainingweeks['lms_week'];
+	                	    $year = $remainingweeks['lms_year'];
 
 	                	}
 	                	

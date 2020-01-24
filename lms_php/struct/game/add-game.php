@@ -26,7 +26,7 @@ if (login_check($mypdo) == true) {
                     if ($cucount > 0) {
                         $html .= "<script>
 										alert('A game with that name already exists.');
-										window.location.href='game-main.php';
+										window.location.href='game-manage.php';
 									</script>";
                     } else {
 
@@ -48,12 +48,12 @@ if (login_check($mypdo) == true) {
                             
                           $html .= "<script>              
 									alert('Game added.');
-									window.location.href='game-main.php';
+									window.location.href='game-manage.php';
 								  </script>";
                         }else {
                            $html .= "<script>
 									alert('Game was not added.');
-									window.location.href='game-main.php';
+									window.location.href='game-manage.php';
 								  </script>";
                         }
 
@@ -63,7 +63,7 @@ if (login_check($mypdo) == true) {
                 } else {
                     echo "<script>
 								alert('Game name missing. Please check details and try again.');
-								window.location.href='game-main.php';
+								window.location.href='game-manage.php';
 							</script>";
                 }
             } else {

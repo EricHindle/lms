@@ -103,7 +103,7 @@ if (login_check($mypdo) == true) {
 										        <div class="row">
 													<br>
 													<div class="col-xs-6">
-														<a href="' . $myPath . 'struct/game/game-main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
+														<a href="' . $myPath . 'struct/game/game-manage.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
 														<br>
 													</div>
 												</div>
@@ -116,20 +116,20 @@ if (login_check($mypdo) == true) {
                             } else {
                                 $html .= "<script>
 										alert('Game not open to new players. Please check the code and try again.');
-										window.location.href='game-main.php';
+										window.location.href='game-manage.php';
 									</script>";
                             }
                         
                     } else {
                         $html .= "<script>
 										alert('You are not active in this game. Please check the game and try again.');
-										window.location.href='game-main.php';
+										window.location.href='game-manage.php';
 									</script>";
                     }
                 } else {
                     $html .= "<script>
 										alert('Game not found. Please check the code and try again.');
-										window.location.href='game-main.php';
+										window.location.href='game-manage.php';
 									</script>";
                 }
 

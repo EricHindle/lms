@@ -33,7 +33,7 @@ if (login_check($mypdo) == true) {
                         $weekquery->bindParam(":week", $_SESSION['currentweek'], PDO::PARAM_INT);
                         $weekquery->bindParam(":season", $_SESSION['currentseason'], PDO::PARAM_INT);
                         $weekquery->execute();
-                        $weekfetch = $weekquery->fetchAll(PDO::FETCH_ASSOC);
+                        $remainingweeks = $weekquery->fetchAll(PDO::FETCH_ASSOC);
                         echo '
 								<!doctype html>
 								<html>
@@ -93,7 +93,7 @@ if (login_check($mypdo) == true) {
                                                             <div class="row">
                                                                <label for="gamestartweek">New start week:</label>
 			                                                   <select class="form-control" id="gamestartweek" name="gamestartweek">';
-                        foreach ($weekfetch as $wk) {
+                        foreach ($remainingweeks as $wk) {
                             $html .= '<option value="' . $wk['lms_week_no'] . '">' . $wk['lms_week'] . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
                         }
                         $html .= '	                           </select>
@@ -115,7 +115,7 @@ if (login_check($mypdo) == true) {
 										        <div class="row">
 													<br>
 													<div class="col-xs-6">
-														<a href="' . $myPath . 'struct/game/game-main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
+														<a href="' . $myPath . 'struct/game/game-manage.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
 														<br>
 													</div>
 												</div>
@@ -128,7 +128,7 @@ if (login_check($mypdo) == true) {
                     } else {
                         $html .= "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='game-main.php';
+										window.location.href='game-manage.php';
 									</script>";
                     }
 
@@ -136,7 +136,7 @@ if (login_check($mypdo) == true) {
                 } else {
                     echo "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='game-main.php';
+										window.location.href='game-manage.php';
 									</script>";
                 }
             } else {

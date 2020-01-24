@@ -66,5 +66,28 @@ function get_game_player_status($game, $player) {
     return $mygamesfetch;
 }
 
+function get_remaining_weeks(){
+    
+    global $mypdo;
+    $weeksql = "SELECT lms_week_no, lms_week, lms_week, lms_week_start FROM lms_week WHERE lms_week > :week and lms_year = :season";
+    $weekquery = $mypdo->prepare($weeksql);
+    $weekquery->bindParam(":week", $_SESSION['currentweek'], PDO::PARAM_INT);
+    $weekquery->bindParam(":season", $_SESSION['currentseason'], PDO::PARAM_INT);
+    $weekquery->execute();
+    $weekfetch = $weekquery->fetchAll(PDO::FETCH_ASSOC);
+    return $weekfetch;
+}
+
+function get_deadline_date() {
+    global $mypdo;
+    $weeksql = "SELECT lms_week_deadline FROM lms_week WHERE lms_week = :week and lms_year = :season LIMIT 1";
+    $weekquery = $mypdo->prepare($weeksql);
+    $weekquery->bindParam(":week", $_SESSION['currentweek'], PDO::PARAM_INT);
+    $weekquery->bindParam(":season", $_SESSION['currentseason'], PDO::PARAM_INT);
+    $weekquery->execute();
+    $weekfetch = $weekquery->fetch(PDO::FETCH_ASSOC);
+    return $weekfetch['lms_week_deadline'];
+}
+
 
 ?>

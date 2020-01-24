@@ -31,7 +31,7 @@
 
 	                	if( $weekcount>0){
 							$key = $formKey->outputKey();
-							$weekfetch=$weekquery->fetch(PDO::FETCH_ASSOC);
+							$remainingweeks=$weekquery->fetch(PDO::FETCH_ASSOC);
 							echo '
 								<!doctype html>
 								<html>
@@ -70,11 +70,11 @@
 									                    	<div class="form-group">
 																<label class="col-sm-2" for="season">Season:</label>
 																<div class="col-sm-2">
-																 	<p class="form-control-static" name="season" id="season">'.$weekfetch['lms_year'].'</p>
+																 	<p class="form-control-static" name="season" id="season">'.$remainingweeks['lms_year'].'</p>
 																</div>
 																<label class="col-sm-2" for="period">Period:</label>
 																<div class="col-sm-2">
-																 	<p class="form-control-static" name="period" id="period">'.$weekfetch['lms_week'].'</p>
+																 	<p class="form-control-static" name="period" id="period">'.$remainingweeks['lms_week'].'</p>
 																</div>
 
 															</div>
@@ -82,11 +82,11 @@
 										                    <div class="form-group">
 										                    	
                                                                <label for="startdate">New start date:</label>
-                    					                       <input type="text" class="form-control" id="startdate" name="startdate" value="'.date_format(date_create($weekfetch['lms_week_start']),'Y-m-d').'" placeholder="yyyy-mm-dd"><br>
+                    					                       <input type="text" class="form-control" id="startdate" name="startdate" value="'.date_format(date_create($remainingweeks['lms_week_start']),'Y-m-d').'" placeholder="yyyy-mm-dd"><br>
                                                                <label for="deadline">New deadline:</label>
-                    					                       <input type="text" class="form-control" id="deadline" name="deadline" value="'.date_format(date_create($weekfetch['lms_week_deadline']),'Y-m-d').'" placeholder="yyyy-mm-dd"><br>
+                    					                       <input type="text" class="form-control" id="deadline" name="deadline" value="'.date_format(date_create($remainingweeks['lms_week_deadline']),'Y-m-d').'" placeholder="yyyy-mm-dd"><br>
                                                                <label for="enddate">New end date:</label>
-                    					                       <input type="text" class="form-control" id="enddate" name="enddate" value="'.date_format(date_create($weekfetch['lms_week_end']),'Y-m-d').'" placeholder="yyyy-mm-dd"><br>
+                    					                       <input type="text" class="form-control" id="enddate" name="enddate" value="'.date_format(date_create($remainingweeks['lms_week_end']),'Y-m-d').'" placeholder="yyyy-mm-dd"><br>
 
 															   <input type= "hidden" name= "id" value="'.$id.'" />
 										                    </div>

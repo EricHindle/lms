@@ -44,7 +44,7 @@
 			                </div>
 			                <div class="col-sm-4">
 			                    <div class="tile green">
-			                    	<a href="'.$myPath.'struct/game/game-main.php">
+			                    	<a href="'.$myPath.'struct/game/game-admin.php">
 			                    		<h3 class="title" >Games</h3>
 			                            <p>Game Management.</p>
 			                        </a>	

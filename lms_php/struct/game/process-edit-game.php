@@ -47,12 +47,12 @@
 								if( $upcount >0){
 									$html.= "<script>
 												alert('Details updated successfully.');
-												window.location.href='game-main.php';
+												window.location.href='game-manage.php';
 											</script>";
 			                	} else {
 			                		$html.= "<script>
 										alert('Details not altered.');
-										window.location.href='game-main.php';
+										window.location.href='game-manage.php';
 									</script>";
 								}
 								
@@ -60,7 +60,7 @@
 						}else{
 							$html.= "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='game-main.php';
+										window.location.href='game-manage.php';
 									</script>";
 						}
 	                	
@@ -69,7 +69,7 @@
 	                } else {
 	                	echo "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='game-main.php';
+										window.location.href='game-manage.php';
 									</script>";
 	            	}
 	            } else {

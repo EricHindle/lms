@@ -20,18 +20,14 @@ echo '
 						<div id="navbarCollapse" class="collapse navbar-collapse">
 							<ul class="nav navbar-nav">
 								<li><a href="' . $myPath . 'menus/home.php">Home</a></li>
-								<li><a href="' . $myPath . 'struct/game/game-main.php">Games</a></li>
-								
-
+								<li><a href="' . $myPath . 'struct/game/game-manage.php">Manage Games</a></li>
 					';
 
 if ($currentlevel == $levelneeded) {
-	echo '
+    echo '
 								<li><a href="' . $myPath . 'struct/main.php">Admin</a></li>
-
 					';
 }
-
 echo '
 							</ul>
 							<ul class="nav navbar-nav navbar-right">

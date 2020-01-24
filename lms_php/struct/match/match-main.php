@@ -15,7 +15,7 @@
 		$weeksql = "SELECT * FROM lms_week ORDER BY lms_week_no ASC ";
 		$weekquery = $mypdo->prepare($weeksql);
 		$weekquery->execute();
-		$weekfetch = $weekquery->fetchAll(PDO::FETCH_ASSOC);
+		$remainingweeks = $weekquery->fetchAll(PDO::FETCH_ASSOC);
 		$html="";
 
 		echo '
@@ -61,7 +61,7 @@
 				                    <div class="form-group">
 			                        	<label for="weekid">Choose period:</label>
 			                            <select class="form-control" id="weekid" name="weekid">';
-		foreach ($weekfetch as $myweek) {
+		foreach ($remainingweeks as $myweek) {
 		    $html.=						'<option value="'.$myweek['lms_week_no'].'">'.$myweek['lms_year'].'/'.sprintf('%02d',$myweek['lms_week']).'&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp'. date_format(date_create($myweek['lms_week_start']),'d-M-Y').'</option>';
 		}
 		$html .='	                    </select>
@@ -79,7 +79,7 @@
 				                    <div class="form-group">
 			                        	<label for="weekid">Choose period:</label>
 			                            <select class="form-control" id="weekid" name="weekid">';
-		foreach ($weekfetch as $myweek) {
+		foreach ($remainingweeks as $myweek) {
 		    $html.=						'<option value="'.$myweek['lms_week_no'].'">'.$myweek['lms_year'].'/'.sprintf('%02d',$myweek['lms_week']).'&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp'. date_format(date_create($myweek['lms_week_start']),'d-M-Y').'</option>';
 		}
 		$html .='	                    </select>

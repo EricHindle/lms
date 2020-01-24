@@ -7,7 +7,7 @@ sec_session_start();
 $formKey = new formKey();
 $matchwk = $_SESSION['currentseason'] . $_SESSION['currentweek'];
 $picksql = "SELECT lms_team_name, lms_match_date  FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game and lms_match_weekno = :matchwk LIMIT 1";
-$gamesql = "SELECT * FROM v_lms_player_games WHERE lms_player_id = :player ORDER BY lms_game_name ASC";
+$gamesql = "SELECT * FROM v_lms_player_games WHERE lms_player_id = :player ORDER BY lms_game_player_status, lms_game_name ASC";
 $gamequery = $mypdo->prepare($gamesql);
 $gamequery->bindParam(':player', $_SESSION['user_id'], PDO::PARAM_INT);
 $gamequery->execute();
@@ -47,7 +47,7 @@ if (login_check($mypdo) == true) {
 
     $html .= '            <div class="row">
 			            	<div class="well col-md-10  textDark">
-				        		<h3>' . $_SESSION['nickname'] . ' Games</h3>
+				        		<h3>Games Played by ' . $_SESSION['nickname'] . '</h3>
 					        	<table class="table table-bordered" id="keywords">
 									<thead>
 									<tr class="game">
@@ -70,25 +70,30 @@ if (login_check($mypdo) == true) {
         $pickquery->bindParam(':game', $rs['lms_game_id'], PDO::PARAM_INT);
         $pickquery->bindParam(':matchwk', $matchwk);
         $pickquery->execute();
+        $currentpick = '';
+        $rowcolor = 'black';
+        $selcolor = 'black';
         if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
             $currentpick = '';
+            $rowcolor = 'silver';
         } else {
             if ($pickquery->rowCount() > 0) {
                 $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
-                $currentpick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd-M-Y') . ')';
+                $currentpick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd M Y') . ')';
             } else {
                 $currentpick = '(waiting)';
+                $selcolor = 'crimson';
             }
         }
         $html .= '
-									<tr>
+									<tr style="color:'.$rowcolor.'">
 										<td>' . $rs['lms_game_name'] . '</td>
 										<td>' . $rs['lms_game_start_wkno'] . '</td>
                                         <td>' . $rs['lms_game_status_text'] . '</td>
                                         <td>' . $rs['lms_game_total_players'] . '</td>
                                         <td>' . $rs['lms_game_still_active'] . '</td>
                                         <td>' . $rs['lms_game_player_status_text'] . '</td>
-                                        <td>' . $currentpick . '</td>
+                                        <td style="color:'.$selcolor.'">' . $currentpick . '</td>
 									</tr>';
     }
     $html .= '
@@ -118,12 +123,28 @@ if (login_check($mypdo) == true) {
                                     </form>
                                 </div>
 			                </div>
-			                <div class="col-sm-4">
+			            	<div class="col-sm-4">
 			                    <div class="tile orange">
-			                    	<a href="' . $myPath . 'struct/game/game-main.php">
-			                    		<h3 class="title" >Games</h3>
-			                        </a>	
+		                    		    <h3 class="title" >Join a Game</h3>
+					                	<form role="form" name ="edit" method="post" action="process-join-game.php">';
+    $html .= $key;
+    $html .= '                  <div class="form-group " style="margin-left:16px;margin-right:16px">
+    					                        <input type="text" class="form-control" id="gamecode" name="gamecode" placeholder="game code">
+						                    </div>
+						                    <div class="form-group" style="margin-left:16px;margin-right:16px">
+    					                    	<br>
+    					                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+						                    </div>
+						                </form>
 			          			</div>
+			                </div>
+			      		</div>
+                        <div class="row">
+			                <div class="col-sm-8">
+			                    <div class="tile teal">
+			                    	<a href="' . $myPath . 'struct/game/game-manage.php">
+			                    		<h3 class="title" style="text-align:center">Manage Games</h3>
+			                        </a>
 			                </div>
 			      		</div>
 		    	</div>

@@ -11,7 +11,7 @@
 		$weeksql = "SELECT * FROM lms_week ORDER BY lms_week_no ASC ";
 		$weekquery = $mypdo->prepare($weeksql);
 		$weekquery->execute();
-		$weekfetch = $weekquery->fetchAll(PDO::FETCH_ASSOC);
+		$remainingweeks = $weekquery->fetchAll(PDO::FETCH_ASSOC);
 
 		$html="";
 
@@ -22,9 +22,7 @@
 				
 			    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
 			    <meta charset="UTF-8">
-			    
 			    <title>Game Weeks</title>
-			    
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
 			    <link rel="stylesheet" href="'.$myPath.'css/bootstrap.min.css">
 			    <link rel="stylesheet" href="'.$myPath.'css/rethome.css">
@@ -80,7 +78,7 @@
 				                    <div class="form-group">
 			                        	<label for="weekid">Choose period:</label>
 			                            <select class="form-control" id="weekid" name="weekid">';
-		foreach ($weekfetch as $myweek) {
+		foreach ($remainingweeks as $myweek) {
 		    $html.=						'<option value="'.$myweek['lms_week_no'].'">'.$myweek['lms_year'].'/'.sprintf('%02d',$myweek['lms_week']).'&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp'. date_format(date_create($myweek['lms_week_start']),'d-M-Y').'</option>';
 		}
 		$html .='	                    </select>
@@ -109,7 +107,7 @@
 									</thead>
 									<tbody>
 									';
-							foreach ($weekfetch as $rs) {
+							foreach ($remainingweeks as $rs) {
 							    $stDate = date_format(date_create($rs['lms_week_start']),'d-M-Y');
 							    $enDate = date_format(date_create($rs['lms_week_end']),'d-M-Y');
 							    $dlDate = date_format(date_create($rs['lms_week_deadline']),'d-M-Y');

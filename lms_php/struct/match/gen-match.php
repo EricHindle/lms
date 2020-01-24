@@ -39,10 +39,10 @@
                         $kodate = '';
 	                	if( $weekcount>0){
 	                	    $key = $formKey->outputKey();
-	                	    $weekfetch=$weekquery->fetch(PDO::FETCH_ASSOC);
-	                	    $week = $weekfetch['lms_week'];
-	                	    $year = $weekfetch['lms_year'];
-	                	    $md = date_create($weekfetch['lms_week_end']);
+	                	    $remainingweeks=$weekquery->fetch(PDO::FETCH_ASSOC);
+	                	    $week = $remainingweeks['lms_week'];
+	                	    $year = $remainingweeks['lms_year'];
+	                	    $md = date_create($remainingweeks['lms_week_end']);
 	                	    $kodate = date_format($md,'Y-m-d');
 	                	}
 	                	

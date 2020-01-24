@@ -84,7 +84,7 @@ function remove_player_from_game($gameid, $playerid)
 
 function generate_game_code()
 {
-    $allchars = "abcdefghijklmnopqrstuvwxyz0123456789";
+    $allchars = "abcdefghijkmnopqrstuvwxyz023456789";
     $randstr = str_shuffle($allchars);
     $gamecode = "";
     $gamecount = -1;

@@ -3,21 +3,18 @@ $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
+require $myPath . 'includes/lookup-functions.php';
 sec_session_start();
 $formKey = new formKey();
 if (login_check($mypdo) == true) {
-    $gamesql = "SELECT lms_game_id, lms_game_name FROM lms_game WHERE lms_game_manager = :manager and lms_game_status = 1 ORDER BY lms_game_start_wkno, lms_game_name";
+    $gamesql = "SELECT lms_game_id, lms_game_start_wkno, lms_game_name FROM lms_game WHERE lms_game_manager = :manager and lms_game_status = 1 ORDER BY lms_game_start_wkno, lms_game_name";
     $gamequery = $mypdo->prepare($gamesql);
     $gamequery->bindParam(":manager", $_SESSION['user_id'], PDO::PARAM_INT);
     $gamequery->execute();
     $gamefetch = $gamequery->fetchAll(PDO::FETCH_ASSOC);
     
-    $weeksql = "SELECT lms_week_no, lms_week, lms_week, lms_week_start FROM lms_week WHERE lms_week > :week and lms_year = :season";
-    $weekquery = $mypdo->prepare($weeksql);
-    $weekquery->bindParam(":week", $_SESSION['currentweek'], PDO::PARAM_INT);
-    $weekquery->bindParam(":season", $_SESSION['currentseason'], PDO::PARAM_INT);
-    $weekquery->execute();
-    $weekfetch = $weekquery->fetchAll(PDO::FETCH_ASSOC);
+
+    $remainingweeks = get_remaining_weeks();
     
     $mygamessql = "SELECT lms_game_id, lms_game_id, lms_game_name FROM v_lms_player_games WHERE lms_player_id = :player and lms_game_player_status = 1 ORDER BY lms_game_name";
     $mygamesquery = $mypdo->prepare($mygamessql);
@@ -56,6 +53,8 @@ if (login_check($mypdo) == true) {
 			                    <br>
 			                </div>
 			            </div>
+                        <div class="row">
+                        </div>
 			            <div class="row">
 			            	<div class="col-sm-4">
 			                    <div class="tile red">
@@ -94,48 +93,11 @@ if (login_check($mypdo) == true) {
 			                </div>
                         </div>
                         <div class="row">
-			                <div class="col-sm-4">
-			                    <div class="tile teal">
-                                    <h3 class="title" >Create a Game</h3>
-                                    <form class="form-horizontal" role="form" name ="addteam" method="post" action="add-game.php">';
-    $html .= $key;
-    $html .= '					         <div class="form-group" style="margin-left:16px;margin-right:16px">
-				                    	       <label for="gamename">Game Name:</label>
-					                           <input type="text" class="form-control" id="gamename" name="gamename" placeholder="Game name" />
-				                         </div>
-                                         <div class="form-group" style="margin-left:16px;margin-right:16px">
-                                               <label for="gamestartweek">Start week:</label>
-                                               <select class="form-control" id="gamestartweek" name="gamestartweek">';
-    foreach ($weekfetch as $wk) {
-        $html .= '<option value="' . $wk['lms_week_no'] . '">' . $wk['lms_week'] . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
-    }
-    $html .= '	                               </select>
-										 </div>
-        				                 <div class="form-group" style="margin-left:16px;margin-right:16px">
-                                                <br>
-				                                <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
-				                         </div>
-                                   </form>
-			          			</div>
-			                </div>
-			                <div class="col-sm-4">
+			                <div class="col-sm-8">
 			                    <div class="tile green">
-			                	<form class="form-horizontal" role="form" name ="editgame" method="post" action="edit-game.php">';
-    $html .= $key;
-    $html .= '					<h3 class="title">Manage Game</h3>
-				                    <div class="form-group" style="margin-left:16px;margin-right:16px">
-			                            <select class="form-control" id="gameid" name="gameid">';
-    foreach ($gamefetch as $myGame) {
-        $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
-    }
-    $html .= '	                    </select>
-				                    </div>
-				                    <div class="form-group" style="margin-left:16px;margin-right:16px">
-                                        <br>
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
-				                    </div>
-                                    </form>
-			          			</div>
+			                    	<a href="' . $myPath . 'struct/game/game-manage.php">
+			                    		<h3 class="title" >Manage Games</h3>
+			                        </a>
 			                </div>
 			      		</div>
 			      		<div class="row">
