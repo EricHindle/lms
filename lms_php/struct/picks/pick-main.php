@@ -14,24 +14,44 @@ if (login_check($mypdo) == true) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
             if (isset($_POST['gameid'])) {
-                $id = sanitize_int($_POST['gameid']);
-                if ($id) {
+                $gameid = sanitize_int($_POST['gameid']);
+                if ($gameid) {
                     $player = $_SESSION['user_id'];
-                    $gamename = get_game_name($id);
+                    $gamename = get_game_name($gameid);
                     $weekno = $_SESSION['currentseason'] . $_SESSION['currentweek'];
-                    $gps = get_game_player_status($id, $player);
+                    $gps = get_game_player_status($gameid, $player);
 
-                    $picksql = "SELECT lms_match_result,lms_week, lms_year,lms_match_date,lms_team_name FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game";
+                    /*
+                     * Get all the players picks for the selected game
+                     */   
+                    $picksql = "SELECT lms_pick_match_id, lms_match_result, lms_match_weekno, lms_week, lms_year,lms_match_date, lms_team_id, lms_team_name FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game ORDER BY lms_match_weekno";
                     $pickquery = $mypdo->prepare($picksql);
                     $pickquery->bindParam(':player', $player, PDO::PARAM_INT);
-                    $pickquery->bindParam(':game', $id, PDO::PARAM_INT);
+                    $pickquery->bindParam(':game', $gameid, PDO::PARAM_INT);
                     $pickquery->execute();
                     $pickfetch = $pickquery->fetchAll(PDO::FETCH_ASSOC);
-
-                    $availsql = "SELECT lms_match_id, lms_team_name, lms_match_date FROM lms.v_lms_match where lms_match_team in (SELECT lms_available_picks_team FROM v_lms_available_picks WHERE lms_available_picks_player_id = :player and lms_available_picks_game = :game) and lms_match_weekno = :weekno";
+                    /* 
+                     * Get the current picked match id
+                     */                    
+                    $currentpickmatch = 0;
+                    $currentpickteam = 0;
+                    foreach ($pickfetch as $rs) {
+                        if ($rs['lms_match_weekno'] == $weekno) {
+                            $currentpickmatch = $rs['lms_pick_match_id'];
+                            $currentpickteam = $rs['lms_team_id'];
+                            break;
+                        }
+                     }
+                     /*
+                      * Get all the matches for the current week featuring the available teams left in this game for the player 
+                      */
+                    $availsql = "SELECT lms_match_id, lms_team_name, lms_match_date FROM lms.v_lms_match where lms_match_team in 
+                                    (SELECT lms_available_picks_team FROM v_lms_available_picks WHERE lms_available_picks_player_id = :player and lms_available_picks_game = :game)
+                                         and lms_match_weekno = :weekno and lms_match_id <> :currentpick ORDER BY lms_team_name, lms_match_date";
                     $availquery = $mypdo->prepare($availsql);
                     $availquery->bindParam(':player', $player, PDO::PARAM_INT);
-                    $availquery->bindParam(':game', $id, PDO::PARAM_INT);
+                    $availquery->bindParam(':game', $gameid, PDO::PARAM_INT);
+                    $availquery->bindParam(':currentpick', $currentpickmatch, PDO::PARAM_INT);
                     $availquery->bindParam(':weekno', $weekno);
                     $availquery->execute();
                     $availfetch = $availquery->fetchAll(PDO::FETCH_ASSOC);
@@ -127,8 +147,9 @@ if (login_check($mypdo) == true) {
                         $html .= '	                    </select>
 				                    </div>
 				                    <div class="col-sm-2 col-sm-offset-1">
-                                        <input type= "hidden" name= "gameid" value="' . $id . '" />
-                                        <br>
+                                        <input type= "hidden" name= "gameid" value="' . $gameid . '" />
+	                                    <input type= "hidden" name= "currentpickteam" value="' . $currentpickteam . '" />
+	                                    <input type= "hidden" name= "currentpickmatch" value="' . $currentpickmatch . '" />
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
 				                    </div>
                                     </form>

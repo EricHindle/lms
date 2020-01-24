@@ -2,6 +2,8 @@
 $myPath = '../../';
 
 require $myPath . 'includes/db_connect.php';
+require $myPath . 'struct/picks/pick-functions.php';
+
 date_default_timezone_set('Europe/London');
 
 function add_player_to_game($gameid, $playerid)
@@ -41,12 +43,7 @@ function add_player_to_game($gameid, $playerid)
         $teamfetch = $teamquery->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($teamfetch as $rs) {
-            $sqlavailablegame = "INSERT INTO lms_available_picks (lms_available_picks_game, lms_available_picks_player_id, lms_available_picks_team) VALUES (:gameid, :playerid, :teamid)";
-            $stmtavailablegame = $mypdo->prepare($sqlavailablegame);
-            $stmtavailablegame->bindParam(":gameid", $gameid, PDO::PARAM_INT);
-            $stmtavailablegame->bindParam(":playerid", $playerid, PDO::PARAM_INT);
-            $stmtavailablegame->bindParam(":teamid", $rs['lms_team_id'], PDO::PARAM_INT);
-            $stmtavailablegame->execute();
+            insert_available_team($playerid, $gameid, $rs['lms_team_id']); 
         }
     }
     return $joinok;

@@ -75,7 +75,7 @@ if (login_check($mypdo) == true) {
         } else {
             if ($pickquery->rowCount() > 0) {
                 $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
-                $currentpick = $pickfetch['lms_team_name'] . ' ('.date_format(date_create($pickfetch['lms_match_date']), 'd-M-Y').')';
+                $currentpick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd-M-Y') . ')';
             } else {
                 $currentpick = '(waiting)';
             }
@@ -100,16 +100,16 @@ if (login_check($mypdo) == true) {
 			            <div class="row">
 			            	<div class="col-sm-4">
 			                    <div class="tile red">
-                                    <form class="form-horizontal" role="form" name ="editgame" method="post" action="'.$myPath.'struct/picks/pick-main.php">';
+                                    <form class="form-horizontal" role="form" name ="editpick" method="post" action="' . $myPath . 'struct/picks/pick-main.php">';
     $html .= $key;
     $html .= '					
 			                    		<h3 class="title" >Selections for</h3>
 			                            <div class="form-group" style="margin-left:16px;margin-right:16px">
 		                                     <select class="form-control" id="gameid" name="gameid">';
-foreach ($gamefetch as $myGame) {
-    $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
-}
-$html .= '	                                 </select>
+    foreach ($gamefetch as $myGame) {
+        $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
+    }
+    $html .= '	                                 </select>
 			                            </div>
 			                            <div class="form-group" style="margin-left:16px;margin-right:16px">
                                             <br>

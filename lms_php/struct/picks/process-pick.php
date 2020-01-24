@@ -4,6 +4,8 @@ $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
+require $myPath . 'struct/picks/pick-functions.php';
+require $myPath . 'struct/match/match-functions.php';
 
 sec_session_start();
 $formKey = new formKey();
@@ -12,29 +14,35 @@ if (login_check($mypdo) == true) {
         if (! isset($_POST['form_key']) || ! $formKey->validate()) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
-            if (isset($_POST['matchid'], $_POST['gameid'])) {
+            if (isset($_POST['matchid'], $_POST['gameid'], $_POST['currentpickteam'], $_POST['currentpickmatch'],)) {
                 $matchid = sanitize_int($_POST['matchid']);
                 $player = $_SESSION['user_id'];
                 $game = sanitize_int($_POST['gameid']);
+                $currentpickteam = sanitize_int($_POST['currentpickteam']);
+                $currentpickmatch = sanitize_int($_POST['currentpickmatch']);
                 $weekno = $_SESSION['currentseason'] . $_SESSION['currentweek'];
                 if ($game && $matchid && $player) {
                     $html = "";
-                    $upsql = "INSERT INTO lms_pick (lms_pick_player_id, lms_pick_game_id, lms_pick_match_id, lms_pick_wl) VALUES (:player, :game, :match, '');";
-                    $upquery = $mypdo->prepare($upsql);
-                    $upquery->bindParam(':player', $player, PDO::PARAM_INT);
-                    $upquery->bindParam(':game', $game, PDO::PARAM_INT);
-                    $upquery->bindParam(':match', $matchid, PDO::PARAM_INT);
-                    $upquery->execute();
-                    $upcount = $upquery->rowCount();
-                    if ($upcount > 0) {
+                    
+                    if ($currentpickmatch <> 0) {
+                        /*
+                         * Remove current pick and make team available again
+                         */
+                        delete_pick($player, $game, $currentpickmatch);
+                        insert_available_team($player, $game, $currentpickteam);
+                    }
+                    
+                    if (insert_pick($player, $game, $matchid)) {
+                        delete_available_team($player, $game, get_team_from_match($matchid));
+
                         $html .= "<script>
 									alert('Selection updated successfully.');
-									window.location.href='pick-main.php';
+									window.location.href='".$myPath."menus/home.php';
 								</script>";
                     } else {
                         $html .= "<script>
 									alert('Selection not saved.');
-									window.location.href='pick-main.php';
+									window.location.href='".$myPath."menus/home.php';
 								</script>";
                     }
 
@@ -42,7 +50,7 @@ if (login_check($mypdo) == true) {
                 } else {
                     echo "<script>
 							alert('There was a problem. Please check details and try again.');
-							window.location.href='pick-main.php';
+							window.location.href='".$myPath."menus/home.php';
 						</script>";
                 }
             } else {
