@@ -14,7 +14,7 @@ if (login_check($mypdo) == true) {
         if (! isset($_POST['form_key']) || ! $formKey->validate()) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
-            if (isset($_POST['matchid'], $_POST['gameid'], $_POST['currentpickteam'], $_POST['currentpickmatch'],)) {
+            if (isset($_POST['matchid'], $_POST['gameid'], $_POST['currentpickteam'], $_POST['currentpickmatch'])) {
                 $matchid = sanitize_int($_POST['matchid']);
                 $player = $_SESSION['user_id'];
                 $game = sanitize_int($_POST['gameid']);
@@ -23,26 +23,26 @@ if (login_check($mypdo) == true) {
                 $weekno = $_SESSION['currentseason'] . $_SESSION['currentweek'];
                 if ($game && $matchid && $player) {
                     $html = "";
-                    
-                    if ($currentpickmatch <> 0) {
+
+                    if ($currentpickmatch != 0) {
                         /*
                          * Remove current pick and make team available again
                          */
                         delete_pick($player, $game, $currentpickmatch);
                         insert_available_team($player, $game, $currentpickteam);
                     }
-                    
+
                     if (insert_pick($player, $game, $matchid)) {
                         delete_available_team($player, $game, get_team_from_match($matchid));
 
                         $html .= "<script>
 									alert('Selection updated successfully.');
-									window.location.href='".$myPath."menus/home.php';
+									window.location.href='" . $myPath . "menus/home.php';
 								</script>";
                     } else {
                         $html .= "<script>
 									alert('Selection not saved.');
-									window.location.href='".$myPath."menus/home.php';
+									window.location.href='" . $myPath . "menus/home.php';
 								</script>";
                     }
 
@@ -50,7 +50,7 @@ if (login_check($mypdo) == true) {
                 } else {
                     echo "<script>
 							alert('There was a problem. Please check details and try again.');
-							window.location.href='".$myPath."menus/home.php';
+							window.location.href='" . $myPath . "menus/home.php';
 						</script>";
                 }
             } else {

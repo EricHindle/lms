@@ -1,6 +1,5 @@
 <?php
 $myPath = '../../';
-
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'struct/picks/pick-functions.php';
 
@@ -43,7 +42,7 @@ function add_player_to_game($gameid, $playerid)
         $teamfetch = $teamquery->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($teamfetch as $rs) {
-            insert_available_team($playerid, $gameid, $rs['lms_team_id']); 
+            insert_available_team($playerid, $gameid, $rs['lms_team_id']);
         }
     }
     return $joinok;
@@ -87,7 +86,7 @@ function generate_game_code()
     $allchars = "abcdefghijkmnopqrstuvwxyz023456789";
     $randstr = str_shuffle($allchars);
     $gamecode = "";
-    $gamecount = -1;
+    $gamecount = - 1;
     do {
         for ($i = 1; $i < 7; $i ++) {
             $gamecode .= substr($randstr, 0, 1);
@@ -95,9 +94,8 @@ function generate_game_code()
         }
         $gamequery = find_game_by_code($gamecode);
         $gamecount = $gamequery->rowCount();
-        
-    } while ($gamecount <> 0);
-    
+    } while ($gamecount != 0);
+
     return $gamecode;
 }
 
@@ -111,5 +109,17 @@ function find_game_by_code($gamecode)
     ));
 
     return $gamequery;
+}
+
+function get_player_games()
+{
+    global $mypdo;
+    $player = $_SESSION['user_id'];
+    $gamesql = "SELECT * FROM v_lms_player_games WHERE lms_player_id = :player ORDER BY lms_game_player_status, lms_game_name ASC";
+    $gamequery = $mypdo->prepare($gamesql);
+    $gamequery->bindParam(':player', $player, PDO::PARAM_INT);
+    $gamequery->execute();
+    $gamelist = $gamequery->fetchAll(PDO::FETCH_ASSOC);
+    return $gamelist;
 }
 ?>

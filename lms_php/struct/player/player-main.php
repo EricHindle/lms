@@ -1,22 +1,21 @@
 <?php
-	$myPath='../../';
-	require $myPath.'includes/db_connect.php';
-    require $myPath.'includes/functions.php';
-    require $myPath .'includes/formkey.class.php';
-	sec_session_start(); 
-	if(login_check($mypdo) == true && $_SESSION['retaccess']==999) {
-		$formKey = new formKey();
-		$key = $formKey->outputKey();
+$myPath = '../../';
+require $myPath . 'includes/db_connect.php';
+require $myPath . 'includes/functions.php';
+require $myPath . 'includes/formkey.class.php';
+sec_session_start();
+if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
+    $formKey = new formKey();
+    $key = $formKey->outputKey();
 
-		$playerchangesql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active FROM lms_player ORDER BY lms_player_screen_name ASC";
-		$playerchangequery = $mypdo->prepare($playerchangesql);
-		$playerchangequery->execute();
-		$cafetch = $playerchangequery->fetchAll(PDO::FETCH_ASSOC);
+    $playerchangesql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active FROM lms_player ORDER BY lms_player_screen_name ASC";
+    $playerchangequery = $mypdo->prepare($playerchangesql);
+    $playerchangequery->execute();
+    $cafetch = $playerchangequery->fetchAll(PDO::FETCH_ASSOC);
 
+    $html = "";
 
-		$html="";
-
-		echo '
+    echo '
 		<!doctype html>
 		<html>
 			<head>
@@ -27,11 +26,11 @@
 			    <title>Player Admin</title>
 			    
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
-			    <link rel="stylesheet" href="'.$myPath.'css/bootstrap.min.css">
-			    <link rel="stylesheet" href="'.$myPath.'css/rethome.css">
-			    <script src="'.$myPath.'js/jquery.js"></script>
-			    <script src="'.$myPath.'js/bootstrap.min.js"></script>
-			    <script src="'.$myPath.'js/jquery.tablesorter.js"></script>
+			    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
+			    <link rel="stylesheet" href="' . $myPath . 'css/rethome.css">
+			    <script src="' . $myPath . 'js/jquery.js"></script>
+			    <script src="' . $myPath . 'js/bootstrap.min.js"></script>
+			    <script src="' . $myPath . 'js/jquery.tablesorter.js"></script>
 			    <script>
 		            $(function(){
 		            $(\'#keywords\').tablesorter(); 
@@ -89,8 +88,8 @@
 			</head>
 
 			<body>';
-				include $myPath.'globNAV.php';
-		$html.= '
+    include $myPath . 'globNAV.php';
+    $html .= '
 				<section id="homeSection">
 			    <br><br>
 			        <div class="container">
@@ -102,10 +101,10 @@
 			      		</div>
 			        	<div class = "row">';
 
-		$html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
+    $html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
 			                	<form class="form-horizontal" role="form" name ="addplayer" method="post" action="add-player.php">';
-		$html .= $key;
-		$html .= '					<h3 class="text-center">Add Player</h3>
+    $html .= $key;
+    $html .= '					<h3 class="text-center">Add Player</h3>
 				                    <div class="form-group">
 				                    	<label for="email">Email address :</label>
 				                    	<input type="text" class="form-control" id="email" name="email" maxlength="100" placeholder="email" />
@@ -118,7 +117,7 @@
 					                    <label for="screenname">Screen name (no special characters):</label>
 					                    <input type="text" class="form-control" id="screenname" name="screenname" placeholder="screen name" />
 					                    <input type="checkbox" name="isadmin" value="true"> Administrator<br>';
-		$html.='	                 
+    $html .= '	                 
 				                    </div>
 				                    <div class="form-group">
 				                    	<br>
@@ -128,18 +127,18 @@
 				            </div>
 			            ';
 
-		$html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
+    $html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
 			                	<form class="form-horizontal" role="form" name ="edituser" method="post" action="edit-player.php">';
-		$html .= $key;
-		$html .= '					<h3 class="text-center">Edit Player</h3>
+    $html .= $key;
+    $html .= '					<h3 class="text-center">Edit Player</h3>
 			                  
 				                    <div class="form-group">
 			                        	<label for="user">Choose Player:</label>
 			                            <select class="form-control" id="user" name="user">';
-		foreach ($cafetch as $myUser) {
-			$html.=						'<option value="'.$myUser['lms_player_id'].'">'.$myUser['lms_player_screen_name'].' <small>('.$myUser['lms_player_email'].')<small></option>';
-		}
-		$html .='	                    </select>
+    foreach ($cafetch as $myUser) {
+        $html .= '<option value="' . $myUser['lms_player_id'] . '">' . $myUser['lms_player_screen_name'] . ' <small>(' . $myUser['lms_player_email'] . ')<small></option>';
+    }
+    $html .= '	                    </select>
 				                    </div>
 				                    <div class="form-group">
 				                    
@@ -149,19 +148,19 @@
 				            </div>
 			            ';
 
-		$html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
+    $html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
 			                	<form class="form-horizontal" role="form" name ="edituser" method="post" action="change-password.php" onsubmit="return validatePassReset()">';
-		$html .= $key;
-		$html .= '					<h3 class="text-center">Change Password</h3>
+    $html .= $key;
+    $html .= '					<h3 class="text-center">Change Password</h3>
 									<h5>Password must contain at least 8 characters, including UPPERCASE, lowercase and numbers.</h5>
 			                    	<br>
 				                    <div class="form-group">
 			                        	<label for="user">Choose Player:</label>
 			                            <select class="form-control" id="user" name="user">';
-		foreach ($cafetch as $myUser) {
-		    $html.=						'<option value="'.$myUser['lms_player_id'].'">'.$myUser['lms_player_screen_name'].' <small>('.$myUser['lms_player_email'].')<small></option>';
-		}
-		$html .='	                    </select>
+    foreach ($cafetch as $myUser) {
+        $html .= '<option value="' . $myUser['lms_player_id'] . '">' . $myUser['lms_player_screen_name'] . ' <small>(' . $myUser['lms_player_email'] . ')<small></option>';
+    }
+    $html .= '	                    </select>
 									</div>
                                     <div class="form-group">
                                         <label for="pwd1">New password:</label>
@@ -178,10 +177,7 @@
 				            </div>
 			            ';
 
-
-
-		
-		$html .='		</div>
+    $html .= '		</div>
 						<div class = "row">
 				        	<div class="well col-md-10 col-md-offset-1 textDark">
 				        		<h3>All Players</h3>
@@ -199,13 +195,13 @@
 									</thead>
 									<tbody>
 									';
-							foreach ($cafetch as $rs) {
-								if ($rs['lms_active']==1) {
-									$active='Yes';
-								} else {
-									$active='No';
-								}
-								$html .='
+    foreach ($cafetch as $rs) {
+        if ($rs['lms_active'] == 1) {
+            $active = 'Yes';
+        } else {
+            $active = 'No';
+        }
+        $html .= '
 									<tr>
 										<td>' . $rs['lms_player_login'] . '</td>
 										<td>' . $rs['lms_player_forename'] . '</td>
@@ -215,20 +211,20 @@
 										<td>' . $rs['lms_access'] . '</td>
                                         <td>' . $active . '</td>
 									</tr>';
-							}
-							$html .='
+    }
+    $html .= '
 									</tbody>
 								</table>
 							</div>
 						</div>
 
 				        ';
-		
-		$html.= '	      		
+
+    $html .= '	      		
 			      		<div class="row">
 							<br>
 							<div class="col-xs-6">
-								<a href="'.$myPath.'struct/main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
+								<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
 								<br>
 							</div>
 						</div>
@@ -239,8 +235,8 @@
 		</html>
 
 		';
-		echo $html;
-	} else { 
-	        header('Location: '.$myPath.'index.php?error=1');
-	}
+    echo $html;
+} else {
+    header('Location: ' . $myPath . 'index.php?error=1');
+}
 ?>

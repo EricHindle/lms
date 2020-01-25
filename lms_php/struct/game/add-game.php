@@ -42,21 +42,19 @@ if (login_check($mypdo) == true) {
                         $added = $stmtaddgame->rowCount();
                         $gameid = $mypdo->lastInsertId();
                         if ($added == 1) {
-                            
+
                             add_player_to_game($gameid, $_SESSION['user_id']);
-                            
-                            
-                          $html .= "<script>              
+
+                            $html .= "<script>              
 									alert('Game added.');
 									window.location.href='game-manage.php';
 								  </script>";
-                        }else {
-                           $html .= "<script>
+                        } else {
+                            $html .= "<script>
 									alert('Game was not added.');
 									window.location.href='game-manage.php';
 								  </script>";
                         }
-
                     }
 
                     echo $html;

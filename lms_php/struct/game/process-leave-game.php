@@ -119,37 +119,34 @@ if (login_check($mypdo) == true) {
 										window.location.href='game-manage.php';
 									</script>";
                             }
-                        
-                    } else {
-                        $html .= "<script>
+                        } else {
+                            $html .= "<script>
 										alert('You are not active in this game. Please check the game and try again.');
 										window.location.href='game-manage.php';
 									</script>";
-                    }
-                } else {
-                    $html .= "<script>
+                        }
+                    } else {
+                        $html .= "<script>
 										alert('Game not found. Please check the code and try again.');
 										window.location.href='game-manage.php';
 									</script>";
-                }
+                    }
 
-                echo $html;
-            } else {
-                echo "<script>
+                    echo $html;
+                } else {
+                    echo "<script>
 										alert('There was a problem. Please check details and try again.');
 										window.location.href='join-game.php';
 									</script>";
+                }
+            } else {
+                header('Location: ' . $myPath . 'index.php?error=1');
             }
-        } else {
-            header('Location: ' . $myPath . 'index.php?error=1');
         }
+    } else {
+        header('Location: ' . $myPath . 'index.php?error=1');
     }
 } else {
     header('Location: ' . $myPath . 'index.php?error=1');
 }
-
-
-	} else { 
-	        header('Location: '.$myPath.'index.php?error=1');
-	}
 ?>

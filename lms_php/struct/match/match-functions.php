@@ -3,7 +3,8 @@ $myPath = '../../';
 
 require $myPath . 'includes/db_connect.php';
 
-function get_team_from_match($matchid) {
+function get_team_from_match($matchid)
+{
     global $mypdo;
     $teamid = 0;
     $lookupsql = "SELECT lms_match_team FROM lms_match WHERE lms_match_id = :id LIMIT 1";

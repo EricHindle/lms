@@ -1,55 +1,49 @@
 <?php
-	$myPath='../../';
+$myPath = '../../';
 
-	require $myPath.'includes/db_connect.php';
-    require $myPath.'includes/functions.php';
-    require $myPath.'includes/formkey.class.php';
+require $myPath . 'includes/db_connect.php';
+require $myPath . 'includes/functions.php';
+require $myPath . 'includes/formkey.class.php';
 
-	sec_session_start();
-	$formKey = new formKey();
-	$access = sanitize_int($_SESSION['retaccess']);
-	if(login_check($mypdo) == true && $access == 999) {
-		if($_SERVER['REQUEST_METHOD'] == 'POST')
-		{
-	        if(!isset($_POST['form_key']) || !$formKey->validate())
-	        {
-	            header('Location: '.$myPath.'index.php?error=1');
-	        }
-	        else
-	        {
-	            if (isset($_POST['weekid']))
-	            {
-	                $gameid = $_POST['weekid'];
-	                if($gameid)
-	                {
-	                	$html="";
-	                	$teamsql = "SELECT lms_team_name, lms_team_id, lms_team_active FROM lms_team WHERE lms_team_active = 1";
-	                	$teamquery = $mypdo->prepare($teamsql);
-	                	$teamquery->execute();
-	                	$teamcount = $teamquery->rowCount();
-	                	
-	                	$weeksql = "SELECT * FROM lms_week WHERE lms_week_no = :id LIMIT 1";
-	                	$weekquery = $mypdo->prepare($weeksql);
-	                	$weekquery->bindParam(':id',$gameid);
-	                	$weekquery->execute();
-	                	$weekcount = $weekquery->rowCount();
-	                	
-	                	$week = 0;
-	                	$year = 0;	
-                        $kodate = '';
-	                	if( $weekcount>0){
-	                	    $key = $formKey->outputKey();
-	                	    $remainingweeks=$weekquery->fetch(PDO::FETCH_ASSOC);
-	                	    $week = $remainingweeks['lms_week'];
-	                	    $year = $remainingweeks['lms_year'];
-	                	    $md = date_create($remainingweeks['lms_week_end']);
-	                	    $kodate = date_format($md,'Y-m-d');
-	                	}
-	                	
-	                	if( $teamcount>0){
-							$key = $formKey->outputKey();
-							$teamfetch=$teamquery->fetchAll(PDO::FETCH_ASSOC);
-							echo '
+sec_session_start();
+$formKey = new formKey();
+$access = sanitize_int($_SESSION['retaccess']);
+if (login_check($mypdo) == true && $access == 999) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if (! isset($_POST['form_key']) || ! $formKey->validate()) {
+            header('Location: ' . $myPath . 'index.php?error=1');
+        } else {
+            if (isset($_POST['weekid'])) {
+                $gameid = $_POST['weekid'];
+                if ($gameid) {
+                    $html = "";
+                    $teamsql = "SELECT lms_team_name, lms_team_id, lms_team_active FROM lms_team WHERE lms_team_active = 1";
+                    $teamquery = $mypdo->prepare($teamsql);
+                    $teamquery->execute();
+                    $teamcount = $teamquery->rowCount();
+
+                    $weeksql = "SELECT * FROM lms_week WHERE lms_week_no = :id LIMIT 1";
+                    $weekquery = $mypdo->prepare($weeksql);
+                    $weekquery->bindParam(':id', $gameid);
+                    $weekquery->execute();
+                    $weekcount = $weekquery->rowCount();
+
+                    $week = 0;
+                    $year = 0;
+                    $kodate = '';
+                    if ($weekcount > 0) {
+                        $key = $formKey->outputKey();
+                        $remainingweeks = $weekquery->fetch(PDO::FETCH_ASSOC);
+                        $week = $remainingweeks['lms_week'];
+                        $year = $remainingweeks['lms_year'];
+                        $md = date_create($remainingweeks['lms_week_end']);
+                        $kodate = date_format($md, 'Y-m-d');
+                    }
+
+                    if ($teamcount > 0) {
+                        $key = $formKey->outputKey();
+                        $teamfetch = $teamquery->fetchAll(PDO::FETCH_ASSOC);
+                        echo '
 								<!doctype html>
 								<html>
 									<head>
@@ -60,29 +54,29 @@
 									    <title>Generate Matches</title>
 									    
 									    <meta name="viewport" content="width=device-width, initial-scale=1">
-									    <link rel="stylesheet" href="'.$myPath.'css/bootstrap.min.css">
-									    <link rel="stylesheet" href="'.$myPath.'css/rethome.css">
-									    <script src="'.$myPath.'js/jquery.js"></script>
-									    <script src="'.$myPath.'js/bootstrap.min.js"></script>
+									    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
+									    <link rel="stylesheet" href="' . $myPath . 'css/rethome.css">
+									    <script src="' . $myPath . 'js/jquery.js"></script>
+									    <script src="' . $myPath . 'js/bootstrap.min.js"></script>
 									</head>
 
 									<body>';
-										include $myPath.'globNAV.php';
-								$html.= '
+                        include $myPath . 'globNAV.php';
+                        $html .= '
 										<section id="homeSection">
 									    <br><br>
 									        <div class="container">
 									        	<div class="row">
 									                <div class="col-md-8">
-									                    <h1><strong>Generate Matches for Period '.$year.'/'.$week.'</strong></h1>
+									                    <h1><strong>Generate Matches for Period ' . $year . '/' . $week . '</strong></h1>
 									                </div>
 									      		</div>
 									        	<div class = "row">';
 
-								$html .= '			<div class="well col-md-8 col-md-offset-1 textDark">
+                        $html .= '			<div class="well col-md-8 col-md-offset-1 textDark">
 									                	<form class="form-horizontal" role="form" name ="gen" method="post" action="process-gen-match.php">';
-								$html .= $key;
-								$html .= '					<h3 class="text-center">Matches</h3>
+                        $html .= $key;
+                        $html .= '					<h3 class="text-center">Matches</h3>
      <div class="form-group">
 					        	<table class="table table-bordered" id="matchtable">
 									<thead>
@@ -95,29 +89,29 @@
 									<tbody>
 									';
 
-							foreach ($teamfetch as $rs) {
-							    $matchsql = "SELECT * FROM lms_match WHERE lms_match_weekno = :id and lms_match_team = :team LIMIT 1";
-							    $matchquery = $mypdo->prepare($matchsql);
-							    $matchquery->bindParam(':id', $gameid);
-							    $matchquery->bindParam(':team', $rs['lms_team_id']);
-							    $matchquery->execute();
-							    $matchcount = $matchquery->rowCount();
-							    if ($matchcount==0){
-							    
-								$html .='
+                        foreach ($teamfetch as $rs) {
+                            $matchsql = "SELECT * FROM lms_match WHERE lms_match_weekno = :id and lms_match_team = :team LIMIT 1";
+                            $matchquery = $mypdo->prepare($matchsql);
+                            $matchquery->bindParam(':id', $gameid);
+                            $matchquery->bindParam(':team', $rs['lms_team_id']);
+                            $matchquery->execute();
+                            $matchcount = $matchquery->rowCount();
+                            if ($matchcount == 0) {
+
+                                $html .= '
 									<tr>
-										<td><input type="checkbox" style="margin-left:20px;" name="add-'.$rs['lms_team_id'].'" id="add-'.$rs['lms_team_id'].'" value="true" checked ></td>
+										<td><input type="checkbox" style="margin-left:20px;" name="add-' . $rs['lms_team_id'] . '" id="add-' . $rs['lms_team_id'] . '" value="true" checked ></td>
                                         <td>' . $rs['lms_team_name'] . '</td>
-										<td><input type="text" class="form-control" id="mdt-'.$rs['lms_team_id'].'" name="mdt-'.$rs['lms_team_id'].'" value="'.$kodate.'" placeholder="yyyy-mm-dd"></td>
+										<td><input type="text" class="form-control" id="mdt-' . $rs['lms_team_id'] . '" name="mdt-' . $rs['lms_team_id'] . '" value="' . $kodate . '" placeholder="yyyy-mm-dd"></td>
 									</tr>';
-							    }
-							}
-							$html .='
+                            }
+                        }
+                        $html .= '
 									</tbody>
 								</table>
 </div>
 										                    <div class="form-group">
-										                        <input type= "hidden" name= "weekid" value="'.$gameid.'" />
+										                        <input type= "hidden" name= "weekid" value="' . $gameid . '" />
 										                    </div>									                    	
 										                    <div class="form-group">
 										                    	<br>
@@ -129,7 +123,7 @@
 										        <div class="row">
 													<br>
 													<div class="col-xs-6">
-														<a href="'.$myPath.'struct/match/match-main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
+														<a href="' . $myPath . 'struct/match/match-main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
 														<br>
 													</div>
 												</div>
@@ -139,31 +133,28 @@
 									</body>
 								</html>
 									            ';
-	                	} else {
-	                		$html.= "<script>
+                    } else {
+                        $html .= "<script>
 										alert('There was a problem. Please check details and try again.');
 										window.location.href='match-main.php';
 									</script>";
-	                	}
-	                	
-						echo $html;
-			            
-	                } else {
-	                	echo "<script>
+                    }
+
+                    echo $html;
+                } else {
+                    echo "<script>
 										alert('There was a problem. Please check details and try again.');
 										window.location.href='match-main.php';
 									</script>";
-	            	}
-	            } else {
-	                header('Location: '.$myPath.'index.php?error=1');
-	            }
-	        }
-	    } else { 
-	        header('Location: '.$myPath.'index.php?error=1');
-		}
-
-
-	} else { 
-	        header('Location: '.$myPath.'index.php?error=1');
-	}
+                }
+            } else {
+                header('Location: ' . $myPath . 'index.php?error=1');
+            }
+        }
+    } else {
+        header('Location: ' . $myPath . 'index.php?error=1');
+    }
+} else {
+    header('Location: ' . $myPath . 'index.php?error=1');
+}
 ?>

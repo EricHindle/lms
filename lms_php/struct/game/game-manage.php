@@ -4,6 +4,7 @@ require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
 require $myPath . 'includes/lookup-functions.php';
+
 sec_session_start();
 $formKey = new formKey();
 if (login_check($mypdo) == true) {

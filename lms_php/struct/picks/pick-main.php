@@ -142,7 +142,7 @@ if (login_check($mypdo) == true) {
 				                    <div class="col-sm-9">
 			                            <select class="form-control" id="matchid" name="matchid">';
                             foreach ($availfetch as $mypick) {
-                                $html .= '<option value="' .  $mypick['lms_match_id'] . '">'. date_format(date_create($mypick['lms_match_date']), 'd-M'). '&nbsp;&nbsp;&nbsp;&nbsp;' . $mypick['lms_team_name'].  '</option>';
+                                $html .= '<option value="' . $mypick['lms_match_id'] . '">' . date_format(date_create($mypick['lms_match_date']), 'd-M') . '&nbsp;&nbsp;&nbsp;&nbsp;' . $mypick['lms_team_name'] . '</option>';
                             }
                             $html .= '	                    </select>
 				                    </div>

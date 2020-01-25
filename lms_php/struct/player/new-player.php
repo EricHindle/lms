@@ -1,15 +1,15 @@
 <?php
-	$myPath='../../';
-	require $myPath.'includes/db_connect.php';
-    require $myPath.'includes/functions.php';
-    require $myPath .'includes/formkey.class.php';
-	sec_session_start(); 
-		$formKey = new formKey();
-		$key = $formKey->outputKey();
+$myPath = '../../';
+require $myPath . 'includes/db_connect.php';
+require $myPath . 'includes/functions.php';
+require $myPath . 'includes/formkey.class.php';
+sec_session_start();
+$formKey = new formKey();
+$key = $formKey->outputKey();
 
-		$html="";
+$html = "";
 
-		echo '
+echo '
 		<!doctype html>
 		<html>
 			<head>
@@ -20,11 +20,11 @@
 			    <title>Player Admin</title>
 			    
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
-			    <link rel="stylesheet" href="'.$myPath.'css/bootstrap.min.css">
-			    <link rel="stylesheet" href="'.$myPath.'css/retlogin.css">
-			    <script src="'.$myPath.'js/jquery.js"></script>
-			    <script src="'.$myPath.'js/bootstrap.min.js"></script>
-			    <script src="'.$myPath.'js/jquery.tablesorter.js"></script>
+			    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
+			    <link rel="stylesheet" href="' . $myPath . 'css/retlogin.css">
+			    <script src="' . $myPath . 'js/jquery.js"></script>
+			    <script src="' . $myPath . 'js/bootstrap.min.js"></script>
+			    <script src="' . $myPath . 'js/jquery.tablesorter.js"></script>
 			    <script>
 		            $(function(){
 		            $(\'#keywords\').tablesorter(); 
@@ -82,7 +82,7 @@
 			</head>
 
 			<body>';
-		$html.= '
+$html .= '
 				<section id="homeSection">
 			    <br><br>
 			        <div class="container">
@@ -94,10 +94,10 @@
 			      		</div>
 			        	<div class = "row">';
 
-		$html .= '			<div class="well col-md-offset-4 col-md-4 col-sm-offset-1 col-sm-10 textDark">
-			                	<form class="form-group" role="form" name ="addplayer" method="post" action="'.$mypath.'add-new-player.php">';
-		$html .= $key;
-		$html .= '					<h3 class="text-center">Enter Your Details</h3>
+$html .= '			<div class="well col-md-offset-4 col-md-4 col-sm-offset-1 col-sm-10 textDark">
+			                	<form class="form-group" role="form" name ="addplayer" method="post" action="' . $mypath . 'add-new-player.php">';
+$html .= $key;
+$html .= '					<h3 class="text-center">Enter Your Details</h3>
 			                    	<br>
 
                                     <div class="form-group">
@@ -131,26 +131,25 @@
                                            <i class="glyphicon glyphicon-modal-window"></i>
 					                       <input type="text" class="form-control" id="screenname" name="screenname" placeholder="screen name" />
 					                    <input type="hidden" name="isadmin" value="false">';
-		$html.='	                 
+$html .= '	                 
 				                       </div>
                                     </div>
 				                    <div class="form-group">
 				                    	<br>
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
-                                        <a href="'.$myPath.'index.php" class="btn btn-primary btn-small" role="button" style="float:right">Back</a>
+                                        <a href="' . $myPath . 'index.php" class="btn btn-primary btn-small" role="button" style="float:right">Back</a>
 				                    </div>
 				                </form>
 				            </div>
 			            ';
 
-	
-		$html.= '	      		
+$html .= '	      		
 			    	</div>
 			    </section>
 			</body>
 		</html>
 
 		';
-		echo $html;
+echo $html;
 
 ?>

@@ -1,9 +1,9 @@
 <?php
 $myPath = '../../';
-
 require $myPath . 'includes/db_connect.php';
 
-function delete_pick($playerid, $gameid, $matchid) {
+function delete_pick($playerid, $gameid, $matchid)
+{
     global $mypdo;
     $isdeleted = false;
     $delsql = "DELETE FROM lms_pick WHERE lms_pick_player_id=:player and lms_pick_game_id=:game and lms_pick_match_id=:match";
@@ -19,7 +19,8 @@ function delete_pick($playerid, $gameid, $matchid) {
     return $isdeleted;
 }
 
-function delete_available_team($playerid, $gameid, $teamid) {
+function delete_available_team($playerid, $gameid, $teamid)
+{
     global $mypdo;
     $isdeleted = false;
     $delsql = "DELETE FROM lms_available_picks WHERE lms_available_picks_player_id=:player and lms_available_picks_game=:game and lms_available_picks_team=:team";
@@ -35,7 +36,8 @@ function delete_available_team($playerid, $gameid, $teamid) {
     return $isdeleted;
 }
 
-function insert_available_team($playerid, $gameid, $teamid) {
+function insert_available_team($playerid, $gameid, $teamid)
+{
     global $mypdo;
     $isinserted = false;
     $inssql = "INSERT INTO lms_available_picks (lms_available_picks_game, lms_available_picks_player_id, lms_available_picks_team) VALUES (:gameid, :playerid, :teamid)";
@@ -51,7 +53,8 @@ function insert_available_team($playerid, $gameid, $teamid) {
     return $isinserted;
 }
 
-function insert_pick($playerid, $gameid, $matchid) {
+function insert_pick($playerid, $gameid, $matchid)
+{
     global $mypdo;
     $isinserted = false;
     $inssql = "INSERT INTO lms_pick (lms_pick_player_id, lms_pick_game_id, lms_pick_match_id, lms_pick_wl) VALUES (:player, :game, :match, '');";
@@ -65,10 +68,10 @@ function insert_pick($playerid, $gameid, $matchid) {
         $isinserted = true;
     }
     return $isinserted;
-    
 }
 
-function get_current_player_pick($gameid, $playerid) {
+function get_current_player_pick($gameid, $playerid)
+{
     global $mypdo;
     $matchwk = $_SESSION['currentseason'] . $_SESSION['currentweek'];
     $picksql = "SELECT lms_team_name, lms_match_date  FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game and lms_match_weekno = :matchwk LIMIT 1";

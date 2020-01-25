@@ -1,24 +1,24 @@
 <?php
-	$myPath='../../';
-	require $myPath.'includes/db_connect.php';
-    require $myPath.'includes/functions.php';
-    require $myPath .'includes/formkey.class.php';
-	sec_session_start(); 
-	if(login_check($mypdo) == true && $_SESSION['retaccess']==999) {
-		$formKey = new formKey();
-		$key = $formKey->outputKey();
+$myPath = '../../';
+require $myPath . 'includes/db_connect.php';
+require $myPath . 'includes/functions.php';
+require $myPath . 'includes/formkey.class.php';
+sec_session_start();
+if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
+    $formKey = new formKey();
+    $key = $formKey->outputKey();
 
-		$matchsql = "SELECT * FROM v_lms_match ORDER BY lms_match_date, lms_match_team ASC ";
-		$matchquery = $mypdo->prepare($matchsql);
-		$matchquery->execute();
-		$matchfetch = $matchquery->fetchAll(PDO::FETCH_ASSOC);
-		$weeksql = "SELECT * FROM lms_week ORDER BY lms_week_no ASC ";
-		$weekquery = $mypdo->prepare($weeksql);
-		$weekquery->execute();
-		$remainingweeks = $weekquery->fetchAll(PDO::FETCH_ASSOC);
-		$html="";
+    $matchsql = "SELECT * FROM v_lms_match ORDER BY lms_match_date, lms_match_team ASC ";
+    $matchquery = $mypdo->prepare($matchsql);
+    $matchquery->execute();
+    $matchfetch = $matchquery->fetchAll(PDO::FETCH_ASSOC);
+    $weeksql = "SELECT * FROM lms_week ORDER BY lms_week_no ASC ";
+    $weekquery = $mypdo->prepare($weeksql);
+    $weekquery->execute();
+    $remainingweeks = $weekquery->fetchAll(PDO::FETCH_ASSOC);
+    $html = "";
 
-		echo '
+    echo '
 		<!doctype html>
 		<html>
 			<head>
@@ -29,11 +29,11 @@
 			    <title>Game matchs</title>
 			    
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
-			    <link rel="stylesheet" href="'.$myPath.'css/bootstrap.min.css">
-			    <link rel="stylesheet" href="'.$myPath.'css/rethome.css">
-			    <script src="'.$myPath.'js/jquery.js"></script>
-			    <script src="'.$myPath.'js/bootstrap.min.js"></script>
-			    <script src="'.$myPath.'js/jquery.tablesorter.js"></script>
+			    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
+			    <link rel="stylesheet" href="' . $myPath . 'css/rethome.css">
+			    <script src="' . $myPath . 'js/jquery.js"></script>
+			    <script src="' . $myPath . 'js/bootstrap.min.js"></script>
+			    <script src="' . $myPath . 'js/jquery.tablesorter.js"></script>
 			    <script>
 		            $(function(){
 		            $(\'#keywords\').tablesorter(); 
@@ -42,8 +42,8 @@
 			</head>
 
 			<body>';
-				include $myPath.'globNAV.php';
-		$html.= '
+    include $myPath . 'globNAV.php';
+    $html .= '
 				<section id="homeSection">
 			    <br><br>
 			        <div class="container">
@@ -54,17 +54,17 @@
 			                </div>
 			      		</div>
                         <div class="row">';
-		$html .= '			<div class="well col-md-3 textDark">
+    $html .= '			<div class="well col-md-3 textDark">
 			                	<form class="form-horizontal" role="form" name ="genmatch" method="post" action="gen-match.php">';
-		$html .= $key;
-		$html .= '					<h3 class="text-center">Generate Matches</h3>
+    $html .= $key;
+    $html .= '					<h3 class="text-center">Generate Matches</h3>
 				                    <div class="form-group">
 			                        	<label for="weekid">Choose period:</label>
 			                            <select class="form-control" id="weekid" name="weekid">';
-		foreach ($remainingweeks as $myweek) {
-		    $html.=						'<option value="'.$myweek['lms_week_no'].'">'.$myweek['lms_year'].'/'.sprintf('%02d',$myweek['lms_week']).'&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp'. date_format(date_create($myweek['lms_week_start']),'d-M-Y').'</option>';
-		}
-		$html .='	                    </select>
+    foreach ($remainingweeks as $myweek) {
+        $html .= '<option value="' . $myweek['lms_week_no'] . '">' . $myweek['lms_year'] . '/' . sprintf('%02d', $myweek['lms_week']) . '&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp' . date_format(date_create($myweek['lms_week_start']), 'd-M-Y') . '</option>';
+    }
+    $html .= '	                    </select>
 				                    </div>
 				                    <div class="form-group">
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
@@ -72,17 +72,17 @@
                                 </form>
                             </div>
 			            ';
-		$html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
+    $html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
 			                	<form class="form-horizontal" role="form" name ="results" method="post" action="results.php">';
-		$html .= $key;
-		$html .= '					<h3 class="text-center">Enter Results</h3>
+    $html .= $key;
+    $html .= '					<h3 class="text-center">Enter Results</h3>
 				                    <div class="form-group">
 			                        	<label for="weekid">Choose period:</label>
 			                            <select class="form-control" id="weekid" name="weekid">';
-		foreach ($remainingweeks as $myweek) {
-		    $html.=						'<option value="'.$myweek['lms_week_no'].'">'.$myweek['lms_year'].'/'.sprintf('%02d',$myweek['lms_week']).'&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp'. date_format(date_create($myweek['lms_week_start']),'d-M-Y').'</option>';
-		}
-		$html .='	                    </select>
+    foreach ($remainingweeks as $myweek) {
+        $html .= '<option value="' . $myweek['lms_week_no'] . '">' . $myweek['lms_year'] . '/' . sprintf('%02d', $myweek['lms_week']) . '&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp' . date_format(date_create($myweek['lms_week_start']), 'd-M-Y') . '</option>';
+    }
+    $html .= '	                    </select>
 				                    </div>
 				                    <div class="form-group">
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
@@ -90,17 +90,17 @@
                                 </form>
                             </div>
 ';
-		$html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
+    $html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
 			                	<form class="form-horizontal" role="form" name ="editmatch" method="post" action="edit-match.php">';
-		$html .= $key;
-		$html .= '					<h3 class="text-center">Edit Match</h3>
+    $html .= $key;
+    $html .= '					<h3 class="text-center">Edit Match</h3>
 				                    <div class="form-group">
 			                        	<label for="weekid">Choose match:</label>
 			                            <select class="form-control" id="matchid" name="matchid">';
-		foreach ($matchfetch as $mymatch) {
-		    $html.=						'<option value="'.$mymatch['lms_match_id'].'">'.$mymatch['lms_team_name'].'&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp'. date_format(date_create($mymatch['lms_match_date']),'d-M-Y').'</option>';
-		}
-		$html .='	                    </select>
+    foreach ($matchfetch as $mymatch) {
+        $html .= '<option value="' . $mymatch['lms_match_id'] . '">' . $mymatch['lms_team_name'] . '&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp' . date_format(date_create($mymatch['lms_match_date']), 'd-M-Y') . '</option>';
+    }
+    $html .= '	                    </select>
 				                    </div>
 				                    <div class="form-group">
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
@@ -109,7 +109,7 @@
 				            </div>
 ';
 
-		$html .= '
+    $html .= '
                         </div>
 						<div class = "row">
 				        	<div class="well col-md-9 col-md-offset-1 textDark">
@@ -126,24 +126,24 @@
 									</thead>
 									<tbody>
 									';
-							foreach ($matchfetch as $rs) {
-							    
-							    if ($rs[lms_week] == $_SESSION['currentweek'] && $rs[lms_year] == $_SESSION['currentseason']) {
-    							    $result = 'no result';							    
-    							    switch($rs['lms_match_result']) {
-    							        case 'w':
-    							            $result = 'win';
-    							            break;
-    							        case 'l':
-    						                $result = 'lose';
-    						                break;
-    							        case 'd':
-    					                    $result = 'draw';
-    					                    break;
-    							    }
-    
-    							    $stDate = date_format(date_create($rs['lms_match_date']),'d-M-Y');
-    								$html .='
+    foreach ($matchfetch as $rs) {
+
+        if ($rs[lms_week] == $_SESSION['currentweek'] && $rs[lms_year] == $_SESSION['currentseason']) {
+            $result = 'no result';
+            switch ($rs['lms_match_result']) {
+                case 'w':
+                    $result = 'win';
+                    break;
+                case 'l':
+                    $result = 'lose';
+                    break;
+                case 'd':
+                    $result = 'draw';
+                    break;
+            }
+
+            $stDate = date_format(date_create($rs['lms_match_date']), 'd-M-Y');
+            $html .= '
     									<tr>
     										<td>' . $rs['lms_week'] . '</td>
     										<td>' . $rs['lms_year'] . '</td>
@@ -151,21 +151,21 @@
     										<td>' . $stDate . '</td>
     										<td>' . $result . '</td>
     									</tr>';
-							    }
-							}
-							$html .='
+        }
+    }
+    $html .= '
 									</tbody>
 								</table>
 							</div>
 						</div>
 
 				        ';
-		
-		$html.= '	      		
+
+    $html .= '	      		
 			      		<div class="row">
 							<br>
 							<div class="col-xs-6">
-								<a href="'.$myPath.'struct/main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
+								<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
 								<br>
 							</div>
 						</div>
@@ -176,8 +176,8 @@
 		</html>
 
 		';
-		echo $html;
-	} else { 
-	        header('Location: '.$myPath.'index.php?error=1');
-	}
+    echo $html;
+} else {
+    header('Location: ' . $myPath . 'index.php?error=1');
+}
 ?>
