@@ -10,8 +10,8 @@ if (login_check($mypdo) == true) {
     header('Location: logout.php');
 } else {
 
-    $_SESSION['currentweek'] = get_global_value('currweek', $mypdo);
-    $_SESSION['currentseason'] = get_global_value('currseason', $mypdo);
+    $_SESSION['currentweek'] = get_global_value('currweek');
+    $_SESSION['currentseason'] = get_global_value('currseason');
     $html = '
         <!DOCTYPE html>
         <html>

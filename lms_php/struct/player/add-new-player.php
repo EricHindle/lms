@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $body = 'A new LMS account has been created for "' . $screenname . '" at email address: ' . $email;
                     $bcclist = '';
                     if ($added == 1) {
-                        sendmail($email, get_global_value('create_email_subject'), $body, $fname . ' ' . $sname, $bcclist);
+                        sendmail($email, get_global_value('create_email_subject'), $body, $fname . ' ' . $sname, $bcclist,'','');
                     }
                     $html .= "<script>
 											alert('Account added.');

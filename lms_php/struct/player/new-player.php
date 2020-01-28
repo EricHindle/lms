@@ -95,7 +95,7 @@ $html .= '
 			        	<div class = "row">';
 
 $html .= '			<div class="well col-md-offset-4 col-md-4 col-sm-offset-1 col-sm-10 textDark">
-			                	<form class="form-group" role="form" name ="addplayer" method="post" action="' . $mypath . 'add-new-player.php">';
+			                	<form class="form-group" role="form" name ="addplayer" method="post" action="' . $myPath . 'struct/player/add-new-player.php">';
 $html .= $key;
 $html .= '					<h3 class="text-center">Enter Your Details</h3>
 			                    	<br>

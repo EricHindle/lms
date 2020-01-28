@@ -12,14 +12,21 @@ function getmailer() {
         $mail->Username = get_global_value('smtp_user');
         $mail->Password = get_global_value('smtp_pwd');
         $mail->SMTPSecure = 'ssl';
-        $mail->SetFrom(get_global_value('smtp_from_address'), get_global_value('smtp_from_name'));
+        $mail->setFrom(get_global_value('smtp_from_address'), get_global_value('smtp_from_name'));
         $mail->AddReplyTo(get_global_value('smtp_reply_address'), get_global_value('smtp_reply_name'));
     return $mail;
 }
 
-function sendmail($to, $subject, $message, $name, $list) {
+function sendmail($to, $subject, $message, $name, $list, $from_address, $from_name) {
     $mail = getmailer();
 
+    if ($from_address){
+        if (!$from_name){
+            $from_name = $from_address;
+        }
+        $mail->setFrom($from_address,$from_name);
+    }
+    
     $body = $message;
     
     $mail->Subject = $subject;

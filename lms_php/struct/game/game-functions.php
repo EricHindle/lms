@@ -122,4 +122,17 @@ function get_player_games()
     $gamelist = $gamequery->fetchAll(PDO::FETCH_ASSOC);
     return $gamelist;
 }
+
+function get_game($gameid) {
+    global $mypdo;
+    $gamesql = "SELECT * FROM lms_game WHERE lms_game_id = :id";
+    $gamequery = $mypdo->prepare($gamesql);
+    $gamequery->execute(array(
+        ':id' => $gameid
+    ));
+    $gamefetch = $gamequery->fetch(PDO::FETCH_ASSOC);
+    return $gamefetch;
+}
+
+
 ?>

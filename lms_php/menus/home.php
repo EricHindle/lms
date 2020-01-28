@@ -76,7 +76,8 @@ if (login_check($mypdo) == true) {
         $pickquery->bindParam(':game', $gameid, PDO::PARAM_INT);
         $pickquery->bindParam(':matchwk', $matchwk);
         $pickquery->execute();
-        $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
+        $pickcount = $pickquery->rowCount();
+//        $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
 
         $currentpick = '';
         $rowcolor = 'black';
@@ -84,7 +85,8 @@ if (login_check($mypdo) == true) {
         if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
             $rowcolor = 'silver';
         } else {
-            if (count($pickfetch) > 0) {
+            if ($pickcount > 0) {
+                $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
                 $currentpick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd M Y') . ')';
             } else {
                 $currentpick = '(waiting)';
@@ -94,7 +96,7 @@ if (login_check($mypdo) == true) {
         $html .= '
     								<tr style="color:' . $rowcolor . '">
     									<td>' . $rs['lms_game_name'] . '</td>
-    									<td>' . $rs['lms_game_start_wkno'] . '</td>
+						         		<td>' . sprintf('%02d', $rs['lms_week']) . '/' . $rs['lms_year'] . '</td>    	
                                         <td>' . $rs['lms_game_status_text'] . '</td>
                                         <td>' . $rs['lms_game_total_players'] . '</td>
                                         <td>' . $rs['lms_game_still_active'] . '</td>
@@ -132,7 +134,7 @@ if (login_check($mypdo) == true) {
 		            	<div class="col-sm-4">
 		                    <div class="tile orange">
 	                    		    <h3 class="title" >Join a Game</h3>
-				                	<form role="form" name ="edit" method="post" action="process-join-game.php">';
+				                	<form role="form" name ="edit" method="post" action="' . $myPath . 'struct/game/process-join-game.php">';
     $html .= $key;
     $html .= '                          <div class="form-group " style="margin-left:16px;margin-right:16px">
 					                        <input type="text" class="form-control" id="gamecode" name="gamecode" placeholder="game code">
