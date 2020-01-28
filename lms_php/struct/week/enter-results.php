@@ -68,6 +68,9 @@ if (login_check($mypdo) == true && $access == 999) {
 									                <div class="col-md-8">
 									                    <h1><strong>Enter Results for Period ' . $year . '/' . sprintf('%02d', $week) . '</strong></h1>
 									                </div>
+							<div class="col-md-1">
+								<a href="' . $myPath . 'struct/week/weekend-admin.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
+							</div>
 									      		</div>
 									        	<div class = "row">';
 
@@ -137,7 +140,7 @@ if (login_check($mypdo) == true && $access == 999) {
 										        <div class="row">
 													<br>
 													<div class="col-xs-6">
-														<a href="' . $myPath . 'struct/match/match-main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
+														<a href="' . $myPath . 'struct/week/weekend-admin.php" class="btn btn-primary btn-lg" role="button">Back</a>
 														<br>
 													</div>
 												</div>
