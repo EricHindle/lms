@@ -134,7 +134,7 @@ if (login_check($mypdo) == true) {
                 } else {
                     echo "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='join-game.php';
+										window.location.href='".$myPath."menus/home.php';
 									</script>";
                 }
             } else {

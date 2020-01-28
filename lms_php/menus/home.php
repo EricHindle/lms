@@ -113,10 +113,10 @@ if (login_check($mypdo) == true) {
 		            <div class="row">
 		            	<div class="col-sm-4">
 		                    <div class="tile red">
+		                    		<h3 class="title" >Selections for</h3>
                                 <form class="form-horizontal" role="form" name ="editpick" method="post" action="' . $myPath . 'struct/picks/pick-main.php">';
     $html .= $key;
     $html .= '					
-		                    		<h3 class="title" >Selections for</h3>
 		                            <div class="form-group" style="margin-left:16px;margin-right:16px">
 	                                     <select class="form-control" id="gameid" name="gameid">';
     foreach ($gamefetch as $myGame) {
@@ -125,8 +125,7 @@ if (login_check($mypdo) == true) {
     $html .= '	                         </select>
 		                            </div>
 		                            <div class="form-group" style="margin-left:16px;margin-right:16px">
-                                        <br>
-		                                <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+		                                <input id="submit1" name="submit" type="submit" value="Submit" class="btn btn-primary">
 		                            </div>
                                 </form>
                             </div>
@@ -141,7 +140,7 @@ if (login_check($mypdo) == true) {
 					                    </div>
 					                    <div class="form-group" style="margin-left:16px;margin-right:16px">
 					                    	<br>
-					                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+					                        <input id="submit2" name="submit" type="submit" value="Submit" class="btn btn-primary">
 					                    </div>
 					                </form>
 			          			</div>

@@ -44,9 +44,9 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
 			                </div>
 			                <div class="col-sm-4">
 			                    <div class="tile green">
-			                    	<a href="' . $myPath . 'struct/game/game-admin.php">
-			                    		<h3 class="title" >Games</h3>
-			                            <p>Game Management.</p>
+			                    	<a href="' . $myPath . 'struct/week/weekend-admin.php">
+			                    		<h3 class="title" >Weekend</h3>
+			                            <p>Weekend Processing</p>
 			                        </a>	
 			          			</div>
 			                </div>

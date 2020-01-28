@@ -45,10 +45,12 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
 			    <br><br>
 			        <div class="container">
 			        	<div class="row">
-			                <div class="col-md-12">
+			                <div class="col-md-11">
 			                    <h1><strong>Team Admin</strong></h1>
-			                    <br>
 			                </div>
+							<div class="col-md-1">
+								<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
+							</div>
 			      		</div>
 			        	<div class = "row">';
 
@@ -61,7 +63,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
 					                    <input type="text" class="form-control" id="teamname" name="teamname" placeholder="Team name" />
 				                    </div>
 				                    <div class="form-group">
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
 				                    </div>
 				                </form>
 				            </div>
@@ -80,7 +82,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
     $html .= '	                    </select>
 				                    </div>
 				                    <div class="form-group">
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
 				                    </div>
 				                </form>
 				            </div>
@@ -123,7 +125,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
 			      		<div class="row">
 							<br>
 							<div class="col-xs-6">
-								<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
+								<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-lg" role="button">Back</a>
 								<br>
 							</div>
 						</div>

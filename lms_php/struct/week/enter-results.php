@@ -13,8 +13,7 @@ if (login_check($mypdo) == true && $access == 999) {
         if (! isset($_POST['form_key']) || ! $formKey->validate()) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
-            if (isset($_POST['weekid'])) {
-                $gameid = $_POST['weekid'];
+            $gameid = $_SESSION['currentseason'] . $_SESSION['currentweek'] ;
                 if ($gameid) {
                     $html = "";
                     $matchsql = "SELECT lms_match_id, lms_match_date, lms_match_result, lms_team_name FROM v_lms_match WHERE lms_match_weekno = :matchwk";
@@ -67,7 +66,7 @@ if (login_check($mypdo) == true && $access == 999) {
 									        <div class="container">
 									        	<div class="row">
 									                <div class="col-md-8">
-									                    <h1><strong>Enter Results for Period ' . $year . '/' . $week . '</strong></h1>
+									                    <h1><strong>Enter Results for Period ' . $year . '/' . sprintf('%02d', $week) . '</strong></h1>
 									                </div>
 									      		</div>
 									        	<div class = "row">';
@@ -117,6 +116,7 @@ if (login_check($mypdo) == true && $access == 999) {
                                             <option ' . $wresult . ' value="w">Win</option>
                                             <option ' . $dresult . ' value="d">Draw</option>
                                             <option ' . $lresult . ' value="l">Lose</option>
+                                            <option ' . $lresult . ' value="p">Postponed</option>
                                             <option ' . $nresult . ' value="">No result</option>
                                        </select></tr>';
                         }
@@ -155,12 +155,6 @@ if (login_check($mypdo) == true && $access == 999) {
                     }
 
                     echo $html;
-                } else {
-                    echo "<script>
-										alert('There was a problem. Please check details and try again.');
-										window.location.href='match-main.php';
-									</script>";
-                }
             } else {
                 header('Location: ' . $myPath . 'index.php?error=1');
             }

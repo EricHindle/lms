@@ -38,7 +38,7 @@ body {
 	line-height: 1.5em;
 	font-weight: 400;
   /*background: #00233f;*/
-	background: url('../img/horse_comp.jpg') no-repeat center center fixed;
+	background: url('../img/background.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;

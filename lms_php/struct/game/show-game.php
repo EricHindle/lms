@@ -31,7 +31,7 @@ if (login_check($mypdo) == true) {
                         $key = $formKey->outputKey();
                         $gamefetch = $gamequery->fetch(PDO::FETCH_ASSOC);
                         $gamename = $gamefetch['lms_game_name'];
-                        $remainingweeks = get_remaining_weeks();
+                        $remainingweeks = get_remaining_weeks(false);
 
                         $gameplayersql = "SELECT lms_game_player_status, lms_player_screen_name, lms_game_player_status_text, lms_player_id FROM v_lms_player_games WHERE lms_game_id = :game";
                         $gameplayerquery = $mypdo->prepare($gameplayersql);

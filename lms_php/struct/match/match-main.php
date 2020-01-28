@@ -3,6 +3,8 @@ $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
+require $myPath . 'includes/lookup-functions.php';
+
 sec_session_start();
 if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
     $formKey = new formKey();
@@ -12,10 +14,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
     $matchquery = $mypdo->prepare($matchsql);
     $matchquery->execute();
     $matchfetch = $matchquery->fetchAll(PDO::FETCH_ASSOC);
-    $weeksql = "SELECT * FROM lms_week ORDER BY lms_week_no ASC ";
-    $weekquery = $mypdo->prepare($weeksql);
-    $weekquery->execute();
-    $remainingweeks = $weekquery->fetchAll(PDO::FETCH_ASSOC);
+    $remainingweeks = get_remaining_weeks(false);
     $html = "";
 
     echo '
@@ -48,13 +47,15 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
 			    <br><br>
 			        <div class="container">
 			        	<div class="row">
-			                <div class="col-md-12">
+			                <div class="col-md-11">
 			                    <h1><strong>Match Admin</strong></h1>
-			                    <br>
 			                </div>
+							<div class="col-md-1">
+								<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
+							</div>
 			      		</div>
                         <div class="row">';
-    $html .= '			<div class="well col-md-3 textDark">
+    $html .= '			<div class="well col-md-3 col-md-offset-2 textDark">
 			                	<form class="form-horizontal" role="form" name ="genmatch" method="post" action="gen-match.php">';
     $html .= $key;
     $html .= '					<h3 class="text-center">Generate Matches</h3>
@@ -67,29 +68,12 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
     $html .= '	                    </select>
 				                    </div>
 				                    <div class="form-group">
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
 				                    </div>
                                 </form>
                             </div>
 			            ';
-    $html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
-			                	<form class="form-horizontal" role="form" name ="results" method="post" action="results.php">';
-    $html .= $key;
-    $html .= '					<h3 class="text-center">Enter Results</h3>
-				                    <div class="form-group">
-			                        	<label for="weekid">Choose period:</label>
-			                            <select class="form-control" id="weekid" name="weekid">';
-    foreach ($remainingweeks as $myweek) {
-        $html .= '<option value="' . $myweek['lms_week_no'] . '">' . $myweek['lms_year'] . '/' . sprintf('%02d', $myweek['lms_week']) . '&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp' . date_format(date_create($myweek['lms_week_start']), 'd-M-Y') . '</option>';
-    }
-    $html .= '	                    </select>
-				                    </div>
-				                    <div class="form-group">
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
-				                    </div>
-                                </form>
-                            </div>
-';
+   
     $html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
 			                	<form class="form-horizontal" role="form" name ="editmatch" method="post" action="edit-match.php">';
     $html .= $key;
@@ -103,7 +87,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
     $html .= '	                    </select>
 				                    </div>
 				                    <div class="form-group">
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
 				                    </div>
 				                </form>
 				            </div>
