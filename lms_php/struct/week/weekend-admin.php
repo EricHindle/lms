@@ -43,7 +43,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
 			        <div class="container">
 			        	<div class="row">
 			                <div class="col-md-11">
-			                    <h1><strong>Weekend Admin for period ' . $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'] . '</strong></h1>
+			                    <h1><strong>Week End Admin for period ' . $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'] . '</strong></h1>
 			                </div>
 							<div class="col-md-1">
 								<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
@@ -69,8 +69,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
                         <div class="row">
                             <div class="col-sm-4 col-sm-offset-1">
                                 <div class="tile orange">
-                                    <h3 class="title" >Complete the week</h3>
-                                    <form class="form" role="form" name ="results" method="post" action="confirm-results.php">';
+                                    <h3 class="title" >Complete the week</h3>   ';
     $html .= $key;
     $html .= '
                                             <ul>
@@ -83,9 +82,8 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
                                             </ul>
                                             <br>				  	    
 				                        <div>
-				                            <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
+				                          <a href="' . $myPath . 'struct/week/week-end-processing.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
 				                        </div>
-                                    </form>
                                 </div>
                             </div>
                         </div>
