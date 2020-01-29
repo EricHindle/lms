@@ -86,9 +86,22 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
 				                        </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>';
+    if (isset($_GET['msg'])) {
 
-			      		<div class="row">
+        if ($_GET['msg'] == 1) {
+            $html .= '
+                        <div class="alert alert-success">Week complete</div>
+                        ';
+        } else {
+
+            $html .= '
+                <div class="alert alert-danger">Unknown error</div>
+                ';
+        }
+    }
+
+    $html .= '		      		<div class="row">
 							<br>
 							<div class="col-xs-6">
 								<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>

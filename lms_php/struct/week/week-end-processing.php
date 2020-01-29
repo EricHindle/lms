@@ -74,7 +74,7 @@ if (login_check($mypdo) == true && $access == 999) {
                         $_SESSION['currentweek'] = get_global_value('currweek');
                         $_SESSION['currentseason'] = get_global_value('currseason');
                         $_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
-                        header('Location: ' . $myPath . 'struct/week/week-end-processing.php');
+                        header('Location: ' . $myPath . 'struct/week/weekend-admin.php?msg=1');
                     }
                 } else {
                     /*
@@ -127,7 +127,7 @@ if (login_check($mypdo) == true && $access == 999) {
             }
             $activeGames = get_active_games();
             foreach ($activeGames as $game) {
-                $activePlayers = get_still_actve_game_players($game['lms_game_id']);
+                $activePlayers = get_still_active_game_players($game['lms_game_id']);
                 foreach ($activePlayers as $activePlayer) {
                     $gameid = $game['lms_game_id'];
                     $playerid = $activePlayer['lms_player_id'];

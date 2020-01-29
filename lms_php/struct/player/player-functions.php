@@ -2,6 +2,7 @@
 $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'struct/game/game-functions.php';
+require $myPath . 'includes/mail-util.php';
 
 function get_player($playerid){
     

@@ -191,8 +191,8 @@ function get_still_active_game_players($gameid)
     $gamesql = "SELECT * FROM v_lms_player_games WHERE lms_game_id = :gameid and lms_week = :week and lms_year = :year ";
     $gamequery = $mypdo->prepare($gamesql);
     $gamequery->bindParam(':player', $player, PDO::PARAM_INT);
-    $gamequery->bindParam(':week', $_SESSION(['currentweek']), PDO::PARAM_INT);
-    $gamequery->bindParam(':year', $_SESSION(['currentseason']), PDO::PARAM_INT);
+    $gamequery->bindParam(':week', $_SESSION['currentweek'], PDO::PARAM_INT);
+    $gamequery->bindParam(':year', $_SESSION['currentseason'], PDO::PARAM_INT);
     $gamequery->execute();
     $gamelist = $gamequery->fetchAll(PDO::FETCH_ASSOC);
     return $gamelist;
