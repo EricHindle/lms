@@ -58,34 +58,24 @@ if (login_check($mypdo) == true && $access == 999) {
                 if ($weekstate > 3) {
                     $html .= '        <div class = "row">Game statuses marked up</div>';
                     if ($weekstate > 4) {
-                        $html .= '           <div class = "row">Outcomes notified</div>';
-                        if ($weekstate > 5) {
-                            $html .= '            <div class = "row">Week rolled forward</div>';
-                            $html .= ' 		<div class="row">
+                        $html .= '            <div class = "row">Week rolled forward</div>';
+                        $html .= ' 		<div class="row">
 													<br>
 													<div class="col-xs-6">
 														<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">OK</a>
 														<br>
 													</div>
 												</div> ';
-                        } else {
-                            /*
-                             * Rolling week forward
-                             */
-                            $nextWeek = $_SESSION['currentweek'] + 1;
-                            set_global_value('currweek', sprintf('%02d', $nextWeek));
-                            set_week_state($_SESSION['matchweek'], 6);
-                            $_SESSION['currentweek'] = get_global_value('currweek');
-                            $_SESSION['currentseason'] = get_global_value('currseason');
-                            $_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
-                            header('Location: ' . $myPath . 'struct/week/week-end-processing.php');
-                        }
                     } else {
                         /*
-                         * Notifying outcomes
+                         * Rolling week forward
                          */
-
+                        $nextWeek = $_SESSION['currentweek'] + 1;
+                        set_global_value('currweek', sprintf('%02d', $nextWeek));
                         set_week_state($_SESSION['matchweek'], 5);
+                        $_SESSION['currentweek'] = get_global_value('currweek');
+                        $_SESSION['currentseason'] = get_global_value('currseason');
+                        $_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
                         header('Location: ' . $myPath . 'struct/week/week-end-processing.php');
                     }
                 } else {
@@ -143,7 +133,7 @@ if (login_check($mypdo) == true && $access == 999) {
                 foreach ($activePlayers as $activePlayer) {
                     $gameid = $game['lms_game_id'];
                     $playerid = $activePlayer['lms_player_id'];
-                    
+
                     if (get_game_player_pick_count($gameid, $playerid) == 0) {
                         set_game_player_out($gameid, $playerid);
                         notify_no_pick($playerid, $gameid);
