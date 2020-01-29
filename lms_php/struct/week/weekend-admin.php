@@ -82,7 +82,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
                                             </ul>
                                             <br>				  	    
 				                        <div>
-				                          <a href="' . $myPath . 'struct/week/week-end-processing.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
+				                          <a href="' . $myPath . 'struct/week/week-end-processing.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Submit</a>
 				                        </div>
                                 </div>
                             </div>

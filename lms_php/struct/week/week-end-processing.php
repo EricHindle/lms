@@ -6,8 +6,6 @@ require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
 require $myPath . 'struct/week/week-functions.php';
 require $myPath . 'struct/match/match-functions.php';
-require $myPath . 'struct/pick/pick-functions.php';
-require $myPath . 'struct/game/game-functions.php';
 require $myPath . 'struct/player/player-functions.php';
 
 sec_session_start();
