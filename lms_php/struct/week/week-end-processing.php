@@ -126,11 +126,13 @@ if (login_check($mypdo) == true && $access == 999) {
                 $playerid = $rs['lms_pick_player_id'];
                 $matchid = $rs['lms_pick_match_id'];
                 $pickwl = '';
-                if($rs['lms_match_result'] == 'l' or $rs['lms_match_result'] == 'd') {
+                if ($rs['lms_match_result'] == 'l' or $rs['lms_match_result'] == 'd') {
                     set_game_player_out($gameid, $playerid);
                     $pickwl = 'l';
+                    notify_loser($playerid, $gameid);
                 } else {
                     $pickwl = 'w';
+                    notify_winner($playerid, $gameid);
                 }
                 set_pick_wl($gameid, $playerid, $matchid, $pickwl);
                 set_game_player_out($gameid, $playerid);
@@ -139,8 +141,12 @@ if (login_check($mypdo) == true && $access == 999) {
             foreach ($activeGames as $game) {
                 $activePlayers = get_still_actve_game_players($game['lms_game_id']);
                 foreach ($activePlayers as $activePlayer) {
-                    if (get_game_player_pick_count($game['lms_game_id'], $activePlayer['lms_player_id']) == 0) {
-                        set_game_player_out($game['lms_game_id'], $activePlayer['lms_player_id']);
+                    $gameid = $game['lms_game_id'];
+                    $playerid = $activePlayer['lms_player_id'];
+                    
+                    if (get_game_player_pick_count($gameid, $playerid) == 0) {
+                        set_game_player_out($gameid, $playerid);
+                        notify_no_pick($playerid, $gameid);
                     }
                 }
             }
