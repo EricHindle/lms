@@ -20,7 +20,6 @@ if (login_check($mypdo) == true) {
                 $game = sanitize_int($_POST['gameid']);
                 $currentpickteam = sanitize_int($_POST['currentpickteam']);
                 $currentpickmatch = sanitize_int($_POST['currentpickmatch']);
-                $weekno = $_SESSION['currentseason'] . $_SESSION['currentweek'];
                 if ($game && $matchid && $player) {
                     $html = "";
 

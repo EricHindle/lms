@@ -40,18 +40,18 @@ if (login_check($mypdo) == true && $access == 999) {
                     }
                     $html .= "<script>
                             	alert('" . $totalupdates . " matches resulted.');
-                            	window.location.href='match-main.php';
+                            	window.location.href='" . $myPath . "struct/week/weekend-admin.php';
                             </script>";
                 } else {
                     $html .= "<script>
     								alert('There was a problem. Please check details and try again.');
-    								window.location.href='match-main.php';
+    								window.location.href='" . $myPath . "struct/week/weekend-admin.php';
     							</script>";
                 }
             } else {
                 $html .= "<script>
 								alert('There was a problem with the weekno.');
-								window.location.href='match-main.php';
+								window.location.href='" . $myPath . "struct/week/weekend-admin.php';
 							</script>";
             }
             echo $html;

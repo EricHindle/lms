@@ -12,6 +12,7 @@ if (login_check($mypdo) == true) {
 
     $_SESSION['currentweek'] = get_global_value('currweek');
     $_SESSION['currentseason'] = get_global_value('currseason');
+    $_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
     $html = '
         <!DOCTYPE html>
         <html>

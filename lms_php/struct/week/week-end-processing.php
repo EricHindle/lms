@@ -5,13 +5,16 @@ require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
 require $myPath . 'struct/week/week-functions.php';
+require $myPath . 'struct/match/match-functions.php';
+require $myPath . 'struct/pick/pick-functions.php';
+require $myPath . 'struct/game/game-functions.php';
+require $myPath . 'struct/player/player-functions.php';
 
 sec_session_start();
 $formKey = new formKey();
 $access = sanitize_int($_SESSION['retaccess']);
 if (login_check($mypdo) == true && $access == 999) {
-    $weekid = $_SESSION['currentseason'] . $_SESSION['currentweek'];
-    $weekstate = get_week_state($weekid);
+    $weekstate = get_week_state($_SESSION['matchweek']);
     $html = "";
     $key = $formKey->outputKey();
     echo '
@@ -69,8 +72,12 @@ if (login_check($mypdo) == true && $access == 999) {
                             /*
                              * Rolling week forward
                              */
-
-                            set_week_state($weekid, 6);
+                            $nextWeek = $_SESSION['currentweek'] + 1;
+                            set_global_value('currweek', sprintf('%02d', $nextWeek));
+                            set_week_state($_SESSION['matchweek'], 6);
+                            $_SESSION['currentweek'] = get_global_value('currweek');
+                            $_SESSION['currentseason'] = get_global_value('currseason');
+                            $_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
                             header('Location: ' . $myPath . 'struct/week/week-end-processing.php');
                         }
                     } else {
@@ -78,39 +85,82 @@ if (login_check($mypdo) == true && $access == 999) {
                          * Notifying outcomes
                          */
 
-                        set_week_state($weekid, 5);
+                        set_week_state($_SESSION['matchweek'], 5);
                         header('Location: ' . $myPath . 'struct/week/week-end-processing.php');
                     }
                 } else {
                     /*
-                     * Marking up game status
+                     * Marking up starting games as in-play
                      */
-
-                    set_week_state($weekid, 4);
+                    $nextWeek = $_SESSION['currentweek'] + 1;
+                    $nextmatchweek = $_SESSION['currentseason'] . sprintf('%02d', $nextWeek);
+                    activateGames($nextmatchweek);
+                    set_week_state($_SESSION['matchweek'], 4);
                     header('Location: ' . $myPath . 'struct/week/week-end-processing.php');
                 }
             } else {
                 /*
-                 * Checking for winners
+                 * Increment game week number and mark completed games (no remaining players)
                  */
-
-                set_week_state($weekid, 3);
+                $activegames = get_active_games();
+                foreach ($activegames as $game) {
+                    if ($game['lms_game_still_active'] == 0) {
+                        set_game_complete($game['lms_game_id']);
+                    } else {
+                        $gameweekcount = $game['lms_game_week_count'] + 1;
+                        set_game_weekcount($game['lms_game_id'], $gameweekcount);
+                    }
+                }
+                set_week_state($_SESSION['matchweek'], 3);
                 header('Location: ' . $myPath . 'struct/week/week-end-processing.php');
             }
         } else {
             /*
-             * Marking up game player status
+             * Mark picks as win/lose
+             * Mark players with losing pick as out
+             * Mark players with no pick as out
              */
-
-            set_week_state($weekid, 2);
+            $picks = get_current_week_picks();
+            foreach ($picks as $rs) {
+                $gameid = $rs['lms_pick_game_id'];
+                $playerid = $rs['lms_pick_player_id'];
+                $matchid = $rs['lms_pick_match_id'];
+                $pickwl = '';
+                if($rs['lms_match_result'] == 'l' or $rs['lms_match_result'] == 'd') {
+                    set_game_player_out($gameid, $playerid);
+                    $pickwl = 'l';
+                } else {
+                    $pickwl = 'w';
+                }
+                set_pick_wl($gameid, $playerid, $matchid, $pickwl);
+                set_game_player_out($gameid, $playerid);
+            }
+            $activeGames = get_active_games();
+            foreach ($activeGames as $game) {
+                $activePlayers = get_still_actve_game_players($game['lms_game_id']);
+                foreach ($activePlayers as $activePlayer) {
+                    if (get_game_player_pick_count($game['lms_game_id'], $activePlayer['lms_player_id']) == 0) {
+                        set_game_player_out($game['lms_game_id'], $activePlayer['lms_player_id']);
+                    }
+                }
+            }
+            set_week_state($_SESSION['matchweek'], 2);
             header('Location: ' . $myPath . 'struct/week/week-end-processing.php');
         }
     } else {
         /*
          * Confirming results
          */
-        set_week_state($weekid, 1);
-        header('Location: ' . $myPath . 'struct/week/week-end-processing.php');
+        $missingresultct = get_count_of_matches_with_no_result();
+        if ($missingresultct > 0) {
+            $html .= "<script>
+						alert('Not all matches have been resulted. Enter results and try again.');
+						window.location.href='weekend-admin.php';
+					</script>";
+        } else {
+            set_week_state($_SESSION['matchweek'], 1);
+            header('Location: ' . $myPath . 'struct/week/week-end-processing.php');
+        }
     }
 
     $html .= '			   </div>

@@ -255,6 +255,16 @@ function get_global_value($valuename)
     return $infofetch['lms_info_value'];
 }
 
+function set_global_value($valuename, $infovalue){
+    global $mypdo;
+    $upsql = "UPDATE lms_info SET lms_info_value = :infovalue WHERE lms_info_id = :id";
+    $upquery = $mypdo->prepare($upsql);
+    $upquery->bindParam(':id', $valuename);
+    $upquery->bindParam(':infovalue', $infovalue);
+    $upquery->execute();
+    return $upquery->rowCount();
+}
+
 function bootOut($rootPath, $user = 'UNKNOWN', $page = 'UNKNOWN', $error = 'UNKNOWN')
 {
     error_log("User: " . $user . ", Page: " . $page . ", Error: " . $error, 0);

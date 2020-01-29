@@ -15,7 +15,6 @@ $gamequery->bindParam(':player', $playerid, PDO::PARAM_INT);
 $gamequery->execute();
 $gamefetch = $gamequery->fetchAll(PDO::FETCH_ASSOC);
 
-$matchwk = $_SESSION['currentseason'] . $_SESSION['currentweek'];
 $picksql = "SELECT lms_team_name, lms_match_date  FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game and lms_match_weekno = :matchwk LIMIT 1";
 
 $key = $formKey->outputKey();
@@ -74,7 +73,7 @@ if (login_check($mypdo) == true) {
         $pickquery = $mypdo->prepare($picksql);
         $pickquery->bindParam(':player', $playerid, PDO::PARAM_INT);
         $pickquery->bindParam(':game', $gameid, PDO::PARAM_INT);
-        $pickquery->bindParam(':matchwk', $matchwk);
+        $pickquery->bindParam(':matchwk', $_SESSION['matchweek']);
         $pickquery->execute();
         $pickcount = $pickquery->rowCount();
 //        $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);

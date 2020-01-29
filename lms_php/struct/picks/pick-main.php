@@ -18,7 +18,6 @@ if (login_check($mypdo) == true) {
                 if ($gameid) {
                     $player = $_SESSION['user_id'];
                     $gamename = get_game_name($gameid);
-                    $weekno = $_SESSION['currentseason'] . $_SESSION['currentweek'];
                     $gps = get_game_player_status($gameid, $player);
 
                     /*
@@ -36,7 +35,7 @@ if (login_check($mypdo) == true) {
                     $currentpickmatch = 0;
                     $currentpickteam = 0;
                     foreach ($pickfetch as $rs) {
-                        if ($rs['lms_match_weekno'] == $weekno) {
+                        if ($rs['lms_match_weekno'] == $_SESSION['matchweek']) {
                             $currentpickmatch = $rs['lms_pick_match_id'];
                             $currentpickteam = $rs['lms_team_id'];
                             break;
@@ -52,7 +51,7 @@ if (login_check($mypdo) == true) {
                     $availquery->bindParam(':player', $player, PDO::PARAM_INT);
                     $availquery->bindParam(':game', $gameid, PDO::PARAM_INT);
                     $availquery->bindParam(':currentpick', $currentpickmatch, PDO::PARAM_INT);
-                    $availquery->bindParam(':weekno', $weekno);
+                    $availquery->bindParam(':weekno', $_SESSION['matchweek']);
                     $availquery->execute();
                     $availfetch = $availquery->fetchAll(PDO::FETCH_ASSOC);
 

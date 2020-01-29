@@ -134,5 +134,78 @@ function get_game($gameid) {
     return $gamefetch;
 }
 
+function set_game_player_out($gameid, $playerid) {
+    global $mypdo;
+    $upsql = "UPDATE lms_game_player SET lms_game_player_status = 2 WHERE lms_game_id = :gameid and lms_player_id = :playerid";
+    $upquery = $mypdo->prepare($upsql);
+    $upquery->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+    $upquery->bindParam(':playerid', $playerid, PDO::PARAM_INT);
+    $upquery->execute();
+    $upCount =  $upquery->rowCount();
+    if ($upCount >0) {
+        $game = get_game($gameid);
+        $stillActive = max(0, $game['lms_game_still_active'] - 1);
+        $updgamesql = "UPDATE lms_game SET lms_game_still_active = :stillactive WHERE lms_game_id = :gameid";
+        $updgamequery = $mypdo->prepare($updgamesql);
+        $updgamequery->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+        $updgamequery->bindParam(':stillactive', $stillActive, PDO::PARAM_INT);
+        $updgamequery->execute();
+        $upCount =  $updgamequery->rowCount();
+    }
+}
+
+function get_active_games() {
+    global $mypdo;
+    $gamesql = "SELECT * FROM lms_game WHERE lms_game_status = 2";
+    $gamequery = $mypdo->prepare($gamesql);
+    $gamequery->execute();
+    $gamefetch = $gamequery->fetchAll(PDO::FETCH_ASSOC);
+    return $gamefetch;
+}
+
+function set_game_complete($gameid) {
+    global $mypdo;
+    $updgamesql = "UPDATE lms_game SET lms_game_status = 3 WHERE lms_game_id = :gameid";
+    $updgamequery = $mypdo->prepare($updgamesql);
+    $updgamequery->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+    $updgamequery->execute();
+    $upCount =  $updgamequery->rowCount();
+    return $upCount;
+}
+
+function set_game_week_count($gameid, $newweekcount) {
+    global $mypdo;
+    $updgamesql = "UPDATE lms_game SET lms_game_week_count = :weekcount WHERE lms_game_id = :gameid";
+    $updgamequery = $mypdo->prepare($updgamesql);
+    $updgamequery->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+    $updgamequery->bindParam(':weekcount', $newweekcount, PDO::PARAM_INT);
+    $updgamequery->execute();
+    $upCount =  $updgamequery->rowCount();
+    return $upCount;
+}
+
+function get_still_active_game_players($gameid)
+{
+    global $mypdo;
+    $player = $_SESSION['user_id'];
+    $gamesql = "SELECT * FROM v_lms_player_games WHERE lms_game_id = :gameid and lms_week = :week and lms_year = :year ";
+    $gamequery = $mypdo->prepare($gamesql);
+    $gamequery->bindParam(':player', $player, PDO::PARAM_INT);
+    $gamequery->bindParam(':week', $_SESSION(['currentweek']), PDO::PARAM_INT);
+    $gamequery->bindParam(':year', $_SESSION(['currentseason']), PDO::PARAM_INT);
+    $gamequery->execute();
+    $gamelist = $gamequery->fetchAll(PDO::FETCH_ASSOC);
+    return $gamelist;
+}
+
+function activateGames($nextgameweek) {
+    global $mypdo;
+    $updgamesql = "UPDATE lms_game SET lms_game_status = 2, lms_game_week_count = 1 WHERE lms_game_start_wkno = :weekno";
+    $updgamequery = $mypdo->prepare($updgamesql);
+    $updgamequery->bindParam(':weekno', $nextgameweek);
+    $updgamequery->execute();
+    $upCount =  $updgamequery->rowCount();
+    return $upCount;
+}
 
 ?>

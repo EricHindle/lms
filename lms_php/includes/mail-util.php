@@ -3,6 +3,7 @@
 require 'ret-config.php';
 require 'class.phpmailer.php';
 
+
 function getmailer() {
         $mail = new PHPMailer();
         $mail->IsSMTP();
