@@ -23,11 +23,21 @@ DROP TABLE IF EXISTS `lms_info`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `lms_info` (
-  `lms_info_id` varchar(12) NOT NULL,
-  `lms_info_value` varchar(45) DEFAULT '',
+  `lms_info_id` varchar(24) NOT NULL,
+  `lms_info_value` varchar(256) DEFAULT '',
   PRIMARY KEY (`lms_info_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `lms_info`
+--
+
+LOCK TABLES `lms_info` WRITE;
+/*!40000 ALTER TABLE `lms_info` DISABLE KEYS */;
+INSERT INTO `lms_info` VALUES ('create_email_subject','LMS account created'),('currseason','2020'),('currweek','05'),('invite_email_subject','Join my LMS game '),('smtp_from_address','lms-admin@netwyrks.co.uk'),('smtp_from_name','LMS Admin'),('smtp_host','smtp.virginmedia.com'),('smtp_port','465'),('smtp_pwd','dkknetvir5'),('smtp_reply_address','lms-reply@netwyrks.co.uk'),('smtp_reply_name','LMS Replies'),('smtp_user','netwyrks@ntlworld.com');
+/*!40000 ALTER TABLE `lms_info` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -38,4 +48,4 @@ CREATE TABLE `lms_info` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-15 12:15:27
+-- Dump completed on 2020-01-30 16:25:04

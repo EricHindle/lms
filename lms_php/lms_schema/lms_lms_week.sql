@@ -29,6 +29,7 @@ CREATE TABLE `lms_week` (
   `lms_week_start` datetime NOT NULL,
   `lms_week_end` datetime NOT NULL,
   `lms_week_deadline` datetime NOT NULL,
+  `lms_week_state` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`lms_week_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -42,4 +43,4 @@ CREATE TABLE `lms_week` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-15 12:15:26
+-- Dump completed on 2020-01-30 16:21:49

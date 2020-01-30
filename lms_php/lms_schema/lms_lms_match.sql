@@ -33,7 +33,7 @@ CREATE TABLE `lms_match` (
   KEY `fk_team_idx` (`lms_match_team`),
   CONSTRAINT `fk_lms_match_lms_team1` FOREIGN KEY (`lms_match_team`) REFERENCES `lms_team` (`lms_team_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_match_weekno` FOREIGN KEY (`lms_match_weekno`) REFERENCES `lms_week` (`lms_week_no`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -45,4 +45,4 @@ CREATE TABLE `lms_match` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-15 12:15:26
+-- Dump completed on 2020-01-30 16:21:49

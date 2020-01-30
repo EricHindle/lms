@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `lms_game_player`;
 CREATE TABLE `lms_game_player` (
   `lms_game_id` int(11) NOT NULL,
   `lms_player_id` int(11) NOT NULL,
-  `lms_game_player_status` varchar(10) NOT NULL DEFAULT 'Active',
+  `lms_game_player_status` int(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`lms_game_id`,`lms_player_id`),
   KEY `lms_player_id_idx` (`lms_player_id`),
   CONSTRAINT `fk_lms_game_player_game` FOREIGN KEY (`lms_game_id`) REFERENCES `lms_game` (`lms_game_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -42,4 +42,4 @@ CREATE TABLE `lms_game_player` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-15 12:15:26
+-- Dump completed on 2020-01-30 16:21:49

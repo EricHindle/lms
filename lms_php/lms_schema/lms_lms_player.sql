@@ -34,7 +34,7 @@ CREATE TABLE `lms_player` (
   `lms_active` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`lms_player_id`),
   UNIQUE KEY `lms_player_id_UNIQUE` (`lms_player_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -46,4 +46,4 @@ CREATE TABLE `lms_player` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-15 12:15:26
+-- Dump completed on 2020-01-30 16:21:48
