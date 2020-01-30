@@ -71,44 +71,35 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
                                 <div class="tile orange">
                                     <h3 class="title" >Complete the week</h3>   ';
     $html .= $key;
-    $html .= '
-                                            <ul>
-                                                <li>Confirm that all results have been entered</li>
-                                                <li>Update player status in all active games</li>
-                                                <li>Check for game winners</li>
-                                                <li>Update game status in all active games</li>
-                                                <li>Notify outcomes</li>
-                                                <li>Move week forward</li>
-                                            </ul>
-                                            <br>				  	    
-				                        <div>
-				                          <a href="' . $myPath . 'struct/week/week-end-processing.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Submit</a>
-				                        </div>
-                                </div>
-                            </div>
-                        </div>';
-    if (isset($_GET['msg'])) {
-
-        if ($_GET['msg'] == 1) {
-            $html .= '
-                        <div class="alert alert-success">Week complete</div>
-                        ';
-        } else {
-
-            $html .= '
-                <div class="alert alert-danger">Unknown error</div>
-                ';
+    $html .= '                      <ul>
+                                        <li>Confirm that all results have been entered</li>
+                                        <li>Update player status in all active games</li>
+                                        <li>Check for game winners</li>
+                                        <li>Update game status in all active games</li>
+                                        <li>Notify outcomes</li>
+                                        <li>Move week forward</li>
+                                    </ul>
+                                    <br>				  	    
+    		                        <div>
+    		                          <a href="' . $myPath . 'struct/week/week-end-processing.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Submit</a>
+    		                        </div>
+                                </div>';
+    if (isset($_GET['error'])) {
+        if ($_GET['error'] == 1) {
+            $html .= ' <div class="alert alert-danger">Not all matches have been resulted. Enter results and try again.</div> ';
         }
     }
 
-    $html .= '		      		<div class="row">
-							<br>
-							<div class="col-xs-6">
-								<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
-								<br>
-							</div>
-						</div>
-			    	</div>
+    $html .= '                 </div>
+                           </div>
+                           <div class="row">
+						      <br>
+						      <div class="col-xs-6">
+						          <a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
+						          <br>
+				              </div>
+						  </div>
+			          </div>
 			    </section>
 			</body>
 		</html>

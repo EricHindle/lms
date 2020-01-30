@@ -42,67 +42,25 @@ if (login_check($mypdo) == true && $access == 999) {
 									<div class="col-md-8">
 									    <h1><strong>Week End Processing for period ' . $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'] . '</strong></h1>
 									</div>
-								</div>
-								<div class = "row">';
+        							<div class="col-md-1">
+        								<a href="' . $myPath . 'struct/week/weekend-admin.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
+        							</div>
+								</div>	
+                            	<div class="row">
+                                    <div class="col-md-offset-4 col-md-4 col-sm-offset-1 col-sm-10">';
+    /*
+     * Confirming results
+     */
+    $missingresultct = get_count_of_matches_with_no_result();
+    if ($missingresultct > 0) {
+        header('Location: ' . $myPath . 'struct/week/weekend-admin.php?error=1');
+    } else {
+        $html .= '    <div class="alert alert-success">Confirmed : all matches have been resulted</div>';
 
-    $html .= '			   <div class="well col-md-6 col-md-offset-1 textDark">';
-
-    if ($weekstate > 0) {
-        $html .= ' <div class = "row">Confirmed : all matches have been resulted</div>';
-        if ($weekstate > 1) {
-            $html .= '   <div class = "row">Game player statuses marked up</div>';
-            if ($weekstate > 2) {
-                $html .= '    <div class = "row">Winners identified</div>';
-                if ($weekstate > 3) {
-                    $html .= '        <div class = "row">Game statuses marked up</div>';
-                    if ($weekstate > 4) {
-                        $html .= '            <div class = "row">Week rolled forward</div>';
-                        $html .= ' 		<div class="row">
-													<br>
-													<div class="col-xs-6">
-														<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">OK</a>
-														<br>
-													</div>
-												</div> ';
-                    } else {
-                        /*
-                         * Rolling week forward
-                         */
-                        $nextWeek = $_SESSION['currentweek'] + 1;
-                        set_global_value('currweek', sprintf('%02d', $nextWeek));
-                        set_week_state($_SESSION['matchweek'], 5);
-                        $_SESSION['currentweek'] = get_global_value('currweek');
-                        $_SESSION['currentseason'] = get_global_value('currseason');
-                        $_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
-                        header('Location: ' . $myPath . 'struct/week/weekend-admin.php?msg=1');
-                    }
-                } else {
-                    /*
-                     * Marking up starting games as in-play
-                     */
-                    $nextWeek = $_SESSION['currentweek'] + 1;
-                    $nextmatchweek = $_SESSION['currentseason'] . sprintf('%02d', $nextWeek);
-                    activateGames($nextmatchweek);
-                    set_week_state($_SESSION['matchweek'], 4);
-                    header('Location: ' . $myPath . 'struct/week/week-end-processing.php');
-                }
-            } else {
-                /*
-                 * Increment game week number and mark completed games (no remaining players)
-                 */
-                $activegames = get_active_games();
-                foreach ($activegames as $game) {
-                    if ($game['lms_game_still_active'] == 0) {
-                        set_game_complete($game['lms_game_id']);
-                    } else {
-                        $gameweekcount = $game['lms_game_week_count'] + 1;
-                        set_game_weekcount($game['lms_game_id'], $gameweekcount);
-                    }
-                }
-                set_week_state($_SESSION['matchweek'], 3);
-                header('Location: ' . $myPath . 'struct/week/week-end-processing.php');
-            }
-        } else {
+        if ($weekstate <= 1) {
+            $weekstate = 1;
+            set_week_state($_SESSION['matchweek'], $weekstate);
+            
             /*
              * Mark picks as win/lose
              * Mark players with losing pick as out
@@ -138,32 +96,60 @@ if (login_check($mypdo) == true && $access == 999) {
                     }
                 }
             }
-            set_week_state($_SESSION['matchweek'], 2);
-            header('Location: ' . $myPath . 'struct/week/week-end-processing.php');
         }
-    } else {
-        /*
-         * Confirming results
-         */
-        $missingresultct = get_count_of_matches_with_no_result();
-        if ($missingresultct > 0) {
-            $html .= "<script>
-						alert('Not all matches have been resulted. Enter results and try again.');
-						window.location.href='weekend-admin.php';
-					</script>";
-        } else {
-            set_week_state($_SESSION['matchweek'], 1);
-            header('Location: ' . $myPath . 'struct/week/week-end-processing.php');
+        $html .= '    <div class="alert alert-success">Game player statuses marked up</div>';
+        if ($weekstate <= 2) {
+            $weekstate = 2;
+            set_week_state($_SESSION['matchweek'], $weekstate);
+            /*
+             * Increment game week number and mark completed games (no remaining players)
+             */
+            $activegames = get_active_games();
+            foreach ($activegames as $game) {
+                if ($game['lms_game_still_active'] == 0) {
+                    set_game_complete($game['lms_game_id']);
+                } else {
+                    $gameweekcount = $game['lms_game_week_count'] + 1;
+                    set_game_week_count($game['lms_game_id'], $gameweekcount);
+                }
+            }
+            set_week_state($_SESSION['matchweek'], 3);
         }
+        $html .= '    <div class="alert alert-success">Increment game week number</div>';
+        if ($weekstate <= 3) {
+            $weekstate = 3;
+            set_week_state($_SESSION['matchweek'], $weekstate);
+            /*
+             * Marking up starting games as in-play
+             */
+            $nextWeek = $_SESSION['currentweek'] + 1;
+            $nextmatchweek = $_SESSION['currentseason'] . sprintf('%02d', $nextWeek);
+            activateGames($nextmatchweek);
+            set_week_state($_SESSION['matchweek'], 4);
+        }
+        $html .= '    <div class="alert alert-success">Marking up starting games as in-play</div>';
+        if ($weekstate <= 4) {
+            $weekstate = 4;
+            set_week_state($_SESSION['matchweek'], $weekstate);
+            /*
+             * Rolling week forward
+             */
+            $nextWeek = $_SESSION['currentweek'] + 1;
+            set_global_value('currweek', sprintf('%02d', $nextWeek));
+            set_week_state($_SESSION['matchweek'], 5);
+            $_SESSION['currentweek'] = get_global_value('currweek');
+            $_SESSION['currentseason'] = get_global_value('currseason');
+            $_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
+            
+            set_week_state($_SESSION['matchweek'], 5);
+        }
+        $html .= '    <div class="alert alert-success">Rolling week forward</div>';
+        $html .= '     </div>
+                         </section>
+                         </body>
+                         </html>';
+        echo $html;
     }
-
-    $html .= '			   </div>
-								</div>
-                            </div>
-                        </section>
-            		</body>
-				</html>';
-    echo $html;
 } else {
     header('Location: ' . $myPath . 'index.php?error=1');
 }
