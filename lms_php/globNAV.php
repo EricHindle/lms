@@ -28,11 +28,14 @@ if ($currentlevel == $levelneeded) {
 								<li><a href="' . $myPath . 'struct/main.php">Admin</a></li>
 					';
 }
-echo '
-							</ul>
+echo '                      </ul>
 							<ul class="nav navbar-nav navbar-right">
                                 <li><a href="#">Period: ' . $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'] . '</a></li>
-								<li><a href="#"><span class="glyphicon glyphicon-user"></span> ' . $_SESSION['nickname'] . '</a></li>
+								<li>
+                                    <form class="glyphicon glyphicon-user" role="form" name ="edit" method="post" action="' . $myPath . 'struct/player/myaccount.php">' . $key .
+				                        '<input id="submit" name="submit" type="submit" value="' . $_SESSION['nickname'] . '" class="navbar nav-button">
+                                    </form>
+                                </li>
 								<li><a href="' . $myPath . 'logout.php"><span class="glyphicon glyphicon-log-in"></span> Sign out</a></li>
 							</ul>
 						</div>

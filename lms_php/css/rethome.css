@@ -182,6 +182,19 @@ strong {
 /* NEW END */
 
 
+.navbar.nav-button {
+	background:#00233f;
+	border-style:none;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	margin-bottom: 0px;
+}
+
+
+.navbar.nav-button:hover {
+    color: #fbff00;
+}
+
 .navbar-nav.navbar-right:last-child {
     margin-right: 0;
 }

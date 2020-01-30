@@ -9,12 +9,10 @@ require $myPath . 'struct/match/match-functions.php';
 require $myPath . 'struct/player/player-functions.php';
 
 sec_session_start();
-$formKey = new formKey();
 $access = sanitize_int($_SESSION['retaccess']);
 if (login_check($mypdo) == true && $access == 999) {
     $weekstate = get_week_state($_SESSION['matchweek']);
     $html = "";
-    $key = $formKey->outputKey();
     echo '
 				<!doctype html>
 				<html>
@@ -60,7 +58,7 @@ if (login_check($mypdo) == true && $access == 999) {
         if ($weekstate <= 1) {
             $weekstate = 1;
             set_week_state($_SESSION['matchweek'], $weekstate);
-            
+
             /*
              * Mark picks as win/lose
              * Mark players with losing pick as out
@@ -140,7 +138,7 @@ if (login_check($mypdo) == true && $access == 999) {
             $_SESSION['currentweek'] = get_global_value('currweek');
             $_SESSION['currentseason'] = get_global_value('currseason');
             $_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
-            
+
             set_week_state($_SESSION['matchweek'], 5);
         }
         $html .= '    <div class="alert alert-success">Rolling week forward</div>';
