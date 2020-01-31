@@ -4,8 +4,6 @@ $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
-require $myPath . 'includes/mail-util.php';
-require $myPath . 'struct/game/game-functions.php';
 require $myPath . 'struct/player/player-functions.php';
 
 sec_session_start();
