@@ -20,7 +20,7 @@ if (login_check($mypdo) == true) {
                 if ($gameid) {
                     $deadline = get_deadline_date();
                     $html = "";
-                    $gamesql = "SELECT lms_game_start_wkno, lms_game_name, lms_week, lms_year, lms_game_status_text FROM v_lms_game WHERE lms_game_id = :id";
+                    $gamesql = "SELECT lms_game_start_wkno, lms_game_name, lms_week, lms_year, lms_game_status_text, lms_game_status, lms_week_start FROM v_lms_game WHERE lms_game_id = :id";
                     $gamequery = $mypdo->prepare($gamesql);
                     $gamequery->execute(array(
                         ':id' => $gameid
@@ -68,20 +68,22 @@ if (login_check($mypdo) == true) {
 									                </div>
 									      		</div>
                         <div class="row">
-			            	<div class="well col-md-8  textDark">
+			            	<div class="well col-md-9  textDark">
                                 <div class="row">
-                                    <div class="col-sm-2"><b>Start week:</b> </div>
-                                    <div class="col-sm-2">' . sprintf("%02d", $gamefetch['lms_week']) . '</div>
-                                    <div class="col-sm-2"><b>Start date:</b></div>
-                                    <div class="col-sm-2"> ' . date_format(date_create($gamefetch['lms_week_start']), 'd M Y') . '</div>
-                                    <div class="col-sm-2 col-sm-offset-1"  style="color:blue"><b>' . $gamefetch['lms_game_status_text'] . '</b></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-4"><b>Current week:</b> </div>
-                                    <div class="col-sm-2"><b>Deadline:</b> </div>
-                                    <div class="col-sm-2">' . date_format(date_create($deadline), 'd M Y') . '</div>
-                                </div>
-                                <div class="row">
+                                    <div class="col-sm-3"><b>Game start week: </b></div><div class="col-sm-1">' . sprintf("%02d", $gamefetch['lms_week']) . '</div>
+                                    <div class="col-sm-2"><b>Start date:</b> </div><div class="col-sm-2">' . date_format(date_create($gamefetch['lms_week_start']), 'd M Y') . '</div>
+                                    <div class="col-sm-2 col-sm-offset-1 text-center"  style="background:midnightblue;color:white">' . $gamefetch['lms_game_status_text'] . '</div>
+
+                                </div>';
+                        if ($gamefetch['lms_game_status'] == 2) {
+
+                            $html .= '         <div class="row">
+<br>
+                                    <div class="col-sm-4"><b>Current week selection deadline:</div><div class="col-sm-2"></b>  ' . date_format(date_create($deadline), 'd M Y') . '</div>
+                                </div>';
+                        }
+                        $html .= ' <div class="row">
+<br>
     					        	<table class="table table-bordered" id="keywords">
     									<thead>
     									<tr>

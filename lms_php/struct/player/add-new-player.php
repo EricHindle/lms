@@ -13,9 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (! isset($_POST['form_key']) || ! $formKey->validate()) {
         header('Location: ' . $myPath . 'index.php?error=1');
     } else {
-        if (isset($_POST['email'], $_POST['password'], $_POST['fname'], $_POST['sname'], $_POST['screenname'])) {
+        if (isset($_POST['email'], $_POST['password'], $_POST['confirm'], $_POST['fname'], $_POST['sname'], $_POST['screenname'])) {
             $email = $_POST['email'];
             $password = $_POST['password'];
+            $confirm = $_POST['confirm'];
             $fname = sanitize_message_string($_POST['fname']);
             $sname = sanitize_message_string($_POST['sname']);
             $screenname = sanitize_message_string($_POST['screenname']);
@@ -24,8 +25,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($isadmin == 'true') {
                 $myaccess = 999;
             }
-            if ($email && $password && $fname && $sname && $screenname) {
+            if ($email && $password && $confirm && $fname && $sname && $screenname) {
                 $html = "";
+                
+                if ($password <> $confirm){ 
+                    $html .= "<script>
+    							alert('Passwords do not match');
+    							window.location.href='new-player.php';
+    						</script>";
+                } else {
                 $cusql = "SELECT lms_player_id FROM lms_player WHERE lms_player_email = :email LIMIT 1";
                 $cuquery = $mypdo->prepare($cusql);
                 $cuquery->execute(array(
@@ -69,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 											window.location.href='" . $myPath . "index.php';
 										</script>";
                 }
-
+            }
                 echo $html;
             } else {
                 echo "<script>

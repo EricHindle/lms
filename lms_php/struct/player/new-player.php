@@ -38,47 +38,6 @@ echo '
 						});
 					});
 				</script>
-				<script>
-
-					function validatePassReset(){
-                            var canSubmit = false;
-                            var password = $("#pwd1").val();
-                            var confirmPassword = $("#pwd2").val();
-                            if (password == confirmPassword) {
-                            	if (password.length>7) {
-                            		canSubmit = true;
-                            	} else {
-                            		alert("Password must contain at least 8 characters.");
-                            		canSubmit = false;
-                            	}
-                            } else {
-                                alert("Passwords do not match");
-                            }
-
-                            return canSubmit;
-                    }
-
-                    function checkPasswordMatch() {
-                        var password = $("#pwd1").val();
-                        var confirmPassword = $("#pwd2").val();
-                        var element = document.getElementById("p1");
-                        if (password.match(/[A-z]/) && password.match(/[A-Z]/) && password.match(/\d/) && password.length > 7)
-                            document.getElementById("pwd1").style.borderColor = "green";
-                        else
-                            document.getElementById("pwd1").style.borderColor = "red";
-
-                        if (password != confirmPassword)
-                            document.getElementById("pwd2").style.borderColor = "red";
-                        else {
-                            document.getElementById("pwd2").style.borderColor = "green";
-                            document.getElementById("pwd1").style.borderColor = "green";
-                        }
-
-                    }
-                    $(document).ready(function () {
-                        $("#pwd1, #pwd2").keyup(checkPasswordMatch);
-                    });
-				</script>
 			</head>
 
 			<body>';
@@ -95,7 +54,7 @@ $html .= '
 			        	<div class = "row">';
 
 $html .= '			<div class="well col-md-offset-4 col-md-4 col-sm-offset-1 col-sm-10 textDark">
-			                	<form class="form-group" role="form" name ="addplayer" method="post" action="' . $myPath . 'struct/player/add-new-player.php">';
+			                	<form class="form-group" role="form" name ="addplayer" autocomplete="off" method="post" action="' . $myPath . 'struct/player/add-new-player.php">';
 $html .= $key;
 $html .= '					<h3 class="text-center">Enter Your Details</h3>
 			                    	<br>
@@ -103,14 +62,21 @@ $html .= '					<h3 class="text-center">Enter Your Details</h3>
                                     <div class="form-group">
                                         <div class="inner-addon left-addon">
                                             <i class="glyphicon glyphicon-envelope"></i>
-                                            <input type="text" class="form-control" name="email"  id="email" placeholder="email address">
+                                            <input type="text" class="form-control" name="email"  id="email" placeholder="email address"  value="" >
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <div class="inner-addon left-addon">
                                             <i class="glyphicon glyphicon-lock"></i>
-                                            <input type="text" class="form-control" name="password"  id="password" placeholder="password">
+                                            <input type="password" class="form-control" name="password"  id="password" placeholder="password" autocomplete="off"  value="" >
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="inner-addon left-addon">
+                                            <i class="glyphicon glyphicon-lock"></i>
+                                            <input type="password" class="form-control" name="confirm"  id="confirm" placeholder="confirm password" autocomplete="off"  value="" >
                                         </div>
                                     </div>
 

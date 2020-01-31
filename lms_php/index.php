@@ -46,7 +46,7 @@ if (login_check($mypdo) == true) {
                                     <div class="form-group">
                                         <div class="inner-addon left-addon">
                                             <i class="glyphicon glyphicon-lock"></i>
-                                            <input name="password" type="password" class="form-control input-lg" name="password" id="password" placeholder="password">
+                                            <input name="password" type="password" class="form-control input-lg" name="password" id="password" placeholder="password" autocomplete="off">
                                         </div>
                                         <br>
                                     </div>
