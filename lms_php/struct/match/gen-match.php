@@ -17,7 +17,7 @@ if (login_check($mypdo) == true && $access > 900) {
                 $gameid = $_POST['weekid'];
                 if ($gameid) {
                     $html = "";
-                    $teamsql = "SELECT lms_team_name, lms_team_id, lms_team_active FROM lms_team WHERE lms_team_active = 1";
+                    $teamsql = "SELECT lms_team_name, lms_team_id, lms_team_active FROM lms_team WHERE lms_team_active = 1 ORDER BY lms_team_name";
                     $teamquery = $mypdo->prepare($teamsql);
                     $teamquery->execute();
                     $teamcount = $teamquery->rowCount();
@@ -67,13 +67,18 @@ if (login_check($mypdo) == true && $access > 900) {
 									    <br><br>
 									        <div class="container">
 									        	<div class="row">
-									                <div class="col-md-8">
+									                <div class="col-md-7">
 									                    <h1><strong>Generate Matches for Period ' . $year . '/' . $week . '</strong></h1>
 									                </div>
+							<div class="col-md-1">
+								<a href="' . $myPath . 'struct/match/match-main.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
+							</div>
+
+
 									      		</div>
 									        	<div class = "row">';
 
-                        $html .= '			<div class="well col-md-8 col-md-offset-1 textDark">
+                        $html .= '			<div class="well col-md-8 textDark">
 									                	<form class="form-horizontal" role="form" name ="gen" method="post" action="process-gen-match.php">';
                         $html .= $key;
                         $html .= '					<h3 class="text-center">Matches</h3>
@@ -100,7 +105,7 @@ if (login_check($mypdo) == true && $access > 900) {
 
                                 $html .= '
 									<tr>
-										<td><input type="checkbox" style="margin-left:20px;" name="add-' . $rs['lms_team_id'] . '" id="add-' . $rs['lms_team_id'] . '" value="true" checked ></td>
+										<td><input type="checkbox" style="margin-left:20px;" name="add-' . $rs['lms_team_id'] . '" id="add-' . $rs['lms_team_id'] . '" value="true" ></td>
                                         <td>' . $rs['lms_team_name'] . '</td>
 										<td><input type="text" class="form-control" id="mdt-' . $rs['lms_team_id'] . '" name="mdt-' . $rs['lms_team_id'] . '" value="' . $kodate . '" placeholder="yyyy-mm-dd"></td>
 									</tr>';

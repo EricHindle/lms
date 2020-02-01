@@ -20,7 +20,7 @@ if (login_check($mypdo) == true) {
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
-                <title>Login</title>
+                <title>Last Man Live</title>
                 <link rel="stylesheet" href="css/bootstrap.min.css" />
                 <link rel="stylesheet" href="css/retlogin.css">
             </head>
@@ -28,7 +28,7 @@ if (login_check($mypdo) == true) {
                 <div class="container-fluid">
                     <div class="row">
                         <section id="login">
-                            <div class="col-md-offset-4 col-md-4 col-sm-offset-1 col-sm-10">
+                            <div class="col-md-offset-4 col-md-4 col-sm-offset-3 col-sm-6  col-xs-offset-1 col-xs-10">
                             <br><br>
                                 <img class="img-responsive center-block" src="img/logo_big.png">
                                 <form role="form" autocomplete="off" name="form1" method="post" action="process_login.php" class="form-group">

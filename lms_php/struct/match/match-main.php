@@ -10,7 +10,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $formKey = new formKey();
     $key = $formKey->outputKey();
 
-    $matchsql = "SELECT * FROM v_lms_match ORDER BY lms_match_date, lms_match_team ASC ";
+    $matchsql = "SELECT * FROM v_lms_match ORDER BY lms_team_name, lms_match_date  ASC ";
     $matchquery = $mypdo->prepare($matchsql);
     $matchquery->execute();
     $matchfetch = $matchquery->fetchAll(PDO::FETCH_ASSOC);
@@ -25,7 +25,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
 			    <meta charset="UTF-8">
 			    
-			    <title>Game matchs</title>
+			    <title>Match administration</title>
 			    
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
 			    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
@@ -47,7 +47,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			    <br><br>
 			        <div class="container">
 			        	<div class="row">
-			                <div class="col-md-11">
+			                <div class="col-md-8">
 			                    <h1><strong>Match Admin</strong></h1>
 			                </div>
 							<div class="col-md-1">
@@ -55,7 +55,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 							</div>
 			      		</div>
                         <div class="row">';
-    $html .= '			<div class="well col-md-3 col-md-offset-2 textDark">
+    $html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
 			                	<form class="form-horizontal" role="form" name ="genmatch" method="post" action="gen-match.php">';
     $html .= $key;
     $html .= '					<h3 class="text-center">Generate Matches</h3>
@@ -96,7 +96,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $html .= '
                         </div>
 						<div class = "row">
-				        	<div class="well col-md-9 col-md-offset-1 textDark">
+				        	<div class="well col-md-9 textDark">
 				        		<h3>Period ' . $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'] . ' matches</h3>
 					        	<table class="table table-bordered" id="keywords">
 									<thead>

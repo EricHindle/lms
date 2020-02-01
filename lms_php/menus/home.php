@@ -44,7 +44,7 @@ if (login_check($mypdo) == true) {
 			    <br><br>
 		        <div class="container">
 		            <div class="row">
-		                <div class="col-md-12">
+		                <div class="col-md-10">
 		                    <h1><strong>Welcome ' . $_SESSION['nickname'] . '</strong></h1>
 		                    <br>
 		                </div>

@@ -62,31 +62,41 @@ if (login_check($mypdo) == true && $access > 900) {
 			    <br><br>
 			        <div class="container">
 			        	<div class="row">
-			                <div class="col-md-12">
+			                <div class="col-md-7 col-sm-7 col-xs-7">
 			                    <h1><strong>Edit player</strong></h1>
 			                    <br>
 			                </div>
+							<div class="col-md-1">
+								<a href="' . $myPath . 'struct/player/player-main.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
+							</div>
+
 			      		</div>
 			        	<div class = "row">';
 
-                        $html .= '			<div class="well col-md-10 col-md-offset-1 textDark">
+                        $html .= '			<div class="well col-md-8 col-sm-10 col-xs-offset-1 col-xs-10 textDark">
 			                	<form class="form-horizontal" role="form" name ="edit" method="post" action="process-edit-player.php">';
                         $html .= $key;
-                        $html .= '					<div class="form-group">
-										<label class="control-label col-sm-2" for="name">Name:</label>
-										<div class="col-sm-2">
+                        $html .= '					
+                                    <div class="row">
+										<label class="control-label col-md-2  col-sm-2" for="name">Name:</label>
+										<div class="col-md-3 col-sm-3">
 										 	<p class="form-control-static" name="name">' . $userfetch['lms_player_forename'] . ' ' . $userfetch['lms_player_surname'] . '</p>
 										</div>
-										<label class="control-label col-sm-2" for="scrname">Screen name:</label>
-										<div class="col-sm-2">
+										<label class="control-label col-md-3 col-sm-3" for="scrname">Screen name:</label>
+										<div class="col-md-3 col-sm-4">
 										 	<p class="form-control-static" name="scrname">' . $userfetch['lms_player_screen_name'] . '</p>
 										</div>
-										<label class="control-label col-sm-2" for="oemail">Email:</label>
-										<div class="col-sm-2">
+                                    </div>
+                                    <div class="row">
+
+										<label class="control-label col-md-2 col-sm-2" for="oemail">Email:</label>
+										<div class="col-md-4 col-sm-4">
 										 	<p class="form-control-static" name="oemail">' . $userfetch['lms_player_email'] . '</p>
 										</div>
+                                        <div class="col-md-2 col-sm-2">
+                                        </div>
 									</div>
-                                    <div class="form-group">
+                                    <div style="margin-top:16px">
                                            <label for="email">Email address:</label>
                                            <input type="text" class="form-control" name="email"  id="email" value="' . $userfetch['lms_player_email'] . '">
                                            <label for="fname">Forename:</label>
@@ -101,21 +111,20 @@ if (login_check($mypdo) == true && $access > 900) {
                                            <label for="isactive">&nbsp is Active</label>
                                            <input type= "hidden" name= "id" value="' . $gameid . '" />
                                      </div>
-									 <div class="form-group">
+									 <div>
 				                    	<br>
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
 				                     </div>
 								</form>
 							</div>
 				        </div>
-				        <div class="row">
+				        <div>
 							<br>
 							<div class="col-xs-6">
 								<a href="' . $myPath . 'struct/player/player-main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
 								<br>
 							</div>
 						</div>
-			      		<br><br><br><br>
 			    	</div>
 			    </section>
 			</body>
