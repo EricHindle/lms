@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $stmtadduser->execute();
                     $added = $stmtadduser->rowCount();
                     $body = 'A new LMS account has been created for "' . $screenname . '" at email address: ' . $email;
-                    $bcclist = '';
+                    $bcclist = array(get_global_value('admin_email_address'));
                     if ($added == 1) {
                         sendmail($email, get_global_value('create_email_subject'), $body, $fname . ' ' . $sname, $bcclist,'','');
                     }

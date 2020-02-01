@@ -8,7 +8,7 @@ require $myPath . 'includes/formkey.class.php';
 sec_session_start();
 $formKey = new formKey();
 $access = sanitize_int($_SESSION['retaccess']);
-if (login_check($mypdo) == true && $access == 999) {
+if (login_check($mypdo) == true && $access > 900) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (! isset($_POST['form_key']) || ! $formKey->validate()) {
             header('Location: ' . $myPath . 'index.php?error=1');
@@ -111,7 +111,7 @@ if (login_check($mypdo) == true && $access == 999) {
                             $presult = 'selected';
                             break;
                     }
-                    $md = date_create($matchfetch['lms_match_date']);
+                    $md = date_create($rs['lms_match_date']);
                     $kodate = date_format($md, 'd-M-Y');
                     $html .= '
 									<tr>

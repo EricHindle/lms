@@ -18,7 +18,7 @@ function getmailer() {
     return $mail;
 }
 
-function sendmail($to, $subject, $message, $name, $list, $from_address, $from_name) {
+function sendmail($to, $subject, $message, $name, $bcclist, $from_address, $from_name) {
     $mail = getmailer();
 
     if ($from_address){
@@ -33,9 +33,10 @@ function sendmail($to, $subject, $message, $name, $list, $from_address, $from_na
     $mail->Subject = $subject;
     $mail->AltBody = $body;
     $mail->MsgHTML($body);
-    foreach ($list as $bccer) {
+/*     foreach ($list as $bccer) {
         $mail->AddBCC($bccer);
-    }
+    } */
+    $mail->addCustomHeader("BCC: ". $bcclist); 
     $address = $to;
     $mail->AddAddress($address, $name);
 

@@ -3,7 +3,7 @@ $myPath='../../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 sec_session_start(); 
-if(login_check($mypdo) == true && $_SESSION['retaccess']==999) {
+if(login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 	echo '
 	<!doctype html>
 	<html>

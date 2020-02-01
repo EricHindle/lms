@@ -6,7 +6,7 @@ require $myPath . 'includes/formkey.class.php';
 require $myPath . 'includes/lookup-functions.php';
 
 sec_session_start();
-if (login_check($mypdo) == true && $_SESSION['retaccess'] == 999) {
+if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $formKey = new formKey();
     $key = $formKey->outputKey();
 

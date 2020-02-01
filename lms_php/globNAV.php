@@ -1,6 +1,7 @@
 <?php
 $currentlevel = $_SESSION['retaccess'];
-$levelneeded = 999;
+$adminlevelneeded = 999;
+$devlevelneeded = 901;
 
 echo '
 		   <section>
@@ -23,9 +24,14 @@ echo '
 								<li><a href="' . $myPath . 'struct/game/game-manage.php">Manage Games</a></li>
 					';
 
-if ($currentlevel == $levelneeded) {
+if ($currentlevel == $adminlevelneeded || $currentlevel == $devlevelneeded) {
     echo '
 								<li><a href="' . $myPath . 'struct/main.php">Admin</a></li>
+					';
+}
+if ($currentlevel == $devlevelneeded) {
+    echo '
+								<li><a href="' . $myPath . 'menus/testmenu.php">Test</a></li>
 					';
 }
 echo '                      </ul>

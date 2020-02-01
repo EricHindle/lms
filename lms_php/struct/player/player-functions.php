@@ -21,7 +21,7 @@ function notify_loser($playerid, $gameid) {
     $playeremail = $player['lms_player_email'];
     $game = get_game($gameid);
     $gamename = $game['lms_game_name'];
-    $bcclist = '';
+    $bcclist = array(get_global_value('admin_email_address'));
     $body = 'The team you picked this week in the LMS game ' . $gamename . ' was a loser. Sorry but you are out of the game' ;
     $subject = 'For you, the game is over';
     sendmail($playeremail, $subject, $body, '', $bcclist, $playeremail, $playername);
@@ -33,7 +33,7 @@ function notify_winner($playerid, $gameid) {
     $playeremail = $player['lms_player_email'];
     $game = get_game($gameid);
     $gamename = $game['lms_game_name'];
-    $bcclist = '';
+    $bcclist = array(get_global_value('admin_email_address'));
     $body = 'The team you picked this week in the LMS game ' . $gamename . ' was a winner. You are still in the game. Do not forget to make a pick for the new week.' ;
     $subject = 'You are still in the game';
     sendmail($playeremail, $subject, $body, '', $bcclist, $playeremail, $playername);
@@ -45,7 +45,7 @@ function notify_no_pick($playerid, $gameid) {
     $playeremail = $player['lms_player_email'];
     $game = get_game($gameid);
     $gamename = $game['lms_game_name'];
-    $bcclist = '';
+    $bcclist = array(get_global_value('admin_email_address'));
     $body = 'You have failed to make a pick in LMS game ' . $gamename . ' this week. Sorry but you are out of the game' ;
     $subject = 'You missed out';
     sendmail($playeremail, $subject, $body, '', $bcclist, $playeremail, $playername);

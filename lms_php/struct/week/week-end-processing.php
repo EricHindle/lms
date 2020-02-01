@@ -10,7 +10,7 @@ require $myPath . 'struct/player/player-functions.php';
 
 sec_session_start();
 $access = sanitize_int($_SESSION['retaccess']);
-if (login_check($mypdo) == true && $access == 999) {
+if (login_check($mypdo) == true && $access > 900) {
     $weekstate = get_week_state($_SESSION['matchweek']);
     $html = "";
     echo '

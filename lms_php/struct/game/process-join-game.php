@@ -114,26 +114,26 @@ if (login_check($mypdo) == true) {
                             } else {
                                 $html .= "<script>
 										alert('Game not open to new players. Please check the code and try again.');
-										window.location.href='game-manage.php';
+										window.location.href='".$myPath."menus/home.php';
 									</script>";
                             }
                         } else {
                             $html .= "<script>
 										alert('You are already in this game. Please check the code and try again.');
-										window.location.href='game-manage.php';
+										window.location.href='".$myPath."menus/home.php';
 									</script>";
                         }
                     } else {
                         $html .= "<script>
 										alert('Game not found. Please check the code and try again.');
-										window.location.href='game-manage.php';
+										window.location.href='".$myPath."menus/home.php';
 									</script>";
                     }
 
                     echo $html;
                 } else {
                     echo "<script>
-										alert('There was a problem. Please check details and try again.');
+										alert('Enter a game code and try again.');
 										window.location.href='".$myPath."menus/home.php';
 									</script>";
                 }
