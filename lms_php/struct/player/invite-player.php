@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($emails && $gamecode && $gamename) {
                 $html = "";
                 $bcclist = array(get_global_value('admin_email_address'));
-                $body = 'Please join my LMS game called ' . $gamename . '. The game code is: ' . $gamecode;
+                $body = 'Please join my Last Man Live game called ' . $gamename . '. The game code is: ' . $gamecode . ' Register or Login at ' . get_global_value('lml_url');
                 foreach ($emails as $playeremail) {
                     sendmail($playeremail, get_global_value('invite_email_subject'), $body, '', $bcclist, $playeremail, $playername);
                 }

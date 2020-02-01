@@ -67,10 +67,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     $stmtadduser->execute();
                     $added = $stmtadduser->rowCount();
-                    $body = 'A new LMS account has been created for "' . $screenname . '" at email address: ' . $email;
+                    $body = 'A new LMS account has been created for ' . $fname . ' ' . $sname . '(' . $screenname . ') at email address: ' . $email . ' Login using this email address at '. get_global_value('lml_url') ;
                     $bcclist = array(get_global_value('admin_email_address'));
                     if ($added == 1) {
-                        sendmail($email, get_global_value('create_email_subject'), $body, $fname . ' ' . $sname, $bcclist,'','');
+                        sendmail($email, get_global_value('create_email_subject'), $body, $fname . ' ' . $sname, $bcclist,get_global_value('admin_email_address'),'LML Admin');
                     }
                     $html .= "<script>
 											alert('Account added.');

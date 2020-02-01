@@ -21,10 +21,10 @@ function notify_loser($playerid, $gameid) {
     $playeremail = $player['lms_player_email'];
     $game = get_game($gameid);
     $gamename = $game['lms_game_name'];
-    $bcclist = array(get_global_value('admin_email_address'));
-    $body = 'The team you picked this week in the LMS game ' . $gamename . ' was a loser. Sorry but you are out of the game' ;
+    $bcclist = '';
+    $body = 'The team you picked this week in the Last Man Live game ' . $gamename . ' was a loser. Sorry but you are out of the game. Why not login at ' . get_global_value('lml_url') . ' and join another game or start your own.'  ;
     $subject = 'For you, the game is over';
-    sendmail($playeremail, $subject, $body, '', $bcclist, $playeremail, $playername);
+    sendmail($playeremail, $subject, $body, $playername, $bcclist, get_global_value('admin_email_address'), 'LML Admin');
 
 }
 
@@ -33,10 +33,10 @@ function notify_winner($playerid, $gameid) {
     $playeremail = $player['lms_player_email'];
     $game = get_game($gameid);
     $gamename = $game['lms_game_name'];
-    $bcclist = array(get_global_value('admin_email_address'));
-    $body = 'The team you picked this week in the LMS game ' . $gamename . ' was a winner. You are still in the game. Do not forget to make a pick for the new week.' ;
+    $bcclist = '';
+    $body = 'The team you picked this week in the Last Man Live game ' . $gamename . ' was a winner. You are still in the game. Do not forget to make a pick for the new week. Login at '. get_global_value('lml_url') ;
     $subject = 'You are still in the game';
-    sendmail($playeremail, $subject, $body, '', $bcclist, $playeremail, $playername);
+    sendmail($playeremail, $subject, $body, '', $bcclist, $get_global_value('admin_email_address'), 'LML Admin');
     
 }
 
@@ -46,9 +46,9 @@ function notify_no_pick($playerid, $gameid) {
     $game = get_game($gameid);
     $gamename = $game['lms_game_name'];
     $bcclist = array(get_global_value('admin_email_address'));
-    $body = 'You have failed to make a pick in LMS game ' . $gamename . ' this week. Sorry but you are out of the game' ;
+    $body = 'You have failed to make a pick in the Last Man Live game ' . $gamename . ' this week. Sorry but you are out of the game. Why not login at ' . get_global_value('lml_url') . ' and join another game or start your own.' ;
     $subject = 'You missed out';
-    sendmail($playeremail, $subject, $body, '', $bcclist, $playeremail, $playername);
+    sendmail($playeremail, $subject, $body, '', $bcclist, $get_global_value('admin_email_address'), 'LML Admin');
     
 }
 

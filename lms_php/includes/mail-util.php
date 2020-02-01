@@ -33,10 +33,9 @@ function sendmail($to, $subject, $message, $name, $bcclist, $from_address, $from
     $mail->Subject = $subject;
     $mail->AltBody = $body;
     $mail->MsgHTML($body);
-/*     foreach ($list as $bccer) {
+    foreach ($bcclist as $bccer) {
         $mail->AddBCC($bccer);
-    } */
-    $mail->addCustomHeader("BCC: ". $bcclist); 
+    }
     $address = $to;
     $mail->AddAddress($address, $name);
 
