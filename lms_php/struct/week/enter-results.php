@@ -14,7 +14,7 @@ if (login_check($mypdo) == true && $access > 900) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
             $html = "";
-            $matchsql = "SELECT lms_match_id, lms_match_date, lms_match_result, lms_team_name FROM v_lms_match WHERE lms_match_weekno = :matchwk";
+            $matchsql = "SELECT lms_match_id, lms_match_date, lms_match_result, lms_team_name FROM v_lms_match WHERE lms_match_weekno = :matchwk ORDER BY lms_team_name";
             $matchquery = $mypdo->prepare($matchsql);
             $matchquery->bindParam(':matchwk', $_SESSION['matchweek']);
             $matchquery->execute();
