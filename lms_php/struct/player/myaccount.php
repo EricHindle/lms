@@ -52,18 +52,18 @@ if (login_check($mypdo) == true) {
 			    <br><br>
 			        <div class="container">
 			        	<div class="row">
-			                <div class="col-md-11">
+			                <div class="col-md-8 col-sm-10 col-xs-8">
 			                    <h1><strong>My Account</strong></h1>
 			                    <br>
 			                </div>
 							<div class="col-md-1">
-								<a href="' . $myPath . 'menus/home.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
+								<a href="' . $myPath . 'menus/home.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:35px" role="button">Back</a>
 							</div>
 			      		</div>
 			        	<div class = "row">
  <div class="col-md-12">';
 
-                        $html .= '	<div class="well col-md-offset-2 col-md-4 textDark">
+                        $html .= '	<div class="well col-sm-offset-0 col-md-offset-0 col-md-4 col-sm-5 col-xs-offset-1 col-xs-8 textDark">
 			                	<form role="form" name="details" method="post" action="process-myaccount.php" class="form-group">';
                         $html .= $key;
                         $html .= '	<h3 class="text-center">Change my details</h3>
@@ -92,7 +92,7 @@ if (login_check($mypdo) == true) {
 							</div>';
 	
 
-    $html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
+    $html .= '			<div class="well col-md-4 col-md-offset-1 col-sm-offset-1 col-sm-5 col-xs-offset-1 col-xs-8 textDark">
 			                	<form role="form" name ="password" method="post" action="change-my-password.php">';
     $html .= $key;
     $html .= '					<h3 class="text-center">Change Password</h3>
