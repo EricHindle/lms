@@ -21,7 +21,7 @@ if (login_check($mypdo) == true) {
                 $email = $_POST['email'];
                 if ($userid) {
                     $html = "";
-                    $upsql = "UPDATE lms_player SET lms_player_email = :email, lms_player_forename = :forename, lms_player_surname = :surname, lms_player_screen_name = :screenname WHERE lms_player_id = :userid";
+                    $upsql = "UPDATE lms_player SET lms_player_email = :email, lms_player_login = :email, lms_player_forename = :forename, lms_player_surname = :surname, lms_player_screen_name = :screenname WHERE lms_player_id = :userid";
                     $upduser = $mypdo->prepare($upsql);
                     $upduser->bindParam(':forename', $fname);
                     $upduser->bindParam(':surname', $sname);

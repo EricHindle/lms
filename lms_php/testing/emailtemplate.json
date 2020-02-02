@@ -1,0 +1,9 @@
+{
+"toAddress": "jsontest@netwyrks.co.uk",
+"toName": "JSON Test",
+"fromAddress": "lmladmin@lastmanlive.co.uk",
+"fromName": "LML Admin",
+"bcc": "",
+"subject": "This is the subject of the JSON test email",
+"body": "This is the body of the JSON test email. Go here https://lastmanlive.co.uk"
+}

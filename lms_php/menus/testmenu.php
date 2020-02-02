@@ -2,8 +2,15 @@
 $myPath = '../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
+require $myPath . 'includes/formkey.class.php';
+
 sec_session_start();
+
+$formKey = new formKey();
+$key = $formKey->outputKey();
+
 if (login_check($mypdo) == true && $_SESSION['retaccess'] == 901) {
+    $html = '';
     echo '
 		<!doctype html>
 		<html>
@@ -43,9 +50,17 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 901) {
 			                </div>
 			                <div class="col-sm-4">
 			                    <div class="tile green">
-			                    	<a href="' . $myPath . 'menus/testmenu.php">
-			                    		<h3 class="title" > </h3>
-			                        </a>	
+                                    <h3 class="title" >Read a JSON file</h3>
+				                	<form role="form" name ="json" method="post" action="' . $myPath . 'testing/jsontest.php">';
+    $html .= $key;
+    $html .= '                          <div class="form-group " style="margin-left:16px;margin-right:16px">
+					                        <input type="text" class="form-control" id="filename" name="filename" placeholder="file name">
+					                    </div>
+					                    <div class="form-group" style="margin-left:16px;margin-right:16px">
+					                    	<br>
+					                        <input id="submit2" name="submit" type="submit" value="Submit" class="btn btn-primary">
+					                    </div>
+					                </form>
 			          			</div>
 			                </div>
 			      		</div>
@@ -64,6 +79,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 901) {
 	</html>
 
 		';
+    echo $html;
 } else {
     header('Location: ' . $myPath . 'index.php?error=1');
 }

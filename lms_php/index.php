@@ -48,6 +48,7 @@ if (login_check($mypdo) == true) {
                                             <i class="glyphicon glyphicon-lock"></i>
                                             <input name="password" type="password" class="form-control input-lg" name="password" id="password" placeholder="password" autocomplete="off">
                                         </div>
+<a href="struct/player/new-password.php" class="" style="float:right">Forgotten Password</a>
                                         <br>
                                     </div>
                                         <button class="btn btn-primary btn-md" type="submit">Sign in <span class="glyphicon glyphicon-log-in"></button>
@@ -55,6 +56,8 @@ if (login_check($mypdo) == true) {
                                         <a href="struct/player/new-player.php" class="btn btn-primary btn-small" role="button" style="float:right">Create Account <span class="glyphicon glyphicon-globe"></a>
 
                                 </form>
+
+
                                 ';
     if (isset($_GET['error'])) {
         $html .= '<div class="alert alert-danger">There has been a problem</div>';

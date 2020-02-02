@@ -293,4 +293,16 @@ function bootOut($rootPath, $user = 'UNKNOWN', $page = 'UNKNOWN', $error = 'UNKN
     return header('Location: ' . $rootPath . 'index.php?error=1');
 }
 
+function generate_password()
+{
+    $allchars = "abcdefghijkmnopqrstuvwxyz023456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    $randstr = str_shuffle($allchars);
+    $passcode = "";
+    for ($i = 1; $i < 9; $i ++) {
+        $passcode .= substr($randstr, 0, 1);
+        $randstr = str_shuffle($randstr);
+    }
+    return $passcode;
+}
+
 ?>
