@@ -7,11 +7,10 @@ require $myPath . 'includes/mail-util.php';
 function get_player($playerid)
 {
     global $mypdo;
-    $playersql = "SELECT * FROM lms_player WHERE lms_player_id = :id";
+    $playersql = "SELECT * FROM lms_player WHERE lms_player_id = :id LIMIT 1";
     $playerquery = $mypdo->prepare($playersql);
-    $playerquery->execute(array(
-        ':id' => $playerid
-    ));
+    $playerquery->bindParam(":id", $playerid, PDO::PARAM_INT);
+    $playerquery->execute();
     $playerfetch = $playerquery->fetch(PDO::FETCH_ASSOC);
     return $playerfetch;
 }

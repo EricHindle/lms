@@ -5,6 +5,7 @@ require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
 require $myPath . 'includes/mail-util.php';
+require $myPath . 'struct/email/email-functions.php';
 
 sec_session_start();
 $formKey = new formKey();
@@ -66,11 +67,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $stmtadduser->bindParam(':retaccess', $myaccess, PDO::PARAM_INT);
 
                     $stmtadduser->execute();
+                  
+                    
                     $added = $stmtadduser->rowCount();
-                    $body = 'A new LMS account has been created for ' . $fname . ' ' . $sname . '(' . $screenname . ') at email address: ' . $email . ' Login using this email address at '. get_global_value('lml_url') ;
-                    $bcclist = array(get_global_value('admin_email_address'));
+                    
+                    
+ //                   $body = 'A new LMS account has been created for ' . $fname . ' ' . $sname . '(' . $screenname . ') at email address: ' . $email . ' Login using this email address at '. get_global_value('lml_url') ;
+ //                   $bcclist = array(get_global_value('admin_email_address'));
                     if ($added == 1) {
-                        sendmail($email, get_global_value('create_email_subject'), $body, $fname . ' ' . $sname, $bcclist,get_global_value('admin_email_address'),'LML Admin');
+                        $playerid = $mypdo->lastInsertId();
+ //                       sendmail($email, get_global_value('create_email_subject'), $body, $fname . ' ' . $sname, $bcclist,get_global_value('admin_email_address'),'LML Admin');
+                        sendemailusingtemplate('newaccount', $playerid, '');
                     }
                     $html .= "<script>
 											alert('Account added.');

@@ -1,8 +1,8 @@
 <?php
 $myPath = '../';
-require $myPath . 'includes/db_connect.php';
-require $myPath . 'includes/functions.php';
-require $myPath . 'includes/formkey.class.php';
+require_once $myPath . 'includes/db_connect.php';
+require_once $myPath . 'includes/functions.php';
+require_once $myPath . 'includes/formkey.class.php';
 
 sec_session_start();
 

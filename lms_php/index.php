@@ -1,4 +1,5 @@
 <?php
+
 require 'includes/db_connect.php';
 require 'includes/functions.php';
 require 'includes/formkey.class.php';

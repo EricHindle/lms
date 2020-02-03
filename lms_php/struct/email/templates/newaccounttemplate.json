@@ -1,0 +1,9 @@
+{
+"toAddress": "$email",
+"toName": "$name",
+"fromAddress": "$adminAddress",
+"fromName": "$adminName",
+"bcc": "$bcc",
+"subject": "Last Man Live account created",
+"body": "A new Last Man Live account has been created for $name ($screenname) at email address: $email. Login using this email address at $url"
+}

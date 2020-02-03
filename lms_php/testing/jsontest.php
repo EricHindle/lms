@@ -1,10 +1,9 @@
 <?php
-$myPath = '../';
+$myPath = '../../';
 
-require $myPath . 'includes/db_connect.php';
-require $myPath . 'includes/functions.php';
-require $myPath . 'includes/formkey.class.php';
-require $myPath . 'includes/mail-util.php';
+require_once $myPath . 'includes/functions.php';
+require_once $myPath . 'includes/formkey.class.php';
+require_once $myPath . 'struct/email/email-functions.php';
 
 sec_session_start();
 $formKey = new formKey();
@@ -19,17 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $html = "";
 
-            $strJsonFileContents = file_get_contents($filename);
-            $array = json_decode($strJsonFileContents, true);
-
-            $email = $array['toAddress'];
-            $name = $array['toName'];
-            $fromemail = $array['fromAddress'];
-            $fromname = $array['fromName'];
-            $bcc = $array['bcc'];
-            $subject = $array['subject'];
-            $body = $array['body'];
-            $sentOk = sendmail($email, $subject, $body, $name, $bcc, $fromemail, $fromname);
+       $sentOk =     sendemailusingtemplate('newaccount',15,'');
+            
             $html = ' <!doctype html>
             <html>
             <head>

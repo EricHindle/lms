@@ -76,7 +76,7 @@ if (login_check($mypdo) == true) {
         $pickquery->bindParam(':matchwk', $_SESSION['matchweek']);
         $pickquery->execute();
         $pickcount = $pickquery->rowCount();
-//        $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
+        // $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
 
         $currentpick = '';
         $rowcolor = 'black';
@@ -88,8 +88,10 @@ if (login_check($mypdo) == true) {
                 $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
                 $currentpick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd M Y') . ')';
             } else {
-                $currentpick = '(waiting)';
-                $selcolor = 'crimson';
+                if ($rs['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
+                    $currentpick = '(waiting)';
+                    $selcolor = 'crimson';
+                }
             }
         }
         $html .= '
@@ -119,7 +121,9 @@ if (login_check($mypdo) == true) {
 		                            <div class="form-group" style="margin-left:16px;margin-right:16px">
 	                                     <select class="form-control" id="gameid" name="gameid">';
     foreach ($gamefetch as $myGame) {
-        $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
+        if ($myGame['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
+            $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
+        }
     }
     $html .= '	                         </select>
 		                            </div>
