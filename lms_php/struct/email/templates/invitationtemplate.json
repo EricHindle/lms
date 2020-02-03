@@ -1,0 +1,8 @@
+{
+"toAddress": "$toEmail",
+"fromAddress": "$email",
+"fromName": "$name",
+"bcc": "$bcc",
+"subject": "Join my Last Man Live game",
+"body": "Please join my Last Man Live game called $gameName . The game code is: $gameCode .  Register or Login at $url"
+}

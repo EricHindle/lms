@@ -4,7 +4,7 @@ $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
-require $myPath . 'struct/player/player-functions.php';
+require $myPath . 'struct/email/email-functions.php';
 
 sec_session_start();
 $formKey = new formKey();
@@ -22,21 +22,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_POST['email4']
             );
 
-            $game = get_game($gameid);
-
-            $gamecode = $game['lms_game_code'];
-            $gamename = $game['lms_game_name'];
             $playerid = $_SESSION['user_id'];
-            $player = get_player($playerid);
-            $playername = $player['lms_player_forename'] . ' ' . $player['lms_player_surname'];
-            $playeremail = $player['lms_player_email'];
-
-            if ($emails && $gamecode && $gamename) {
+            if ($emails && $gameid && $playerid) {
                 $html = "";
-                $bcclist = array(get_global_value('admin_email_address'));
-                $body = 'Please join my Last Man Live game called ' . $gamename . '. The game code is: ' . $gamecode . ' Register or Login at ' . get_global_value('lml_url');
-                foreach ($emails as $playeremail) {
-                    sendmail($playeremail, get_global_value('invite_email_subject'), $body, '', $bcclist, $playeremail, $playername);
+                foreach ($emails as $inviteEmail) {
+                    if ($inviteEmail != '') {
+                        sendemailusingtemplate('invitation', $playerid, $gameid, $inviteEmail);
+                    }
                 }
 
                 $html .= "<script>
