@@ -44,7 +44,7 @@ if (login_check($mypdo) == true) {
                     /*
                      * Get all the matches for the current week featuring the available teams left in this game for the player
                      */
-                    $availsql = "SELECT lms_match_id, lms_team_name, lms_match_date FROM lms.v_lms_match where lms_match_team in 
+                    $availsql = "SELECT lms_match_id, lms_team_name, lms_match_date FROM v_lms_match where lms_match_team in 
                                     (SELECT lms_available_picks_team FROM v_lms_available_picks WHERE lms_available_picks_player_id = :player and lms_available_picks_game = :game)
                                          and lms_match_weekno = :weekno and lms_match_id <> :currentpick ORDER BY lms_team_name, lms_match_date";
                     $availquery = $mypdo->prepare($availsql);
