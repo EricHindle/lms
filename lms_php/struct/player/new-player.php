@@ -100,6 +100,11 @@ $html .= '					<h3 class="text-center">Enter Your Details</h3>
 $html .= '	                 
 				                       </div>
                                     </div>
+
+                                    <div class="form-group">
+                                           <input type="checkbox" style="margin-left:20px;" name="issendemail" id="issendemail" value="true" checked >
+                                           <label for="issendemail">&nbsp send game emails</label>
+                                    </div>
 				                    <div class="form-group">
 				                    	<br>
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">

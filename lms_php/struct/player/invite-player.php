@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $html = "";
                 foreach ($emails as $inviteEmail) {
                     if ($inviteEmail != '') {
-                        sendemailusingtemplate('invitation', $playerid, $gameid, array($inviteEmail));
+                        sendemailusingtemplate('invitation', $playerid, $gameid, array($inviteEmail), false);
                     }
                 }
 

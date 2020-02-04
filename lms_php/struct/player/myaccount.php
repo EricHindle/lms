@@ -98,10 +98,6 @@ if (login_check($mypdo) == true) {
     $html .= '					<h3 class="text-center">Change Password</h3>
 									<h5>Password must contain at least 8 characters, including UPPERCASE, lowercase and numbers.</h5>
                                     <br>
-				                    <div class="form-group">
-                                        <label for="pwd0">Current password:</label>
-                                        <input name="pwd0" id="pwd0" class="form-control" type="password">
-									</div>
                                     <div class="form-group">
                                         <label for="pwd1">New password:</label>
                                         <input name="pwd1" id="pwd1" class="form-control" type="password">

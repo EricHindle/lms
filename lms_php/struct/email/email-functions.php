@@ -4,25 +4,28 @@ require $myPath . 'includes/mail-util.php';
 require_once $myPath . 'struct/player/player-lookup.php';
 require_once $myPath . 'struct/game/game-lookup.php';
 
-function sendemailusingtemplate($templatename, $playerid, $gameid, $values)
+function sendemailusingtemplate($templatename, $playerid, $gameid, $values, $checkflag)
 {
     global $myPath;
 
     $game = get_game($gameid);
     $player = get_player($playerid);
-    $sentOk = false;
-    $filename = $myPath . 'struct/email/templates/' . $templatename . 'template.json';
-    $strJsonFileContents = file_get_contents($filename);
-    if ($strJsonFileContents) {
-        $array = json_decode($strJsonFileContents, true);
-        $email = replacemarkers($array['toAddress'], $player, $game, $values);
-        $name = replacemarkers($array['toName'], $player, $game, $values);
-        $fromemail = replacemarkers($array['fromAddress'], $player, $game, $values);
-        $fromname = replacemarkers($array['fromName'], $player, $game, $values);
-        $bcc = replacemarkers($array['bcc'], $player, $game, $values);
-        $subject = replacemarkers($array['subject'], $player, $game, $values);
-        $body = replacemarkers($array['body'], $player, $game, $values);
-        $sentOk = sendmail($email, $subject, $body, $name, $bcc, $fromemail, $fromname);
+    $sentOk = true;
+    if ($checkflag == false || $player['lms_player_send_mail'] == 1) {
+        $sentOk = false;
+        $filename = $myPath . 'struct/email/templates/' . $templatename . 'template.json';
+        $strJsonFileContents = file_get_contents($filename);
+        if ($strJsonFileContents) {
+            $array = json_decode($strJsonFileContents, true);
+            $email = replacemarkers($array['toAddress'], $player, $game, $values);
+            $name = replacemarkers($array['toName'], $player, $game, $values);
+            $fromemail = replacemarkers($array['fromAddress'], $player, $game, $values);
+            $fromname = replacemarkers($array['fromName'], $player, $game, $values);
+            $bcc = replacemarkers($array['bcc'], $player, $game, $values);
+            $subject = replacemarkers($array['subject'], $player, $game, $values);
+            $body = replacemarkers($array['body'], $player, $game, $values);
+            $sentOk = sendmail($email, $subject, $body, $name, $bcc, $fromemail, $fromname);
+        }
     }
     return $sentOk;
 }

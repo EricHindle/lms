@@ -4,7 +4,6 @@ $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
-require $myPath . 'includes/mail-util.php';
 require $myPath . 'struct/email/email-functions.php';
 
 sec_session_start();
@@ -21,11 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $fname = sanitize_message_string($_POST['fname']);
             $sname = sanitize_message_string($_POST['sname']);
             $screenname = sanitize_message_string($_POST['screenname']);
-            $isadmin = $_POST['isadmin'];
-            $myaccess = 0;
-            if ($isadmin == 'true') {
-                $myaccess = 999;
+            $issendemail = $_POST['issendemail'];
+            $sendemail = 0;
+            if ($issendemail) {
+                $sendemail = 1;
             }
+            $myaccess = 0;
+
             if ($email && $password && $confirm && $fname && $sname && $screenname) {
                 $html = "";
 
@@ -50,13 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     } else {
 
                         $name = $_SESSION['username'];
-                        date_default_timezone_set('Europe/London');
-                        $phptime = time();
-                        $mysqltime = date("Y-m-d H:i:s", $phptime);
+
                         $hash = password_hash($password, PASSWORD_DEFAULT, [
                             'cost' => 11
                         ]);
-                        $sqladduser = "INSERT INTO lms_player (lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active) VALUES (:username, :password, :fname, :sname, :screenname, :email, :retaccess, 1)";
+                        $sqladduser = "INSERT INTO lms_player (lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active, lms_player_send_email) VALUES (:username, :password, :fname, :sname, :screenname, :email, :retaccess, 1, :sendemail)";
                         $stmtadduser = $mypdo->prepare($sqladduser);
                         $stmtadduser->bindParam(':username', $email);
                         $stmtadduser->bindParam(':password', $hash);
@@ -65,11 +64,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $stmtadduser->bindParam(':screenname', $screenname);
                         $stmtadduser->bindParam(':email', $email);
                         $stmtadduser->bindParam(':retaccess', $myaccess, PDO::PARAM_INT);
+                        $stmtadduser->bindParam(':sendemail', $sendemail, PDO::PARAM_INT);
                         $stmtadduser->execute();
                         $added = $stmtadduser->rowCount();
                         if ($added == 1) {
                             $playerid = $mypdo->lastInsertId();
-                            sendemailusingtemplate('newaccount', $playerid, '', '', '');
+                            sendemailusingtemplate('newaccount', $playerid, '', '', '', true);
                         }
                         $html .= "<script>
 											alert('Account added.');

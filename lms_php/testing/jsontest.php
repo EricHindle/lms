@@ -18,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $html = "";
 
-       $sentOk =     sendemailusingtemplate('newaccount',15,'');
-            
+            $sentOk = sendemailusingtemplate('newaccount', 15, '', '', false);
+
             $html = ' <!doctype html>
             <html>
             <head>
@@ -99,8 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
                 $html .= 'Email failed';
             }
-            
-                    
+
             $html .= '                 <div class="form-group">
 				                    <br>
 				                    <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
@@ -119,8 +118,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		';
 
             echo $html;
-
-
         } else {
             $html .= "<script>
 							alert('Missing values in POST');
