@@ -36,7 +36,8 @@ if (login_check($mypdo) == true && $access > 900) {
                         $remainingweeks = $weekquery->fetch(PDO::FETCH_ASSOC);
                         $week = $remainingweeks['lms_week'];
                         $year = $remainingweeks['lms_year'];
-                        $md = date_create($remainingweeks['lms_week_end']);
+                        $md = date_create($remainingweeks['lms_week_start']);
+                        $md->modify('next saturday');
                         $kodate = date_format($md, 'Y-m-d');
                     }
 
