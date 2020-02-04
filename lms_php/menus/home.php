@@ -112,7 +112,7 @@ if (login_check($mypdo) == true) {
 					</div>
 
 		            <div class="row">
-		            	<div class="col-sm-4">
+		            	<div class="col-sm-3 col-md-3">
 		                    <div class="tile red">
 		                    		<h3 class="title" >Selections for</h3>
                                 <form class="form-horizontal" role="form" name ="editpick" method="post" action="' . $myPath . 'struct/picks/pick-main.php">';
@@ -128,12 +128,13 @@ if (login_check($mypdo) == true) {
     $html .= '	                         </select>
 		                            </div>
 		                            <div class="form-group" style="margin-left:16px;margin-right:16px">
+                                        <br>
 		                                <input id="submit1" name="submit" type="submit" value="Submit" class="btn btn-primary">
 		                            </div>
                                 </form>
                             </div>
 		                </div>
-		            	<div class="col-sm-4">
+		            	<div class="col-sm-3 col-md-3">
 		                    <div class="tile orange">
 	                    		    <h3 class="title" >Join a Game</h3>
 				                	<form role="form" name ="edit" method="post" action="' . $myPath . 'struct/game/process-join-game.php">';
@@ -148,19 +149,38 @@ if (login_check($mypdo) == true) {
 					                </form>
 			          			</div>
 			                </div>
-			      		</div>
-                        <div class="row">
-			                <div class="col-sm-8">
-			                    <div class="tile teal">
-			                    	<a href="' . $myPath . 'struct/game/game-manage.php">
-			                    		<h3 class="title" style="text-align:center">Manage Games</h3>
-			                        </a>
+    		                <div class="col-sm-3 col-md-3">
+		                      <div class="tile green">
+		                	     <form class="form-horizontal" role="form" name ="showgame" method="post" action="' . $myPath . 'struct/game/show-played-game.php">';
+    $html .= $key;
+    $html .= '					     <h3 class="title">Show a Game</h3>
+			                         <div class="form-group" style="margin-left:16px;margin-right:16px">
+		                                  <select class="form-control" id="gameid" name="gameid">';
+    foreach ($gamefetch as $myGame) {
+        $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
+    }
+$html .= '	                             </select>
+			                         </div>
+			                     <div class="form-group" style="margin-left:16px;margin-right:16px">
+                                    <br>
+			                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
 			                    </div>
-			      		    </div>
-		    	        </div>
-		             </section>
-		          </body>
-	           </html>
+                            </form>
+	          			</div>
+	                </div>
+	      		</div>
+                <div class="row">
+	                <div class="col-sm-8">
+	                    <div class="tile teal">
+	                    	<a href="' . $myPath . 'struct/game/game-manage.php">
+	                    		<h3 class="title" style="text-align:center">Manage Games</h3>
+	                        </a>
+	                    </div>
+	      		    </div>
+    	        </div>
+             </section>
+          </body>
+       </html>
     	';
     echo $html;
 } else {

@@ -94,7 +94,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			    <br><br>
 			        <div class="container">
 			        	<div class="row">
-			                <div class="col-md-11">
+			                <div class="col-md-9">
 			                    <h1><strong>Player Admin</strong></h1>
 			                </div>
 							<div class="col-md-1">
