@@ -1,5 +1,6 @@
 <?php
 require 'db_connect.php';
+
 date_default_timezone_set('Europe/London');
 
 function isSecure()
@@ -54,6 +55,26 @@ function check_password($username, $password)
     }
 }
 
+function gettemppassword($playerid){
+    global $mypdo;
+    $temppwdsql = "SELECT * FROM lms_player_temp_password WHERE lms_player_id = :id LIMIT 1";
+    $temppwdquery = $mypdo->prepare($temppwdsql);
+    $temppwdquery->execute(array(
+        ':id' => $playerid
+    ));
+    $temppwd = $temppwdquery->fetch(PDO::FETCH_ASSOC);
+    return $temppwd;
+}
+
+function removetemppassword($playerid)
+{
+    global $mypdo;
+    $delsql = "DELETE FROM lms_player_temp_password WHERE lms_player_id=:player";
+    $delquery = $mypdo->prepare($delsql);
+    $delquery->bindParam(":player", $playerid, PDO::PARAM_INT);
+    $delquery->execute();
+}
+
 function login($username, $password, $mypdo)
 {
     $sql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active FROM lms_player WHERE lms_player_login = :username LIMIT 1";
@@ -88,9 +109,18 @@ function login($username, $password, $mypdo)
             // Check if the password in the database matches
 
             $check = password_verify($password, $db_password);
+            $temppwd = gettemppassword($user_id);
+
+            if (! $check) {
+                If ($temppwd) {
+                    $db_password = $temppwd['lms_player_temp_password'];
+                    $check =  password_verify($password, $db_password);
+                }
+            }
+
             if ($check) {
                 // Password is correct!
-                $user_id = preg_replace("/[^0-9]+/", "", $user_id);
+                removetemppassword($user_id);
                 $_SESSION['user_id'] = $user_id;
                 $_SESSION['username'] = $username;
                 $_SESSION['fname'] = $fname;
@@ -110,6 +140,7 @@ function login($username, $password, $mypdo)
                 // Login successful.
                 return true;
             } else {
+
                 // FAILED LOGIN
                 $now = time();
                 $sql2 = "INSERT INTO loginattempts(userid, time) VALUES (:user_id, :time)";

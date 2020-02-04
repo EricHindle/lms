@@ -1,7 +1,7 @@
 <?php
 $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
-require $myPath . 'struct/picks/pick-functions.php';
+require_once $myPath . 'struct/picks/pick-functions.php';
 
 date_default_timezone_set('Europe/London');
 
@@ -123,15 +123,7 @@ function get_player_games()
     return $gamelist;
 }
 
-function get_game($gameid) {
-    global $mypdo;
-    $gamesql = "SELECT * FROM lms_game WHERE lms_game_id = :id LIMIT 1";
-    $gamequery = $mypdo->prepare($gamesql);
-    $gamequery->bindParam(":id", $gameid, PDO::PARAM_INT);
-    $gamequery->execute();
-    $gamefetch = $gamequery->fetch(PDO::FETCH_ASSOC);
-    return $gamefetch;
-}
+
 
 function set_game_player_out($gameid, $playerid) {
     global $mypdo;

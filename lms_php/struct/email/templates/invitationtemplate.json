@@ -1,5 +1,5 @@
 {
-"toAddress": "$toEmail",
+"toAddress": "$value0",
 "fromAddress": "$email",
 "fromName": "$name",
 "bcc": "$bcc",
