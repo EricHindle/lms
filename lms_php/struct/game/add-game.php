@@ -5,6 +5,8 @@ require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
 require $myPath . 'struct/game/game-functions.php';
+require $myPath . 'struct/email/email-functions.php';
+
 sec_session_start();
 $formKey = new formKey();
 if (login_check($mypdo) == true) {
@@ -29,14 +31,14 @@ if (login_check($mypdo) == true) {
 										window.location.href='game-manage.php';
 									</script>";
                     } else {
-
+                        $playerid = $_SESSION['user_id'];
                         $gamecode = generate_game_code();
                         $sqladdgame = "INSERT INTO lms_game (lms_game_start_wkno, lms_game_name, lms_game_status, lms_game_week_count, lms_game_total_players, lms_game_still_active, lms_game_manager, lms_game_code) 
                                                     VALUES (:startwkno, :gamename, 1, 0, 0, 0, :playerid, :gamecode)";
                         $stmtaddgame = $mypdo->prepare($sqladdgame);
                         $stmtaddgame->bindParam(":startwkno", $gamestartweek);
                         $stmtaddgame->bindParam(":gamename", $gamename);
-                        $stmtaddgame->bindParam(":playerid", $_SESSION['user_id'], PDO::PARAM_INT);
+                        $stmtaddgame->bindParam(":playerid", $playerid , PDO::PARAM_INT);
                         $stmtaddgame->bindParam(":gamecode", $gamecode);
                         $stmtaddgame->execute();
                         $added = $stmtaddgame->rowCount();
@@ -44,7 +46,7 @@ if (login_check($mypdo) == true) {
                         if ($added == 1) {
 
                             add_player_to_game($gameid, $_SESSION['user_id']);
-
+                            sendemailusingtemplate('newgame', $playerid, $gameid, '', true);
                             $html .= "<script>              
 									alert('Game added.');
 									window.location.href='game-manage.php';

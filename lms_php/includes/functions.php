@@ -326,7 +326,7 @@ function bootOut($rootPath, $user = 'UNKNOWN', $page = 'UNKNOWN', $error = 'UNKN
 
 function generate_password()
 {
-    $allchars = "abcdefghijkmnopqrstuvwxyz023456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    $allchars = "abcdefghjkmnpqrstuvwxyz23456789ABCDEFGHJKLMNOPQRSTUVWXYZ";
     $randstr = str_shuffle($allchars);
     $passcode = "";
     for ($i = 1; $i < 9; $i ++) {

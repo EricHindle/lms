@@ -11,7 +11,7 @@ function sendemailusingtemplate($templatename, $playerid, $gameid, $values, $che
     $game = get_game($gameid);
     $player = get_player($playerid);
     $sentOk = true;
-    if ($checkflag == false || $player['lms_player_send_mail'] == 1) {
+    if ($checkflag == false || $player['lms_player_send_email'] == 1) {
         $sentOk = false;
         $filename = $myPath . 'struct/email/templates/' . $templatename . 'template.json';
         $strJsonFileContents = file_get_contents($filename);
