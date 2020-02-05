@@ -95,6 +95,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                                         <th>Total Players</th>
                                         <th>Active Players</th>
                                         <th>Game Code</th>
+                                        <th>Manager</th>
 									</tr>
 									</thead>
 									<tbody>
@@ -115,7 +116,10 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                                         <td>' . $rs['lms_game_status_text'] . '</td>
                                         <td>' . $rs['lms_game_total_players'] . '</td>
                                         <td>' . $rs['lms_game_still_active'] . '</td>
+
                                         <td style="font-family:courier">' . $rs['lms_game_code'] . '</td>
+<td>' . $rs['lms_player_screen_name'] . '</td>
+
 									</tr>';
                     }
                 }
