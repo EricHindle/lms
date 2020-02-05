@@ -4,6 +4,7 @@ $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
+require $myPath . 'struct/email/email-functions.php';
 
 sec_session_start();
 $formKey = new formKey();
@@ -49,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             ':id' => $userid
                         ));
                         allowUser();
+                        sendemailusingtemplate('passwordchange', $userid, '', '', true);
                     } else {
                         patchUser($passwordErr);
                     }
