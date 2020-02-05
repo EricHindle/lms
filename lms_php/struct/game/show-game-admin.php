@@ -9,7 +9,7 @@ require $myPath . 'struct/picks/pick-functions.php';
 
 sec_session_start();
 $formKey = new formKey();
-if (login_check($mypdo) == true) {
+if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (! isset($_POST['form_key']) || ! $formKey->validate()) {
             header('Location: ' . $myPath . 'index.php?error=1');
@@ -67,7 +67,7 @@ if (login_check($mypdo) == true) {
 									                    <h1><strong>' . $gamename . '</strong></h1>
 									                </div>
 							<div class="col-md-1">
-								<a href="' . $myPath . 'struct/game/game-manage.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
+								<a href="game-admin.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
 							</div>
 									      		</div>
                         <div class="row">
@@ -132,78 +132,23 @@ if (login_check($mypdo) == true) {
 						</div>
                     </div>
 					<div class = "row">';
-                        if ($gamefetch['lms_game_status'] < 3) {
-                            
-                            $type = "text";
-                            if ($gamefetch['lms_game_status'] ==2){
-                                $type = "hidden";
-                            }
-                            
-                            $html .= '	        <div class="well col-md-4 textDark">
-                        <h3 class="text-center">Edit Game</h3>
-						<form class="form-horizontal" style="margin-left:24px; margin-right:30px" role="form" name ="edit" method="post" action="process-edit-game.php">';
-                            $html .= $key;
-                            $html .= '					     
-		                    <div class="row">
-                               <label for="gamename">New name:</label>
-		                       <input type="text" class="form-control" id="gamename" name="gamename" value="' . $gamefetch['lms_game_name'] . '"><br>
-                            </div>
-                            <div class="row">
-                               <label for="gamestartweek">New start week:</label>
-                               <select class="form-control" id="gamestartweek" name="gamestartweek">';
-                            foreach ($remainingweeks as $wk) {
-                                $html .= '<option value="' . $wk['lms_week_no'] . '">' . $wk['lms_week'] . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
-                            }
-                            $html .= '
-	                           </select>
-							   <input type= "hidden" name= "id" value="' . $gameid . '" />
-		                    </div>
-                            <div class="row">
-                                <br>
-                               <label for="iscancel">&nbsp Cancel this game</label>
-                               <input type="checkbox" style="margin-left:20px;" name="iscancel" id="iscancel" value="true">
-                            </div>
-		                    <div class="form-group">
-		                    	<br>
-		                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+
+                        $html .= '	        <div class="well col-md-3 col-sm-3 textDark">
+                        <h3 class="text-center">Cancel Game</h3>
+						<form class="form-horizontal" style="margin-left:24px; margin-right:30px" role="form" name ="edit" method="post" action="process-cancel-game.php">';
+                        $html .= $key;
+                        $html .= '					     
+		                    <div class="form-group text-center">
+                                <input type= "hidden" name= "id" value="' . $gameid . '" />
+		                        <input id="submit" name="submit" type="submit" value="Cancel the Game" class="btn btn-primary">
 		                    </div>
 		                </form>
-		            </div>';
-                        }
-
-                        if ($gamefetch['lms_game_status'] == 1) {
-
-                            $html .= '	                 <div class="well col-md-3 col-md-offset-1 textDark">
-                        <h3 class="text-center">Invite Players</h3>
-                        <form class="form-group" role="form" name ="inviteplayer" method="post" action="' . $myPath . 'struct/player/invite-player.php">';
-                            $html .= $key;
-                            $html .= '
-                            <input type= "hidden" name= "gameid" value="' . $gameid . '" />
-                            <h4>Email Addresses</h4>
-                            <div class="form-group">
-                                    <input type="text" class="form-control" name="email1"  id="email1" placeholder="new player 1">
-                            </div>
-                            <div class="form-group">
-                                    <input type="text" class="form-control" name="email2"  id="email2" placeholder="new player 2">
-                            </div>
-                            <div class="form-group">
-                                    <input type="text" class="form-control" name="email3"  id="email3" placeholder="new player 3">
-                            </div>
-                            <div class="form-group">
-                                    <input type="text" class="form-control" name="email4"  id="email4" placeholder="new player 4">
-                            </div>
-
-		                    <div class="form-group">
-		                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
-                            </div>
-                        </form>
-                    </div>';
-                        }
-                        $html .= '		        </div>
+		            </div>
+		        </div>
 		        <div class="row">
 					<br>
 					<div class="col-xs-6">
-						<a href="' . $myPath . 'struct/game/game-manage.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
+						<a href="game-admin.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
 						<br>
 					</div>
 				</div>
@@ -216,7 +161,7 @@ if (login_check($mypdo) == true) {
                     } else {
                         $html .= "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='game-manage.php';
+										window.location.href='game-admin.php';
 									</script>";
                     }
 
@@ -224,7 +169,7 @@ if (login_check($mypdo) == true) {
                 } else {
                     echo "<script>
 										alert('There was a problem. Please check details and try again.');
-										window.location.href='game-manage.php';
+										window.location.href='game-admin.php';
 									</script>";
                 }
             } else {

@@ -8,7 +8,7 @@ require $myPath . 'includes/lookup-functions.php';
 sec_session_start();
 $formKey = new formKey();
 if (login_check($mypdo) == true) {
-    $gamesql = "SELECT lms_game_id, lms_game_start_wkno, lms_game_name, lms_game_code, lms_game_status_text, lms_game_total_players, lms_game_still_active, lms_week, lms_year FROM v_lms_game WHERE lms_game_manager = :manager and lms_game_status = 1 ORDER BY lms_game_start_wkno, lms_game_name";
+    $gamesql = "SELECT lms_game_id, lms_game_start_wkno, lms_game_name, lms_game_code, lms_game_status_text, lms_game_total_players, lms_game_still_active, lms_week, lms_year FROM v_lms_game WHERE lms_game_manager = :manager  ORDER BY lms_game_start_wkno, lms_game_name";
     $gamequery = $mypdo->prepare($gamesql);
     $gamequery->bindParam(":manager", $_SESSION['user_id'], PDO::PARAM_INT);
     $gamequery->execute();
@@ -16,7 +16,7 @@ if (login_check($mypdo) == true) {
 
     $remainingweeks = get_remaining_weeks(false);
 
-    $mygamessql = "SELECT lms_game_id, lms_game_id, lms_game_name FROM v_lms_player_games WHERE lms_player_id = :player and lms_game_player_status = 1 ORDER BY lms_game_name";
+    $mygamessql = "SELECT lms_game_id, lms_game_id, lms_game_name FROM v_lms_player_games WHERE lms_player_id = :player and  ORDER BY lms_game_name";
     $mygamesquery = $mypdo->prepare($mygamessql);
     $mygamesquery->bindParam(":player", $_SESSION['user_id'], PDO::PARAM_INT);
     $mygamesquery->execute();
@@ -48,10 +48,13 @@ if (login_check($mypdo) == true) {
 			    <br><br>
 			        <div class="container">
 			            <div class="row">
-			                <div class="col-md-12">
+			                <div class="col-md-9">
 			                    <h1><strong>Managed Games</strong></h1>
 			                    <br>
 			                </div>
+							<div class="col-md-1">
+								<a href="' . $myPath . 'menus/home.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
+							</div>
 			            </div>
                         <div class="row">
 
