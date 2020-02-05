@@ -181,7 +181,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 
     $html .= '		</div>
 						<div class = "row">
-				        	<div class="well col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 textDark">
+				        	<div class="well col-md-10 col-md-offset-1 col-sm-12  textDark">
 				        		<h3>All Players</h3>
 					        	<table class="table table-bordered" id="keywords">
 									<thead>
@@ -190,7 +190,6 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 										<th>Forename</th>
 										<th>Surname</th>
 										<th>Screen Name</th>
-										<th>Email Address</th>
 										<th>Access</th>
                                         <th>Active</th>
 									</tr>
@@ -209,7 +208,6 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 										<td>' . $rs['lms_player_forename'] . '</td>
 										<td>' . $rs['lms_player_surname'] . '</td>
 										<td>' . $rs['lms_player_screen_name'] . '</td>
-										<td>' . $rs['lms_player_email'] . '</td>
 										<td>' . $rs['lms_access'] . '</td>
                                         <td>' . $active . '</td>
 									</tr>';
