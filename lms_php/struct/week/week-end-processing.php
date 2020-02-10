@@ -7,6 +7,8 @@ require $myPath . 'includes/formkey.class.php';
 require $myPath . 'struct/week/week-functions.php';
 require $myPath . 'struct/match/match-functions.php';
 require $myPath . 'struct/player/player-functions.php';
+require $myPath . 'struct/picks/pick-functions.php';
+require $myPath . 'struct/game/game-functions.php';
 
 sec_session_start();
 $access = sanitize_int($_SESSION['retaccess']);
@@ -113,7 +115,7 @@ if (login_check($mypdo) == true && $access > 900) {
             }
             set_week_state($_SESSION['matchweek'], 3);
         }
-        $html .= '    <div class="alert alert-success">Increment game week number</div>';
+        $html .= '    <div class="alert alert-success">Incremented game week number</div>';
         if ($weekstate <= 3) {
             $weekstate = 3;
             set_week_state($_SESSION['matchweek'], $weekstate);
@@ -125,7 +127,7 @@ if (login_check($mypdo) == true && $access > 900) {
             activateGames($nextmatchweek);
             set_week_state($_SESSION['matchweek'], 4);
         }
-        $html .= '    <div class="alert alert-success">Marking up starting games as in-play</div>';
+        $html .= '    <div class="alert alert-success">Marked up starting games as in-play</div>';
         if ($weekstate <= 4) {
             $weekstate = 4;
             set_week_state($_SESSION['matchweek'], $weekstate);
@@ -138,10 +140,8 @@ if (login_check($mypdo) == true && $access > 900) {
             $_SESSION['currentweek'] = get_global_value('currweek');
             $_SESSION['currentseason'] = get_global_value('currseason');
             $_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
-
-            set_week_state($_SESSION['matchweek'], 5);
         }
-        $html .= '    <div class="alert alert-success">Rolling week forward</div>';
+        $html .= '    <div class="alert alert-success">Rolled week forward</div>';
         $html .= '     </div>
                          </section>
                          </body>
