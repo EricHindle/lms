@@ -15,7 +15,13 @@ class formKey
  
     private function generateKey()
     {
-        $ip = $_SERVER['HTTP_X_REAL_IP'];
+        if (getenv('HTTP_X_REAL_IP')) {
+            $ip = getenv('HTTP_X_REAL_IP');
+        }
+        
+        else {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
         $uniqid = uniqid(mt_rand(), true);
          
         return md5($ip . $uniqid);

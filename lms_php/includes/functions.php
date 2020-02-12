@@ -55,7 +55,8 @@ function check_password($username, $password)
     }
 }
 
-function gettemppassword($playerid){
+function gettemppassword($playerid)
+{
     global $mypdo;
     $temppwdsql = "SELECT * FROM lms_player_temp_password WHERE lms_player_id = :id LIMIT 1";
     $temppwdquery = $mypdo->prepare($temppwdsql);
@@ -114,7 +115,7 @@ function login($username, $password, $mypdo)
             if (! $check) {
                 If ($temppwd) {
                     $db_password = $temppwd['lms_player_temp_password'];
-                    $check =  password_verify($password, $db_password);
+                    $check = password_verify($password, $db_password);
                 }
             }
 
@@ -128,7 +129,14 @@ function login($username, $password, $mypdo)
                 $_SESSION['email'] = $email;
                 $_SESSION['nickname'] = $nickname;
                 $_SESSION['retaccess'] = $retaccess;
-                $hash = password_hash($_SERVER['HTTP_X_REAL_IP'] . $_SERVER['HTTP_USER_AGENT'], PASSWORD_DEFAULT, [
+                if (getenv('HTTP_X_REAL_IP')) {
+                    $ip = getenv('HTTP_X_REAL_IP');
+                } else {
+                    $ip = $_SERVER['REMOTE_ADDR'];
+                }
+                $userAgent = getenv('HTTP_USER_AGENT');
+
+                $hash = password_hash($ip . $userAgent, PASSWORD_DEFAULT, [
                     'cost' => 5
                 ]);
                 $_SESSION['login_string'] = $hash;
@@ -183,7 +191,13 @@ function login_check($mypdo)
             $user_id = $_SESSION['user_id'];
             $login_string = $_SESSION['login_string'];
             $username = $_SESSION['username'];
-            $login_check = $_SERVER['HTTP_X_REAL_IP'] . $_SERVER['HTTP_USER_AGENT'];
+            if (getenv('HTTP_X_REAL_IP')) {
+                $ip = getenv('HTTP_X_REAL_IP');
+            } else {
+                $ip = $_SERVER['REMOTE_ADDR'];
+            }
+            $userAgent = getenv('HTTP_USER_AGENT');
+            $login_check = $ip . $userAgent;
             $check = password_verify($login_check, $login_string);
             date_default_timezone_set('Europe/London');
             $phptime = time();
