@@ -178,10 +178,9 @@ function set_game_week_count($gameid, $newweekcount) {
 function get_still_active_game_players($gameid)
 {
     global $mypdo;
-    $player = $_SESSION['user_id'];
     $gamesql = "SELECT * FROM v_lms_player_games WHERE lms_game_id = :gameid and lms_week = :week and lms_year = :year ";
     $gamequery = $mypdo->prepare($gamesql);
-    $gamequery->bindParam(':player', $player, PDO::PARAM_INT);
+    $gamequery->bindParam(':gameid', $gameid, PDO::PARAM_INT);
     $gamequery->bindParam(':week', $_SESSION['currentweek'], PDO::PARAM_INT);
     $gamequery->bindParam(':year', $_SESSION['currentseason'], PDO::PARAM_INT);
     $gamequery->execute();
