@@ -50,8 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 									</script>";
                     } else {
 
-                        $name = $_SESSION['username'];
-
                         $hash = password_hash($password, PASSWORD_DEFAULT, [
                             'cost' => 11
                         ]);

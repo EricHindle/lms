@@ -37,18 +37,24 @@ function replacemarkers($input, $player, $game, $values)
     $lmlurl = get_global_value('lml_url');
 
     $output = $input;
-    $output = str_replace('$email', $player['lms_player_email'], $output);
-    $output = str_replace('$name', $player['lms_player_forename'] . ' ' . $player['lms_player_surname'], $output);
-    $output = str_replace('$screenname', $player['lms_player_screen_name'], $output);
+    if (is_array($player)) {
+        $output = str_replace('$email', $player['lms_player_email'], $output);
+        $output = str_replace('$name', $player['lms_player_forename'] . ' ' . $player['lms_player_surname'], $output);
+        $output = str_replace('$screenname', $player['lms_player_screen_name'], $output);
+    }
+    if (is_array($game)) {
+        $output = str_replace('$gameName', $game['lms_game_name'], $output);
+        $output = str_replace('$gameCode', $game['lms_game_code'], $output);
+    }
     $output = str_replace('$adminAddress', $adminFromAddress, $output);
     $output = str_replace('$adminName', $adminFromName, $output);
-    $output = str_replace('$gameName', $game['lms_game_name'], $output);
-    $output = str_replace('$gameCode', $game['lms_game_code'], $output);
     $output = str_replace('$url', $lmlurl, $output);
     $output = str_replace('$bcc', $adminFromAddress, $output);
-    $arr_length = count($values);
-    for ($i = 0; $i < $arr_length; $i ++) {
-        $output = str_replace('$value' . $i, $values[$i], $output);
+    if (is_array($values)) {
+        $arr_length = count($values);
+        for ($i = 0; $i < $arr_length; $i ++) {
+            $output = str_replace('$value' . $i, $values[$i], $output);
+        }
     }
     return $output;
 }

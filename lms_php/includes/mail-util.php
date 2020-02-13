@@ -1,6 +1,6 @@
 <?php
 
-require 'ret-config.php';
+require_once 'ret-config.php';
 require 'class.phpmailer.php';
 
 
@@ -33,8 +33,10 @@ function sendmail($to, $subject, $message, $name, $bcclist, $from_address, $from
     $mail->Subject = $subject;
     $mail->AltBody = $body;
     $mail->MsgHTML($body);
-    foreach ($bcclist as $bccer) {
-        $mail->AddBCC($bccer);
+    if (is_array($bcclist)) {
+        foreach ($bcclist as $bccer) {
+            $mail->AddBCC($bccer);
+        }
     }
     $address = $to;
     $mail->AddAddress($address, $name);
