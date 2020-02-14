@@ -19,8 +19,17 @@ if (login_check($mypdo) == true && $access > 900) {
                 $sname = sanitize_paranoid_string($_POST['sname']);
                 $screenname = sanitize_paranoid_string($_POST['screenname']);
                 $email = $_POST['email'];
-                $isadmin = $_POST['isadmin'];
-                $isactive = $_POST['isactive'];
+                if (isset($_POST['isadmin'])) {
+                    $isadmin = $_POST['isadmin'];
+                } else {
+                    $isadmin = "false";
+                }
+                if (isset($_POST['isactive'])) {
+                    $isactive = $_POST['isactive'];
+                } else {
+                    $isactive = "false";
+                }
+                               
                 if ($gameid) {
                     $html = "";
                     $myaccess = 0;

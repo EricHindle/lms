@@ -19,7 +19,11 @@ if (login_check($mypdo) == true && $access > 900) {
                 $fname = sanitize_message_string($_POST['fname']);
                 $sname = sanitize_message_string($_POST['sname']);
                 $screenname = sanitize_message_string($_POST['screenname']);
-                $isadmin = $_POST['isadmin'];
+                if (isset($_POST['isadmin'])) {
+                    $isadmin = $_POST['isadmin'];
+                } else {
+                    $isadmin = "false";
+                }
                 $myaccess = 0;
                 if ($isadmin == 'true') {
                     $myaccess = 999;
@@ -47,7 +51,7 @@ if (login_check($mypdo) == true && $access > 900) {
                         $hash = password_hash($password, PASSWORD_DEFAULT, [
                             'cost' => 11
                         ]);
-                        $sqladduser = "INSERT INTO lms_player (lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active) VALUES (:username, :password, :fname, :sname, :screenname, :email, :retaccess, 1)";
+                        $sqladduser = "INSERT INTO lms_player (lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active, lms_player_created) VALUES (:username, :password, :fname, :sname, :screenname, :email, :retaccess, 1, :create)";
                         $stmtadduser = $mypdo->prepare($sqladduser);
                         $stmtadduser->bindParam(':username', $email);
                         $stmtadduser->bindParam(':password', $hash);
@@ -56,7 +60,7 @@ if (login_check($mypdo) == true && $access > 900) {
                         $stmtadduser->bindParam(':screenname', $screenname);
                         $stmtadduser->bindParam(':email', $email);
                         $stmtadduser->bindParam(':retaccess', $myaccess, PDO::PARAM_INT);
-
+                        $stmtadduser->bindParam(':create', $mysqltime);
                         $stmtadduser->execute();
                         $added = $stmtadduser->rowCount();
                         $html .= "<script>
