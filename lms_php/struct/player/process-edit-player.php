@@ -40,6 +40,8 @@ if (login_check($mypdo) == true && $access > 900) {
                     if ($isactive == "true") {
                         $myactive = 1;
                     }
+                    date_default_timezone_set('Europe/London');
+                    $phptime = time();
                     $mysqltime = date("Y-m-d H:i:s", $phptime);
                     $upsql = "UPDATE lms_player SET lms_player_email = :email, lms_player_login = :username, lms_player_forename = :forename,  lms_player_surname = :surname, lms_player_screen_name = :screenname, lms_access = :access, lms_active = :active WHERE lms_player_id = :id";
                     $upduser = $mypdo->prepare($upsql);

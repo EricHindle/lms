@@ -100,87 +100,61 @@ function login($username, $password, $mypdo)
             return false;
         }
 
-        if (checkbrute($user_id, $mypdo) == true) {
-            // TO DO
-            // Account is locked
-            // Send an email to user saying their account is locked + reset link
-            // need email adresses
-            return false;
-        } else {
-            // Check if the password in the database matches
+        // Check if the password in the database matches
 
-            $check = password_verify($password, $db_password);
-            $temppwd = gettemppassword($user_id);
+        $check = password_verify($password, $db_password);
+        $temppwd = gettemppassword($user_id);
 
-            if (! $check) {
-                If ($temppwd) {
-                    $db_password = $temppwd['lms_player_temp_password'];
-                    $check = password_verify($password, $db_password);
-                }
+        if (! $check) {
+            If ($temppwd) {
+                $db_password = $temppwd['lms_player_temp_password'];
+                $check = password_verify($password, $db_password);
             }
+        }
 
-            if ($check) {
-                // Password is correct!
-                removetemppassword($user_id);
-                $_SESSION['user_id'] = $user_id;
-                $_SESSION['username'] = $username;
-                $_SESSION['fname'] = $fname;
-                $_SESSION['sname'] = $sname;
-                $_SESSION['email'] = $email;
-                $_SESSION['nickname'] = $nickname;
-                $_SESSION['retaccess'] = $retaccess;
-                if (getenv('HTTP_X_REAL_IP')) {
-                    $ip = getenv('HTTP_X_REAL_IP');
-                } else {
-                    $ip = $_SERVER['REMOTE_ADDR'];
-                }
-                $userAgent = getenv('HTTP_USER_AGENT');
-
-                $hash = password_hash($ip . $userAgent, PASSWORD_DEFAULT, [
-                    'cost' => 5
-                ]);
-                $_SESSION['login_string'] = $hash;
-
-                date_default_timezone_set('Europe/London');
-                $phptime = time();
-                $mysqltime = date("Y-m-d H:i:s", $phptime);
-
-                // Login successful.
-                return true;
+        if ($check) {
+            // Password is correct!
+            removetemppassword($user_id);
+            $_SESSION['user_id'] = $user_id;
+            $_SESSION['username'] = $username;
+            $_SESSION['fname'] = $fname;
+            $_SESSION['sname'] = $sname;
+            $_SESSION['email'] = $email;
+            $_SESSION['nickname'] = $nickname;
+            $_SESSION['retaccess'] = $retaccess;
+            if (getenv('HTTP_X_REAL_IP')) {
+                $ip = getenv('HTTP_X_REAL_IP');
             } else {
-
-                // FAILED LOGIN
-                $now = time();
-                $sql2 = "INSERT INTO loginattempts(userid, time) VALUES (:user_id, :time)";
-                $stmt2 = $mypdo->prepare($sql2);
-                $stmt2->execute(array(
-                    ':user_id' => $user_id,
-                    ':time' => $now
-                ));
-                return false;
+                $ip = $_SERVER['REMOTE_ADDR'];
             }
+            $userAgent = getenv('HTTP_USER_AGENT');
+
+            $hash = password_hash($ip . $userAgent, PASSWORD_DEFAULT, [
+                'cost' => 5
+            ]);
+            $_SESSION['login_string'] = $hash;
+
+            date_default_timezone_set('Europe/London');
+            $phptime = time();
+            $mysqltime = date("Y-m-d H:i:s", $phptime);
+
+            // Login successful.
+            return true;
+        } else {
+
+            // FAILED LOGIN
+            $now = time();
+            $sql2 = "INSERT INTO loginattempts(userid, time) VALUES (:user_id, :time)";
+            $stmt2 = $mypdo->prepare($sql2);
+            $stmt2->execute(array(
+                ':user_id' => $user_id,
+                ':time' => $now
+            ));
+            return false;
         }
     } else {
         return false;
     }
-}
-
-function checkbrute($user_id, $mypdo)
-{
-    return false;
-    // $now = time();
-
-    // $valid_attempts = $now - (2 * 60 * 60);
-    // $sql3 = "SELECT time FROM loginattempts WHERE userid = :user_id AND time > :time";
-    // $stmt = $mypdo->prepare($sql3);
-    // $stmt->execute(array(':user_id' => $user_id, ':time' => $valid_attempts));
-    // If there have been more than 6 failed logins
-    // if ($stmt->rowCount() > 6) {
-    // // return true; FIX!!!!!!!!!!!!!!!!!!!!!
-    // return false;
-    // } else {
-    // return false;
-    // }
 }
 
 function login_check($mypdo)

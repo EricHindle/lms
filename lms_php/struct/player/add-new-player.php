@@ -20,7 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $fname = sanitize_message_string($_POST['fname']);
             $sname = sanitize_message_string($_POST['sname']);
             $screenname = sanitize_message_string($_POST['screenname']);
-            $issendemail = $_POST['issendemail'];
+            if (isset($_POST['issendemail'])) {
+                $issendemail = $_POST['issendemail'];
+            } else {
+                $issendemail = false;
+            }
+
             $sendemail = 0;
             if ($issendemail) {
                 $sendemail = 1;
