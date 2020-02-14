@@ -16,7 +16,12 @@ if (login_check($mypdo) == true) {
                 $gameid = sanitize_int($_POST['id']);
                 $gamename = $_POST['gamename'];
                 $gamestartweek = $_POST['gamestartweek'];
-                $iscancel = $_POST['iscancel'];
+
+                if (isset($_POST['iscancel'])) {
+                    $iscancel = $_POST['iscancel'];
+                } else {
+                    $iscancel = "false";
+                }
 
                 if ($gameid && $gamename) {
                     $html = "";

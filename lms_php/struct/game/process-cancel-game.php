@@ -40,7 +40,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 											</script>";
                         } else {
                             $html .= "<script>
-										alert('Game NOT cancelled');
+										alert('Game NOT altered');
 										window.location.href='game-admin.php';
 									</script>";
                         }

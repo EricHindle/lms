@@ -81,12 +81,12 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                         if ($gamefetch['lms_game_status'] == 2) {
 
                             $html .= '         <div class="row">
-<br>
+                                        <br>
                                     <div class="col-sm-4"><b>Current week selection deadline:</div><div class="col-sm-2"></b>  ' . date_format(date_create($deadline), 'd M Y') . '</div>
                                 </div>';
                         }
                         $html .= ' <div class="row">
-<br>
+                                        <br>
     					        	<table class="table table-bordered" id="keywords">
     									<thead>
     									<tr>
@@ -95,8 +95,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                                             <th>Current pick</th>
      									</tr>
     									</thead>
-    									<tbody>
-    									';
+    									<tbody>	';
 
                         foreach ($gameplayerfetch as $rs) {
                             $pickfetch = get_current_player_pick($gameid, $rs['lms_player_id']);
@@ -132,22 +131,23 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 								</table>
                             </div>
 						</div>
-                    </div>
-					<div class = "row">';
-
-                        $html .= '	        <div class="well col-md-3 col-sm-3 textDark">
-                        <h3 class="text-center">Cancel Game</h3>
-						<form class="form-horizontal" style="margin-left:24px; margin-right:30px" role="form" name ="edit" method="post" action="process-cancel-game.php">';
-                        $html .= $key;
-                        $html .= '					     
-		                    <div class="form-group text-center">
-                                <input type= "hidden" name= "id" value="' . $gameid . '" />
-		                        <input id="submit" name="submit" type="submit" value="Cancel the Game" class="btn btn-primary">
-		                    </div>
-		                </form>
-		            </div>
-		        </div>
-		        <div class="row">
+                    </div>';
+                        if ($gamefetch['lms_game_status'] < 3) {
+                            $html .= '	<div class = "row">
+                                        <div class="well col-md-3 col-sm-3 textDark">
+                                            <h3 class="text-center">Cancel Game</h3>
+                    						<form class="form-horizontal" style="margin-left:24px; margin-right:30px" role="form" name ="edit" method="post" action="process-cancel-game.php">';
+                            $html .= $key;
+                            $html .= '					     
+                    		                    <div class="form-group text-center">
+                                                    <input type= "hidden" name= "id" value="' . $gameid . '" />
+                    		                        <input id="submit" name="submit" type="submit" value="Cancel the Game" class="btn btn-primary">
+                    		                    </div>
+		                                    </form>
+	                                    </div>
+		                              </div>';
+                        }
+                        $html .= '    <div class="row">
 					<br>
 					<div class="col-xs-6">
 						<a href="game-admin.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>

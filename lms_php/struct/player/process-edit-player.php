@@ -17,7 +17,7 @@ if (login_check($mypdo) == true && $access > 900) {
                 $gameid = sanitize_int($_POST['id']);
                 $fname = sanitize_paranoid_string($_POST['fname']);
                 $sname = sanitize_paranoid_string($_POST['sname']);
-                $screenname = sanitize_paranoid_string($_POST['screenname']);
+                $screenname = $_POST['screenname'];
                 $email = $_POST['email'];
                 if (isset($_POST['isadmin'])) {
                     $isadmin = $_POST['isadmin'];
