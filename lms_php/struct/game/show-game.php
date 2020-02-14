@@ -110,8 +110,10 @@ if (login_check($mypdo) == true) {
                                 if ($pickfetch) {
                                     $currentpick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd M Y') . ')';
                                 } else {
-                                    $currentpick = '(waiting)';
-                                    $selcolor = 'crimson';
+                                    if ($gamefetch['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
+                                        $currentpick = '(waiting)';
+                                        $selcolor = 'crimson';
+                                    }
                                 }
                             }
 
@@ -133,12 +135,12 @@ if (login_check($mypdo) == true) {
                     </div>
 					<div class = "row">';
                         if ($gamefetch['lms_game_status'] < 3) {
-                            
+
                             $type = "text";
-                            if ($gamefetch['lms_game_status'] ==2){
+                            if ($gamefetch['lms_game_status'] == 2) {
                                 $type = "hidden";
                             }
-                            
+
                             $html .= '	        <div class="well col-md-4 textDark">
                         <h3 class="text-center">Edit Game</h3>
 						<form class="form-horizontal" style="margin-left:24px; margin-right:30px" role="form" name ="edit" method="post" action="process-edit-game.php">';

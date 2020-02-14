@@ -110,8 +110,10 @@ if (login_check($mypdo) == true) {
                                 if ($pickfetch) {
                                     $currentpick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd M Y') . ')';
                                 } else {
-                                    $currentpick = '(waiting)';
-                                    $selcolor = 'crimson';
+                                    if ($gamefetch['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
+                                        $currentpick = '(waiting)';
+                                        $selcolor = 'crimson';
+                                    }
                                 }
                             }
 
