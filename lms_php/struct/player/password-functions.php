@@ -13,7 +13,7 @@ function createtemppassword($email)
     $player = get_player_by_userid($email);
     if ($player) {
         $playerid = $player['lms_player_id'];
-        $istempalready = gettemppasswordcount($player);
+        $istempalready = gettemppasswordcount($playerid);
         if ($istempalready == 1) {
             removetemppassword($playerid);
         }
