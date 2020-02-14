@@ -73,7 +73,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                                 </form>
                             </div>
 			            ';
-   
+
     $html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
 			                	<form class="form-horizontal" role="form" name ="editmatch" method="post" action="edit-match.php">';
     $html .= $key;
@@ -112,7 +112,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 									';
     foreach ($matchfetch as $rs) {
 
-        if ($rs[lms_week] == $_SESSION['currentweek'] && $rs[lms_year] == $_SESSION['currentseason']) {
+        if ($rs['lms_week'] == $_SESSION['currentweek'] && $rs['lms_year'] == $_SESSION['currentseason']) {
             $result = 'no result';
             switch ($rs['lms_match_result']) {
                 case 'w':

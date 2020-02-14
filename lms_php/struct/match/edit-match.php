@@ -28,7 +28,7 @@ if (login_check($mypdo) == true && $access > 900) {
                     $lresult = '';
                     $dresult = '';
                     $nresult = '';
-
+                    $presult = '';
                     if ($matchcount > 0) {
                         $key = $formKey->outputKey();
                         $matchfetch = $matchquery->fetch(PDO::FETCH_ASSOC);
@@ -45,6 +45,9 @@ if (login_check($mypdo) == true && $access > 900) {
                                 break;
                             case '':
                                 $nresult = 'selected';
+                                break;
+                            case 'p':
+                                $presult = 'selected';
                                 break;
                         }
                         echo '
@@ -109,6 +112,7 @@ if (login_check($mypdo) == true && $access > 900) {
                                                                     <option ' . $wresult . ' value="w">Win</option>
                                                                     <option ' . $dresult . ' value="d">Draw</option>
                                                                     <option ' . $lresult . ' value="l">Lose</option>
+                                                                    <option ' . $presult . ' value="p">Postponed</option>
                                                                     <option ' . $nresult . ' value="">No result</option>
                                                                </select>
 															   <input type= "hidden" name= "id" value="' . $gameid . '" />

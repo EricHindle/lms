@@ -16,7 +16,12 @@ if (login_check($mypdo) == true && $access > 900) {
             if (isset($_POST['id'], $_POST['teamname'])) {
                 $gameid = sanitize_int($_POST['id']);
                 $teamname = $_POST['teamname'];
-                $isactive = $_POST['isactive'];
+                if (isset($_POST['isactive'])) {
+                    $isactive = $_POST['isactive'];
+                } else {
+                    $isactive = "false";
+                }
+
                 $myactive = 0;
                 if ($isactive == "true") {
                     $myactive = 1;
