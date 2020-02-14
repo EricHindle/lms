@@ -1,4 +1,8 @@
 <?php
+/*
+ * HINDLEWARE
+ * Copyright (C) 2020 Eric Hindle. All rights reserved.
+ */
 $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
@@ -90,8 +94,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
 				                    </div>
 				                </form>
-				            </div>
-';
+				            </div>';
 
     $html .= '
                         </div>

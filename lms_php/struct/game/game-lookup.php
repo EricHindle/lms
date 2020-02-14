@@ -1,5 +1,8 @@
 <?php
-
+/*
+ * HINDLEWARE
+ * Copyright (C) 2020 Eric Hindle. All rights reserved.
+ */
 function get_game($gameid) {
     global $mypdo;
     $gamesql = "SELECT * FROM lms_game WHERE lms_game_id = :id LIMIT 1";

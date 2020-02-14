@@ -1,4 +1,8 @@
 <?php
+/*
+ * HINDLEWARE
+ * Copyright (C) 2020 Eric Hindle. All rights reserved.
+ */
 $myPath = "../../";
 require $myPath . 'includes/mail-util.php';
 require_once $myPath . 'struct/player/player-lookup.php';
