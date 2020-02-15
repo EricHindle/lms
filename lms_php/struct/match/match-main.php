@@ -119,13 +119,16 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
             $result = 'no result';
             switch ($rs['lms_match_result']) {
                 case 'w':
-                    $result = 'win';
+                    $result = 'won';
                     break;
                 case 'l':
-                    $result = 'lose';
+                    $result = 'lost';
                     break;
                 case 'd':
-                    $result = 'draw';
+                    $result = 'drew';
+                    break;
+                case 'p':
+                    $result = 'postponed';
                     break;
             }
 

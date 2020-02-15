@@ -70,36 +70,37 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 									                <div class="col-md-8">
 									                    <h1><strong>' . $gamename . '</strong></h1>
 									                </div>
-							<div class="col-md-1">
-								<a href="game-admin.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
-							</div>
+                        							<div class="col-md-1">
+                        								<a href="game-admin.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
+                        							</div>
 									      		</div>
-                        <div class="row">
-			            	<div class="well col-md-9  textDark">
-                                <div class="row">
-                                    <div class="col-sm-3"><b>Game start week: </b></div><div class="col-sm-1">' . sprintf("%02d", $gamefetch['lms_week']) . '</div>
-                                    <div class="col-sm-2"><b>Start date:</b> </div><div class="col-sm-2">' . date_format(date_create($gamefetch['lms_week_start']), 'd M Y') . '</div>
-                                    <div class="col-sm-2 col-sm-offset-1 text-center"  style="background:midnightblue;color:white">' . $gamefetch['lms_game_status_text'] . '</div>
-
-                                </div>';
+                                                <div class="row">
+                        			            	<div class="well col-md-9  textDark">
+                                                        <div class="row">
+                                                            <div class="col-sm-3"><b>Game start week: </b></div><div class="col-sm-1">' . sprintf("%02d", $gamefetch['lms_week']) . '</div>
+                                                            <div class="col-sm-2"><b>Start date:</b> </div><div class="col-sm-2">' . date_format(date_create($gamefetch['lms_week_start']), 'd M Y') . '</div>
+                                                            <div class="col-sm-2 col-sm-offset-1 text-center"  style="background:midnightblue;color:white">' . $gamefetch['lms_game_status_text'] . '</div>
+                        
+                                                        </div>';
                         if ($gamefetch['lms_game_status'] == 2) {
 
-                            $html .= '         <div class="row">
-                                        <br>
-                                    <div class="col-sm-4"><b>Current week selection deadline:</div><div class="col-sm-2"></b>  ' . date_format(date_create($deadline), 'd M Y') . '</div>
-                                </div>';
+                            $html .= '                  <div class="row">
+                                                            <br>
+                                                            <div class="col-sm-4">
+                                                                <b>Current week selection deadline:</div><div class="col-sm-2"></b>  ' . date_format(date_create($deadline), 'd M Y') . '</div>
+                                                            </div>';
                         }
-                        $html .= ' <div class="row">
-                                        <br>
-    					        	<table class="table table-bordered" id="keywords">
-    									<thead>
-    									<tr>
-    										<th>Player Name</th>
-    										<th>Player Status</th>
-                                            <th>Current pick</th>
-     									</tr>
-    									</thead>
-    									<tbody>	';
+                        $html .= '                          <div class="row">
+                                                                <br>
+                                					        	<table class="table table-bordered" id="keywords">
+                                									<thead>
+                                									<tr>
+                                										<th>Player Name</th>
+                                										<th>Player Status</th>
+                                                                        <th>Current pick</th>
+                                 									</tr>
+                                									</thead>
+                                									<tbody>	';
 
                         foreach ($gameplayerfetch as $rs) {
                             $pickfetch = get_current_player_pick($gameid, $rs['lms_player_id']);
@@ -107,8 +108,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                             $rowcolor = 'black';
                             $selcolor = 'black';
                             if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
-                                $currentpick = '';
-                                $rowcolor = 'silver';
+                                $rowcolor = $rs['lms_game_player_status'] == 2 ? 'red' : 'silver';
                             } else {
                                 if ($pickfetch) {
                                     $currentpick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd M Y') . ')';
@@ -120,49 +120,46 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                                 }
                             }
 
-                            if ($rs['lms_game_player_status'] > 1) {
-                                $rowcolor = 'silver';
-                            }
                             $html .= '
-									<tr style="color:' . $rowcolor . '">
-										<td>' . $rs['lms_player_screen_name'] . '</td>
-                                        <td>' . $rs['lms_game_player_status_text'] . '</td>
-                                        <td style="color:' . $selcolor . '">' . $currentpick . '</td>
-									</tr>';
+                                    									<tr style="color:' . $rowcolor . '">
+                                    										<td>' . $rs['lms_player_screen_name'] . '</td>
+                                                                            <td>' . $rs['lms_game_player_status_text'] . '</td>
+                                                                            <td style="color:' . $selcolor . '">' . $currentpick . '</td>
+                                    									</tr>';
                         }
                         $html .= '
-									</tbody>
-								</table>
-                            </div>
-						</div>
-                    </div>';
+                                									</tbody>
+                                								</table>
+                                                            </div>
+                                						</div>
+                                                    </div>';
                         if ($gamefetch['lms_game_status'] < 3) {
-                            $html .= '	<div class = "row">
-                                        <div class="well col-md-3 col-sm-3 textDark">
-                                            <h3 class="text-center">Cancel Game</h3>
-                    						<form class="form-horizontal" style="margin-left:24px; margin-right:30px" role="form" name ="edit" method="post" action="process-cancel-game.php">';
+                            $html .= '	             <div class = "row">
+                                                        <div class="well col-md-3 col-sm-3 textDark">
+                                                            <h3 class="text-center">Cancel Game</h3>
+                						                    <form class="form-horizontal" style="margin-left:24px; margin-right:30px" role="form" name ="edit" method="post" action="process-cancel-game.php">';
                             $html .= $key;
                             $html .= '					     
-                    		                    <div class="form-group text-center">
-                                                    <input type= "hidden" name= "id" value="' . $gameid . '" />
-                    		                        <input id="submit" name="submit" type="submit" value="Cancel the Game" class="btn btn-primary">
-                    		                    </div>
-		                                    </form>
-	                                    </div>
-		                              </div>';
+                                    		                    <div class="form-group text-center">
+                                                                    <input type= "hidden" name= "id" value="' . $gameid . '" />
+                                    		                        <input id="submit" name="submit" type="submit" value="Cancel the Game" class="btn btn-primary">
+                                    		                    </div>
+                		                                    </form>
+                	                                    </div>
+		                                            </div>';
                         }
-                        $html .= '    <div class="row">
-					<br>
-					<div class="col-xs-6">
-						<a href="game-admin.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
-						<br>
-					</div>
-				</div>
-	      		<br><br><br><br>
-	    	</div>
-	    </section>
-	</body>
-</html>
+                        $html .= '                  <div class="row">
+                                    					<br>
+                                    					<div class="col-xs-6">
+                                    						<a href="game-admin.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
+                                    						<br>
+                                    					</div>
+                                    				</div>
+                                    	      		<br><br><br><br>
+                                    	    	</div>
+                                    	    </section>
+                                    	</body>
+                                    </html>
 									            ';
                     } else {
                         $html .= "<script>
@@ -174,9 +171,9 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                     echo $html;
                 } else {
                     echo "<script>
-										alert('There was a problem. Please check details and try again.');
-										window.location.href='game-admin.php';
-									</script>";
+							alert('There was a problem. Please check details and try again.');
+							window.location.href='game-admin.php';
+						</script>";
                 }
             } else {
                 header('Location: ' . $myPath . 'index.php?error=1');

@@ -83,17 +83,15 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			                        	<label for="user">Choose value:</label>
 			                            <select class="form-control" id="infoid" name="infoid">';
     foreach ($infofetch as $myinfo) {
-        $html .= '<option value="' . $myinfo['lms_info_id'] . '">' . $myinfo['lms_info_id'] . '</option>';
+        $html .= '                          <option value="' . $myinfo['lms_info_id'] . '">' . $myinfo['lms_info_id'] . '</option>';
     }
-    $html .= '	                    </select>
+    $html .= '	                         </select>
 				                    </div>
 				                    <div class="form-group">
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
 				                    </div>
 				                </form>
-				            </div>
-			            ';
-
+				            </div>  ';
     $html .= '		</div>
 						<div class = "row">
 				        	<div class="well col-md-7 col-md-offset-1 textDark">

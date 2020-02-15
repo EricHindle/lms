@@ -9,7 +9,6 @@ require $myPath . 'includes/db_connect.php';
 function delete_pick($playerid, $gameid, $matchid)
 {
     global $mypdo;
-    $isdeleted = false;
     $delsql = "DELETE FROM lms_pick WHERE lms_pick_player_id=:player and lms_pick_game_id=:game and lms_pick_match_id=:match";
     $delquery = $mypdo->prepare($delsql);
     $delquery->bindParam(":player", $playerid, PDO::PARAM_INT);
@@ -17,16 +16,13 @@ function delete_pick($playerid, $gameid, $matchid)
     $delquery->bindParam(":match", $matchid, PDO::PARAM_INT);
     $delquery->execute();
     $delcount = $delquery->rowCount();
-    if ($delcount == 1) {
-        $isdeleted = true;
-    }
+    $isdeleted = ($delcount > 0) ? true : false;
     return $isdeleted;
 }
 
 function delete_available_team($playerid, $gameid, $teamid)
 {
     global $mypdo;
-    $isdeleted = false;
     $delsql = "DELETE FROM lms_available_picks WHERE lms_available_picks_player_id=:player and lms_available_picks_game=:game and lms_available_picks_team=:team";
     $delquery = $mypdo->prepare($delsql);
     $delquery->bindParam(":player", $playerid, PDO::PARAM_INT);
@@ -34,16 +30,13 @@ function delete_available_team($playerid, $gameid, $teamid)
     $delquery->bindParam(":team", $teamid, PDO::PARAM_INT);
     $delquery->execute();
     $delcount = $delquery->rowCount();
-    if ($delcount == 1) {
-        $isdeleted = true;
-    }
+    $isdeleted = ($delcount > 0) ? true : false;
     return $isdeleted;
 }
 
 function insert_available_team($playerid, $gameid, $teamid)
 {
     global $mypdo;
-    $isinserted = false;
     $inssql = "INSERT INTO lms_available_picks (lms_available_picks_game, lms_available_picks_player_id, lms_available_picks_team) VALUES (:gameid, :playerid, :teamid)";
     $insquery = $mypdo->prepare($inssql);
     $insquery->bindParam(":gameid", $gameid, PDO::PARAM_INT);
@@ -51,16 +44,13 @@ function insert_available_team($playerid, $gameid, $teamid)
     $insquery->bindParam(":teamid", $teamid, PDO::PARAM_INT);
     $insquery->execute();
     $inscount = $insquery->rowCount();
-    if ($inscount == 1) {
-        $isinserted = true;
-    }
+    $isinserted = ($inscount > 0) ? true : false;
     return $isinserted;
 }
 
 function insert_pick($playerid, $gameid, $matchid)
 {
     global $mypdo;
-    $isinserted = false;
     $inssql = "INSERT INTO lms_pick (lms_pick_player_id, lms_pick_game_id, lms_pick_match_id, lms_pick_wl) VALUES (:player, :game, :match, '');";
     $insquery = $mypdo->prepare($inssql);
     $insquery->bindParam(':player', $playerid, PDO::PARAM_INT);
@@ -68,9 +58,7 @@ function insert_pick($playerid, $gameid, $matchid)
     $insquery->bindParam(':match', $matchid, PDO::PARAM_INT);
     $insquery->execute();
     $inscount = $insquery->rowCount();
-    if ($inscount > 0) {
-        $isinserted = true;
-    }
+    $isinserted = ($inscount > 0) ? true : false;
     return $isinserted;
 }
 
@@ -87,7 +75,8 @@ function get_current_player_pick($gameid, $playerid)
     return $pickfetch;
 }
 
-function get_current_week_picks() {
+function get_current_week_picks()
+{
     global $mypdo;
     $picksql = "SELECT lms_pick_game_id, lms_pick_player_id, lms_pick_match_id, lms_match_result FROM v_lms_player_picks WHERE lms_match_weekno = :matchwk";
     $pickquery = $mypdo->prepare($picksql);
@@ -97,7 +86,8 @@ function get_current_week_picks() {
     return $pickfetch;
 }
 
-function get_game_player_pick_count($gameid, $playerid) {
+function get_game_player_pick_count($gameid, $playerid)
+{
     global $mypdo;
     $picksql = "SELECT lms_team_name, lms_match_date  FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game and lms_match_weekno = :matchwk LIMIT 1";
     $pickquery = $mypdo->prepare($picksql);
@@ -106,9 +96,11 @@ function get_game_player_pick_count($gameid, $playerid) {
     $pickquery->bindParam(':matchwk', $_SESSION['matchweek']);
     $pickquery->execute();
     $pickcount = $pickquery->rowCount();
+    return $pickcount;
 }
 
-function set_pick_wl($gameid, $playerid, $matchid, $wl) {
+function set_pick_wl($gameid, $playerid, $matchid, $wl)
+{
     global $mypdo;
     $updgamesql = "UPDATE lms_pick SET lms_pick_wl = :wl WHERE lms_pick_game_id = :gameid, lms_pick_player_id = :playerid, lms_pick_match_id = :matchid";
     $updgamequery = $mypdo->prepare($updgamesql);
@@ -117,10 +109,8 @@ function set_pick_wl($gameid, $playerid, $matchid, $wl) {
     $updgamequery->bindParam(':matchid', $matchid, PDO::PARAM_INT);
     $updgamequery->bindParam(':wl', $wl);
     $updgamequery->execute();
-    $upCount =  $updgamequery->rowCount();
+    $upCount = $updgamequery->rowCount();
     return $upCount;
-    
 }
-
 
 ?>

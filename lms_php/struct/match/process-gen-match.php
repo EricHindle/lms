@@ -18,41 +18,33 @@ if (login_check($mypdo) == true && $access > 900) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
             if (isset($_POST['weekid'])) {
-
-                $gameid = $_POST['weekid'];
-
+                $weekid = $_POST['weekid'];
                 $teamsql = "SELECT lms_team_name, lms_team_id, lms_team_active FROM lms_team WHERE lms_team_active = 1";
                 $teamquery = $mypdo->prepare($teamsql);
                 $teamquery->execute();
                 $teamcount = $teamquery->rowCount();
-
                 $html = "";
-
                 if ($teamcount > 0) {
-
                     $teamfetch = $teamquery->fetchAll(PDO::FETCH_ASSOC);
-
                     date_default_timezone_set('Europe/London');
                     $phptime = time();
                     $mysqltime = date("Y-m-d H:i:s", $phptime);
-
-                    $totalcount = 0;
+                    $totaladded = 0;
                     foreach ($teamfetch as $rs) {
-
                         $teamid = $rs['lms_team_id'];
                         $postadd = $_POST["add-" . $teamid];
                         $postmatchdate = $_POST["mdt-" . $teamid];
                         if ($postadd == "true") {
                             $matchsql = "SELECT lms_match_id FROM lms_match WHERE lms_match_weekno = :id and lms_match_team = :team LIMIT 1";
                             $matchquery = $mypdo->prepare($matchsql);
-                            $matchquery->bindParam(':id', $gameid);
+                            $matchquery->bindParam(':id', $weekid);
                             $matchquery->bindParam(':team', $rs['lms_team_id']);
                             $matchquery->execute();
                             $matchcount = $matchquery->rowCount();
                             if ($matchcount == 0) {
                                 $addsql = "INSERT INTO lms_match (lms_match_weekno , lms_match_team , lms_match_date , lms_match_result) VALUES (:weekno, :team, :kodate, '')";
                                 $addquery = $mypdo->prepare($addsql);
-                                $addquery->bindParam(':weekno', $gameid);
+                                $addquery->bindParam(':weekno', $weekid);
                                 $addquery->bindParam(':team', $teamid, PDO::PARAM_INT);
                                 $addquery->bindParam(':kodate', $postmatchdate);
                                 $addquery->execute();
@@ -61,7 +53,6 @@ if (login_check($mypdo) == true && $access > 900) {
                             }
                         }
                     }
-
                     $html .= "<script>
                                 	alert('" . $totaladded . " matches added.');
                                 	window.location.href='match-main.php';
@@ -74,9 +65,9 @@ if (login_check($mypdo) == true && $access > 900) {
                 }
             } else {
                 $html .= "<script>
-									alert('There was a problem with the weekno.');
-									window.location.href='match-main.php';
-								</script>";
+								alert('There was a problem with the weekno.');
+								window.location.href='match-main.php';
+							</script>";
             }
             echo $html;
         }

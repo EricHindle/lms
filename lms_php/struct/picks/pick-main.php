@@ -117,6 +117,9 @@ if (login_check($mypdo) == true) {
                             case 'd':
                                 $result = 'draw';
                                 break;
+                            case 'p':
+                                $result = 'postponed';
+                                break;
                         }
 
                         $html .= '
@@ -147,7 +150,7 @@ if (login_check($mypdo) == true) {
                             foreach ($availfetch as $mypick) {
                                 $html .= '<option value="' . $mypick['lms_match_id'] . '">' . date_format(date_create($mypick['lms_match_date']), 'd-M') . '&nbsp;&nbsp;&nbsp;&nbsp;' . $mypick['lms_team_name'] . '</option>';
                             }
-                            $html .= '	                    </select>
+                            $html .= '	</select>
 				                    </div>
 				                    <div class="col-sm-2 col-sm-offset-1">
                                         <input type= "hidden" name= "gameid" value="' . $gameid . '" />

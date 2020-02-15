@@ -110,9 +110,21 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                     if ($status == 0 || $status == $rs['lms_game_status']) {
 
                         $rowcolor = 'black';
-                        if ($rs['lms_game_status'] > 2) {
-                            $rowcolor = 'silver';
+                        switch ($rs['lms_game_status']) {
+                            case 1:
+                                $rowcolor = 'blue';
+                                break;
+                            case 2:
+                                $rowcolor = 'black';
+                                break;
+                            case 3:
+                                $rowcolor = 'limegreen';
+                                break;
+                            case 4:
+                                $rowcolor = 'silver';
+                                break;
                         }
+                        
                         $html .= '
 									<tr style="color:' . $rowcolor . '">
 										<td>' . $rs['lms_game_name'] . '</td>

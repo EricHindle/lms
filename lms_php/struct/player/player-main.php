@@ -203,8 +203,10 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     foreach ($cafetch as $rs) {
 
         $active = ($rs['lms_active'] == 1 ? 'Yes' : 'No');
+        $rowcolor = ($rs['lms_active'] == 1 ? 'black' : 'silver');
+        $rowcolor = ($rs['lms_access'] > 900 ? 'blue' : $rowcolor);
         $html .= '
-									<tr>
+									<tr style="color:' . $rowcolor . '">
 										<td>' . $rs['lms_player_login'] . '</td>
 										<td>' . $rs['lms_player_forename'] . '</td>
 										<td>' . $rs['lms_player_surname'] . '</td>

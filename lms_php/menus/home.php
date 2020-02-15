@@ -81,8 +81,23 @@ if (login_check($mypdo) == true) {
         $currentpick = '';
         $rowcolor = 'black';
         $selcolor = 'black';
+        $playercolor = 'black';
+        switch ($rs['lms_game_status']) {
+            case 1:
+                $rowcolor = 'blue';
+                break;
+            case 2:
+                $rowcolor = 'black';
+                break;
+            case 3:
+                $rowcolor = 'limegreen';
+                break;
+            case 4:
+                $rowcolor = 'silver';
+                break;
+        }
         if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
-            $rowcolor = 'silver';
+            $playercolor = $rs['lms_game_player_status'] == 2 ? 'red' : 'silver';
         } else {
             if ($pickcount > 0) {
                 $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
@@ -101,7 +116,7 @@ if (login_check($mypdo) == true) {
                                         <td>' . $rs['lms_game_status_text'] . '</td>
                                         <td>' . $rs['lms_game_total_players'] . '</td>
                                         <td>' . $rs['lms_game_still_active'] . '</td>
-                                        <td>' . $rs['lms_game_player_status_text'] . '</td>
+                                        <td style="color:' . $playercolor . '">' . $rs['lms_game_player_status_text'] . '</td>
                                         <td style="color:' . $selcolor . '">' . $currentpick . '</td>
     								</tr>';
     }
@@ -159,7 +174,7 @@ if (login_check($mypdo) == true) {
     foreach ($gamefetch as $myGame) {
         $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
     }
-$html .= '	                             </select>
+    $html .= '	                             </select>
 			                         </div>
 			                     <div class="form-group" style="margin-left:16px;margin-right:16px">
                                     <br>

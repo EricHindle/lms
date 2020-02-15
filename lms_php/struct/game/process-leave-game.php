@@ -38,10 +38,7 @@ if (login_check($mypdo) == true) {
                         $gameplayercount = $gameplayerquery->rowCount();
 
                         if ($gameplayercount == 1) {
-
                             $key = $formKey->outputKey();
-
-                            $isactive = "";
                             if ($gamefetch["lms_game_status"] == 1) {
                                 echo '
 								<!doctype html>
@@ -97,10 +94,10 @@ if (login_check($mypdo) == true) {
 																</div>
 															   <input type= "hidden" name= "gameid" value="' . $gamefetch['lms_game_id'] . '" />
 										                    </div>
-<div class="text-center">
+                                                            <div class="text-center">
 										                    	<br>
 										                        <input id="submit" name="submit" type="submit" value="Confirm" class="btn btn-primary">
-</div>
+                                                            </div>
 										                </form>
 										            </div>
 										        </div>
@@ -139,9 +136,9 @@ if (login_check($mypdo) == true) {
                     echo $html;
                 } else {
                     echo "<script>
-										alert('There was a problem. Please check details and try again.');
-										window.location.href='join-game.php';
-									</script>";
+								alert('There was a problem. Please check details and try again.');
+								window.location.href='join-game.php';
+							</script>";
                 }
             } else {
                 header('Location: ' . $myPath . 'index.php?error=1');

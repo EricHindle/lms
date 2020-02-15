@@ -45,17 +45,17 @@ if (login_check($mypdo) == true && $access > 900) {
                         $stmtaddinfo->execute();
                         $added = $stmtaddinfo->rowCount();
                         $html .= "<script>
-											alert('" . $added . " values added.');
-											window.location.href='info-main.php';
-										</script>";
+									alert('" . $added . " values added.');
+									window.location.href='info-main.php';
+								</script>";
                     }
 
                     echo $html;
                 } else {
                     echo "<script>
-										alert('There was a problem. Please check details and try again.');
-										window.location.href='info-main.php';
-									</script>";
+							alert('There was a problem. Please check details and try again.');
+							window.location.href='info-main.php';
+						</script>";
                 }
             } else {
                 header('Location: ' . $myPath . 'index.php?error=1');

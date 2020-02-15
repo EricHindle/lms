@@ -108,8 +108,7 @@ if (login_check($mypdo) == true) {
                             $rowcolor = 'black';
                             $selcolor = 'black';
                             if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
-                                $currentpick = '';
-                                $rowcolor = 'silver';
+                                $rowcolor = $rs['lms_game_player_status'] == 2 ? 'red' : 'silver';
                             } else {
                                 if ($pickfetch) {
                                     $currentpick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd M Y') . ')';
@@ -119,10 +118,6 @@ if (login_check($mypdo) == true) {
                                         $selcolor = 'crimson';
                                     }
                                 }
-                            }
-
-                            if ($rs['lms_game_player_status'] > 1) {
-                                $rowcolor = 'silver';
                             }
                             $html .= '
 									<tr style="color:' . $rowcolor . '">

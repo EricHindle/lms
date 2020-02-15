@@ -39,9 +39,9 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                         $upcount = $upquery->rowCount();
                         if ($upcount > 0) {
                             $html .= "<script>
-												alert('Game cancelled successfully.');
-												window.location.href='game-admin.php';
-											</script>";
+											alert('Game cancelled successfully.');
+											window.location.href='game-admin.php';
+										</script>";
                         } else {
                             $html .= "<script>
 										alert('Game NOT altered');
@@ -54,13 +54,12 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 										window.location.href='game-admin.php';
 									</script>";
                     }
-
                     echo $html;
                 } else {
                     echo "<script>
-										alert('There was a problem. Please check details and try again.');
-										window.location.href='game-admin.php';
-									</script>";
+								alert('There was a problem. Please check details and try again.');
+								window.location.href='game-admin.php';
+							</script>";
                 }
             } else {
                 header('Location: ' . $myPath . 'index.php?error=1');

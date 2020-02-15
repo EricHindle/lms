@@ -103,12 +103,11 @@ if (login_check($mypdo) == true) {
                         $html .= '	                           </select>
 															   <input type= "hidden" name= "id" value="' . $gameid . '" />
 										                    </div>
-<div class="row">
-<br>
-                                           <label for="iscancel">&nbsp Cancel this game</label>
-                                           <input type="checkbox" style="margin-left:20px;" name="iscancel" id="iscancel" value="true">
-</div>
-
+                                                            <div class="row">
+                                                            <br>
+                                                               <label for="iscancel">&nbsp Cancel this game</label>
+                                                               <input type="checkbox" style="margin-left:20px;" name="iscancel" id="iscancel" value="true">
+                                                            </div>
 										                    <div class="form-group">
 										                    	<br>
 										                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">

@@ -20,9 +20,7 @@ if (login_check($mypdo) == true) {
             if (isset($_POST['gamecode'])) {
                 $gamecode = $_POST['gamecode'];
                 if ($gamecode) {
-
                     $html = "";
-
                     $gamequery = find_game_by_code($gamecode);
                     $gamecount = $gamequery->rowCount();
 
@@ -36,16 +34,12 @@ if (login_check($mypdo) == true) {
                         $gameplayercount = $gameplayerquery->rowCount();
 
                         if ($gameplayercount == 0) {
-
                             $key = $formKey->outputKey();
-
-                            $isactive = "";
                             if ($gamefetch["lms_game_status"] == 1) {
                                 echo '
 								<!doctype html>
 								<html>
 									<head>
-										
 									    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 									    <meta charset="UTF-8">
 									    
@@ -95,10 +89,10 @@ if (login_check($mypdo) == true) {
 																</div>
 															   <input type= "hidden" name= "gameid" value="' . $gamefetch['lms_game_id'] . '" />
 										                    </div>
-<div class="text-center">
+                                                            <div class="text-center">
 										                    	<br>
 										                        <input id="submit" name="submit" type="submit" value="Confirm" class="btn btn-primary">
-</div>
+                                                            </div>
 										                </form>
 										            </div>
 										        </div>
@@ -137,9 +131,9 @@ if (login_check($mypdo) == true) {
                     echo $html;
                 } else {
                     echo "<script>
-										alert('Enter a game code and try again.');
-										window.location.href='".$myPath."menus/home.php';
-									</script>";
+								alert('Enter a game code and try again.');
+								window.location.href='".$myPath."menus/home.php';
+							</script>";
                 }
             } else {
                 header('Location: ' . $myPath . 'index.php?error=1');

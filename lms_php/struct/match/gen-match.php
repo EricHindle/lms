@@ -75,29 +75,27 @@ if (login_check($mypdo) == true && $access > 900) {
 									                <div class="col-md-7">
 									                    <h1><strong>Generate Matches for Period ' . $year . '/' . $week . '</strong></h1>
 									                </div>
-							<div class="col-md-1">
-								<a href="' . $myPath . 'struct/match/match-main.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
-							</div>
-
-
+                        							<div class="col-md-1">
+                        								<a href="' . $myPath . 'struct/match/match-main.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
+                        							</div>
 									      		</div>
 									        	<div class = "row">';
 
-                        $html .= '			<div class="well col-md-8 textDark">
+                        $html .= '			       <div class="well col-md-8 textDark">
 									                	<form class="form-horizontal" role="form" name ="gen" method="post" action="process-gen-match.php">';
                         $html .= $key;
-                        $html .= '					<h3 class="text-center">Matches</h3>
-     <div class="form-group">
-					        	<table class="table table-bordered" id="matchtable">
-									<thead>
-									<tr class="match">
-										<th>Select</th>
-                                        <th>Team</th>
-                                        <th>Match Date</th>
-									</tr>
-									</thead>
-									<tbody>
-									';
+                        $html .= '					        <h3 class="text-center">Matches</h3>
+                                                            <div class="form-group">
+                                					        	<table class="table table-bordered" id="matchtable">
+                                									<thead>
+                                									<tr class="match">
+                                										<th>Select</th>
+                                                                        <th>Team</th>
+                                                                        <th>Match Date</th>
+                                									</tr>
+                                									</thead>
+                                									<tbody>
+                                									';
 
                         foreach ($teamfetch as $rs) {
                             $matchsql = "SELECT * FROM lms_match WHERE lms_match_weekno = :id and lms_match_team = :team LIMIT 1";
@@ -107,19 +105,18 @@ if (login_check($mypdo) == true && $access > 900) {
                             $matchquery->execute();
                             $matchcount = $matchquery->rowCount();
                             if ($matchcount == 0) {
-
                                 $html .= '
-									<tr>
-										<td><input type="checkbox" style="margin-left:20px;" name="add-' . $rs['lms_team_id'] . '" id="add-' . $rs['lms_team_id'] . '" value="true" ></td>
-                                        <td>' . $rs['lms_team_name'] . '</td>
-										<td><input type="text" class="form-control" id="mdt-' . $rs['lms_team_id'] . '" name="mdt-' . $rs['lms_team_id'] . '" value="' . $kodate . '" placeholder="yyyy-mm-dd"></td>
-									</tr>';
+                                    									<tr>
+                                    										<td><input type="checkbox" style="margin-left:20px;" name="add-' . $rs['lms_team_id'] . '" id="add-' . $rs['lms_team_id'] . '" value="true" ></td>
+                                                                            <td>' . $rs['lms_team_name'] . '</td>
+                                    										<td><input type="text" class="form-control" id="mdt-' . $rs['lms_team_id'] . '" name="mdt-' . $rs['lms_team_id'] . '" value="' . $kodate . '" placeholder="yyyy-mm-dd"></td>
+                                    									</tr>';
                             }
                         }
                         $html .= '
-									</tbody>
-								</table>
-</div>
+                                									</tbody>
+                                								</table>
+                                                            </div>
 										                    <div class="form-group">
 										                        <input type= "hidden" name= "weekid" value="' . $gameid . '" />
 										                    </div>									                    	

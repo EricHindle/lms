@@ -40,9 +40,9 @@ if (login_check($mypdo) == true && $access > 900) {
                         $upcount = $upquery->rowCount();
                         if ($upcount > 0) {
                             $html .= "<script>
-												alert('Details updated successfully.');
-												window.location.href='info-main.php';
-											</script>";
+											alert('Details updated successfully.');
+											window.location.href='info-main.php';
+										</script>";
                         } else {
                             $html .= "<script>
 										alert('Details not altered.');
@@ -55,13 +55,12 @@ if (login_check($mypdo) == true && $access > 900) {
 										window.location.href='info-main.php';
 									</script>";
                     }
-
                     echo $html;
                 } else {
                     echo "<script>
-										alert('There was a problem. Please check details and try again.');
-										window.location.href='info-main.php';
-									</script>";
+								alert('There was a problem. Please check details and try again.');
+								window.location.href='info-main.php';
+							</script>";
                 }
             } else {
                 header('Location: ' . $myPath . 'index.php?error=1');

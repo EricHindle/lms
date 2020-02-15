@@ -19,7 +19,6 @@ if (login_check($mypdo) == true) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
             if (isset($_POST['gameid'])) {
-
                 $gameid = sanitize_int($_POST['gameid']);
                 if ($gameid) {
                     $deadline = get_deadline_date();
@@ -30,13 +29,10 @@ if (login_check($mypdo) == true) {
                         ':id' => $gameid
                     ));
                     $gamecount = $gamequery->rowCount();
-
                     if ($gamecount > 0) {
                         $key = $formKey->outputKey();
                         $gamefetch = $gamequery->fetch(PDO::FETCH_ASSOC);
                         $gamename = $gamefetch['lms_game_name'];
-                        $remainingweeks = get_remaining_weeks(false);
-
                         $gameplayersql = "SELECT lms_game_player_status, lms_player_screen_name, lms_game_player_status_text, lms_player_id FROM v_lms_player_games WHERE lms_game_id = :game";
                         $gameplayerquery = $mypdo->prepare($gameplayersql);
                         $gameplayerquery->bindParam(":game", $gameid, PDO::PARAM_INT);
@@ -44,72 +40,71 @@ if (login_check($mypdo) == true) {
                         $gameplayerfetch = $gameplayerquery->fetchAll(PDO::FETCH_ASSOC);
 
                         echo '
-								<!doctype html>
-								<html>
-									<head>
-										
-									    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-									    <meta charset="UTF-8">
-									    
-									    <title>Show a Game</title>
-									    
-									    <meta name="viewport" content="width=device-width, initial-scale=1">
-									    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
-									    <link rel="stylesheet" href="' . $myPath . 'css/rethome.css">
-									    <script src="' . $myPath . 'js/jquery.js"></script>
-									    <script src="' . $myPath . 'js/bootstrap.min.js"></script>
-									</head>
+							<!doctype html>
+							<html>
+								<head>
+									
+								    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+								    <meta charset="UTF-8">
+								    
+								    <title>Show a Game</title>
+								    
+								    <meta name="viewport" content="width=device-width, initial-scale=1">
+								    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
+								    <link rel="stylesheet" href="' . $myPath . 'css/rethome.css">
+								    <script src="' . $myPath . 'js/jquery.js"></script>
+								    <script src="' . $myPath . 'js/bootstrap.min.js"></script>
+								</head>
 
-									<body>';
+								<body>';
                         include $myPath . 'globNAV.php';
                         $html .= '
-										<section id="homeSection">
-									    <br><br>
-									        <div class="container">
-									        	<div class="row">
-									                <div class="col-md-8">
-									                    <h1><strong>' . $gamename . '</strong></h1>
-									                </div>
-							<div class="col-md-1">
-								<a href="' . $myPath . 'menus/home.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
-							</div>
-									      		</div>
-                        <div class="row">
-			            	<div class="well col-md-9  textDark">
-                                <div class="row">
-                                    <div class="col-sm-3"><b>Game start week: </b></div><div class="col-sm-1">' . sprintf("%02d", $gamefetch['lms_week']) . '</div>
-                                    <div class="col-sm-2"><b>Start date:</b> </div><div class="col-sm-2">' . date_format(date_create($gamefetch['lms_week_start']), 'd M Y') . '</div>
-                                    <div class="col-sm-2 col-sm-offset-1 text-center"  style="background:midnightblue;color:white">' . $gamefetch['lms_game_status_text'] . '</div>
-
-                                </div>';
+									<section id="homeSection">
+								    <br><br>
+								        <div class="container">
+								        	<div class="row">
+								                <div class="col-md-8">
+								                    <h1><strong>' . $gamename . '</strong></h1>
+								                </div>
+                    							<div class="col-md-1">
+                    								<a href="' . $myPath . 'menus/home.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
+                    							</div>
+								      		</div>
+                                            <div class="row">
+                    			            	<div class="well col-md-9  textDark">
+                                                    <div class="row">
+                                                        <div class="col-sm-3"><b>Game start week: </b></div><div class="col-sm-1">' . sprintf("%02d", $gamefetch['lms_week']) . '</div>
+                                                        <div class="col-sm-2"><b>Start date:</b> </div><div class="col-sm-2">' . date_format(date_create($gamefetch['lms_week_start']), 'd M Y') . '</div>
+                                                        <div class="col-sm-2 col-sm-offset-1 text-center"  style="background:midnightblue;color:white">' . $gamefetch['lms_game_status_text'] . '</div>
+                    
+                                                    </div>';
                         if ($gamefetch['lms_game_status'] == 2) {
 
-                            $html .= '         <div class="row">
-<br>
-                                    <div class="col-sm-4"><b>Current week selection deadline:</div><div class="col-sm-2"></b>  ' . date_format(date_create($deadline), 'd M Y') . '</div>
-                                </div>';
+                            $html .= '              <div class="row">
+                                                        <br>
+                                                        <div class="col-sm-4">
+                                                            <b>Current week selection deadline:</div><div class="col-sm-2"></b>  ' . date_format(date_create($deadline), 'd M Y') . '
+                                                        </div>
+                                                    </div>';
                         }
-                        $html .= ' <div class="row">
-<br>
-    					        	<table class="table table-bordered" id="keywords">
-    									<thead>
-    									<tr>
-    										<th>Player Name</th>
-    										<th>Player Status</th>
-                                            <th>Current pick</th>
-     									</tr>
-    									</thead>
-    									<tbody>
-    									';
-
+                        $html .= '                  <div class="row">
+                                                        <br>
+                        					        	<table class="table table-bordered" id="keywords">
+                        									<thead>
+                        									<tr>
+                        										<th>Player Name</th>
+                        										<th>Player Status</th>
+                                                                <th>Current pick</th>
+                         									</tr>
+                        									</thead>
+                        									<tbody>	';
                         foreach ($gameplayerfetch as $rs) {
                             $pickfetch = get_current_player_pick($gameid, $rs['lms_player_id']);
                             $currentpick = '';
                             $rowcolor = 'black';
                             $selcolor = 'black';
                             if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
-                                $currentpick = '';
-                                $rowcolor = 'silver';
+                                $rowcolor = $rs['lms_game_player_status'] == 2 ? 'red' : 'silver';
                             } else {
                                 if ($pickfetch) {
                                     $currentpick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd M Y') . ')';
@@ -121,35 +116,31 @@ if (login_check($mypdo) == true) {
                                 }
                             }
 
-                            if ($rs['lms_game_player_status'] > 1) {
-                                $rowcolor = 'silver';
-                            }
                             $html .= '
-									<tr style="color:' . $rowcolor . '">
-										<td>' . $rs['lms_player_screen_name'] . '</td>
-                                        <td>' . $rs['lms_game_player_status_text'] . '</td>
-                                        <td style="color:' . $selcolor . '">' . $currentpick . '</td>
-									</tr>';
+                            									<tr style="color:' . $rowcolor . '">
+                            										<td>' . $rs['lms_player_screen_name'] . '</td>
+                                                                    <td>' . $rs['lms_game_player_status_text'] . '</td>
+                                                                    <td style="color:' . $selcolor . '">' . $currentpick . '</td>
+                            									</tr>';
                         }
                         $html .= '
-									</tbody>
-								</table>
-                            </div>
-						</div>
-                    </div>
-		        <div class="row">
-					<br>
-					<div class="col-xs-6">
-						<a href="' . $myPath . 'menus/home.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
-						<br>
-					</div>
-				</div>
-	      		<br><br><br><br>
-	    	</div>
-	    </section>
-	</body>
-</html>
-									            ';
+                        									</tbody>
+                        								</table>
+                                                    </div>
+                        						</div>
+                                            </div>
+                        		        <div class="row">
+                        					<br>
+                        					<div class="col-xs-6">
+                        						<a href="' . $myPath . 'menus/home.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
+                        						<br>
+                        					</div>
+                        				</div>
+                        	      		<br><br><br><br>
+                        	    	</div>
+                        	    </section>
+                        	</body>
+                        </html>';
                     } else {
                         $html .= "<script>
 										alert('There was a problem. Please check details and try again.');

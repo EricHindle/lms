@@ -107,9 +107,7 @@ if (login_check($mypdo) == true && $access > 900) {
 																 	<p class="form-control-static" name="odate" id="odate">' . date_format(date_create($matchfetch['lms_match_date']), 'd-M-Y') . '</p>
 																</div>
 															</div>
-
 										                    <div class="form-group">
-										                    	
                                                                <label for="matchdate">New match date:</label>
                     					                       <input type="text" class="form-control" id="matchdate" name="matchdate" value="' . date_format(date_create($matchfetch['lms_match_date']), 'Y-m-d') . '" placeholder="yyyy-mm-dd"><br>
                                                                <select class="form-control" id="result" name="result">
@@ -139,15 +137,13 @@ if (login_check($mypdo) == true && $access > 900) {
 									    	</div>
 									    </section>
 									</body>
-								</html>
-									            ';
+								</html>  ';
                     } else {
                         $html .= "<script>
 										alert('There was a problem. Please check details and try again.');
 										window.location.href='match-main.php';
 									</script>";
                     }
-
                     echo $html;
                 } else {
                     echo "<script>

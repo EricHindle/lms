@@ -20,22 +20,23 @@ if (login_check($mypdo) == true) {
                 $gameid = sanitize_int($_POST['gameid']);
                 $playerid = $_SESSION['user_id'];
                 if ($gameid && $playerid) {
-
                     if (add_player_to_game($gameid, $playerid)) {
-
-                        $html = "";
-
-                        $html .= "<script>
+                        $html = "<script>
 								alert('You are in the game');
+								window.location.href='" . $myPath . "menus/home.php';
+							</script>";
+                    } else {
+                        $html = "<script>
+								alert('There was a problem adding you to the game');
 								window.location.href='" . $myPath . "menus/home.php';
 							</script>";
                     }
                     echo $html;
                 } else {
                     echo "<script>
-										alert('There was a problem. Please check details and try again.');
-										window.location.href='" . $myPath . "menus/home.php';
-									</script>";
+							alert('There was a problem. Please check details and try again.');
+							window.location.href='" . $myPath . "menus/home.php';
+						</script>";
                 }
             } else {
                 header('Location: ' . $myPath . 'index.php?error=1');

@@ -20,13 +20,14 @@ if (login_check($mypdo) == true) {
                 $gameid = sanitize_int($_POST['gameid']);
                 $playerid = $_SESSION['user_id'];
                 if ($gameid && $playerid) {
-
                     if (remove_player_from_game($gameid, $playerid)) {
-
-                        $html = "";
-
-                        $html .= "<script>
+                        $html = "<script>
 								alert('You are no longer in the game');
+								window.location.href='" . $myPath . "menus/home.php';
+							</script>";
+                    } else {
+                        $html = "<script>
+								alert('There was a problem removing you from the game');
 								window.location.href='" . $myPath . "menus/home.php';
 							</script>";
                     }

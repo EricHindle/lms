@@ -20,13 +20,7 @@ if (login_check($mypdo) == true) {
                 $gameid = sanitize_int($_POST['id']);
                 $gamename = $_POST['gamename'];
                 $gamestartweek = $_POST['gamestartweek'];
-
-                if (isset($_POST['iscancel'])) {
-                    $iscancel = $_POST['iscancel'];
-                } else {
-                    $iscancel = "false";
-                }
-
+                $iscancel = (isset($_POST['iscancel']) ? $_POST['iscancel'] : "false");
                 if ($gameid && $gamename) {
                     $html = "";
 
@@ -51,9 +45,9 @@ if (login_check($mypdo) == true) {
                         $upcount = $upquery->rowCount();
                         if ($upcount > 0) {
                             $html .= "<script>
-												alert('Details updated successfully.');
-												window.location.href='game-manage.php';
-											</script>";
+										alert('Details updated successfully.');
+										window.location.href='game-manage.php';
+									</script>";
                         } else {
                             $html .= "<script>
 										alert('Details not altered.');
@@ -66,13 +60,12 @@ if (login_check($mypdo) == true) {
 										window.location.href='game-manage.php';
 									</script>";
                     }
-
                     echo $html;
                 } else {
                     echo "<script>
-										alert('There was a problem. Please check details and try again.');
-										window.location.href='game-manage.php';
-									</script>";
+								alert('There was a problem. Please check details and try again.');
+								window.location.href='game-manage.php';
+							</script>";
                 }
             } else {
                 header('Location: ' . $myPath . 'index.php?error=1');

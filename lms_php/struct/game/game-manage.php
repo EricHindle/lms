@@ -20,11 +20,13 @@ if (login_check($mypdo) == true) {
 
     $remainingweeks = get_remaining_weeks(false);
 
-    $mygamessql = "SELECT lms_game_id, lms_game_id, lms_game_name FROM v_lms_player_games WHERE lms_player_id = :player and  ORDER BY lms_game_name";
-    $mygamesquery = $mypdo->prepare($mygamessql);
-    $mygamesquery->bindParam(":player", $_SESSION['user_id'], PDO::PARAM_INT);
-    $mygamesquery->execute();
-    $mygamesfetch = $mygamesquery->fetchAll(PDO::FETCH_ASSOC);
+    /*
+     * $mygamessql = "SELECT lms_game_id, lms_game_id, lms_game_name FROM v_lms_player_games WHERE lms_player_id = :player and ORDER BY lms_game_name";
+     * $mygamesquery = $mypdo->prepare($mygamessql);
+     * $mygamesquery->bindParam(":player", $_SESSION['user_id'], PDO::PARAM_INT);
+     * $mygamesquery->execute();
+     * $mygamesfetch = $mygamesquery->fetchAll(PDO::FETCH_ASSOC);
+     */
 
     $html = "";
     $key = $formKey->outputKey();
@@ -81,9 +83,21 @@ if (login_check($mypdo) == true) {
 
     foreach ($gamefetch as $rs) {
         $rowcolor = 'black';
-        if ($rs['lms_game_status'] > 2) {
-            $rowcolor = 'silver';
+        switch ($rs['lms_game_status']) {
+            case 1:
+                $rowcolor = 'blue';
+                break;
+            case 2:
+                $rowcolor = 'black';
+                break;
+            case 3:
+                $rowcolor = 'limegreen';
+                break;
+            case 4:
+                $rowcolor = 'silver';
+                break;
         }
+
         $html .= '
 									<tr style="color:' . $rowcolor . '">
 										<td>' . $rs['lms_game_name'] . '</td>

@@ -32,10 +32,6 @@ if (login_check($mypdo) == true && $access > 900) {
                     if ($infocount > 0) {
                         $key = $formKey->outputKey();
                         $infofetch = $infoquery->fetch(PDO::FETCH_ASSOC);
-                        $isactive = "";
-                        if ($infofetch["lms_info_active"] == 1) {
-                            $isactive = "checked";
-                        }
                         echo '
 								<!doctype html>
 								<html>
@@ -65,11 +61,10 @@ if (login_check($mypdo) == true && $access > 900) {
 									                </div>
 									      		</div>
 									        	<div class = "row">';
-
-                        $html .= '			<div class="well col-md-6 col-md-offset-1 textDark">
+                        $html .= '			        <div class="well col-md-6 col-md-offset-1 textDark">
 									                	<form class="form-horizontal" role="form" name ="edit" method="post" action="process-edit-info.php">';
                         $html .= $key;
-                        $html .= '					<h3 class="text-center">Edit value</h3>
+                        $html .= '					        <h3 class="text-center">Edit value</h3>
 									                    	<br>
 									                    	<div class="form-group">
 																<label class="col-sm-3" for="name">Value name:</label>
