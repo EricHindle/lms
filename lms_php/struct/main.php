@@ -23,7 +23,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 		<html>
 			<head>
 				
-			    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 			    <meta charset="UTF-8">
 			    
 			    <title>Admin</title>
@@ -96,8 +96,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			                        </a>	
 			          			</div>
 			                </div>
-
-</div>
+                        </div>
 			      		<div class="row">
 			            	<div class="col-sm-4">
 			                    <div class="tile orange">
@@ -125,11 +124,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			                        </a>	
 			          			</div>
 			                </div>
-
 			      		</div>
-
-
-
 			      		<div class="row">
 							<br>
 							<div class="col-xs-6">
@@ -138,12 +133,10 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 							</div>
 						</div>
 			      		<br><br><br><br>
-		    	</div>
-		    </section>
-		</body>
-	</html>
-
-		';
+    		    	</div>
+    		    </section>
+    		</body>
+    	</html>';
     echo $html;
 } else {
     header('Location: ' . $myPath . 'index.php?error=1');

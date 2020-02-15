@@ -11,20 +11,17 @@ sec_session_start();
 if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $formKey = new formKey();
     $key = $formKey->outputKey();
-
     $weeksql = "SELECT * FROM lms_week ORDER BY lms_week_no ASC ";
     $weekquery = $mypdo->prepare($weeksql);
     $weekquery->execute();
     $remainingweeks = $weekquery->fetchAll(PDO::FETCH_ASSOC);
-
     $html = "";
-
     echo '
 		<!doctype html>
 		<html>
 			<head>
 				
-			    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 			    <meta charset="UTF-8">
 			    <title>Game Weeks</title>
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -47,7 +44,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			    <br><br>
 			        <div class="container">
 			        	<div class="row">
-			                <div class="col-md-11">
+			                <div class="col-md-6">
 			                    <h1><strong>Period Admin</strong></h1>
 			                </div>
 							<div class="col-md-1">
@@ -56,8 +53,8 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			      		</div>
 			        	<div class = "row">';
 
-    $html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
-			                	<form class="form-horizontal" role="form" name ="addweek" method="post" action="add-week.php">';
+    $html .= '			<div class="well col-md-3 col-sm-5 textDark">
+			                	<form class="form" role="form" name ="addweek" method="post" action="add-week.php">';
     $html .= $key;
     $html .= '					<h3 class="text-center">Add Period</h3>
 				                    <div class="form-group">
@@ -77,8 +74,8 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 				            </div>
 			            ';
 
-    $html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
-			                	<form class="form-horizontal" role="form" name ="editweek" method="post" action="edit-week.php">';
+    $html .= '			<div class="well col-md-3 col-sm-5 col-md-offset-1 col-sm-offset-1 textDark">
+			                	<form class="form" role="form" name ="editweek" method="post" action="edit-week.php">';
     $html .= $key;
     $html .= '					<h3 class="text-center">Edit Period</h3>
 				                    <div class="form-group">
@@ -98,7 +95,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 
     $html .= '		</div>
 						<div class = "row">
-				        	<div class="well col-md-7 col-md-offset-1 textDark">
+				        	<div class="well col-md-7 textDark">
 				        		<h3>All periods</h3>
 					        	<table class="table table-bordered" id="keywords">
 									<thead>

@@ -24,7 +24,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 		<html>
 			<head>
 				
-			    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 			    <meta charset="UTF-8">
 			    
 			    <title>Player Admin</title>
@@ -201,11 +201,8 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 									<tbody>
 									';
     foreach ($cafetch as $rs) {
-        if ($rs['lms_active'] == 1) {
-            $active = 'Yes';
-        } else {
-            $active = 'No';
-        }
+
+        $active = ($rs['lms_active'] == 1 ? 'Yes' : 'No');
         $html .= '
 									<tr>
 										<td>' . $rs['lms_player_login'] . '</td>

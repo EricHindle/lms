@@ -17,6 +17,11 @@ function notify_winner($playerid, $gameid)
     sendemailusingtemplate('teamwin', $playerid, $gameid, '', true);
 }
 
+function notify_postponed($playerid, $gameid)
+{
+    sendemailusingtemplate('postponed', $playerid, $gameid, '', true);
+}
+
 function notify_no_pick($playerid, $gameid)
 {
     sendemailusingtemplate('nopick', $playerid, $gameid, '', true);

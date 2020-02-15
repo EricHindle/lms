@@ -23,15 +23,9 @@ if (login_check($mypdo) == true && $access > 900) {
                 $fname = sanitize_message_string($_POST['fname']);
                 $sname = sanitize_message_string($_POST['sname']);
                 $screenname = sanitize_message_string($_POST['screenname']);
-                if (isset($_POST['isadmin'])) {
-                    $isadmin = $_POST['isadmin'];
-                } else {
-                    $isadmin = "false";
-                }
-                $myaccess = 0;
-                if ($isadmin == 'true') {
-                    $myaccess = 999;
-                }
+                $isadmin = (isset($_POST['isadmin']) ? $_POST['isadmin'] : "false");
+                $myaccess = ($isadmin == 'true' ? 999 : 0);
+
                 if ($email && $password && $fname && $sname && $screenname) {
                     $html = "";
                     $cusql = "SELECT lms_player_id FROM players WHERE lms_player_email = :email LIMIT 1";

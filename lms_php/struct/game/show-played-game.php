@@ -48,7 +48,7 @@ if (login_check($mypdo) == true) {
 								<html>
 									<head>
 										
-									    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+									    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 									    <meta charset="UTF-8">
 									    
 									    <title>Show a Game</title>

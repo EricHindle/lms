@@ -25,28 +25,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_POST['email3'],
                 $_POST['email4']
             );
-
             $playerid = $_SESSION['user_id'];
             if ($emails && $gameid && $playerid) {
                 $html = "";
                 foreach ($emails as $inviteEmail) {
                     if ($inviteEmail != '') {
-                        sendemailusingtemplate('invitation', $playerid, $gameid, array($inviteEmail), false);
+                        sendemailusingtemplate('invitation', $playerid, $gameid, array(
+                            $inviteEmail
+                        ), false);
                     }
                 }
-
                 $html .= "<script>
-											alert('Invitations sent.');
-											window.location.href='" . $myPath . "struct/game/game-manage.php';
-										</script>";
+								alert('Invitations sent.');
+								window.location.href='" . $myPath . "struct/game/game-manage.php';
+							</script>";
             } else {}
-
             echo $html;
         } else {
             echo "<script>
-										alert('There was a problem. Please check details and try again.');
-										window.location.href='new-player.php';
-									</script>";
+						alert('There was a problem. Please check details and try again.');
+						window.location.href='new-player.php';
+					</script>";
         }
     }
 } else {

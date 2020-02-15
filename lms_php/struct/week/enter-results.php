@@ -48,7 +48,7 @@ if (login_check($mypdo) == true && $access > 900) {
 								<html>
 									<head>
 										
-									    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+									    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 									    <meta charset="UTF-8">
 									    
 									    <title>Enter Results</title>
@@ -65,32 +65,32 @@ if (login_check($mypdo) == true && $access > 900) {
                 $html .= '
 										<section id="homeSection">
 									    <br><br>
-									        <div class="container">
-									        	<div class="row">
-									                <div class="col-md-8">
-									                    <h1><strong>Enter Results for Period ' . $year . '/' . sprintf('%02d', $week) . '</strong></h1>
-									                </div>
-							<div class="col-md-1">
-								<a href="' . $myPath . 'struct/week/weekend-admin.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
-							</div>
-									      		</div>
-									        	<div class = "row">';
+								        <div class="container">
+								        	<div class="row">
+								                <div class="col-md-6">
+								                    <h1><strong>Enter Results for Period ' . $year . '/' . sprintf('%02d', $week) . '</strong></h1>
+								                </div>
+                    							<div class="col-md-1">
+                    								<a href="' . $myPath . 'struct/week/weekend-admin.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
+                    							</div>
+								      		</div>
+								        	<div class = "row">';
 
-                $html .= '			<div class="well col-md-8 col-md-offset-1 textDark">
-									                	<form class="form-horizontal" role="form" name ="gen" method="post" action="process-results.php">';
+                $html .= '			           <div class="well col-md-7 col-sm-8 textDark">
+						                     <form class="form" role="form" name ="gen" method="post" action="process-results.php">';
                 $html .= $key;
-                $html .= '					<h3 class="text-center">Results</h3>
-     <div class="form-group">
-					        	<table class="table table-bordered" id="matchtable">
-									<thead>
-									<tr class="match">
-                                        <th>Team</th>
-                                        <th>Match Date</th>
-                                        <th>Result</th>
-									</tr>
-									</thead>
-									<tbody>
-									';
+                $html .= '					     <h3 class="text-center">Results</h3>
+                                                 <div class="form-group">
+                    					        	<table class="table table-bordered" id="matchtable">
+                    									<thead>
+                    									<tr class="match">
+                                                            <th>Team</th>
+                                                            <th>Match Date</th>
+                                                            <th>Result</th>
+                    									</tr>
+                    									</thead>
+                    									<tbody>
+                    									';
 
                 foreach ($matchfetch as $rs) {
                     $wresult = '';
@@ -118,43 +118,43 @@ if (login_check($mypdo) == true && $access > 900) {
                     $md = date_create($rs['lms_match_date']);
                     $kodate = date_format($md, 'd-M-Y');
                     $html .= '
-									<tr>
-                                        <td>' . $rs['lms_team_name'] . '</td>
-										<td>' . $kodate . '</td>
-                                       <td><select class="form-control" name="res-' . $rs['lms_match_id'] . '" id="res-' . $rs['lms_match_id'] . '">
-                                            <option ' . $wresult . ' value="w">Win</option>
-                                            <option ' . $dresult . ' value="d">Draw</option>
-                                            <option ' . $lresult . ' value="l">Lose</option>
-                                            <option ' . $presult . ' value="p">Postponed</option>
-                                            <option ' . $nresult . ' value="">No result</option>
-                                       </select></tr>';
+									                   <tr>
+                                                            <td>' . $rs['lms_team_name'] . '</td>
+            										        <td>' . $kodate . '</td>
+                                                            <td><select class="form-control" name="res-' . $rs['lms_match_id'] . '" id="res-' . $rs['lms_match_id'] . '">
+                                                                    <option ' . $wresult . ' value="w">Win</option>
+                                                                    <option ' . $dresult . ' value="d">Draw</option>
+                                                                    <option ' . $lresult . ' value="l">Lose</option>
+                                                                    <option ' . $presult . ' value="p">Postponed</option>
+                                                                    <option ' . $nresult . ' value="">No result</option>
+                                                                </select></tr>';
                 }
                 $html .= '
-									</tbody>
-								</table>
-</div>
-										                    <div class="form-group">
-										                        <input type= "hidden" name= "weekid" value="' . $_SESSION['matchweek'] . '" />
-										                    </div>									                    	
-										                    <div class="form-group">
-										                    	<br>
-										                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
-										                    </div>
-										                </form>
-										            </div>
-										        </div>
-										        <div class="row">
-													<br>
-													<div class="col-xs-6">
-														<a href="' . $myPath . 'struct/week/weekend-admin.php" class="btn btn-primary btn-lg" role="button">Back</a>
-														<br>
-													</div>
-												</div>
-									      		<br><br><br><br>
-									    	</div>
-									    </section>
-									</body>
-								</html>
+                									</tbody>
+                								</table>
+                                            </div>
+						                    <div class="form-group">
+						                        <input type= "hidden" name= "weekid" value="' . $_SESSION['matchweek'] . '" />
+						                    </div>									                    	
+						                    <div class="form-group">
+						                    	<br>
+						                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+						                    </div>
+						                </form>
+						            </div>
+						        </div>
+						        <div class="row">
+									<br>
+									<div class="col-xs-6">
+										<a href="' . $myPath . 'struct/week/weekend-admin.php" class="btn btn-primary btn-lg" role="button">Back</a>
+										<br>
+									</div>
+								</div>
+					      		<br><br><br><br>
+					    	</div>
+					    </section>
+					</body>
+				</html>
 									            ';
             } else {
                 $html .= "<script>

@@ -7,7 +7,6 @@ $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 require_once $myPath . 'struct/player/player-lookup.php';
 
-
 function createtemppassword($email)
 {
     $newpwd = generate_password();
@@ -26,7 +25,8 @@ function createtemppassword($email)
     }
 }
 
-function gettemppasswordcount($playerid){
+function gettemppasswordcount($playerid)
+{
     global $mypdo;
     $temppwdsql = "SELECT * FROM lms_player_temp_password WHERE lms_player_id = :id LIMIT 1";
     $temppwdquery = $mypdo->prepare($temppwdsql);
@@ -34,7 +34,8 @@ function gettemppasswordcount($playerid){
         ':id' => $playerid
     ));
 
-    return $temppwdquery->rowCount();;
+    return $temppwdquery->rowCount();
+    ;
 }
 
 function inserttemppassword($playerid, $hash)
@@ -49,8 +50,9 @@ function inserttemppassword($playerid, $hash)
 
 function sendpasswordemail($player, $newpwd)
 {
-    
-    sendemailusingtemplate('temppassword', $player['lms_player_id'], '', array($newpwd), false);
+    sendemailusingtemplate('temppassword', $player['lms_player_id'], '', array(
+        $newpwd
+    ), false);
 }
 
 ?>

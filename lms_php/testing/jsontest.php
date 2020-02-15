@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <html>
             <head>
             
-            <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
             <meta charset="UTF-8">
             
             <title>Email Template</title>

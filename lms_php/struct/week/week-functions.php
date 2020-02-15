@@ -6,7 +6,8 @@
 $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 
-function get_week_state($weekno) {
+function get_week_state($weekno)
+{
     global $mypdo;
     $weekstate = 0;
     $lookupsql = "SELECT lms_week_state FROM lms_week WHERE lms_week_no = :weekno LIMIT 1";
@@ -22,7 +23,8 @@ function get_week_state($weekno) {
     return $weekstate;
 }
 
-function set_week_state($weekid, $newstate) {
+function set_week_state($weekid, $newstate)
+{
     global $mypdo;
     $upsql = "UPDATE lms_week SET lms_week_state = :newstate WHERE lms_week_no = :weekid";
     $upquery = $mypdo->prepare($upsql);
@@ -32,6 +34,5 @@ function set_week_state($weekid, $newstate) {
     $upcount = $upquery->rowCount();
     return $upcount;
 }
-
 
 ?>

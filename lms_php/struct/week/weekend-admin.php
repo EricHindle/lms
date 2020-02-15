@@ -13,17 +13,12 @@ sec_session_start();
 if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $formKey = new formKey();
     $key = $formKey->outputKey();
-
-    $remainingweeks = get_remaining_weeks(true);
-
     $html = "";
-
     echo '
 		<!doctype html>
 		<html>
 			<head>
-				
-			    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 			    <meta charset="UTF-8">
 			    <title>Game Weeks</title>
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -46,7 +41,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			    <br><br>
 			        <div class="container">
 			        	<div class="row">
-			                <div class="col-md-11">
+			                <div class="col-md-8">
 			                    <h1><strong>Week End Admin for period ' . $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'] . '</strong></h1>
 			                </div>
 							<div class="col-md-1">
@@ -55,7 +50,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			      		</div>
 			        	<div class = "row">';
 
-    $html .= '		    <div class="col-sm-4 col-sm-offset-1">
+    $html .= '		    <div class="col-sm-5 col-md-4 col-md-offset-1 col-sm-offset-1">
                             <div class="tile red">
                             	<h3 class="title" >Enter Results</h3>
 			                	    <form class="form" role="form" name ="results" method="post" action="enter-results.php">';
@@ -71,7 +66,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-4 col-sm-offset-1">
+                            <div class="col-sm-5 col-sm-offset-1 col-md-4 col-md-offset-1 ">
                                 <div class="tile orange">
                                     <h3 class="title" >Complete the week</h3>   ';
     $html .= $key;

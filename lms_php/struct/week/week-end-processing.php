@@ -15,6 +15,8 @@ require $myPath . 'struct/picks/pick-functions.php';
 require $myPath . 'struct/game/game-functions.php';
 
 sec_session_start();
+$formKey = new formKey();
+$key = $formKey->outputKey();
 $access = sanitize_int($_SESSION['retaccess']);
 if (login_check($mypdo) == true && $access > 900) {
     $weekstate = get_week_state($_SESSION['matchweek']);
@@ -24,7 +26,7 @@ if (login_check($mypdo) == true && $access > 900) {
 				<html>
 					<head>
 
-					    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+					    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 					    <meta charset="UTF-8">
 
 					    <title>Week End Processing</title>
@@ -82,10 +84,13 @@ if (login_check($mypdo) == true && $access > 900) {
                     notify_loser($playerid, $gameid);
                 } else {
                     $pickwl = 'w';
-                    notify_winner($playerid, $gameid);
+                    if ($rs['lms_match_result'] == 'p') {
+                        notify_postponed($playerid, $gameid);
+                    } else {
+                        notify_winner($playerid, $gameid);
+                    }
                 }
                 set_pick_wl($gameid, $playerid, $matchid, $pickwl);
-                set_game_player_out($gameid, $playerid);
             }
             $activeGames = get_active_games();
             foreach ($activeGames as $game) {
@@ -93,7 +98,6 @@ if (login_check($mypdo) == true && $access > 900) {
                 foreach ($activePlayers as $activePlayer) {
                     $gameid = $game['lms_game_id'];
                     $playerid = $activePlayer['lms_player_id'];
-
                     if (get_game_player_pick_count($gameid, $playerid) == 0) {
                         set_game_player_out($gameid, $playerid);
                         notify_no_pick($playerid, $gameid);

@@ -23,27 +23,13 @@ if (login_check($mypdo) == true && $access > 900) {
                 $sname = sanitize_paranoid_string($_POST['sname']);
                 $screenname = $_POST['screenname'];
                 $email = $_POST['email'];
-                if (isset($_POST['isadmin'])) {
-                    $isadmin = $_POST['isadmin'];
-                } else {
-                    $isadmin = "false";
-                }
-                if (isset($_POST['isactive'])) {
-                    $isactive = $_POST['isactive'];
-                } else {
-                    $isactive = "false";
-                }
-                               
+                $isadmin = (isset($_POST['isadmin']) ? $_POST['isadmin'] : "false");
+                $isactive = (isset($_POST['isactive']) ? $_POST['isactive'] : "false");
+
                 if ($gameid) {
                     $html = "";
-                    $myaccess = 0;
-                    if ($isadmin == "true") {
-                        $myaccess = 999;
-                    }
-                    $myactive = 0;
-                    if ($isactive == "true") {
-                        $myactive = 1;
-                    }
+                    $myaccess = ($isadmin == "true" ? 999 : 0);
+                    $myactive = ($isactive == "true" ? 1 : 0);
                     date_default_timezone_set('Europe/London');
                     $phptime = time();
                     $mysqltime = date("Y-m-d H:i:s", $phptime);
@@ -61,9 +47,9 @@ if (login_check($mypdo) == true && $access > 900) {
                     $upcount = $upduser->rowCount();
                     if ($upcount > 0) {
                         $html .= "<script>
-												alert('Details updated successfully.');
-												window.location.href='player-main.php';
-											</script>";
+										alert('Details updated successfully.');
+										window.location.href='player-main.php';
+									</script>";
                     } else {
                         $html .= "<script>
 										alert('Record not changed');

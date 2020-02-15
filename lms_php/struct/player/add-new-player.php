@@ -24,16 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $fname = sanitize_message_string($_POST['fname']);
             $sname = sanitize_message_string($_POST['sname']);
             $screenname = sanitize_message_string($_POST['screenname']);
-            if (isset($_POST['issendemail'])) {
-                $issendemail = $_POST['issendemail'];
-            } else {
-                $issendemail = false;
-            }
-
-            $sendemail = 0;
-            if ($issendemail) {
-                $sendemail = 1;
-            }
+            $issendemail = (isset($_POST['issendemail']) ? $_POST['issendemail'] : false);
+            $sendemail = ($issendemail ? 1 : 0);
             $myaccess = 0;
 
             if ($email && $password && $confirm && $fname && $sname && $screenname) {

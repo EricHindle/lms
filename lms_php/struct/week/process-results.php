@@ -43,18 +43,18 @@ if (login_check($mypdo) == true && $access > 900) {
                         $totalupdates += $upcount;
                     }
                     $html .= "<script>
-                            	alert('" . $totalupdates . " matches resulted.');
+                            	alert('" . $totalupdates . " teams resulted.');
                             	window.location.href='" . $myPath . "struct/week/weekend-admin.php';
                             </script>";
                 } else {
                     $html .= "<script>
-    								alert('There was a problem. Please check details and try again.');
+    								alert('No teams found with matches this week.');
     								window.location.href='" . $myPath . "struct/week/weekend-admin.php';
     							</script>";
                 }
             } else {
                 $html .= "<script>
-								alert('There was a problem with the weekno.');
+								alert('There was a problem with the week number');
 								window.location.href='" . $myPath . "struct/week/weekend-admin.php';
 							</script>";
             }

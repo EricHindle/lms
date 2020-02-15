@@ -18,17 +18,15 @@ if (login_check($mypdo) == true && $access > 900) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
             if (isset($_POST['weekid'])) {
-                $gameid = $_POST['weekid'];
-                if ($gameid) {
-
+                $weekid = $_POST['weekid'];
+                if ($weekid) {
                     $html = "";
                     $weeksql = "SELECT * FROM lms_week WHERE lms_week_no = :id";
                     $weekquery = $mypdo->prepare($weeksql);
                     $weekquery->execute(array(
-                        ':id' => $gameid
+                        ':id' => $weekid
                     ));
                     $weekcount = $weekquery->rowCount();
-
                     if ($weekcount > 0) {
                         $key = $formKey->outputKey();
                         $remainingweeks = $weekquery->fetch(PDO::FETCH_ASSOC);
@@ -37,7 +35,7 @@ if (login_check($mypdo) == true && $access > 900) {
 								<html>
 									<head>
 										
-									    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+									    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 									    <meta charset="UTF-8">
 									    
 									    <title>Edit Pick Period</title>
@@ -56,29 +54,32 @@ if (login_check($mypdo) == true && $access > 900) {
 									    <br><br>
 									        <div class="container">
 									        	<div class="row">
-									                <div class="col-md-8">
+									                <div class="col-md-5 col-sm-6">
 									                    <h1><strong>Edit Pick Period</strong></h1>
 									                </div>
+                        							<div class="col-md-1">
+                        								<a href="' . $myPath . 'struct/week/week-main.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
+                        							</div>
 									      		</div>
 									        	<div class = "row">';
 
-                        $html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
-									                	<form class="form-horizontal" role="form" name ="edit" method="post" action="process-edit-week.php">';
+                        $html .= '			<div class="well col-md-6 col-sm-7 textDark">
+									                	<form class="form" role="form" name ="edit" method="post" action="process-edit-week.php">';
                         $html .= $key;
                         $html .= '					<h3 class="text-center">Period Dates</h3>
 									                    	<br>
 									                    	<div class="form-group">
-																<label class="col-sm-2" for="season">Season:</label>
-																<div class="col-sm-2">
+																<label class="col-sm-2 col-md-2 col-xs-2 col-lg-2" for="season">Season:</label>
+																<div class="col-sm-2 col-md-2 col-xs-2 col-lg-2">
 																 	<p class="form-control-static" name="season" id="season">' . $remainingweeks['lms_year'] . '</p>
 																</div>
-																<label class="col-sm-2" for="period">Period:</label>
-																<div class="col-sm-2">
+																<label class="col-sm-2 col-md-2 col-xs-2 col-lg-2" for="period">Period:</label>
+																<div class="col-sm-2 col-md-2 col-xs-2 col-lg-2">
 																 	<p class="form-control-static" name="period" id="period">' . $remainingweeks['lms_week'] . '</p>
 																</div>
 
 															</div>
-
+                                                            <br>
 										                    <div class="form-group">
 										                    	
                                                                <label for="startdate">New start date:</label>
@@ -88,7 +89,7 @@ if (login_check($mypdo) == true && $access > 900) {
                                                                <label for="enddate">New end date:</label>
                     					                       <input type="text" class="form-control" id="enddate" name="enddate" value="' . date_format(date_create($remainingweeks['lms_week_end']), 'Y-m-d') . '" placeholder="yyyy-mm-dd"><br>
 
-															   <input type= "hidden" name= "id" value="' . $gameid . '" />
+															   <input type= "hidden" name= "id" value="' . $weekid . '" />
 										                    </div>
 										                    <div class="form-group">
 										                    	<br>

@@ -24,7 +24,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 		<html>
 			<head>
 				
-			    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 			    <meta charset="UTF-8">
 			    
 			    <title>Team Admin</title>
@@ -49,7 +49,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			    <br><br>
 			        <div class="container">
 			        	<div class="row">
-			                <div class="col-md-11">
+			                <div class="col-md-6 col-sm-8">
 			                    <h1><strong>Team Admin</strong></h1>
 			                </div>
 							<div class="col-md-1">
@@ -58,8 +58,8 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			      		</div>
 			        	<div class = "row">';
 
-    $html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
-			                	<form class="form-horizontal" role="form" name ="addteam" method="post" action="add-team.php">';
+    $html .= '			<div class="well col-md-3 col-sm-4  textDark">
+			                	<form class="form" role="form" name ="addteam" method="post" action="add-team.php">';
     $html .= $key;
     $html .= '					<h3 class="text-center">Add Team</h3>
 				                    <div class="form-group">
@@ -73,8 +73,8 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 				            </div>
 			            ';
 
-    $html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
-			                	<form class="form-horizontal" role="form" name ="editteam" method="post" action="edit-team.php">';
+    $html .= '			<div class="well col-md-3 col-sm-4 col-md-offset-1 col-sm-offset-1 textDark">
+			                	<form class="form" role="form" name ="editteam" method="post" action="edit-team.php">';
     $html .= $key;
     $html .= '					<h3 class="text-center">Edit Team</h3>
 				                    <div class="form-group">
@@ -94,7 +94,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 
     $html .= '		</div>
 						<div class = "row">
-				        	<div class="well col-md-7 col-md-offset-1 textDark">
+				        	<div class="well col-md-7 col-sm-9 textDark">
 				        		<h3>All Teams</h3>
 					        	<table class="table table-bordered" id="keywords">
 									<thead>
@@ -106,11 +106,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 									<tbody>
 									';
     foreach ($teamfetch as $rs) {
-        if ($rs['lms_team_active'] == 1) {
-            $active = 'Yes';
-        } else {
-            $active = 'No';
-        }
+        $active = ($rs['lms_team_active'] == 1 ? 'Yes' : 'No');
         $html .= '
 									<tr>
 										<td>' . $rs['lms_team_name'] . '</td>

@@ -20,16 +20,10 @@ if (login_check($mypdo) == true && $access > 900) {
             if (isset($_POST['id'], $_POST['teamname'])) {
                 $gameid = sanitize_int($_POST['id']);
                 $teamname = $_POST['teamname'];
-                if (isset($_POST['isactive'])) {
-                    $isactive = $_POST['isactive'];
-                } else {
-                    $isactive = "false";
-                }
 
-                $myactive = 0;
-                if ($isactive == "true") {
-                    $myactive = 1;
-                }
+                $isactive = (isset($_POST['isactive']) ? $_POST['isactive'] : "false");
+                $myactive = ($isactive == "true" ? 1 : 0);
+
                 if ($gameid && $teamname) {
                     $html = "";
 
