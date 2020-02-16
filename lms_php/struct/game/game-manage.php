@@ -91,7 +91,7 @@ if (login_check($mypdo) == true) {
                 $rowcolor = 'black';
                 break;
             case 3:
-                $rowcolor = 'limegreen';
+                $rowcolor = 'green';
                 break;
             case 4:
                 $rowcolor = 'silver';
