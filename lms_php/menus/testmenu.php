@@ -64,7 +64,15 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 901) {
 			          			</div>
 			                </div>
 			      		</div>
-
+                        <div class="row">
+			            	<div class="col-sm-4">
+			                    <div class="tile orange">
+			                    	<a href="' . $myPath . 'testing/encryptiontest.php">
+			                    		<h3 class="title" >Encryption test</h3>
+			                        </a>	
+			          			</div>
+			                </div>
+                        </div>
 			      		<div class="row">
 							<br>
 							<div class="col-xs-6">
