@@ -16,27 +16,18 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `lms_player`
+-- Table structure for table `lms_player_temp_password`
 --
 
-DROP TABLE IF EXISTS `lms_player`;
+DROP TABLE IF EXISTS `lms_player_temp_password`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `lms_player` (
-  `lms_player_id` int(11) NOT NULL AUTO_INCREMENT,
-  `lms_player_login` varchar(255) NOT NULL,
-  `lms_player_password` varchar(100) NOT NULL,
-  `lms_player_forename` varchar(45) NOT NULL DEFAULT '',
-  `lms_player_surname` varchar(45) NOT NULL DEFAULT '',
-  `lms_player_screen_name` varchar(100) NOT NULL DEFAULT '',
-  `lms_player_email` varchar(250) NOT NULL DEFAULT '',
-  `lms_access` int(11) NOT NULL DEFAULT '0',
-  `lms_active` tinyint(1) DEFAULT '1',
-  `lms_player_send_email` tinyint(1) DEFAULT '1',
-  `lms_player_created` datetime DEFAULT NULL,
+CREATE TABLE `lms_player_temp_password` (
+  `lms_player_id` int(11) NOT NULL,
+  `lms_player_temp_password` varchar(100) NOT NULL,
   PRIMARY KEY (`lms_player_id`),
-  UNIQUE KEY `lms_player_id_UNIQUE` (`lms_player_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+  UNIQUE KEY `idlms_player_id_UNIQUE` (`lms_player_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -48,4 +39,4 @@ CREATE TABLE `lms_player` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-30 16:21:48
+-- Dump completed on 2020-02-16 17:11:10
