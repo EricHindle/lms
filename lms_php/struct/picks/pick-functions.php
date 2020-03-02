@@ -102,7 +102,7 @@ function get_game_player_pick_count($gameid, $playerid)
 function set_pick_wl($gameid, $playerid, $matchid, $wl)
 {
     global $mypdo;
-    $updgamesql = "UPDATE lms_pick SET lms_pick_wl = :wl WHERE lms_pick_game_id = :gameid, lms_pick_player_id = :playerid, lms_pick_match_id = :matchid";
+    $updgamesql = "UPDATE lms_pick SET lms_pick_wl = :wl WHERE lms_pick_game_id = :gameid and lms_pick_player_id = :playerid and lms_pick_match_id = :matchid";
     $updgamequery = $mypdo->prepare($updgamesql);
     $updgamequery->bindParam(':gameid', $gameid, PDO::PARAM_INT);
     $updgamequery->bindParam(':playerid', $playerid, PDO::PARAM_INT);
