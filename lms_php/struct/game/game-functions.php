@@ -4,8 +4,9 @@
  * Copyright (C) 2020 Eric Hindle. All rights reserved.
  */
 $myPath = '../../';
-require $myPath . 'includes/db_connect.php';
+require_once $myPath . 'includes/db_connect.php';
 require_once $myPath . 'struct/picks/pick-functions.php';
+require_once $myPath . 'struct/email/email-functions.php';
 
 date_default_timezone_set('Europe/London');
 
@@ -201,6 +202,15 @@ function activateGames($nextgameweek)
     $updgamequery->execute();
     $upCount = $updgamequery->rowCount();
     return $upCount;
+}
+
+function sendcancelemailsforgame($gameid)
+{
+    $gamelist = get_still_active_game_players($gameid);
+    foreach ($gamelist as $player) {
+        $playerid = $player['lms_player_id'];
+        sendemailusingtemplate('cancel', $playerid, $gameid, '', true);
+    }
 }
 
 ?>

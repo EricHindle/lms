@@ -5,9 +5,10 @@
  */
 $myPath = '../../';
 
-require $myPath . 'includes/db_connect.php';
+require_once $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
+require $myPath . 'struct/game/game-functions.php';
 
 sec_session_start();
 $formKey = new formKey();
@@ -44,6 +45,9 @@ if (login_check($mypdo) == true) {
                         $upquery->execute();
                         $upcount = $upquery->rowCount();
                         if ($upcount > 0) {
+                            if ($iscancel == "true") {
+                                sendcancelemailsforgame($gameid);
+                            }
                             $html .= "<script>
 										alert('Details updated successfully.');
 										window.location.href='game-manage.php';

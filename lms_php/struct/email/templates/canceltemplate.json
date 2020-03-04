@@ -1,0 +1,9 @@
+{
+"toAddress": "$email",
+"toName": "$name",
+"fromAddress": "$adminAddress",
+"fromName": "$adminName",
+"bcc": "$bcc",
+"subject": "Last Man Live game cancelled",
+"body": "The Last Man Live game called $gameName has been cancelled."
+}

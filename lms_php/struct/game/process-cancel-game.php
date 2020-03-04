@@ -5,9 +5,10 @@
  */
 $myPath = '../../';
 
-require $myPath . 'includes/db_connect.php';
+require_once $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
+require $myPath . 'struct/game/game-functions.php';
 
 sec_session_start();
 $formKey = new formKey();
@@ -38,6 +39,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                         $upquery->execute();
                         $upcount = $upquery->rowCount();
                         if ($upcount > 0) {
+                            sendcancelemailsforgame($gameid);
                             $html .= "<script>
 											alert('Game cancelled successfully.');
 											window.location.href='game-admin.php';
