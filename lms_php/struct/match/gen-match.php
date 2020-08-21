@@ -41,7 +41,11 @@ if (login_check($mypdo) == true && $access > 900) {
                         $week = $remainingweeks['lms_week'];
                         $year = $remainingweeks['lms_year'];
                         $md = date_create($remainingweeks['lms_week_start']);
-                        $md->modify('next saturday');
+                        if (isset($_POST['midweekmatches'])) {
+                            $md->modify('next tuesday');
+                        } else {
+                            $md->modify('next saturday');
+                        }
                         $kodate = date_format($md, 'Y-m-d');
                     }
 
@@ -100,7 +104,7 @@ if (login_check($mypdo) == true && $access > 900) {
                         $matchcount = 0;
                         foreach ($teamfetch as $rs) {
                             
-                            if (isset($_POST['allavailable'])) {
+                            if (isset($_POST['midweekmatches'])) {
                             } else {
                                 $matchsql = "SELECT * FROM lms_match WHERE lms_match_weekno = :id and lms_match_team = :team LIMIT 1";
                                 $matchquery = $mypdo->prepare($matchsql);
@@ -124,9 +128,9 @@ if (login_check($mypdo) == true && $access > 900) {
                                 									</tbody>
                                 								</table>
                                                             </div>';
-                        if ($availableteams == 0) {
+                        if ($availableteams < $teamcount) {
 						        $html .= '			                    <div class="form-group">
-                                                            Add more matches for this week&nbsp;
+                                                <label for="addmatches">&nbsp; Add mid-week matches for this week &nbsp;&nbsp;</label>
 										                        <input type= "checkbox" name= "addmatches" id="addmatches" value="false" />
 										                    </div>	';
                         }

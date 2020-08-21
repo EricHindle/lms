@@ -47,7 +47,7 @@ if (login_check($mypdo) == true && $access > 900) {
                                 $matchquery = $mypdo->prepare($matchsql);
                                 $matchquery->bindParam(':kodate', $postmatchdate);
                                 $matchquery->bindParam(':team', $rs['lms_team_id']);
-                                
+
                                 $matchquery->execute();
                                 $matchcount = $matchquery->rowCount();
                                 if ($matchcount == 0) {
@@ -71,21 +71,21 @@ if (login_check($mypdo) == true && $access > 900) {
                     $formKey = new formKey();
                     $key = $formKey->outputKey();
                     echo '
-		<!doctype html>
-		<html>
-			<head>
- 			</head>
-			<body>
-              <form id ="genmore" method="post" action="gen-match.php">';
- $html .= $key;
- $html .= '         <input type= "hidden" name= "weekid" value="' . $weekid . '" />
-                    <input type= "hidden" name= "allavailable" value="true" />
-			 </form>
-                <script type="text/javascript">
-                    document.getElementById("genmore").submit();
-                </script>
-			</body>
-		</html>';
+                    		<!doctype html>
+                    		<html>
+                    			<head>
+                     			</head>
+                    			<body>
+                                  <form id ="genmore" method="post" action="gen-match.php">';
+                    $html .= $key;
+                    $html .= '         <input type= "hidden" name= "weekid" value="' . $weekid . '" />
+                                       <input type= "hidden" name= "midweekmatches" value="true" />
+                    			 </form>
+                                    <script type="text/javascript">
+                                        document.getElementById("genmore").submit();
+                                    </script>
+                    			</body>
+                    		</html>';
                 }
             } else {
                 $html .= "<script>
