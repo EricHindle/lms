@@ -96,27 +96,41 @@ if (login_check($mypdo) == true && $access > 900) {
                                 									</thead>
                                 									<tbody>
                                 									';
-
+                        $availableteams = 0;
+                        $matchcount = 0;
                         foreach ($teamfetch as $rs) {
-                            $matchsql = "SELECT * FROM lms_match WHERE lms_match_weekno = :id and lms_match_team = :team LIMIT 1";
-                            $matchquery = $mypdo->prepare($matchsql);
-                            $matchquery->bindParam(':id', $gameid);
-                            $matchquery->bindParam(':team', $rs['lms_team_id']);
-                            $matchquery->execute();
-                            $matchcount = $matchquery->rowCount();
+                            
+                            if (isset($_POST['allavailable'])) {
+                            } else {
+                                $matchsql = "SELECT * FROM lms_match WHERE lms_match_weekno = :id and lms_match_team = :team LIMIT 1";
+                                $matchquery = $mypdo->prepare($matchsql);
+                                $matchquery->bindParam(':id', $gameid);
+                                $matchquery->bindParam(':team', $rs['lms_team_id']);
+                                $matchquery->execute();
+                                $matchcount = $matchquery->rowCount();
+                            }
+                            
                             if ($matchcount == 0) {
+                                $availableteams += 1;
                                 $html .= '
-                                    									<tr>
-                                    										<td><input type="checkbox" style="margin-left:20px;" name="add-' . $rs['lms_team_id'] . '" id="add-' . $rs['lms_team_id'] . '" value="true" ></td>
-                                                                            <td>' . $rs['lms_team_name'] . '</td>
-                                    										<td><input type="text" class="form-control" id="mdt-' . $rs['lms_team_id'] . '" name="mdt-' . $rs['lms_team_id'] . '" value="' . $kodate . '" placeholder="yyyy-mm-dd"></td>
-                                    									</tr>';
+    									<tr>
+    										<td><input type="checkbox" style="margin-left:20px;" name="add-' . $rs['lms_team_id'] . '" id="add-' . $rs['lms_team_id'] . '" value="true" ></td>
+                                            <td>' . $rs['lms_team_name'] . '</td>
+    										<td><input type="text" class="form-control" id="mdt-' . $rs['lms_team_id'] . '" name="mdt-' . $rs['lms_team_id'] . '" value="' . $kodate . '" placeholder="yyyy-mm-dd"></td>
+    									</tr>';
                             }
                         }
                         $html .= '
                                 									</tbody>
                                 								</table>
-                                                            </div>
+                                                            </div>';
+                        if ($availableteams == 0) {
+						        $html .= '			                    <div class="form-group">
+                                                            Add more matches for this week&nbsp;
+										                        <input type= "checkbox" name= "addmatches" id="addmatches" value="false" />
+										                    </div>	';
+                        }
+                        $html .= '
 										                    <div class="form-group">
 										                        <input type= "hidden" name= "weekid" value="' . $gameid . '" />
 										                    </div>									                    	
