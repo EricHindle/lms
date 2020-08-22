@@ -107,15 +107,23 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			          			</div>
 			                </div>
 			            	<div class="col-sm-4">
-			                    <div class="tile purple">
-			                    	<a href="' . $myPath . 'struct/match/match-main.php">
-			                    		<h3 class="title" >Match</h3>
-			                            <p>Match Management</p>
+			                    <div class="tile blue">
+			                    	<a href="' . $myPath . 'struct/league/league-main.php">
+			                    		<h3 class="title" >Leagues</h3>
+			                            <p>League Management</p>
 			                        </a>	
 			          			</div>
 			                </div>
 			      		</div>
 			      		<div class="row">
+                            <div class="col-sm-4">
+    		                    <div class="tile purple">
+    		                    	<a href="' . $myPath . 'struct/match/match-main.php">
+    		                    		<h3 class="title" >Match</h3>
+    		                            <p>Match Management</p>
+    		                        </a>	
+    		          			</div>
+                            </div>
 			            	<div class="col-sm-4">
 			                    <div class="tile grey">
 			                    	<a href="' . $myPath . 'struct/info/info-main.php">

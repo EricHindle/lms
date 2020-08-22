@@ -12,12 +12,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $formKey = new formKey();
     $key = $formKey->outputKey();
 
-    $teamsql = "SELECT lms_team_id, lms_team_name, lms_team_active FROM lms_team ORDER BY lms_team_name ASC";
-    $teamquery = $mypdo->prepare($teamsql);
-    $teamquery->execute();
-    $teamfetch = $teamquery->fetchAll(PDO::FETCH_ASSOC);
-
-    $leaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr FROM lms_league ORDER BY lms_league_id ASC";
+    $leaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr, lms_league_supported FROM lms_league ORDER BY lms_league_id ASC";
     $leaguequery = $mypdo->prepare($leaguesql);
     $leaguequery->execute();
     $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
@@ -32,7 +27,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 			    <meta charset="UTF-8">
 			    
-			    <title>Team Admin</title>
+			    <title>League Admin</title>
 			    
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
 			    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
@@ -55,7 +50,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			        <div class="container">
 			        	<div class="row">
 			                <div class="col-md-6 col-sm-8">
-			                    <h1><strong>Team Admin</strong></h1>
+			                    <h1><strong>League Admin</strong></h1>
 			                </div>
 							<div class="col-md-1">
 								<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
@@ -64,21 +59,17 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			        	<div class = "row">';
 
     $html .= '			<div class="well col-md-3 col-sm-4  textDark">
-			                	<form class="form" role="form" name ="addteam" method="post" action="add-team.php">';
+			                	<form class="form" role="form" name ="addleague" method="post" action="add-league.php">';
     $html .= $key;
-    $html .= '					<h3 class="text-center">Add Team</h3>
+    $html .= '					<h3 class="text-center">Add League</h3>
 				                    <div class="form-group">
-				                    	<label for="teamname">Team Name:</label>
-					                    <input type="text" class="form-control" id="teamname" name="teamname" placeholder="Team name" />
+				                    	<label for="leaguename">League Name:</label>
+					                    <input type="text" class="form-control" id="leaguename" name="leaguename" placeholder="League name" />
 				                    </div>
-					                <label for="leagueid">League</label>
-				                    <div class="form-group" >
-			                            <select class="form-control col-md-6 col-sm-6" style="width:70%" id="leagueid" name="leagueid">';
-    foreach ($leaguefetch as $myLeague) {
-        $html .= '                        <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
-    }
-    $html .= '	                        </select></br></br>
-                                    </div>
+					                <div class="form-group">
+				                    	<label for="leagueabbr">Abbreviation:</label>
+					                    <input type="text" class="form-control" id="leagueabbr" name="leagueabbr" placeholder="Abbr" />
+				                    </div>
 				                    <div class="form-group">
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
 				                    </div>
@@ -87,14 +78,14 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			            ';
 
     $html .= '			<div class="well col-md-3 col-sm-4 col-md-offset-1 col-sm-offset-1 textDark">
-			                	<form class="form" role="form" name ="editteam" method="post" action="edit-team.php">';
+			                	<form class="form" role="form" name ="editleague" method="post" action="edit-league.php">';
     $html .= $key;
-    $html .= '					<h3 class="text-center">Edit Team</h3>
+    $html .= '					<h3 class="text-center">Edit League</h3>
 				                    <div class="form-group">
-			                        	<label for="user">Choose Team:</label>
-			                            <select class="form-control" id="team" name="team">';
-    foreach ($teamfetch as $myTeam) {
-        $html .= '<option value="' . $myTeam['lms_team_id'] . '">' . $myTeam['lms_team_name'] . '</option>';
+			                        	<label for="user">Choose League:</label>
+			                            <select class="form-control" id="league" name="league">';
+    foreach ($leaguefetch as $myLeague) {
+        $html .= '<option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
     }
     $html .= '	                    </select>
 				                    </div>
@@ -108,22 +99,24 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $html .= '		</div>
 						<div class = "row">
 				        	<div class="well col-md-7 col-sm-9 textDark">
-				        		<h3>All Teams</h3>
+				        		<h3>All Leagues</h3>
 					        	<table class="table table-bordered" id="keywords">
 									<thead>
 									<tr class="info">
 										<th>Name</th>
-										<th>Active</th>
+                                        <th>Abbr</th>
+										<th>Supported</th>
 									</tr>
 									</thead>
 									<tbody>
 									';
-    foreach ($teamfetch as $rs) {
-        $active = ($rs['lms_team_active'] == 1 ? 'Yes' : 'No');
+    foreach ($leaguefetch as $rs) {
+        $supported = ($rs['lms_league_supported'] == 1 ? 'Yes' : 'No');
         $html .= '
 									<tr>
-										<td>' . $rs['lms_team_name'] . '</td>
-										<td>' . $active . '</td>
+										<td>' . $rs['lms_league_name'] . '</td>
+                                        <td>' . $rs['lms_league_abbr'] . '</td>
+										<td>' . $supported . '</td>
 									</tr>';
     }
     $html .= '

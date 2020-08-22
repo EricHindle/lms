@@ -30,6 +30,30 @@ if (login_check($mypdo) == true && $access > 900) {
                     $teamcount = $teamquery->rowCount();
 
                     if ($teamcount > 0) {
+                        $leaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr FROM lms_league_team 
+                                        JOIN lms_league ON lms_league_team_league_id = lms_league_id 
+                                        WHERE lms_league_team_team_id = :teamid
+                                        ORDER BY lms_league_id ASC";
+                        $leaguequery = $mypdo->prepare($leaguesql);
+                        $leaguequery->execute(array(
+                            ':teamid' => $gameid
+                        ));
+                        $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
+                        
+                        $allleaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr FROM lms_league
+                                            WHERE lms_league_id NOT IN 
+                                                (SELECT lms_league_team_league_id from lms_league_team where lms_league_team_team_id = :teamid)
+                                            ORDER BY lms_league_id ASC";
+                        $allleaguequery = $mypdo->prepare($allleaguesql);
+                        $allleaguequery->execute(array(
+                            ':teamid' => $gameid
+                        ));
+                        $allleaguefetch = $allleaguequery->fetchAll(PDO::FETCH_ASSOC);
+                        
+                        
+                        
+                        
+                        
                         $key = $formKey->outputKey();
                         $teamfetch = $teamquery->fetch(PDO::FETCH_ASSOC);
                         $isactive = "";
@@ -97,6 +121,36 @@ if (login_check($mypdo) == true && $access > 900) {
                                                                <label for="isactive">&nbsp is Active</label>
 															   <input type= "hidden" name= "id" value="' . $gameid . '" />
 										                    </div>
+					        	<table class="table table-bordered" id="keywords">
+									<thead>
+									<tr class="info">
+										<th>Leagues</th>
+									</tr>
+									</thead>
+									<tbody>
+									';
+    foreach ($leaguefetch as $rs) {
+        $html .= '
+									<tr>
+										<td>' . $rs['lms_league_name'] . '</td>
+									</tr>';
+    }
+    $html .= '
+									</tbody>
+								</table>
+                                <div class="form-group">
+                                      <label for="addleague">&nbsp; Add League &nbsp;&nbsp;</label>
+									   <input type= "checkbox" name= "addleague" id="addleague" value="true" />
+								</div>	
+				                    <div class="form-group" >
+			                            <select class="form-control col-md-6 col-sm-6" style="width:70%" id="leagueid" name="leagueid">';
+    foreach ($allleaguefetch as $myLeague) {
+        $html .= '                        <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
+    }
+    $html .= '	                        </select></br></br>
+                                    </div>
+
+
 										                    <div class="form-group">
 										                    	<br>
 										                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">

@@ -17,8 +17,9 @@ if (login_check($mypdo) == true && $access > 900) {
         if (! isset($_POST['form_key']) || ! $formKey->validate()) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
-            if (isset($_POST['teamname'])) {
+            if (isset($_POST['teamname'], $_POST['leagueid'])) {
                 $teamname = sanitize_message_string($_POST['teamname']);
+                $leagueId = $_POST['leagueid'];
                 if ($teamname) {
                     $html = "";
                     $cusql = "SELECT lms_team_id FROM lms_team WHERE lms_team_name = :teamname LIMIT 1";
@@ -33,7 +34,6 @@ if (login_check($mypdo) == true && $access > 900) {
 										window.location.href='team-main.php';
 									</script>";
                     } else {
-
                         date_default_timezone_set('Europe/London');
                         $phptime = time();
                         $mysqltime = date("Y-m-d H:i:s", $phptime);
@@ -42,7 +42,19 @@ if (login_check($mypdo) == true && $access > 900) {
                         $stmtaddteam->execute(array(
                             ':teamname' => $teamname
                         ));
+                        $stmt = $mypdo->query("SELECT LAST_INSERT_ID()");
+                        $teamid = $stmt->fetchColumn();
                         $added = $stmtaddteam->rowCount();
+                        if ($added == 1) {
+                            $sqladdteamleague = "INSERT INTO lms_league_team (lms_league_team_league_id, lms_league_team_team_id) VALUES (:leagueid, :teamid)";
+                            $sqladdteamleague = $mypdo->prepare($sqladdteamleague);
+                            $sqladdteamleague->execute(array(
+                                ':teamid' => $teamid,
+                                ':leagueid' => $leagueId
+                            ));
+                            $leagueadded = $stmtaddteam->rowCount();
+                        }
+
                         $html .= "<script>
 											alert('" . $added . " teams added.');
 											window.location.href='team-main.php';
