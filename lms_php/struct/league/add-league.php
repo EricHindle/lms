@@ -20,7 +20,7 @@ if (login_check($mypdo) == true && $access > 900) {
             if (isset($_POST['leaguename'], $_POST['leagueabbr'])) {
                 $leaguename = sanitize_message_string($_POST['leaguename']);
                 $leagueabbr = $_POST['leagueabbr'];
-                if ($leaguename) {
+                if ($leaguename && $leagueabbr && strlen($leagueabbr) < 5) {
                     $html = "";
                     $cusql = "SELECT lms_league_id FROM lms_league WHERE lms_league_name = :leaguename LIMIT 1";
                     $cuquery = $mypdo->prepare($cusql);

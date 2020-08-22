@@ -24,7 +24,7 @@ if (login_check($mypdo) == true && $access > 900) {
                 $issupported = (isset($_POST['issupported']) ? $_POST['issupported'] : "false");
                 $mysupported = ($issupported == "true" ? 1 : 0);
 
-                if ($leagueid && $leaguename && $leagueabbr) {
+                if ($leagueid && $leaguename && $leagueabbr && strlen($leagueabbr) < 5) {
                     $html = "";
 
                     $leaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr, lms_league_supported FROM lms_league WHERE lms_league_id = :id LIMIT 1";
