@@ -39,9 +39,10 @@ if (login_check($mypdo) == true && $access > 900) {
                             ':teamid' => $gameid
                         ));
                         $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
-                        
+
                         $allleaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr FROM lms_league
-                                            WHERE lms_league_id NOT IN 
+                                            WHERE lms_league_supported = 1 
+                                                AND lms_league_id NOT IN 
                                                 (SELECT lms_league_team_league_id from lms_league_team where lms_league_team_team_id = :teamid)
                                             ORDER BY lms_league_id ASC";
                         $allleaguequery = $mypdo->prepare($allleaguesql);
@@ -49,11 +50,7 @@ if (login_check($mypdo) == true && $access > 900) {
                             ':teamid' => $gameid
                         ));
                         $allleaguefetch = $allleaguequery->fetchAll(PDO::FETCH_ASSOC);
-                        
-                        
-                        
-                        
-                        
+
                         $key = $formKey->outputKey();
                         $teamfetch = $teamquery->fetch(PDO::FETCH_ASSOC);
                         $isactive = "";
@@ -125,33 +122,36 @@ if (login_check($mypdo) == true && $access > 900) {
 									<thead>
 									<tr class="info">
 										<th>Leagues</th>
+                                        <th>Remove</th>
 									</tr>
 									</thead>
 									<tbody>
 									';
-    foreach ($leaguefetch as $rs) {
-        $html .= '
+                        foreach ($leaguefetch as $rs) {
+                            $html .= '
 									<tr>
 										<td>' . $rs['lms_league_name'] . '</td>
+                                        <td><input type="checkbox" style="margin-left:20px;" name="rmv-' . $rs['lms_league_id'] . '" id="rmv-' . $rs['lms_league_id'] . '" value="true" ></td>
 									</tr>';
-    }
-    $html .= '
+                        }
+                        $html .= '
 									</tbody>
-								</table>
-                                <div class="form-group">
+								</table>';
+                        if (! empty($allleaguefetch)) {
+                            $html .= '                         <div class="form-group">
                                       <label for="addleague">&nbsp; Add League &nbsp;&nbsp;</label>
 									   <input type= "checkbox" name= "addleague" id="addleague" value="true" />
 								</div>	
 				                    <div class="form-group" >
 			                            <select class="form-control col-md-6 col-sm-6" style="width:70%" id="leagueid" name="leagueid">';
-    foreach ($allleaguefetch as $myLeague) {
-        $html .= '                        <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
-    }
-    $html .= '	                        </select></br></br>
-                                    </div>
+                            foreach ($allleaguefetch as $myLeague) {
+                                $html .= '                        <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
+                            }
+                            $html .= '	                        </select></br></br>
+                                    </div>';
+                        }
 
-
-										                    <div class="form-group">
+                        $html .= '								                    <div class="form-group">
 										                    	<br>
 										                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
 										                    </div>

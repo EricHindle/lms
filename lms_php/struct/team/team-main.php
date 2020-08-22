@@ -17,7 +17,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $teamquery->execute();
     $teamfetch = $teamquery->fetchAll(PDO::FETCH_ASSOC);
 
-    $leaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr FROM lms_league ORDER BY lms_league_id ASC";
+    $leaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr FROM lms_league WHERE lms_league_supported = 1 ORDER BY lms_league_id ASC";
     $leaguequery = $mypdo->prepare($leaguesql);
     $leaguequery->execute();
     $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);

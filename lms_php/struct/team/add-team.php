@@ -52,7 +52,7 @@ if (login_check($mypdo) == true && $access > 900) {
                                 ':teamid' => $teamid,
                                 ':leagueid' => $leagueId
                             ));
-                            $leagueadded = $stmtaddteam->rowCount();
+                            $leagueadded = $sqladdteamleague->rowCount();
                         }
 
                         $html .= "<script>
