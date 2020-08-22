@@ -17,9 +17,10 @@ if (login_check($mypdo) == true) {
         if (! isset($_POST['form_key']) || ! $formKey->validate()) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
-            if (isset($_POST['gamename'], $_POST['gamestartweek'])) {
+            if (isset($_POST['gamename'], $_POST['gamestartweek'], $_POST['leagueid'])) {
                 $gamename = $_POST['gamename'];
                 $gamestartweek = $_POST['gamestartweek'];
+                $leagueId = $_POST['leagueid'];
                 if ($gamename) {
                     $html = "";
                     $cusql = "SELECT lms_game_id FROM lms_game WHERE lms_game_name = :gamename LIMIT 1";
@@ -41,13 +42,19 @@ if (login_check($mypdo) == true) {
                         $stmtaddgame = $mypdo->prepare($sqladdgame);
                         $stmtaddgame->bindParam(":startwkno", $gamestartweek);
                         $stmtaddgame->bindParam(":gamename", $gamename);
-                        $stmtaddgame->bindParam(":playerid", $playerid , PDO::PARAM_INT);
+                        $stmtaddgame->bindParam(":playerid", $playerid, PDO::PARAM_INT);
                         $stmtaddgame->bindParam(":gamecode", $gamecode);
                         $stmtaddgame->execute();
                         $added = $stmtaddgame->rowCount();
                         $gameid = $mypdo->lastInsertId();
                         if ($added == 1) {
-
+                            $sqladdgameleague = "INSERT INTO lms_game_league (lms_game_league_game_id, lms_game_league_league_id) VALUES (:gameid, :leagueid)";
+                            $stmtaddgameleague = $mypdo->prepare($sqladdgameleague);
+                            $stmtaddgameleague->execute(array(
+                                ':gameid' => $gameid,
+                                ':leagueid' => $leagueId
+                            ));
+                            $leagueadded = $stmtaddgameleague->rowCount();
                             add_player_to_game($gameid, $_SESSION['user_id']);
                             sendemailusingtemplate('newgame', $playerid, $gameid, '', true);
                             $html .= "<script>              

@@ -18,14 +18,14 @@ if (login_check($mypdo) == true && $access > 900) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
             if (isset($_POST['team'])) {
-                $gameid = sanitize_int($_POST['team']);
-                if ($gameid) {
+                $teamid = sanitize_int($_POST['team']);
+                if ($teamid) {
 
                     $html = "";
                     $teamsql = "SELECT lms_team_id, lms_team_name, lms_team_active FROM lms_team WHERE lms_team_id = :id";
                     $teamquery = $mypdo->prepare($teamsql);
                     $teamquery->execute(array(
-                        ':id' => $gameid
+                        ':id' => $teamid
                     ));
                     $teamcount = $teamquery->rowCount();
 
@@ -36,7 +36,7 @@ if (login_check($mypdo) == true && $access > 900) {
                                         ORDER BY lms_league_id ASC";
                         $leaguequery = $mypdo->prepare($leaguesql);
                         $leaguequery->execute(array(
-                            ':teamid' => $gameid
+                            ':teamid' => $teamid
                         ));
                         $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
 
@@ -47,7 +47,7 @@ if (login_check($mypdo) == true && $access > 900) {
                                             ORDER BY lms_league_id ASC";
                         $allleaguequery = $mypdo->prepare($allleaguesql);
                         $allleaguequery->execute(array(
-                            ':teamid' => $gameid
+                            ':teamid' => $teamid
                         ));
                         $allleaguefetch = $allleaguequery->fetchAll(PDO::FETCH_ASSOC);
 
@@ -116,7 +116,7 @@ if (login_check($mypdo) == true && $access > 900) {
                     					                       <input type="text" class="form-control" id="teamname" name="teamname" value="' . $teamfetch['lms_team_name'] . '"><br>
                                                                <input type="checkbox" style="margin-left:20px;" name="isactive" id="isactive" value="true" ' . $isactive . ' >
                                                                <label for="isactive">&nbsp is Active</label>
-															   <input type= "hidden" name= "id" value="' . $gameid . '" />
+															   <input type= "hidden" name= "id" value="' . $teamid . '" />
 										                    </div>
 					        	<table class="table table-bordered" id="keywords">
 									<thead>

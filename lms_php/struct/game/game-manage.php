@@ -18,15 +18,12 @@ if (login_check($mypdo) == true) {
     $gamequery->execute();
     $gamefetch = $gamequery->fetchAll(PDO::FETCH_ASSOC);
 
+    $leaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr FROM lms_league WHERE lms_league_supported = 1 ORDER BY lms_league_id ASC";
+    $leaguequery = $mypdo->prepare($leaguesql);
+    $leaguequery->execute();
+    $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
+    
     $remainingweeks = get_remaining_weeks(false);
-
-    /*
-     * $mygamessql = "SELECT lms_game_id, lms_game_id, lms_game_name FROM v_lms_player_games WHERE lms_player_id = :player and ORDER BY lms_game_name";
-     * $mygamesquery = $mypdo->prepare($mygamessql);
-     * $mygamesquery->bindParam(":player", $_SESSION['user_id'], PDO::PARAM_INT);
-     * $mygamesquery->execute();
-     * $mygamesfetch = $mygamesquery->fetchAll(PDO::FETCH_ASSOC);
-     */
 
     $html = "";
     $key = $formKey->outputKey();
@@ -154,6 +151,14 @@ if (login_check($mypdo) == true) {
     }
     $html .= '	                               </select>
 										 </div>
+				                         <div class="form-group" style="margin-left:16px;margin-right:16px">
+					                           <label for="leagueid">League</label>
+			                                   <select class="form-control id="leagueid" name="leagueid">';
+    foreach ($leaguefetch as $myLeague) {
+        $html .= '                               <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
+    }
+    $html .= '	                               </select>
+                                         </div>
         				                 <div class="form-group" style="margin-left:16px;margin-right:16px">
                                                 <br>
 				                                <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">

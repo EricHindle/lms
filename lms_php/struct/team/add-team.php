@@ -47,12 +47,12 @@ if (login_check($mypdo) == true && $access > 900) {
                         $added = $stmtaddteam->rowCount();
                         if ($added == 1) {
                             $sqladdteamleague = "INSERT INTO lms_league_team (lms_league_team_league_id, lms_league_team_team_id) VALUES (:leagueid, :teamid)";
-                            $sqladdteamleague = $mypdo->prepare($sqladdteamleague);
-                            $sqladdteamleague->execute(array(
+                            $stmtaddteamleague = $mypdo->prepare($sqladdteamleague);
+                            $stmtaddteamleague->execute(array(
                                 ':teamid' => $teamid,
                                 ':leagueid' => $leagueId
                             ));
-                            $leagueadded = $sqladdteamleague->rowCount();
+                            $leagueadded = $stmtaddteamleague->rowCount();
                         }
 
                         $html .= "<script>
