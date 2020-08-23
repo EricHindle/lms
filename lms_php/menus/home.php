@@ -53,7 +53,8 @@ if (login_check($mypdo) == true) {
     $html .= '	    <div class="row">
     <div class="col-sm-3 col-md-3">
     <div class="tile red">
-    <h3 class="title" >Selections for</h3>
+    <h3 class="title" >Make a Pick for</h3>
+
     <form class="form-horizontal" role="form" name ="editpick" method="post" action="' . $myPath . 'struct/picks/pick-main.php">';
     $html .= $key;
     $html .= '
@@ -67,7 +68,7 @@ if (login_check($mypdo) == true) {
     $html .= '	                         </select>
                 </div>
                 <div class="form-group" style="margin-left:16px;margin-right:16px">
-                <br>
+                <h5 class="title" >(also view past picks)</h5>
                 <input id="submit1" name="submit" type="submit" value="Submit" class="btn btn-primary">
                 </div>
                 </form>
