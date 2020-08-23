@@ -38,7 +38,15 @@ if (login_check($mypdo) == true) {
                         $gameplayerquery->bindParam(":game", $gameid, PDO::PARAM_INT);
                         $gameplayerquery->execute();
                         $gameplayerfetch = $gameplayerquery->fetchAll(PDO::FETCH_ASSOC);
-
+                        $leaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr FROM lms_game_league
+                                        JOIN lms_league ON lms_game_league_league_id = lms_league_id
+                                        WHERE lms_game_league_game_id = :gameid
+                                        ORDER BY lms_league_id ASC";
+                        $leaguequery = $mypdo->prepare($leaguesql);
+                        $leaguequery->execute(array(
+                            ':gameid' => $gameid
+                        ));
+                        $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
                         echo '
 							<!doctype html>
 							<html>
@@ -87,6 +95,26 @@ if (login_check($mypdo) == true) {
                                                         </div>
                                                     </div>';
                         }
+
+                        $html .= '             <div class="col-sm-5, col-md-5, col-lg-5">
+                        </br>
+                        <table class="table table-bordered" id="keywords">
+                        <thead>
+                        <tr class="info">
+                        <th>Leagues</th>
+                        </tr>
+                        </thead>
+                        <tbody>';
+                        foreach ($leaguefetch as $rs) {
+                            $html .= '
+                            <tr>
+                            <td>' . $rs['lms_league_name'] . '</td>
+                                </tr>';
+                        }
+                        $html .= '  </tbody>
+                                </table>
+                                </div>';
+
                         $html .= '                  <div class="row">
                                                         <br>
                         					        	<table class="table table-bordered" id="keywords">

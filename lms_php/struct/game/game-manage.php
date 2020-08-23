@@ -22,7 +22,7 @@ if (login_check($mypdo) == true) {
     $leaguequery = $mypdo->prepare($leaguesql);
     $leaguequery->execute();
     $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
-    
+
     $remainingweeks = get_remaining_weeks(false);
 
     $html = "";
@@ -50,15 +50,90 @@ if (login_check($mypdo) == true) {
 				<section id="homeSection">
 			    <br><br>
 			        <div class="container">
+
 			            <div class="row">
 			                <div class="col-md-9">
-			                    <h1><strong>Managed Games</strong></h1>
+			                    <h1><strong>Manage My Games</strong></h1>
 			                    <br>
 			                </div>
 							<div class="col-md-1">
 								<a href="' . $myPath . 'menus/home.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
 							</div>
 			            </div>
+
+
+                       <div class="row">
+
+			                <div class="col-sm-4">
+			                    <div class="tile teal">
+                                    <h3 class="title" >Create a Game</h3>
+                                    <form class="form-horizontal" role="form" name ="addteam" method="post" action="add-game.php">';
+    $html .= $key;
+    $html .= '					         <div class="form-group" style="margin-left:16px;margin-right:16px">
+				                    	       <label for="gamename">Game Name:</label>
+					                           <input type="text" class="form-control" id="gamename" name="gamename" placeholder="Game name" />
+				                         </div>
+                                         <div class="form-group" style="margin-left:16px;margin-right:16px">
+                                               <label for="gamestartweek">Start week:</label>
+                                               <select class="form-control" id="gamestartweek" name="gamestartweek">';
+    foreach ($remainingweeks as $wk) {
+        $html .= '<option value="' . $wk['lms_week_no'] . '">' . sprintf('%02d', $wk['lms_week']) . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
+    }
+    $html .= '	                               </select>
+										 </div>
+				                         <div class="form-group" style="margin-left:16px;margin-right:16px">
+					                           <label for="leagueid">League</label>
+			                                   <select class="form-control id="leagueid" name="leagueid">';
+    foreach ($leaguefetch as $myLeague) {
+        $html .= '                               <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
+    }
+    $html .= '	                               </select>
+                                         </div>
+        				                 <div class="form-group" style="margin-left:16px;margin-right:16px">
+                                                <br>
+				                                <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+				                         </div>
+                                   </form>
+			          			</div>
+			                </div>
+			                <div class="col-sm-4">
+			                    <div class="tile green">
+
+			                	<form class="form-horizontal" role="form" name ="showgame" method="post" action="show-game.php">';
+    $html .= $key;
+    $html .= '					<h3 class="title">Change a Game</h3>
+				                    <div class="form-group" style="margin-left:16px;margin-right:16px">
+			                            <select class="form-control" id="gameid" name="gameid">';
+    foreach ($gamefetch as $myGame) {
+        $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
+    }
+    $html .= '	                    </select>
+				                    </div>
+				                    <div class="form-group" style="margin-left:16px;margin-right:16px">
+                                    
+				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+				                    </div>
+                                    </form>
+                                 <div class="col-lg-10">
+                                    <ul >
+                                        <li>Add/remove leagues</li>
+                                        <li>Change game name</li>
+                                        <li>Change game start week</li>
+                                        <li>Cancel the game</li>
+                                    </ul>
+                                </div>
+			          			</div>
+			                </div>
+			      		</div>
+
+
+
+
+
+
+
+
+
                         <div class="row">
 
 
@@ -114,61 +189,7 @@ if (login_check($mypdo) == true) {
 
 
                         </div>
-                        <div class="row">
-			                <div class="col-sm-4">
-			                    <div class="tile green">
-			                	<form class="form-horizontal" role="form" name ="showgame" method="post" action="show-game.php">';
-    $html .= $key;
-    $html .= '					<h3 class="title">Show a Game</h3>
-				                    <div class="form-group" style="margin-left:16px;margin-right:16px">
-			                            <select class="form-control" id="gameid" name="gameid">';
-    foreach ($gamefetch as $myGame) {
-        $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
-    }
-    $html .= '	                    </select>
-				                    </div>
-				                    <div class="form-group" style="margin-left:16px;margin-right:16px">
-                                        <br>
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
-				                    </div>
-                                    </form>
-			          			</div>
-			                </div>
-			                <div class="col-sm-4">
-			                    <div class="tile teal">
-                                    <h3 class="title" >Create a Game</h3>
-                                    <form class="form-horizontal" role="form" name ="addteam" method="post" action="add-game.php">';
-    $html .= $key;
-    $html .= '					         <div class="form-group" style="margin-left:16px;margin-right:16px">
-				                    	       <label for="gamename">Game Name:</label>
-					                           <input type="text" class="form-control" id="gamename" name="gamename" placeholder="Game name" />
-				                         </div>
-                                         <div class="form-group" style="margin-left:16px;margin-right:16px">
-                                               <label for="gamestartweek">Start week:</label>
-                                               <select class="form-control" id="gamestartweek" name="gamestartweek">';
-    foreach ($remainingweeks as $wk) {
-        $html .= '<option value="' . $wk['lms_week_no'] . '">' . sprintf('%02d', $wk['lms_week']) . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
-    }
-    $html .= '	                               </select>
-										 </div>
-				                         <div class="form-group" style="margin-left:16px;margin-right:16px">
-					                           <label for="leagueid">League</label>
-			                                   <select class="form-control id="leagueid" name="leagueid">';
-    foreach ($leaguefetch as $myLeague) {
-        $html .= '                               <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
-    }
-    $html .= '	                               </select>
-                                         </div>
-        				                 <div class="form-group" style="margin-left:16px;margin-right:16px">
-                                                <br>
-				                                <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
-				                         </div>
-                                   </form>
-			          			</div>
-			                </div>
-
-			      		</div>
-			      		<div class="row">
+ 			      		<div class="row">
 							<div class="col-xs-6">
 								<a href="' . $myPath . 'menus/home.php" class="btn btn-primary btn-lg" role="button">Back</a>
 								<br>

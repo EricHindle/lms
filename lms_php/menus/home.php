@@ -50,8 +50,76 @@ if (login_check($mypdo) == true) {
 		                </div>
 		            </div>';
 
+    $html .= '	    <div class="row">
+    <div class="col-sm-3 col-md-3">
+    <div class="tile red">
+    <h3 class="title" >Selections for</h3>
+    <form class="form-horizontal" role="form" name ="editpick" method="post" action="' . $myPath . 'struct/picks/pick-main.php">';
+    $html .= $key;
+    $html .= '
+        <div class="form-group" style="margin-left:16px;margin-right:16px">
+        <select class="form-control" id="gameid" name="gameid">';
+    foreach ($gamefetch as $myGame) {
+        if ($myGame['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
+            $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
+        }
+    }
+    $html .= '	                         </select>
+                </div>
+                <div class="form-group" style="margin-left:16px;margin-right:16px">
+                <br>
+                <input id="submit1" name="submit" type="submit" value="Submit" class="btn btn-primary">
+                </div>
+                </form>
+                </div>
+                </div>
+                <div class="col-sm-3 col-md-3">
+                <div class="tile orange">
+                <h3 class="title" >Join a Game</h3>
+                <form role="form" name ="edit" method="post" action="' . $myPath . 'struct/game/process-join-game.php">';
+    $html .= $key;
+    $html .= '                          <div class="form-group " style="margin-left:16px;margin-right:16px">
+                <input type="text" class="form-control" id="gamecode" name="gamecode" placeholder="game code">
+                </div>
+                <div class="form-group" style="margin-left:16px;margin-right:16px">
+                <br>
+                <input id="submit2" name="submit" type="submit" value="Submit" class="btn btn-primary">
+                </div>
+                </form>
+                </div>
+                </div>
+                <div class="col-sm-3 col-md-3">
+                <div class="tile green">
+                <form class="form-horizontal" role="form" name ="showgame" method="post" action="' . $myPath . 'struct/game/show-played-game.php">';
+    $html .= $key;
+    $html .= '					     <h3 class="title">Show a Game</h3>
+                <div class="form-group" style="margin-left:16px;margin-right:16px">
+                <select class="form-control" id="gameid" name="gameid">';
+    foreach ($gamefetch as $myGame) {
+        $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
+    }
+    $html .= '	                             </select>
+            </div>
+            <div class="form-group" style="margin-left:16px;margin-right:16px">
+            <br>
+            <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+            </div>
+            </form>
+            </div>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-sm-9">
+            <div class="tile teal" style="padding-top:10px;padding-bottom:0px;">
+            <a href="' . $myPath . 'struct/game/game-manage.php">
+            <h3 class="title" style="text-align:center">Manage Games</h3>
+            </a>
+            </div>
+            </div>
+            </div>';
+
     $html .= '      <div class="row">
-		            	<div class="well col-md-10  textDark">
+		            	<div class="well col-md-9  textDark">
 			        		<h3>Games Played by ' . $_SESSION['nickname'] . '</h3>
 				        	<table class="table table-bordered" id="keywords">
 								<thead>
@@ -126,73 +194,7 @@ if (login_check($mypdo) == true) {
 						</div>
 					</div>
 
-		            <div class="row">
-		            	<div class="col-sm-3 col-md-3">
-		                    <div class="tile red">
-		                    		<h3 class="title" >Selections for</h3>
-                                <form class="form-horizontal" role="form" name ="editpick" method="post" action="' . $myPath . 'struct/picks/pick-main.php">';
-    $html .= $key;
-    $html .= '					
-		                            <div class="form-group" style="margin-left:16px;margin-right:16px">
-	                                     <select class="form-control" id="gameid" name="gameid">';
-    foreach ($gamefetch as $myGame) {
-        if ($myGame['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
-            $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
-        }
-    }
-    $html .= '	                         </select>
-		                            </div>
-		                            <div class="form-group" style="margin-left:16px;margin-right:16px">
-                                        <br>
-		                                <input id="submit1" name="submit" type="submit" value="Submit" class="btn btn-primary">
-		                            </div>
-                                </form>
-                            </div>
-		                </div>
-		            	<div class="col-sm-3 col-md-3">
-		                    <div class="tile orange">
-	                    		    <h3 class="title" >Join a Game</h3>
-				                	<form role="form" name ="edit" method="post" action="' . $myPath . 'struct/game/process-join-game.php">';
-    $html .= $key;
-    $html .= '                          <div class="form-group " style="margin-left:16px;margin-right:16px">
-					                        <input type="text" class="form-control" id="gamecode" name="gamecode" placeholder="game code">
-					                    </div>
-					                    <div class="form-group" style="margin-left:16px;margin-right:16px">
-					                    	<br>
-					                        <input id="submit2" name="submit" type="submit" value="Submit" class="btn btn-primary">
-					                    </div>
-					                </form>
-			          			</div>
-			                </div>
-    		                <div class="col-sm-3 col-md-3">
-		                      <div class="tile green">
-		                	     <form class="form-horizontal" role="form" name ="showgame" method="post" action="' . $myPath . 'struct/game/show-played-game.php">';
-    $html .= $key;
-    $html .= '					     <h3 class="title">Show a Game</h3>
-			                         <div class="form-group" style="margin-left:16px;margin-right:16px">
-		                                  <select class="form-control" id="gameid" name="gameid">';
-    foreach ($gamefetch as $myGame) {
-        $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
-    }
-    $html .= '	                             </select>
-			                         </div>
-			                     <div class="form-group" style="margin-left:16px;margin-right:16px">
-                                    <br>
-			                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
-			                    </div>
-                            </form>
-	          			</div>
-	                </div>
-	      		</div>
-                <div class="row">
-	                <div class="col-sm-8">
-	                    <div class="tile teal">
-	                    	<a href="' . $myPath . 'struct/game/game-manage.php">
-	                    		<h3 class="title" style="text-align:center">Manage Games</h3>
-	                        </a>
-	                    </div>
-	      		    </div>
-    	        </div>
+
              </section>
           </body>
        </html>
