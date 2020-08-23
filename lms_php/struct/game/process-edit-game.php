@@ -21,6 +21,7 @@ if (login_check($mypdo) == true) {
                 $gameid = sanitize_int($_POST['id']);
                 $gamename = $_POST['gamename'];
                 $gamestartweek = $_POST['gamestartweek'];
+                $addleague = (isset($_POST['addleague']) ? $_POST['addleague'] : "false");
                 $iscancel = (isset($_POST['iscancel']) ? $_POST['iscancel'] : "false");
                 if ($gameid && $gamename) {
                     $html = "";
@@ -31,6 +32,7 @@ if (login_check($mypdo) == true) {
                         ':id' => $gameid
                     ));
                     $gamecount = $gamequery->rowCount();
+                    $alerttext = "";
                     if ($gamecount > 0) {
                         $upsql = "";
                         if ($iscancel == "true") {
@@ -45,11 +47,49 @@ if (login_check($mypdo) == true) {
                         $upquery->execute();
                         $upcount = $upquery->rowCount();
                         if ($upcount > 0) {
+                            $alerttext = "Details updated successfully. ";
+                        }
+                        $leaguesql = "SELECT lms_league_name, lms_league_id FROM lms_league";
+                        $leaguequery = $mypdo->prepare($leaguesql);
+                        $leaguequery->execute();
+                        $leaguecount = $leaguequery->rowCount();
+                        if ($leaguecount > 0) {
+                            $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
+                            foreach ($leaguefetch as $rs) {
+                                $rmvid = $rs['lms_league_id'];
+                                $postrmv = $_POST["rmv-" . $rmvid];
+                                if ($postrmv == "true") {
+                                    $sqlrmvteamleague = "DELETE FROM lms_game_league WHERE lms_game_league_league_id = :leagueid AND lms_game_league_game_id = :gameid";
+                                    $sqlrmvteamleague = $mypdo->prepare($sqlrmvteamleague);
+                                    $sqlrmvteamleague->execute(array(
+                                        ':gameid' => $gameid,
+                                        ':leagueid' => $rmvid
+                                    ));
+                                    $leaguermv = $sqlrmvteamleague->rowCount();
+                                }
+                            }
+                        }
+                        $leagueadded = 0;
+                        if ($addleague == 'true') {
+                            $leagueId = sanitize_int($_POST['leagueid']);
+                            $sqladdteamleague = "INSERT INTO lms_game_league (lms_game_league_league_id, lms_game_league_game_id) VALUES (:leagueid, :gameid)";
+                            $sqladdteamleague = $mypdo->prepare($sqladdteamleague);
+                            $sqladdteamleague->execute(array(
+                                ':gameid' => $gameid,
+                                ':leagueid' => $leagueId
+                            ));
+                            $leagueadded = $sqladdteamleague->rowCount();
+                            if ($leagueadded > 0) {
+                                $alerttext .= "League successfully added to game.";
+                            }
+                        }
+                        
+                        if ($upcount > 0 || $leagueadded > 0) {
                             if ($iscancel == "true") {
                                 sendcancelemailsforgame($gameid);
                             }
                             $html .= "<script>
-										alert('Details updated successfully.');
+										alert('".$alerttext."');
 										window.location.href='game-manage.php';
 									</script>";
                         } else {

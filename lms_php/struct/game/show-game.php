@@ -32,6 +32,17 @@ if (login_check($mypdo) == true) {
                     $gamecount = $gamequery->rowCount();
 
                     if ($gamecount > 0) {
+                        $allleaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr FROM lms_league
+                                            WHERE lms_league_supported = 1
+                                                AND lms_league_id NOT IN
+                                                (SELECT lms_game_league_league_id from lms_game_league where lms_game_league_game_id = :gameid)
+                                            ORDER BY lms_league_id ASC";
+                        $allleaguequery = $mypdo->prepare($allleaguesql);
+                        $allleaguequery->execute(array(
+                            ':gameid' => $gameid
+                        ));
+                        $allleaguefetch = $allleaguequery->fetchAll(PDO::FETCH_ASSOC);
+
                         $key = $formKey->outputKey();
                         $gamefetch = $gamequery->fetch(PDO::FETCH_ASSOC);
                         $gamename = $gamefetch['lms_game_name'];
@@ -52,6 +63,7 @@ if (login_check($mypdo) == true) {
                             ':gameid' => $gameid
                         ));
                         $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
+                        $key = $formKey->outputKey();
                         echo '
 								<!doctype html>
 								<html>
@@ -90,14 +102,35 @@ if (login_check($mypdo) == true) {
                                     <div class="col-sm-2"><b>Start date:</b> </div><div class="col-sm-2">' . date_format(date_create($gamefetch['lms_week_start']), 'd M Y') . '</div>
                                     <div class="col-sm-2 col-sm-offset-1 text-center"  style="background:midnightblue;color:white">' . $gamefetch['lms_game_status_text'] . '</div>
 
-                                </div>';
-
+                                </div>
+                                <form class="form-horizontal" role="form" name ="edit" method="post" action="process-edit-game.php">';
+                        $html .= $key;
                         $html .= '     </br>
-                                <div class="col-sm-4, col-md-4, col-lg-4">
+                            <div class="row">
+                            <div class="col-sm-3, col-md-3, col-lg-3">
+		                    <div class="row" style="margin-left:0px;">
+                               <label for="gamename">New name:</label>
+                                <input type="text" class="form-control" id="gamename" name="gamename" value="' . $gamefetch['lms_game_name'] . '">
+                            </div>
+                            <div class="row" style="margin-left:0px;">
+                               <label for="gamestartweek">New start week:</label>
+                                <select class="form-control" id="gamestartweek" name="gamestartweek">';
+                        foreach ($remainingweeks as $wk) {
+                            $html .= '<option value="' . $wk['lms_week_no'] . '">' . $wk['lms_week'] . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
+                        }
+                        $html .= '
+	                           </select>
+                                <input type= "hidden" name= "id" value="' . $gameid . '" />
+		                    </div>
+
+                                </div>';
+                               $html .= '        <div class="col-sm-5, col-md-5, col-lg-5">
+                                </br>
                                 <table class="table table-bordered" id="keywords">
                                     <thead>
                                     <tr class="info">
                                     <th>Leagues</th>
+                                    <th>Remove</th>
                                     </tr>
                                     </thead>
                                     <tbody>';
@@ -105,24 +138,54 @@ if (login_check($mypdo) == true) {
                             $html .= '
                                         <tr>
                                             <td>' . $rs['lms_league_name'] . '</td>
+                                            <td><input type= "checkbox" style="margin-left:20px;" name="rmv-' . $rs['lms_league_id'] . '" id="rmv-' . $rs['lms_league_id'] . '" value="true" ></td>
+
                                         </tr>';
                         }
                         $html .= '  </tbody>
                                 </table>
-</div>';
+                              </div>
+                                <div class="col-sm-3, col-md-3, col-lg-3">';
+
+                        if (! empty($allleaguefetch)) {
+                            $html .= '
+
+  <div class="row" style="margin-left:0px;">
+
+                                  <label for="addleague">&nbsp; Add league &nbsp;&nbsp;</label>
+								  <input type= "checkbox" name= "addleague" id="addleague" value="true" />
+
+			                     <select class="form-control col-md-6 col-sm-6" id="leagueid" name="leagueid">';
+                            foreach ($allleaguefetch as $myLeague) {
+                                $html .= ' <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
+                            }
+                            $html .= '	</select>
+                                     
+                               </div>';
+                        }
+                        $html .= '             <div class="row" style="margin-left:0px;">
+</br>
+                                <label for="iscancel">&nbsp Cancel this game</label>
+
+                                <input type= "checkbox" name="iscancel" style="margin-left:20px;" id="iscancel" value="true">
+                            </div>
+                                   </div>
+
+                            </div>';
 
                         if ($gamefetch['lms_game_status'] == 2) {
 
                             $html .= '         <div class="row">
-<br>
+                                    <br>
                                     <div class="col-sm-4"><b>Current week selection deadline:</div><div class="col-sm-2"></b>  ' . date_format(date_create($deadline), 'd M Y') . '</div>
                                 </div>';
                         }
                         $html .= ' <div class="row">
-<br>
+                                    <br>
+                                     <div class="col-sm-11, col-md-11, col-lg-11">
     					        	<table class="table table-bordered" id="keywords">
     									<thead>
-    									<tr>
+    									<tr class="info">
     										<th>Player Name</th>
     										<th>Player Status</th>
                                             <th>Current pick</th>
@@ -158,49 +221,57 @@ if (login_check($mypdo) == true) {
                         $html .= '
 									</tbody>
 								</table>
+                              </div>
                             </div>
+                                <div class="row">
+	                                  <div class="col-sm-3, col-md-3, col-lg-3">
+     		                          <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+		                        </div>
+                            </div>
+		                </form>
 						</div>
                     </div>
 					<div class = "row">';
-                        if ($gamefetch['lms_game_status'] < 3) {
-
-                            $type = "text";
-                            if ($gamefetch['lms_game_status'] == 2) {
-                                $type = "hidden";
-                            }
-
-                            $html .= '	        <div class="well col-md-4 textDark">
-                        <h3 class="text-center">Edit Game</h3>
-						<form class="form-horizontal" style="margin-left:24px; margin-right:30px" role="form" name ="edit" method="post" action="process-edit-game.php">';
-                            $html .= $key;
-                            $html .= '					     
-		                    <div class="row">
-                               <label for="gamename">New name:</label>
-		                       <input type="text" class="form-control" id="gamename" name="gamename" value="' . $gamefetch['lms_game_name'] . '"><br>
-                            </div>
-                            <div class="row">
-                               <label for="gamestartweek">New start week:</label>
-                               <select class="form-control" id="gamestartweek" name="gamestartweek">';
-                            foreach ($remainingweeks as $wk) {
-                                $html .= '<option value="' . $wk['lms_week_no'] . '">' . $wk['lms_week'] . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
-                            }
-                            $html .= '
-	                           </select>
-							   <input type= "hidden" name= "id" value="' . $gameid . '" />
-		                    </div>
-                            <div class="row">
-                                <br>
-                               <label for="iscancel">&nbsp Cancel this game</label>
-                               <input type="checkbox" style="margin-left:20px;" name="iscancel" id="iscancel" value="true">
-                            </div>
-		                    <div class="form-group">
-		                    	<br>
-		                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
-		                    </div>
-		                </form>
-		            </div>';
-                        }
-
+                        /*
+                         * if ($gamefetch['lms_game_status'] < 3) {
+                         *
+                         * $type = "text";
+                         * if ($gamefetch['lms_game_status'] == 2) {
+                         * $type = "hidden";
+                         * }
+                         *
+                         * $html .= ' <div class="well col-md-4 textDark">
+                         * <h3 class="text-center">Edit Game</h3>
+                         * <form class="form-horizontal" style="margin-left:24px; margin-right:30px" role="form" name ="edit" method="post" action="process-edit-game.php">';
+                         * $html .= $key;
+                         * $html .= '
+                         * <div class="row">
+                         * <label for="gamename">New name:</label>
+                         * <input type="text" class="form-control" id="gamename" name="gamename" value="' . $gamefetch['lms_game_name'] . '"><br>
+                         * </div>
+                         * <div class="row">
+                         * <label for="gamestartweek">New start week:</label>
+                         * <select class="form-control" id="gamestartweek" name="gamestartweek">';
+                         * foreach ($remainingweeks as $wk) {
+                         * $html .= '<option value="' . $wk['lms_week_no'] . '">' . $wk['lms_week'] . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
+                         * }
+                         * $html .= '
+                         * </select>
+                         * <input type= "hidden" name= "id" value="' . $gameid . '" />
+                         * </div>
+                         * <div class="row">
+                         * <br>
+                         * <label for="iscancel">&nbsp Cancel this game</label>
+                         * <input type="checkbox" style="margin-left:20px;" name="iscancel" id="iscancel" value="true">
+                         * </div>
+                         * <div class="form-group">
+                         * <br>
+                         * <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+                         * </div>
+                         * </form>
+                         * </div>';
+                         * }
+                         */
                         if ($gamefetch['lms_game_status'] == 1) {
 
                             $html .= '	                 <div class="well col-md-3 col-md-offset-1 textDark">
