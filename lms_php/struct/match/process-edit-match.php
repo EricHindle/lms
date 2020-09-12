@@ -22,7 +22,7 @@ if (login_check($mypdo) == true && $access > 900) {
                 $matchdate = sanitize_datetime($_POST['matchdate']);
                 $result = $_POST['result'];
 
-                if ($gameid && $matchdate && $result) {
+                if ($gameid && $matchdate) {
                     $html = "";
 
                     $matchsql = "SELECT lms_match_id FROM lms_match WHERE lms_match_id = :id LIMIT 1";
