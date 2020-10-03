@@ -48,6 +48,20 @@ if (login_check($mypdo) == true) {
 		                    <h1><strong>Welcome ' . $_SESSION['nickname'] . '</strong></h1>
 		                    <br>
 		                </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3 col-md-3">
+                            <div class="tile black">
+                               Match week: ';
+    $html .= $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'];
+    $html .= '
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="tile black">
+                               Deadline for week &nbsp;' . sprintf('%02d', $_SESSION['currentweek'] + 1) . '&nbsp; picks is &nbsp;' . date_format(date_create($_SESSION['deadline']), 'd M Y');
+    $html .= '	            </div>
+                        </div>
 		            </div>';
 
     $html .= '	    <div class="row">
@@ -61,7 +75,7 @@ if (login_check($mypdo) == true) {
         <div class="form-group" style="margin-left:16px;margin-right:16px">
         <select class="form-control" id="gameid" name="gameid">';
     foreach ($gamefetch as $myGame) {
-        if ($myGame['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
+        if ($myGame['lms_game_start_wkno'] <= $_SESSION['selectweekkey']) {
             $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
         }
     }
@@ -131,7 +145,7 @@ if (login_check($mypdo) == true) {
                                         <th>Total Players</th>
                                         <th>Active Players</th>
                                         <th>My Status</th>
-                                        <th>Current Selection</th>
+                                        <th>Current picks</th>
     								</tr>
 								</thead>
 								<tbody>
@@ -144,10 +158,16 @@ if (login_check($mypdo) == true) {
         $pickquery->bindParam(':game', $gameid, PDO::PARAM_INT);
         $pickquery->bindParam(':matchwk', $_SESSION['matchweek']);
         $pickquery->execute();
-        $pickcount = $pickquery->rowCount();
-        // $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
-
+        $matchcount = $pickquery->rowCount();
+        $matchweekpick = $pickquery->fetch(PDO::FETCH_ASSOC);
+        $pickquery->bindParam(':matchwk', $_SESSION['selectweekkey']);
+        $pickquery->execute();
+        $selectweekpick = $pickquery->fetch(PDO::FETCH_ASSOC);
+        $selectcount = $pickquery->rowCount();
+        $pickcount = $matchcount + $selectcount;
         $currentpick = '';
+        $thispick = '';
+        $nextpick = '';
         $rowcolor = 'black';
         $selcolor = 'black';
         $playercolor = 'black';
@@ -169,8 +189,17 @@ if (login_check($mypdo) == true) {
             $playercolor = $rs['lms_game_player_status'] == 2 ? 'red' : 'silver';
         } else {
             if ($pickcount > 0) {
-                $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
-                $currentpick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd M Y') . ')';
+                $newline = '';
+                if ($pickcount == 2){
+                    $newline = '</br>';
+                }
+                if ($matchcount > 0){
+                $thispick = $matchweekpick['lms_team_name'] . ' (' . date_format(date_create($matchweekpick['lms_match_date']), 'd M Y') . ')';
+                }
+                if ($selectcount > 0){
+                $nextpick = $selectweekpick['lms_team_name'] . ' (' . date_format(date_create($selectweekpick['lms_match_date']), 'd M Y') . ')';
+                }
+                $currentpick = $thispick . $newline . $nextpick;             
             } else {
                 if ($rs['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
                     $currentpick = '(waiting)';

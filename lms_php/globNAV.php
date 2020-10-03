@@ -36,7 +36,7 @@ echo '                      </ul>
 
 <ul class="nav navbar-nav navbar-right" >';
 if ($currentlevel != $adminlevelneeded && $currentlevel != $devlevelneeded) {
-    echo '                        <li class="nav-item">    <a class="nav-link" href="#">Period: ' . $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'] . '</a></li>';
+    echo '                        <li class="nav-item">    <a class="nav-link" href="#">Match week: ' . $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'] . '</a></li>';
 }
 echo '                            <li class="nav-item">    <form class="form-inline" role="form" name ="myaccount" method="post" action="' . $myPath . 'struct/player/myaccount.php">
                                 <span class="glyphicon glyphicon-user"></span>' . $key . '<input id="submit" name="submit" type="submit" value="'. $_SESSION['nickname'] . '" class="navbar nav-button">

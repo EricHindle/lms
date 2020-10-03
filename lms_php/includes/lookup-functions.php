@@ -2,7 +2,7 @@
 $myPath = '../../';
 
 require $myPath . 'includes/db_connect.php';
-date_default_timezone_set('Europe/London');
+
 
 function get_player_status($code)
 {
@@ -86,7 +86,7 @@ function get_deadline_date() {
     global $mypdo;
     $weeksql = "SELECT lms_week_deadline FROM lms_week WHERE lms_week = :week and lms_year = :season LIMIT 1";
     $weekquery = $mypdo->prepare($weeksql);
-    $weekquery->bindParam(":week", $_SESSION['currentweek'], PDO::PARAM_INT);
+    $weekquery->bindParam(":week", $_SESSION['selectweek'], PDO::PARAM_INT);
     $weekquery->bindParam(":season", $_SESSION['currentseason'], PDO::PARAM_INT);
     $weekquery->execute();
     $weekfetch = $weekquery->fetch(PDO::FETCH_ASSOC);

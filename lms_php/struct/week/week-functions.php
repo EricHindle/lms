@@ -35,4 +35,14 @@ function set_week_state($weekid, $newstate)
     return $upcount;
 }
 
+function update_complete($matchweek) {
+    global $mypdo;
+    $upsql = "UPDATE lms_info SET lms_info_value = :infovalue WHERE lms_info_id = 'match_week_complete'";
+    $upquery = $mypdo->prepare($upsql);
+    $upquery->bindParam(':infovalue', $matchweek);
+    $upquery->execute();
+    $upcount = $upquery->rowCount();
+    return $upcount;
+}
+
 ?>

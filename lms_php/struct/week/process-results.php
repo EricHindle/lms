@@ -8,6 +8,8 @@ $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
+require $myPath . 'struct/match/match-functions.php';
+require $myPath . 'struct/week/week-functions.php';
 
 sec_session_start();
 $formKey = new formKey();
@@ -41,6 +43,11 @@ if (login_check($mypdo) == true && $access > 900) {
                         $upquery->execute();
                         $upcount = $upquery->rowCount();
                         $totalupdates += $upcount;
+                    }
+                    
+                    $missingresultct = get_count_of_matches_with_no_result();
+                    if ($missingresultct == 0) {
+                        update_complete($_SESSION['matchweek']);
                     }
                     $html .= "<script>
                             	alert('" . $totalupdates . " teams resulted.');

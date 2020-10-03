@@ -39,7 +39,7 @@ if (login_check($mypdo) == true) {
                     $currentpickmatch = 0;
                     $currentpickteam = 0;
                     foreach ($pickfetch as $rs) {
-                        if ($rs['lms_match_weekno'] == $_SESSION['matchweek']) {
+                        if ($rs['lms_match_weekno'] == $_SESSION['selectweekkey']) {
                             $currentpickmatch = $rs['lms_pick_match_id'];
                             $currentpickteam = $rs['lms_team_id'];
                             break;
@@ -55,7 +55,7 @@ if (login_check($mypdo) == true) {
                     $availquery->bindParam(':player', $player, PDO::PARAM_INT);
                     $availquery->bindParam(':game', $gameid, PDO::PARAM_INT);
                     $availquery->bindParam(':currentpick', $currentpickmatch, PDO::PARAM_INT);
-                    $availquery->bindParam(':weekno', $_SESSION['matchweek']);
+                    $availquery->bindParam(':weekno', $_SESSION['selectweekkey']);
                     $availquery->execute();
                     $availfetch = $availquery->fetchAll(PDO::FETCH_ASSOC);
 
@@ -140,7 +140,7 @@ if (login_check($mypdo) == true) {
                             $html .= '    <div class="row">
 			            	<div class="col-sm-6">
 			                    <div class="tile red">
-		                    		    <h3 class="title" >Select a Team for This Week</h3>
+		                    		    <h3 class="title" >Select a Team for Week ' . $_SESSION['selectweek'] . '</h3>
 					                	
 			                	<form class="form-horizontal" role="form" name ="editpick" method="post" action="process-pick.php">';
                             $html .= $key;

@@ -97,21 +97,34 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                                 									<tr>
                                 										<th>Player Name</th>
                                 										<th>Player Status</th>
-                                                                        <th>Current pick</th>
+                                                                        <th>Current picks</th>
                                  									</tr>
                                 									</thead>
                                 									<tbody>	';
 
                         foreach ($gameplayerfetch as $rs) {
                             $pickfetch = get_current_player_pick($gameid, $rs['lms_player_id']);
+                            $nextpickfetch = get_next_player_pick($gameid, $rs['lms_player_id']);
                             $currentpick = '';
+                            $thispick = '';
+                            $nextpick = '';
                             $rowcolor = 'black';
                             $selcolor = 'black';
                             if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
                                 $rowcolor = $rs['lms_game_player_status'] == 2 ? 'red' : 'silver';
                             } else {
-                                if ($pickfetch) {
-                                    $currentpick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd M Y') . ')';
+                                if ($pickfetch || $nextpickfetch) {
+                                    $newline = '';
+                                    if ($pickfetch && $nextpickfetch){
+                                        $newline = '</br>';
+                                    }
+                                    if ($pickfetch) {
+                                        $thispick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd M Y') . ')';
+                                    }
+                                    if ($nextpickfetch) {
+                                        $nextpick = $nextpickfetch['lms_team_name'] . ' (' . date_format(date_create($nextpickfetch['lms_match_date']), 'd M Y') . ')';
+                                    }
+                                    $currentpick =  $thispick . $newline .  $nextpick;
                                 } else {
                                     if ($gamefetch['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
                                         $currentpick = '(waiting)';
