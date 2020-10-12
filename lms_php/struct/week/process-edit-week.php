@@ -21,7 +21,7 @@ if (login_check($mypdo) == true && $access > 900) {
                 $gameid = $_POST['id'];
                 $startdate = sanitize_datetime($_POST['startdate']);
                 $enddate = sanitize_datetime($_POST['enddate']);
-                $deadline = sanitize_datetime($_POST['deadline']);
+                $deadline = sanitize_datetime($_POST['deadline'] . " 23:59:59");
                 if ($gameid && $startdate && $enddate && $deadline) {
                     $html = "";
                     $weeksql = "SELECT lms_week_no FROM lms_week WHERE lms_week_no = :id LIMIT 1";
