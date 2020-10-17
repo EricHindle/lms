@@ -3,8 +3,9 @@
  * HINDLEWARE
  * Copyright (C) 2020 Eric Hindle. All rights reserved.
  */
+
 require '/home/lastmanl/public_html/includes/db_connect.php';
-require '/home/lastmanl/public_html/scheduled/email-functions.php';
+require '/home/lastmanl/public_html/scheduled/email-functions.php'; 
 
 function activateGames($nextgameweek)
 {
@@ -23,7 +24,7 @@ function check_start_date()
     $today = date("Y-m-d");
     $weeksql = "SELECT * FROM lms_week WHERE lms_week_start = :today LIMIT 1";
     $weekquery = $mypdo->prepare($weeksql);
-    $weekquery->bindParam(":week", $today);
+    $weekquery->bindParam(":today", $today);
     $weekquery->execute();
     $rowcount = $weekquery->rowCount();
     return $rowcount;

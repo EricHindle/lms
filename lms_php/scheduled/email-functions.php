@@ -3,7 +3,9 @@
  * HINDLEWARE
  * Copyright (C) 2020 Eric Hindle. All rights reserved.
  */
+
 $myPath = '/home/lastmanl/public_html/';
+
 require $myPath . 'includes/mail-util.php';
 
 function sendemailusingtemplate($templatename, $playerid, $gameid, $values, $checkflag)

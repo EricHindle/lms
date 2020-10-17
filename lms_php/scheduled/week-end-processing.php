@@ -3,7 +3,8 @@
  * HINDLEWARE
  * Copyright (C) 2020 Eric Hindle. All rights reserved.
  */
-$myPath = '/home/lastmanl/public_html/';
+
+$myPath = '/home/lastmanl/public_html/'; 
 
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
