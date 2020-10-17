@@ -17,8 +17,18 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     if (isset($_POST['matchperiod'])) {
         $matchperiod = $_POST['matchperiod'];
     }
+    if (isset($_GET['matchperiod'])) {
+        $matchperiod = $_GET['matchperiod'];
+    }
+    if (strlen($matchperiod) != 6){
+         $matchperiod = '';
+    }
+    $tableperiod = substr($matchperiod,4,2) . '/' . substr($matchperiod,0,4);
+    $tableselect = $matchperiod;
     $matchsql = "SELECT * FROM v_lms_match WHERE lms_match_weekno = :weekno ORDER BY lms_team_name, lms_match_date  ASC ";
     if ($matchperiod == '') {
+        $tableperiod = $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'];
+         $tableselect = $_SESSION['matchweek'] ;
         $matchsql = "SELECT * FROM v_lms_match WHERE lms_match_weekno <> :weekno ORDER BY lms_team_name, lms_match_date  ASC ";
     }
     $matchquery = $mypdo->prepare($matchsql);
@@ -95,7 +105,8 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     foreach ($matchfetch as $mymatch) {
         $html .= '<option value="' . $mymatch['lms_match_id'] . '">' . $mymatch['lms_team_name'] . '&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp' . date_format(date_create($mymatch['lms_match_date']), 'd-M-Y') . '</option>';
     }
-    $html .= '	                    </select>
+    $html .= '	                    </select>   
+                                    <input type= "hidden" name= "matchperiod" value="' . $matchperiod . '" />
 				                    </div>
 				                    <div class="form-group">
 				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
@@ -107,7 +118,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                         </div>
 						<div class = "row">
 				        	<div class="well col-md-9 textDark">
-				        		<h3>Period ' . $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'] . ' matches</h3>
+				        		<h3>Period ' . $tableperiod . ' matches</h3>
 					        	<table class="table table-bordered" id="keywords">
 									<thead>
 									<tr class="match">
@@ -122,7 +133,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 									';
     foreach ($matchfetch as $rs) {
 
-        if ($rs['lms_week'] == $_SESSION['currentweek'] && $rs['lms_year'] == $_SESSION['currentseason']) {
+        if ($rs['lms_match_weekno'] == $tableselect) {
             $result = 'no result';
             switch ($rs['lms_match_result']) {
                 case 'w':

@@ -21,7 +21,10 @@ if (login_check($mypdo) == true && $access > 900) {
                 $gameid = $_POST['id'];
                 $matchdate = sanitize_datetime($_POST['matchdate']);
                 $result = $_POST['result'];
-
+                $matchperiod = '';
+                if (isset($_POST['matchperiod'])) {
+                    $matchperiod = $_POST['matchperiod'];
+                }
                 if ($gameid && $matchdate) {
                     $html = "";
 
@@ -44,12 +47,12 @@ if (login_check($mypdo) == true && $access > 900) {
                         if ($upcount > 0) {
                             $html .= "<script>
 											alert('Details updated successfully.');
-											window.location.href='match-main.php';
+											window.location.href='match-main.php?matchperiod=" . $matchperiod . "';
 										</script>";
                         } else {
                             $html .= "<script>
 										alert('Details not altered.');
-										window.location.href='match-main.php';
+										window.location.href='match-main.php?matchperiod=" . $matchperiod . "';
 									</script>";
                         }
                     } else {

@@ -17,6 +17,10 @@ if (login_check($mypdo) == true && $access > 900) {
         if (! isset($_POST['form_key']) || ! $formKey->validate()) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
+            $matchperiod = '';
+            if (isset($_POST['matchperiod'])) {
+                $matchperiod = $_POST['matchperiod'];
+            }
             if (isset($_POST['matchid'])) {
                 $gameid = $_POST['matchid'];
                 if ($gameid) {
@@ -118,6 +122,7 @@ if (login_check($mypdo) == true && $access > 900) {
                                                                     <option ' . $nresult . ' value="">No result</option>
                                                                </select>
 															   <input type= "hidden" name= "id" value="' . $gameid . '" />
+                                                               <input type= "hidden" name= "matchperiod" value="' . $matchperiod . '" />
 										                    </div>
 										                    <div class="form-group">
 										                    	<br>
