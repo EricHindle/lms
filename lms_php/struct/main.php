@@ -118,10 +118,19 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			      		<div class="row">
                             <div class="col-sm-4">
     		                    <div class="tile purple">
-    		                    	<a href="' . $myPath . 'struct/match/match-main.php">
-    		                    		<h3 class="title" >Match</h3>
-    		                            <p>Match Management</p>
-    		                        </a>	
+		                	     <form class="form-horizontal" role="form" name ="matchmain" method="post" action="' . $myPath . 'struct/match/match-main.php">';
+    $html .= $key;
+    $html .= '					     <h3 class="title">Match</h3>
+			                         <div class="form-group" style="margin-left:10px;margin-right:10px;margin-bottom:0px">
+      			                         <div class="col-sm-8">Manage matches for:</div>
+                                         <div class="col-sm-4" style="padding-left: 5px;padding-right: 5px;">
+                                              <input type="text" class="form-control" style="height:30px" id="matchperiod" name="matchperiod" maxlength="6" placeholder = "yyyyww" />
+                                         </div>
+                                         <div class="col-sm-5">
+                                             <input id="submit" name="submit" type="submit" value="Select" class="btn btn-primary btn-sm">
+                                         </div>
+			                         </div>
+                                  </form>	
     		          			</div>
                             </div>
 			            	<div class="col-sm-4">

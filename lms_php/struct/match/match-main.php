@@ -13,9 +13,16 @@ sec_session_start();
 if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $formKey = new formKey();
     $key = $formKey->outputKey();
-
-    $matchsql = "SELECT * FROM v_lms_match ORDER BY lms_team_name, lms_match_date  ASC ";
+    $matchperiod = '';
+    if (isset($_POST['matchperiod'])) {
+        $matchperiod = $_POST['matchperiod'];
+    }
+    $matchsql = "SELECT * FROM v_lms_match WHERE lms_match_weekno = :weekno ORDER BY lms_team_name, lms_match_date  ASC ";
+    if ($matchperiod == '') {
+        $matchsql = "SELECT * FROM v_lms_match WHERE lms_match_weekno <> :weekno ORDER BY lms_team_name, lms_match_date  ASC ";
+    }
     $matchquery = $mypdo->prepare($matchsql);
+    $matchquery->bindParam(':weekno', $matchperiod);
     $matchquery->execute();
     $matchfetch = $matchquery->fetchAll(PDO::FETCH_ASSOC);
     $remainingweeks = get_remaining_weeks(false);
@@ -83,7 +90,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $html .= $key;
     $html .= '					<h3 class="text-center">Edit Match</h3>
 				                    <div class="form-group">
-			                        	<label for="weekid">Choose match:</label>
+			                        	<label for="matchid">Choose match:</label>
 			                            <select class="form-control" id="matchid" name="matchid">';
     foreach ($matchfetch as $mymatch) {
         $html .= '<option value="' . $mymatch['lms_match_id'] . '">' . $mymatch['lms_team_name'] . '&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp' . date_format(date_create($mymatch['lms_match_date']), 'd-M-Y') . '</option>';
