@@ -144,6 +144,10 @@ if (login_check($mypdo) == true && $access > 900) {
              */
             $nextWeek = $_SESSION['currentweek'] + 1;
             set_global_value('currweek', sprintf('%02d', $nextWeek));
+            $newSelectWeek = $_SESSION['selectweek'] + 1;
+            set_global_value('selectweek', sprintf('%02d', $newSelectWeek));
+            
+            
             set_week_state($_SESSION['matchweek'], 5);
             $_SESSION['currentweek'] = get_global_value('currweek');
             $_SESSION['currentseason'] = get_global_value('currseason');
