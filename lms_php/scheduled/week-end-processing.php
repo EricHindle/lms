@@ -20,8 +20,8 @@ $_SESSION['deadline'] = get_current_deadline_date($_SESSION['selectweekkey']);
 
 $weekstate = get_week_state($_SESSION['matchweek']);
 
-$logfile = fopen("lml-log-" . $_SESSION['matchweek'] . ".log", "a");
-fwrite($logfile, "--------------------------------------\n");
+$logfile = fopen("../logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a");
+fwrite($logfile, "Weekend Processing --------------------------------------\n");
 fwrite($logfile, date("Y-m-d") . "\n");
 if (check_start_date() == 1) {
 
@@ -154,5 +154,5 @@ if (check_start_date() == 1) {
 } else {
     fwrite($logfile, "Today is not a start date\n");
 }
-fclose();
+fclose($logfile);
 ?>

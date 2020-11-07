@@ -1,77 +1,83 @@
 <?php
-/* https://www.thesportsman.com/football/competitions/england/premier-league/results */
 
 /*
  * HINDLEWARE
  * Copyright (C) 2020 Eric Hindle. All rights reserved.
  */
+$myPath = '/home/lastmanl/public_html/';
 
-/* $myPath = '/home/lastmanl/public_html/'; */
 require_once 'simple_html_dom.php';
+require $myPath . 'includes/functions.php';
+require 'results-functions.php';
 
-function scraping_generic($url, $search)
+function scraping_generic($url, $search, $logfile)
 {
-    // Didn't find it yet.
-    $return = false;
-
-    echo "reading the url: " . $url . "\n";
+    fwrite($logfile, "Reading the url: " . $url . "\n");
     // create HTML DOM
     $html = file_get_html($url);
-    echo "url has been read." . "\n";
+    fwrite($logfile, "Url has been read." . "\n");
 
-    // get article block
+    // get fixture list block
     foreach ($html->find($search) as $found) {
-        // Found at least one.
-        $return - true;
+        // Found at least one
 
-        foreach ($html->find(".fixture-list-contain-inner") as $fixturelist) {
+        foreach ($found->find(".fixture-list-contain-inner") as $fixturelist) {
             $matchdate = "";
-
+            // get match date block
             foreach ($fixturelist->find(".flc-comp-title") as $datetext) {
-
-                $matchdate = trim(explode("<", $datetext->innertext, 2)[0]);
-                echo " \n" . "found: " . $matchdate . " \n\n";
+                $textdate = trim(explode("<", $datetext->innertext, 2)[0]);
+                $matchdate = strtotime($textdate);
+                fwrite($logfile, "----- Match date: " . date('d-m-Y', $matchdate) . " -----\n");
             }
-
+            // get match block
             foreach ($fixturelist->find(".flc-match-item-inner") as $match) {
 
-                $lteam = "";
-                $rteam = "";
+                $hometeam = "";
+                $awayteam = "";
+                $isFulltime = false;
                 foreach ($match->find(".left") as $left) {
-
-                    $lteam = trim(explode("<", $left->innertext, 2)[0]);
-                    echo "found: " . $lteam . " v ";
+                    foreach ($left->find(".full-width-extra-info") as $ft) {
+                        if (trim($ft->innertext) == "FT") {
+                            $isFulltime = true;
+                        }
+                    }
+                    $hometeam = get_team_abbreviation($left->innertext);
                 }
-
+                if (! $isFulltime) {
+                    continue;
+                }
                 foreach ($match->find(".right") as $right) {
-
-                    $rteam = trim(explode("<", $right->innertext, 2)[0]);
-                    echo $rteam;
+                    $awayteam = get_team_abbreviation($right->innertext);
                 }
-
+                // get score
                 foreach ($match->find(".center") as $score) {
+                    foreach ($score->find(".l-score") as $lscore) {
+                        $homescore = $lscore->innertext;
+                    }
+                    foreach ($score->find(".r-score") as $rscore) {
+                        $awayscore = $rscore->innertext;
+                    }
+                    fwrite($logfile, "  " . $hometeam . " " . $homescore . " - " . $awayscore . " " . $awayteam . "\n");
+                }
 
-                    foreach ($found->find(".l-score") as $lscore) {
-                        $score1 = $lscore->innertext;
+                if (! is_numeric($homescore)) {
+                    save_result($hometeam, $matchdate, $homescore, "p", $logfile);
+                    save_result($awayteam, $matchdate, $awayscore, "p", $logfile);
+                } else {
+                    if ($homescore > $awayscore) {
+                        save_result($hometeam, $matchdate, $homescore, "w", $logfile);
+                        save_result($awayteam, $matchdate, $awayscore, "l", $logfile);
                     }
 
-                    foreach ($found->find(".r-score") as $rscore) {
-                        $score2 = $rscore->innertext;
+                    if ($homescore < $awayscore) {
+                        save_result($hometeam, $matchdate, $homescore, "l", $logfile);
+                        save_result($awayteam, $matchdate, $awayscore, "w", $logfile);
                     }
 
-                    echo "  " . $score1 . " - " . $score2 . "\n";
-                }
-
-                if ($score1 > $score2) {
-                    echo $lteam . " - win " . $rteam . " - lose" . "\n";
-                }
-
-                if ($score1 < $score2) {
-                    echo $lteam . " - lose " . $rteam . " - win" . "\n";
-                }
-
-                if ($score1 == $score2) {
-                    echo $lteam . " - draw " . $rteam . " - draw" . "\n";
+                    if ($homescore == $awayscore) {
+                        save_result($hometeam, $matchdate, $homescore, "d", $logfile);
+                        save_result($awayteam, $matchdate, $awayscore, "d", $logfile);
+                    }
                 }
             }
         }
@@ -81,13 +87,20 @@ function scraping_generic($url, $search)
     $html->clear();
     unset($html);
 
-    return $return;
+    return;
 }
 
-$url = "https://www.thesportsman.com/football/competitions/england/premier-league/results";
+$_SESSION['currentweek'] = get_global_value('currweek');
+$_SESSION['currentseason'] = get_global_value('currseason');
+$_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
+$logfile = fopen("../logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a");
+fwrite($logfile, "Results Update --------------------------------------\n");
+fwrite($logfile, date("Y-m-d") . "\n");
 
+$url = "https://www.thesportsman.com/football/competitions/england/premier-league/results";
 $search = ".fixture-list-contain";
 
-scraping_generic($url, $search);
+scraping_generic($url, $search, $logfile);
 
+fclose($logfile);
 ?>
