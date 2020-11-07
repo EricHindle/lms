@@ -20,7 +20,7 @@ $_SESSION['deadline'] = get_current_deadline_date($_SESSION['selectweekkey']);
 
 $weekstate = get_week_state($_SESSION['matchweek']);
 
-$logfile = fopen("../logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a");
+$logfile = fopen( $myPath . "logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a");
 fwrite($logfile, "Weekend Processing --------------------------------------\n");
 fwrite($logfile, date("Y-m-d") . "\n");
 if (check_start_date() == 1) {
