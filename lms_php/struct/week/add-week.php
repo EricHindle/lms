@@ -47,16 +47,17 @@ if (login_check($mypdo) == true && $access > 900) {
     									</script>";
                         } else {
 
-                            date_add($dd, new DateInterval("P2D"));
-                            date_add($ed, new DateInterval("P6D"));
+                            // date_sub($dd, new DateInterval("P1D"));
+                            // date_add($ed, new DateInterval("P6D"));
 
-                            $deadline = date_format($dd, "Y-m-d");
-                            $enddate = date_format($ed, "Y-m-d");
-                            $startdate = date_format($sd, "Y-m-d");
+                            $dd->modify("-1 second");
+                            $ed->modify("+6 days");
+
+                            $deadline = date_format($dd, "Y-m-d H:i:s");
+                            $enddate = date_format($ed, "Y-m-d H:i:s");
+                            $startdate = date_format($sd, "Y-m-d H:i:s");
 
                             date_default_timezone_set('Europe/London');
-                            $phptime = time();
-                            $mysqltime = date("Y-m-d H:i:s", $phptime);
                             $sqladdweek = "INSERT INTO lms_week (lms_week_no, lms_week, lms_year, lms_week_start, lms_week_end, lms_week_deadline) VALUES (:weekid, :weeknumber, :weekyear, :weekstart, :weekend, :weekdeadline)";
                             $stmtaddweek = $mypdo->prepare($sqladdweek);
                             $stmtaddweek->bindParam(':weekid', $weekid);

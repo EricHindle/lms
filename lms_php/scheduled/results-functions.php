@@ -3,8 +3,9 @@
  * HINDLEWARE
  * Copyright (C) 2020 Eric Hindle. All rights reserved.
  */
-
-require '/home/lastmanl/public_html/includes/db_connect.php';
+$myPath = '/home/lastmanl/public_html/';
+$myPath = "../";
+require $myPath . 'includes/db_connect.php';
 
 function get_team_abbreviation($teamtext)
 {
@@ -59,6 +60,30 @@ function save_result($teamabbr, $matchdate, $score, $wl, $logfile)
     return;
 }
 
+function save_match($teamabbr, $matchdate, $logfile)
+{
+    $wkno = get_match_week($matchdate);
+    // get team id
+    $teamId = get_teamId_from_abbr($teamabbr);
+    if ($teamId > 0) {
+        // get league
+        $leagueId = get_leagueId($teamId);
+        // get match (team/matchdate)
+        $matchId = get_matchId($teamId, $matchdate);
+        // insert match
+        if ($matchId > 0) {
+            fwrite($logfile, "Match exists for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
+        } else {
+            fwrite($logfile, "** Match not found for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
+            insert_match($teamId, $matchdate, $wkno, '', $leagueId);
+            fwrite($logfile, "** Match inserted for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
+        }
+    } else {
+        fwrite($logfile, "** No team found for " . $teamabbr . "\n");
+    }
+    return;
+}
+
 function get_teamId_from_abbr($teamabbr)
 {
     $teamId = - 1;
@@ -89,7 +114,7 @@ function get_result($teamId, $matchdate)
 function insert_result($teamId, $matchdate, $score, $wl)
 {
     global $mypdo;
-    $insertresult = "INSERT INTO lms_results (lms_match_date,lms_match_team,lms_match_team_score,lms_match_team_wl) VALUES (:matchdate,:teamId,:score,:wl);";
+    $insertresult = "INSERT INTO lms_results (lms_match_date,lms_match_team,lms_match_team_score,lms_match_team_wl) VALUES (:matchdate,:teamId,:score,:wl)";
     $stmtaddweek = $mypdo->prepare($insertresult);
     $stmtaddweek->bindParam(':matchdate', date("Y-m-d", $matchdate));
     $stmtaddweek->bindParam(':teamId', $teamId, PDO::PARAM_INT);
@@ -139,4 +164,46 @@ function update_match_wl($matchid, $matchresult)
     return;
 }
 
+function insert_match($teamId, $matchdate, $wkno, $wl, $league)
+{
+    global $mypdo;
+    $insertresult = "INSERT INTO lms_match (lms_match_weekno, lms_match_team, lms_match_date, lms_match_result, lms_match_league) VALUES (:weekno, :teamId, :matchdate, :wl, :league)";
+    $insertquery = $mypdo->prepare($insertresult);
+    $insertquery->bindParam(':weekno', $wkno);
+    $insertquery->bindParam(':matchdate', date("Y-m-d", $matchdate));
+    $insertquery->bindParam(':teamId', $teamId, PDO::PARAM_INT);
+    $insertquery->bindParam(':league', $league, PDO::PARAM_INT);
+    $insertquery->bindParam(':wl', $wl);
+    $insertquery->execute();
+    return;
+}
+
+function get_leagueId($teamId)
+{
+    $leagueId = - 1;
+    global $mypdo;
+    $leaguesql = "SELECT * FROM lms_league_team WHERE lms_league_team_team_id = :teamId LIMIT 1";
+    $leaguequery = $mypdo->prepare($leaguesql);
+    $leaguequery->bindParam(":teamId", $teamId);
+    $leaguequery->execute();
+    $leaguefetch = $leaguequery->fetch(PDO::FETCH_ASSOC);
+    if ($leaguequery->rowCount() == 1) {
+        $leagueId = $leaguefetch['lms_league_team_league_id'];
+    }
+    return $leagueId;
+}
+
+function get_match_week($matchdate)
+{
+    $matchweek = "";
+    global $mypdo;
+    $weeksql = "SELECT * FROM lastmanl_lms.lms_week WHERE lms_week_start <= :matchdate order by lms_week_no asc";
+    $weekquery = $mypdo->prepare($weeksql);
+    $weekquery->bindParam(":matchdate", date("Y-m-d", $matchdate));
+    $weekquery->execute();
+    $weekfetch = $weekquery->fetchAll(PDO::FETCH_ASSOC);
+    $lastweek = $weekfetch[$weekquery->rowCount() - 1];
+    $matchweek = $lastweek['lms_week_no'];
+    return $matchweek;
+}
 ?>
