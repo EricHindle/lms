@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: localhost    Database: lms
+-- Host: 77.72.1.18    Database: lastmanl_lms
 -- ------------------------------------------------------
--- Server version	5.7.18-log
+-- Server version	5.5.5-10.3.24-MariaDB-log-cll-lve
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,25 +16,25 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `lms_game`
+-- Table structure for table `lms_match`
 --
 
-DROP TABLE IF EXISTS `lms_game`;
+DROP TABLE IF EXISTS `lms_match`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `lms_game` (
-  `lms_game_id` int(11) NOT NULL AUTO_INCREMENT,
-  `lms_game_start_wkno` varchar(6) NOT NULL,
-  `lms_game_name` varchar(45) NOT NULL,
-  `lms_game_status` int(1) NOT NULL DEFAULT '1',
-  `lms_game_week_count` int(11) NOT NULL DEFAULT '0',
-  `lms_game_total_players` int(11) NOT NULL DEFAULT '0',
-  `lms_game_still_active` int(11) NOT NULL DEFAULT '0',
-  `lms_game_manager` int(11) NOT NULL,
-  `lms_game_code` varchar(6) NOT NULL,
-  PRIMARY KEY (`lms_game_id`),
-  UNIQUE KEY `lms_game_id_UNIQUE` (`lms_game_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+CREATE TABLE `lms_match` (
+  `lms_match_id` int(11) NOT NULL AUTO_INCREMENT,
+  `lms_match_weekno` varchar(6) NOT NULL,
+  `lms_match_team` int(11) NOT NULL,
+  `lms_match_date` datetime NOT NULL,
+  `lms_match_result` char(1) NOT NULL DEFAULT '',
+  `lms_match_league` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`lms_match_id`),
+  KEY `fk_weekno_idx` (`lms_match_weekno`),
+  KEY `fk_team_idx` (`lms_match_team`),
+  CONSTRAINT `fk_lms_match_lms_team1` FOREIGN KEY (`lms_match_team`) REFERENCES `lms_team` (`lms_team_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_match_weekno` FOREIGN KEY (`lms_match_weekno`) REFERENCES `lms_week` (`lms_week_no`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=1073 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -46,4 +46,4 @@ CREATE TABLE `lms_game` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-30 16:21:50
+-- Dump completed on 2020-11-07 20:25:02

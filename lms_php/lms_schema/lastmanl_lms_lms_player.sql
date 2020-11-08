@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: localhost    Database: lms
+-- Host: 77.72.1.18    Database: lastmanl_lms
 -- ------------------------------------------------------
--- Server version	5.7.18-log
+-- Server version	5.5.5-10.3.24-MariaDB-log-cll-lve
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,29 +16,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `lms_game_player_status`
+-- Table structure for table `lms_player`
 --
 
-DROP TABLE IF EXISTS `lms_game_player_status`;
+DROP TABLE IF EXISTS `lms_player`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `lms_game_player_status` (
-  `lms_game_player_status_id` int(11) NOT NULL,
-  `lms_game_player_status_text` varchar(20) NOT NULL DEFAULT 'unknown',
-  PRIMARY KEY (`lms_game_player_status_id`),
-  UNIQUE KEY `lms_game_player_status_id_UNIQUE` (`lms_game_player_status_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `lms_player` (
+  `lms_player_id` int(11) NOT NULL AUTO_INCREMENT,
+  `lms_player_login` varchar(255) NOT NULL,
+  `lms_player_password` varchar(100) NOT NULL,
+  `lms_player_forename` varchar(45) NOT NULL DEFAULT '',
+  `lms_player_surname` varchar(45) NOT NULL DEFAULT '',
+  `lms_player_screen_name` varchar(100) NOT NULL DEFAULT '',
+  `lms_player_email` varchar(250) NOT NULL DEFAULT '',
+  `lms_access` int(11) NOT NULL DEFAULT 0,
+  `lms_active` tinyint(1) DEFAULT 1,
+  `lms_player_send_email` tinyint(1) DEFAULT 1,
+  `lms_player_created` datetime DEFAULT NULL,
+  PRIMARY KEY (`lms_player_id`),
+  UNIQUE KEY `lms_player_id_UNIQUE` (`lms_player_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `lms_game_player_status`
---
-
-LOCK TABLES `lms_game_player_status` WRITE;
-/*!40000 ALTER TABLE `lms_game_player_status` DISABLE KEYS */;
-INSERT INTO `lms_game_player_status` VALUES (1,'active'),(2,'out'),(3,'left');
-/*!40000 ALTER TABLE `lms_game_player_status` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -49,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-30 16:25:11
+-- Dump completed on 2020-11-07 20:24:56

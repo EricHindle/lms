@@ -1,8 +1,8 @@
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
--- Host: localhost    Database: lms
+-- Host: 77.72.1.18    Database: lastmanl_lms
 -- ------------------------------------------------------
--- Server version	5.7.18-log
+-- Server version	5.5.5-10.3.24-MariaDB-log-cll-lve
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,24 +16,17 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `lms_pick`
+-- Table structure for table `lms_league_team`
 --
 
-DROP TABLE IF EXISTS `lms_pick`;
+DROP TABLE IF EXISTS `lms_league_team`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `lms_pick` (
-  `lms_pick_player_id` int(11) NOT NULL,
-  `lms_pick_game_id` int(11) NOT NULL,
-  `lms_pick_match_id` int(11) NOT NULL,
-  `lms_pick_wl` char(1) NOT NULL DEFAULT '',
-  PRIMARY KEY (`lms_pick_player_id`,`lms_pick_game_id`,`lms_pick_match_id`),
-  KEY `fk_lms_game_id_idx` (`lms_pick_game_id`),
-  KEY `fk_lms_match_idx` (`lms_pick_match_id`),
-  CONSTRAINT `fk_lms_pick_game` FOREIGN KEY (`lms_pick_game_id`) REFERENCES `lms_game` (`lms_game_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_lms_pick_match` FOREIGN KEY (`lms_pick_match_id`) REFERENCES `lms_match` (`lms_match_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_lms_pick_player` FOREIGN KEY (`lms_pick_player_id`) REFERENCES `lms_player` (`lms_player_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `lms_league_team` (
+  `lms_league_team_league_id` int(11) NOT NULL,
+  `lms_league_team_team_id` int(11) NOT NULL,
+  PRIMARY KEY (`lms_league_team_league_id`,`lms_league_team_team_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -45,4 +38,4 @@ CREATE TABLE `lms_pick` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-01-30 16:21:50
+-- Dump completed on 2020-11-07 20:24:55
