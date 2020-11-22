@@ -5,7 +5,7 @@
  * Copyright (C) 2020 Eric Hindle. All rights reserved.
  */
 $myPath = '/home/lastmanl/public_html/';
-$myPath = "../";
+// $myPath = "../";
 require $myPath . 'scheduled/simple_html_dom.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'scheduled/results-functions.php';
@@ -59,7 +59,7 @@ function scraping_generic($url, $search, $logfile)
 $_SESSION['currentweek'] = get_global_value('currweek');
 $_SESSION['currentseason'] = get_global_value('currseason');
 $_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
-$logfile = fopen($myPath . "logs/test-log-" . $_SESSION['matchweek'] . ".log", "a");
+$logfile = fopen($myPath . "logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a");
 fwrite($logfile, "Fixtures Update --------------------------------------\n");
 fwrite($logfile, date("Y-m-d") . "\n");
 
