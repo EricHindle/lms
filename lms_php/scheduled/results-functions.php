@@ -72,9 +72,9 @@ function save_match($teamabbr, $matchdate, $logfile)
         $matchId = get_matchId($teamId, $matchdate);
         // insert match
         if ($matchId > 0) {
-            fwrite($logfile, "Match exists for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
+        //    fwrite($logfile, "Match exists for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
         } else {
-            fwrite($logfile, "** Match not found for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
+        //    fwrite($logfile, "** Match not found for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
             insert_match($teamId, $matchdate, $wkno, '', $leagueId);
             fwrite($logfile, "** Match inserted for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
         }
@@ -97,6 +97,28 @@ function get_teamId_from_abbr($teamabbr)
         $teamId = $teamfetch['lms_team_id'];
     }
     return $teamId;
+}
+
+function get_all_future_matches()
+{
+    $today = date("Y-m-d");
+    global $mypdo;
+    $matchsql = "SELECT lms_match_id,lms_match_team, lms_match_date, lms_team_abbr FROM v_lms_fixture WHERE lms_match_date > :today";
+    $matchquery = $mypdo->prepare($matchsql);
+    $matchquery->bindParam(":today", $today);
+    $matchquery->execute();
+    $matchdata = $matchquery->fetchAll(PDO::FETCH_ASSOC);
+    return $matchdata;
+}
+
+function delete_match($matchId)
+{
+    global $mypdo;
+    $matchsql = "DELETE FROM lms_match WHERE lms_match_id = :id";
+    $matchquery = $mypdo->prepare($matchsql);
+    $matchquery->bindParam(":id", $matchId, PDO::PARAM_INT);
+    $matchquery->execute();
+    return;
 }
 
 function get_result($teamId, $matchdate)

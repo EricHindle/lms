@@ -16,13 +16,13 @@ function scraping_generic($url, $search, $logfile)
     // create HTML DOM
     $html = file_get_html($url);
     fwrite($logfile, "Url has been read." . "\n");
-
+    $matchdate = "";
     // get fixture list block
     foreach ($html->find($search) as $found) {
         // Found at least one
-
+        $matchlist = array();
         foreach ($found->find(".fixture-list-contain-inner") as $fixturelist) {
-            $matchdate = "";
+
             // get match date block
             foreach ($fixturelist->find(".flc-comp-title") as $datetext) {
                 $textdate = trim(explode("<", $datetext->innertext, 2)[0]);
@@ -42,6 +42,8 @@ function scraping_generic($url, $search, $logfile)
                 }
                 $today = strtotime(date("d-m-Y"));
                 if ($matchdate > $today) {
+                    $matchlist[] = $hometeam . date('d-m-Y', $matchdate);
+                    $matchlist[] = $awayteam . date('d-m-Y', $matchdate);
                     save_match($hometeam, $matchdate, $logfile);
                     save_match($awayteam, $matchdate, $logfile);
                 }
@@ -49,6 +51,19 @@ function scraping_generic($url, $search, $logfile)
         }
     }
 
+    // check for replaced fixtures
+    fwrite($logfile, "----- Checking for duplicate matches -----\n");
+    $matchdata = get_all_future_matches();
+    foreach ($matchdata as $mch) {
+        $teamabbr = $mch['lms_team_abbr'];
+        $matchdate = date_format(date_create($mch['lms_match_date']), 'd-m-Y');
+        $matchid = $mch['lms_match_id'];
+        $found = in_array($teamabbr . $matchdate, $matchlist);
+        if ($found == false) {
+            fwrite($logfile, "Removing match : " . strval($matchid) . " " . $teamabbr . " " . $matchdate . "\n");
+            delete_match($matchid);
+        }
+    }
     // clean up memory
     $html->clear();
     unset($html);
