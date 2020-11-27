@@ -7,6 +7,8 @@
 require '/home/lastmanl/public_html/includes/db_connect.php';
 require '/home/lastmanl/public_html/scheduled/email-functions.php'; 
 
+//require '../scheduled/email-functions.php'; 
+
 function activateGames($nextgameweek)
 {
     global $mypdo;
@@ -151,6 +153,11 @@ function notify_postponed($playerid, $gameid)
 function notify_winner($playerid, $gameid)
 {
     sendemailusingtemplate('teamwin', $playerid, $gameid, '', true);
+}
+
+function notify_no_pick($playerid, $gameid)
+{
+    sendemailusingtemplate('nopick', $playerid, $gameid, '', true);
 }
 
 function set_game_complete($gameid)
