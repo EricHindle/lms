@@ -5,7 +5,7 @@
  */
 
 $myPath = '/home/lastmanl/public_html/'; 
-
+// $myPath =  "../";
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'scheduled/week-end-functions.php';

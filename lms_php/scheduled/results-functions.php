@@ -6,6 +6,34 @@
 $myPath = '/home/lastmanl/public_html/';
 // $myPath = "../";
 require $myPath . 'includes/db_connect.php';
+require $myPath . 'scheduled/email-functions.php';
+
+function notify_error($playerid, $gameid, $errormsg)
+{
+    sendemailusingtemplate('error', $playerid, $gameid, array($errormsg), false);
+}
+
+function get_game($gameid)
+{
+    global $mypdo;
+    $gamesql = "SELECT * FROM lms_game WHERE lms_game_id = :id LIMIT 1";
+    $gamequery = $mypdo->prepare($gamesql);
+    $gamequery->bindParam(":id", $gameid, PDO::PARAM_INT);
+    $gamequery->execute();
+    $gamefetch = $gamequery->fetch(PDO::FETCH_ASSOC);
+    return $gamefetch;
+}
+
+function get_player($playerid)
+{
+    global $mypdo;
+    $playersql = "SELECT * FROM lms_player WHERE lms_player_id = :id LIMIT 1";
+    $playerquery = $mypdo->prepare($playersql);
+    $playerquery->bindParam(":id", $playerid, PDO::PARAM_INT);
+    $playerquery->execute();
+    $playerfetch = $playerquery->fetch(PDO::FETCH_ASSOC);
+    return $playerfetch;
+}
 
 function get_team_abbreviation($teamtext)
 {
@@ -117,8 +145,8 @@ function delete_match($matchId)
     $matchsql = "DELETE FROM lms_match WHERE lms_match_id = :id";
     $matchquery = $mypdo->prepare($matchsql);
     $matchquery->bindParam(":id", $matchId, PDO::PARAM_INT);
-    $matchquery->execute();
-    return;
+    $delete_ok = $matchquery->execute();
+    return $delete_ok;
 }
 
 function get_result($teamId, $matchdate)

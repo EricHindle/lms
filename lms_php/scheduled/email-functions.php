@@ -5,7 +5,7 @@
  */
 
 $myPath = '/home/lastmanl/public_html/';
-
+// $myPath =  "../";
 require $myPath . 'includes/mail-util.php';
 
 function sendemailusingtemplate($templatename, $playerid, $gameid, $values, $checkflag)

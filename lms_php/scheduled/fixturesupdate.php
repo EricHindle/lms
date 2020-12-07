@@ -12,6 +12,7 @@ require $myPath . 'scheduled/results-functions.php';
 
 function scraping_generic($url, $search, $logfile)
 {
+    $errormsg = '';
     fwrite($logfile, "Reading the url: " . $url . "\n");
     // create HTML DOM
     $html = file_get_html($url);
@@ -54,6 +55,7 @@ function scraping_generic($url, $search, $logfile)
     // check for replaced fixtures
     fwrite($logfile, "----- Checking for duplicate matches -----\n");
     $matchdata = get_all_future_matches();
+    
     foreach ($matchdata as $mch) {
         $teamabbr = $mch['lms_team_abbr'];
         $matchdate = date_format(date_create($mch['lms_match_date']), 'd-m-Y');
@@ -61,8 +63,15 @@ function scraping_generic($url, $search, $logfile)
         $found = in_array($teamabbr . $matchdate, $matchlist);
         if ($found == false) {
             fwrite($logfile, "Removing match : " . strval($matchid) . " " . $teamabbr . " " . $matchdate . "\n");
-            delete_match($matchid);
+            if (delete_match($matchid) == false) {
+                $thiserror = "** Unable to remove match : " . strval($matchid) . " " . $teamabbr . " " . $matchdate . "\n";
+                write($logfile, $thiserror);
+                $errormsg = $errormsg . $thiserror;
+            }
         }
+    }
+    if ($errormsg != ''){
+          notify_error(0, 0, $errormsg);
     }
     // clean up memory
     $html->clear();
