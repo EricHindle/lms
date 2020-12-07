@@ -90,6 +90,7 @@ function save_result($teamabbr, $matchdate, $score, $wl, $logfile)
 
 function save_match($teamabbr, $matchdate, $logfile)
 {
+    $isOK = true;
     $wkno = get_match_week($matchdate);
     // get team id
     $teamId = get_teamId_from_abbr($teamabbr);
@@ -103,13 +104,15 @@ function save_match($teamabbr, $matchdate, $logfile)
         //    fwrite($logfile, "Match exists for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
         } else {
         //    fwrite($logfile, "** Match not found for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
-            insert_match($teamId, $matchdate, $wkno, '', $leagueId);
+            if (insert_match($teamId, $matchdate, $wkno, '', $leagueId) == false) {
+                $isOK = false;
+            }
             fwrite($logfile, "** Match inserted for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
         }
     } else {
         fwrite($logfile, "** No team found for " . $teamabbr . "\n");
     }
-    return;
+    return $isOK;
 }
 
 function get_teamId_from_abbr($teamabbr)
@@ -224,8 +227,7 @@ function insert_match($teamId, $matchdate, $wkno, $wl, $league)
     $insertquery->bindParam(':teamId', $teamId, PDO::PARAM_INT);
     $insertquery->bindParam(':league', $league, PDO::PARAM_INT);
     $insertquery->bindParam(':wl', $wl);
-    $insertquery->execute();
-    return;
+    return $insertquery->execute();
 }
 
 function get_leagueId($teamId)

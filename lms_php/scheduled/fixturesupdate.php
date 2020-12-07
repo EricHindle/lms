@@ -45,8 +45,16 @@ function scraping_generic($url, $search, $logfile)
                 if ($matchdate > $today) {
                     $matchlist[] = $hometeam . date('d-m-Y', $matchdate);
                     $matchlist[] = $awayteam . date('d-m-Y', $matchdate);
-                    save_match($hometeam, $matchdate, $logfile);
-                    save_match($awayteam, $matchdate, $logfile);
+                    if (save_match($hometeam, $matchdate, $logfile) == false) {
+                        $thiserror = "** Unable to insert match : " . $hometeam . " " . date_format(date_create($matchdate), 'd-m-Y') . "\n";
+                        fwrite($logfile, $thiserror);
+                        $errormsg = $errormsg . $thiserror;
+                    }
+                    if (save_match($awayteam, $matchdate, $logfile) == false) {
+                        $thiserror = "** Unable to insert match : " . $awayteam . " " . date_format(date_create($matchdate), 'd-m-Y') . "\n";
+                        fwrite($logfile, $thiserror);
+                        $errormsg = $errormsg . $thiserror;
+                    }
                 }
             }
         }
@@ -65,7 +73,7 @@ function scraping_generic($url, $search, $logfile)
             fwrite($logfile, "Removing match : " . strval($matchid) . " " . $teamabbr . " " . $matchdate . "\n");
             if (delete_match($matchid) == false) {
                 $thiserror = "** Unable to remove match : " . strval($matchid) . " " . $teamabbr . " " . $matchdate . "\n";
-                write($logfile, $thiserror);
+                fwrite($logfile, $thiserror);
                 $errormsg = $errormsg . $thiserror;
             }
         }
