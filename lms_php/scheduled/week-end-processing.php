@@ -3,9 +3,8 @@
  * HINDLEWARE
  * Copyright (C) 2020 Eric Hindle. All rights reserved.
  */
-
-$myPath = '/home/lastmanl/public_html/'; 
-// $myPath =  "../";
+$myPath = '/home/lastmanl/public_html/';
+// $myPath = "../";
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'scheduled/week-end-functions.php';
@@ -20,7 +19,7 @@ $_SESSION['deadline'] = get_current_deadline_date($_SESSION['selectweekkey']);
 
 $weekstate = get_week_state($_SESSION['matchweek']);
 
-$logfile = fopen( $myPath . "logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a");
+$logfile = fopen($myPath . "logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a");
 fwrite($logfile, "Weekend Processing --------------------------------------\n");
 fwrite($logfile, date("Y-m-d") . "\n");
 if (check_start_date() == 1) {
@@ -50,29 +49,37 @@ if (check_start_date() == 1) {
              * Mark players with no pick as out
              */
             $picks = get_current_week_picks();
+            fwrite($logfile, "Current week picks\n");
             foreach ($picks as $rs) {
                 $gameid = $rs['lms_pick_game_id'];
                 $playerid = $rs['lms_pick_player_id'];
                 $matchid = $rs['lms_pick_match_id'];
+                $gameplayer = get_game_player($gameid, $playerid);
                 fwrite($logfile, "Player " . strval($playerid) . " Game " . strval($gameid) . " Match " . strval($matchid) . "\n");
-                $pickwl = '';
-                if ($rs['lms_match_result'] == 'l' or $rs['lms_match_result'] == 'd') {
-                    set_game_player_out($gameid, $playerid);
-                    fwrite($logfile, "Player out of game\n");
-                    $pickwl = 'l';
-                    notify_loser($playerid, $gameid);
-                } else {
-                    $pickwl = 'w';
-                    if ($rs['lms_match_result'] == 'p') {
-                        notify_postponed($playerid, $gameid);
-                        fwrite($logfile, "Match postponed\n");
+                if ($gameplayer['lms_game_player_status'] == 1) {
+                    fwrite($logfile, "Player still active in this game\n");
+                    $pickwl = '';
+                    if ($rs['lms_match_result'] == 'l' or $rs['lms_match_result'] == 'd') {
+                        set_game_player_out($gameid, $playerid);
+                        fwrite($logfile, "Player out of game\n");
+                        $pickwl = 'l';
+                        notify_loser($playerid, $gameid);
                     } else {
-                        notify_winner($playerid, $gameid);
-                        fwrite($logfile, "Winning pick\n");
+                        $pickwl = 'w';
+                        if ($rs['lms_match_result'] == 'p') {
+                            notify_postponed($playerid, $gameid);
+                            fwrite($logfile, "Match postponed\n");
+                        } else {
+                            notify_winner($playerid, $gameid);
+                            fwrite($logfile, "Winning pick\n");
+                        }
                     }
+                    set_pick_wl($gameid, $playerid, $matchid, $pickwl);
+                    fwrite($logfile, "Pick result set\n");
+                } else {
+                    fwrite($logfile, "Player no longer active in this game - removing pick\n");
+                    delete_pick($playerid, $gameid, $matchid);
                 }
-                set_pick_wl($gameid, $playerid, $matchid, $pickwl);
-                fwrite($logfile, "Pick result set\n");
             }
             $activeGames = get_active_games();
             fwrite($logfile, "Active games\n");

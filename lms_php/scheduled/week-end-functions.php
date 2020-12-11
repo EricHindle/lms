@@ -32,6 +32,19 @@ function check_start_date()
     return $rowcount;
 }
 
+function delete_pick($playerid, $gameid, $matchid)
+{
+    global $mypdo;
+    $delsql = "DELETE FROM lms_pick WHERE lms_pick_player_id=:player and lms_pick_game_id=:game and lms_pick_match_id=:match";
+    $delquery = $mypdo->prepare($delsql);
+    $delquery->bindParam(":player", $playerid, PDO::PARAM_INT);
+    $delquery->bindParam(":game", $gameid, PDO::PARAM_INT);
+    $delquery->bindParam(":match", $matchid, PDO::PARAM_INT);
+    $delquery->execute();
+    $delcount = $delquery->rowCount();
+    $isdeleted = ($delcount > 0) ? true : false;
+    return $isdeleted;
+}
 
 function get_active_games()
 {
@@ -102,6 +115,17 @@ function get_game_player_pick_count($gameid, $playerid)
 }
 
 function get_player($playerid)
+{
+    global $mypdo;
+    $playersql = "SELECT * FROM lms_player WHERE lms_player_id = :id LIMIT 1";
+    $playerquery = $mypdo->prepare($playersql);
+    $playerquery->bindParam(":id", $playerid, PDO::PARAM_INT);
+    $playerquery->execute();
+    $playerfetch = $playerquery->fetch(PDO::FETCH_ASSOC);
+    return $playerfetch;
+}
+
+function get_game_player($gameid, $playerid)
 {
     global $mypdo;
     $playersql = "SELECT * FROM lms_player WHERE lms_player_id = :id LIMIT 1";
