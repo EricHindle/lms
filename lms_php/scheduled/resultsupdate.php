@@ -57,6 +57,10 @@ function scraping_generic($url, $search, $logfile)
                     foreach ($score->find(".r-score") as $rscore) {
                         $awayscore = $rscore->innertext;
                     }
+                    foreach ($score->find(".flc-match-error") as $rscore) {
+                        $homescore = 'p';
+                        $awayscore = 'p';
+                    }                  
                     fwrite($logfile, "  " . $hometeam . " " . $homescore . " - " . $awayscore . " " . $awayteam . "\n");
                 }
 
