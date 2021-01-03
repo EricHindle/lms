@@ -1,7 +1,7 @@
 <?php
 /*
  * HINDLEWARE
- * Copyright (C) 2020 Eric Hindle. All rights reserved.
+ * Copyright (C) 2020-21 Eric Hindle. All rights reserved.
  */
 $myPath = '/home/lastmanl/public_html/';
 // $myPath = "../";
