@@ -55,6 +55,30 @@ function scraping_generic($url, $search, $logfile)
                         fwrite($logfile, $thiserror);
                         $errormsg = $errormsg . $thiserror;
                     }
+                } else {
+                    $matchlist[] = $hometeam . date('d-m-Y', $matchdate);
+                    $matchlist[] = $awayteam . date('d-m-Y', $matchdate);
+                    // get score
+                    $homescore = 0;
+                    $awayscore = 0;
+                    $scoretext = '';
+                    foreach ($match->find(".center") as $score) {
+                        foreach ($score->find(".flc-match-error") as $rscore) {
+                            $homescore = 'p';
+                            $awayscore = 'p';
+                            $scoretext = trim(explode("<", $rscore->innertext, 2)[0]);
+                        }
+                    }
+                    
+                    if (! is_numeric($homescore)) {
+                        fwrite($logfile, $scoretext . "  " . $hometeam . " " . $homescore . " - " . $awayscore . " " . $awayteam . "\n");
+                        save_result($hometeam, $matchdate, 0, "p", $logfile);
+                        save_result($awayteam, $matchdate, 0, "p", $logfile);
+                    } 
+                    
+                    
+                    
+                    
                 }
             }
         }
