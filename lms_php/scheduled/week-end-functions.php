@@ -128,9 +128,10 @@ function get_player($playerid)
 function get_game_player($gameid, $playerid)
 {
     global $mypdo;
-    $playersql = "SELECT * FROM lms_player WHERE lms_player_id = :id LIMIT 1";
+    $playersql = "SELECT * FROM lms_game_player WHERE lms_player_id = :id and lms_game_id = :gameId LIMIT 1";
     $playerquery = $mypdo->prepare($playersql);
     $playerquery->bindParam(":id", $playerid, PDO::PARAM_INT);
+    $playerquery->bindParam(":gameId", $gameid, PDO::PARAM_INT);
     $playerquery->execute();
     $playerfetch = $playerquery->fetch(PDO::FETCH_ASSOC);
     return $playerfetch;
