@@ -14,113 +14,43 @@ $key = $formKey->outputKey();
 $html = "";
 
 echo '
-		<!doctype html>
-		<html>
-			<head>
-				
-			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-			    <meta charset="UTF-8">
-			    
-			    <title>Player Admin</title>
-			    
-			    <meta name="viewport" content="width=device-width, initial-scale=1">
-			    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
-			    <link rel="stylesheet" href="' . $myPath . 'css/retlogin.css">
-			    <script src="' . $myPath . 'js/jquery.js"></script>
-			    <script src="' . $myPath . 'js/bootstrap.min.js"></script>
-			    <script src="' . $myPath . 'js/jquery.tablesorter.js"></script>
-			    <script>
-		            $(function(){
-		            $(\'#keywords\').tablesorter(); 
-		            });
-		        </script>
-		        <script>
-					$(document).ready(function () {
-						toggleFields();
-						$("#role").change(function () {
-							toggleFields();
-						});
-					});
-				</script>
-			</head>
-
-			<body>';
-$html .= '
-				<section id="homeSection">
-			    <br><br>
-			        <div class="container">
-			        	<div class="row">
-			                <div class="col-md-offset-4 col-md-4 col-sm-offset-1 col-sm-10">
-			                    <h1 style="text-align:center; color:white;"><strong>Create an Account</strong></h1>
-			                    <br>
-			                </div>
-			      		</div>
-			        	<div class = "row">';
-
-$html .= '			<div class="well col-md-offset-4 col-md-4 col-sm-offset-1 col-sm-10 textDark">
-			                	<form class="form-group" role="form" name ="addplayer" autocomplete="off" method="post" action="' . $myPath . 'struct/player/add-new-player.php">';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href="' . $myPath . 'css/login.css">
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+	<title>Last Man Live - Reset Password</title>
+</head>
+<body>
+<div class="container">
+	<div class="box">	
+		<h1 style="margin-bottom:10px">Create account</h1>
+		<form class="form-group" role="form" name ="addplayer" autocomplete="off" method="post" action="' . $myPath . 'struct/player/add-new-player.php">';
 $html .= $key;
-$html .= '					<h3 class="text-center">Enter Your Details</h3>
-			                    	<br>
-
-                                    <div class="form-group">
-                                        <div class="inner-addon left-addon">
-                                            <i class="glyphicon glyphicon-envelope"></i>
-                                            <input type="text" class="form-control" name="email"  id="email" placeholder="email address"  value="" >
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="inner-addon left-addon">
-                                            <i class="glyphicon glyphicon-lock"></i>
-                                            <input type="password" class="form-control" name="password"  id="password" placeholder="password" autocomplete="off"  value="" >
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="inner-addon left-addon">
-                                            <i class="glyphicon glyphicon-lock"></i>
-                                            <input type="password" class="form-control" name="confirm"  id="confirm" placeholder="confirm password" autocomplete="off"  value="" >
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="inner-addon left-addon">
-                                           <i class="glyphicon glyphicon-user"></i>
-					                       <input type="text" class="form-control" id="fname" name="fname" placeholder="forename" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="inner-addon left-addon">
-                                           <i class="glyphicon glyphicon-user"></i>
-					                       <input type="text" class="form-control" id="sname" name="sname" placeholder="surname" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="inner-addon left-addon">
-                                           <i class="glyphicon glyphicon-modal-window"></i>
-					                       <input type="text" class="form-control" id="screenname" name="screenname" placeholder="screen name" />
-					                    <input type="hidden" name="isadmin" value="false">';
-$html .= '	                 
-				                       </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                           <input type="checkbox" style="margin-left:20px;" name="issendemail" id="issendemail" value="true" checked >
-                                           <label for="issendemail">&nbsp send game emails</label>
-                                    </div>
-				                    <div class="form-group">
-				                    	<br>
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
-                                        <a href="' . $myPath . 'index.php" class="btn btn-primary btn-small" role="button" style="float:right">Back</a>
-				                    </div>
-				                </form>
-				            </div>
+$html .= '					
+		<input type="text" class="form-field" name="email"  id="email" placeholder="email address"  value="" >
+		<input type="password" class="form-field" name="password"  id="password" placeholder="password" autocomplete="off"  value="" >
+        <input type="password" class="form-field" name="confirm"  id="confirm" placeholder="confirm password" autocomplete="off"  value="" >
+        <input type="text" class="form-field" name="fname" id="fname" placeholder="first name" />
+        <input type="text" class="form-field" name="sname" id="sname" placeholder="surname" />
+        <input type="text" class="form-field" name="screenname" id="screenname"  placeholder="screen name" />
+		<input type="hidden" name="isadmin" value="false">
+		<div class="form-checkbox">
+		<input type="checkbox" style="margin-left:20px;" name="issendemail" id="issendemail" value="true" checked >
+		<label for="issendemail">&nbsp receive game emails</label>
+		</div>
+        <input id="submit" name="submit" type="submit" value="Submit" class="btn">
+		</form>
+		</div>
+		<div class="light-text">
+        <a href="' . $myPath . 'index.php" role="button">Back</a>
 			            ';
 
 $html .= '	      		
 			    	</div>
-			    </section>
+					</div>
 			</body>
 		</html>
 

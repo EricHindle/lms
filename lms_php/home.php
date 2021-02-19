@@ -15,8 +15,6 @@ $gamequery->bindParam(':player', $playerid, PDO::PARAM_INT);
 $gamequery->execute();
 $gamefetch = $gamequery->fetchAll(PDO::FETCH_ASSOC);
 
-$currentPage = 'home';
-
 $picksql = "SELECT lms_team_name, lms_match_date  FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game and lms_match_weekno = :matchwk LIMIT 1";
 
 $key = $formKey->outputKey();
@@ -27,11 +25,17 @@ if (login_check($mypdo) == true) {
 		<html>
 			<head>
 				
+			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+			    <meta charset="UTF-8">
 			    
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-			    <link rel="stylesheet" href="' . $myPath . 'css/style.css">
-                <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+			    <title>Home</title>
+			    
+			    <meta name="viewport" content="width=device-width, initial-scale=1">
+			    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
+			    <link rel="stylesheet" href="' . $myPath . 'css/nav.css">
+			    <link rel="stylesheet" href="' . $myPath . 'css/rethome.css">
+			    <script src="' . $myPath . 'js/jquery.js"></script>
+			    <script src="' . $myPath . 'js/bootstrap.min.js"></script>
 			</head>
 
 			<body>';
@@ -39,38 +43,38 @@ if (login_check($mypdo) == true) {
     echo '
 				<section id="homeSection">
 			    <br><br>
-		        <div class="">
-		            <div class="">
-		                <div class="">
+		        <div class="container">
+		            <div class="row">
+		                <div class="col-md-10">
 		                    <h1><strong>Welcome ' . $_SESSION['nickname'] . '</strong></h1>
 		                    <br>
 		                </div>
                     </div>
-                    <div class="">
-                        <div class="">
-                            <div class="">
+                    <div class="row">
+                        <div class="col-sm-3 col-md-3">
+                            <div class="tile black">
                                Match week: ';
     $html .= $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'];
     $html .= '
                             </div>
                         </div>
-                        <div class="">
-                            <div class="">
+                        <div class="col-sm-6 col-md-6">
+                            <div class="tile black">
                                Deadline for week &nbsp;' . sprintf('%02d', $_SESSION['currentweek'] + 1) . '&nbsp; picks is &nbsp;' . date_format(date_create($_SESSION['deadline']), 'd M Y');
     $html .= '	            </div>
                         </div>
 		            </div>';
 
-    $html .= '	    <div class="">
-    <div class="">
-    <div class="">
-    <h3 class="" >Make a Pick for</h3>
+    $html .= '	    <div class="row">
+    <div class="col-sm-3 col-md-3">
+    <div class="tile red">
+    <h3 class="title" >Make a Pick for</h3>
 
-    <form class="" role="form" name ="editpick" method="post" action="' . $myPath . 'struct/picks/pick-main.php">';
+    <form class="form-horizontal" role="form" name ="editpick" method="post" action="' . $myPath . 'struct/picks/pick-main.php">';
     $html .= $key;
     $html .= '
-        <div class="" style="margin-left:16px;margin-right:16px">
-        <select class="" id="gameid" name="gameid">';
+        <div class="form-group" style="margin-left:16px;margin-right:16px">
+        <select class="form-control" id="gameid" name="gameid">';
     foreach ($gamefetch as $myGame) {
         if ($myGame['lms_game_start_wkno'] <= $_SESSION['selectweekkey']) {
             $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
@@ -78,64 +82,64 @@ if (login_check($mypdo) == true) {
     }
     $html .= '	                         </select>
                 </div>
-                <div class="" style="margin-left:16px;margin-right:16px">
-                <h5 class="" >(also view past picks)</h5>
-                <input class="" id="submit1" name="submit" type="submit" value="Submit" >
+                <div class="form-group" style="margin-left:16px;margin-right:16px">
+                <h5 class="title" >(also view past picks)</h5>
+                <input id="submit1" name="submit" type="submit" value="Submit" class="btn btn-primary">
                 </div>
                 </form>
                 </div>
                 </div>
-                <div class="">
-                <div class="">
-                <h3 class="" >Join a Game</h3>
+                <div class="col-sm-3 col-md-3">
+                <div class="tile orange">
+                <h3 class="title" >Join a Game</h3>
                 <form role="form" name ="edit" method="post" action="' . $myPath . 'struct/game/process-join-game.php">';
     $html .= $key;
-    $html .= '                          <div class="" style="margin-left:16px;margin-right:16px">
-                <input type="text" class="" id="gamecode" name="gamecode" placeholder="game code">
+    $html .= '                          <div class="form-group " style="margin-left:16px;margin-right:16px">
+                <input type="text" class="form-control" id="gamecode" name="gamecode" placeholder="game code">
                 </div>
-                <div class="" style="margin-left:16px;margin-right:16px">
+                <div class="form-group" style="margin-left:16px;margin-right:16px">
                 <br>
-                <input class="" id="submit2" name="submit" type="submit" value="Submit" >
+                <input id="submit2" name="submit" type="submit" value="Submit" class="btn btn-primary">
                 </div>
                 </form>
                 </div>
                 </div>
-                <div class="">
-                <div class="">
-                <form class="" role="form" name ="showgame" method="post" action="' . $myPath . 'struct/game/show-played-game.php">';
+                <div class="col-sm-3 col-md-3">
+                <div class="tile green">
+                <form class="form-horizontal" role="form" name ="showgame" method="post" action="' . $myPath . 'struct/game/show-played-game.php">';
     $html .= $key;
-    $html .= '					     <h3 class="">Show a Game</h3>
-                <div class="" style="margin-left:16px;margin-right:16px">
-                <select class="" id="gameid" name="gameid">';
+    $html .= '					     <h3 class="title">Show a Game</h3>
+                <div class="form-group" style="margin-left:16px;margin-right:16px">
+                <select class="form-control" id="gameid" name="gameid">';
     foreach ($gamefetch as $myGame) {
         $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
     }
     $html .= '	                             </select>
             </div>
-            <div class="" style="margin-left:16px;margin-right:16px">
+            <div class="form-group" style="margin-left:16px;margin-right:16px">
             <br>
-            <input id="submit" name="submit" type="submit" value="Submit" class="">
+            <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
             </div>
             </form>
             </div>
             </div>
             </div>
-            <div class="">
-            <div class="">
-            <div class="" style="padding-top:10px;padding-bottom:0px;">
+            <div class="row">
+            <div class="col-sm-9">
+            <div class="tile teal" style="padding-top:10px;padding-bottom:0px;">
             <a href="' . $myPath . 'struct/game/game-manage.php">
-            <h3 class="" style="text-align:center">Manage Games</h3>
+            <h3 class="title" style="text-align:center">Manage Games</h3>
             </a>
             </div>
             </div>
             </div>';
 
-    $html .= '      <div class="">
-		            	<div class="">
+    $html .= '      <div class="row">
+		            	<div class="well col-md-9  textDark">
 			        		<h3>Games Played by ' . $_SESSION['nickname'] . '</h3>
-				        	<table class="" id="keywords">
+				        	<table class="table table-bordered" id="keywords">
 								<thead>
-    								<tr class="">
+    								<tr class="game">
     									<th>Name</th>
     									<th>Start Wk</th>
                                         <th>Game Status</th>
@@ -223,41 +227,12 @@ if (login_check($mypdo) == true) {
 
 
              </section>
-			 
-			 
-			 
-			 
           </body>
        </html>
     	';
     echo $html;
-} 
-
-
-
-else {
+} else {
     header('Location: ' . $myPath . 'index.php?error=1');
 }
 
-?> 
-
-<?php $currentPage = 'home'; ?>
-
-<div class="page-container">
-  <a href="games.php" class="option">
-    <h2>My Games</h2>
-    <p>Make picks in your current games</p>
-  </a>
-  <a href="create.php"class="option">   
-    <h2>Create Game</h2>
-    <p>Create a football knockout Game</p>
-  </a>
-  <a href="join.php"class="option">   
-    <h2>Join Game</h2>
-    <p>Use a unique code to join a game</p>
-  </a>
-  <a href="manage.php" class="option">   
-    <h2>Manage</h2>
-    <p>Manage games you’ve created</p>
-  </a>
-</div>
+?>

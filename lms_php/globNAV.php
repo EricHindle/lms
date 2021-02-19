@@ -2,51 +2,57 @@
 $currentlevel = $_SESSION['retaccess'];
 $adminlevelneeded = 999;
 $devlevelneeded = 901;
+?>
 
-echo '
-		   <section>
+<header>
+	<link rel="stylesheet" href="<?php echo $myPath; ?>css/nav.css">
+	<a href="<?php echo $myPath; ?>menus/home.php">
+		<img src="<?php echo $myPath; ?>img/Lastman-Logo.png" alt="logo" class="logo-image" />
+	</a>
+	
+	
+	<div class="account" onClick="menuToggle();">
+			<span class="account-icon" style="background-image: url(<?php echo $myPath; ?>img/icons/home-grey.svg)"></span>
+		<div class="account-name"> 
+		   	<?php echo $_SESSION['nickname'];?>
+		</div>
+		<div class="account-menu">
+			<ul>
+				<li>
+					<form class="txt-btn" role="form" name ="myaccount" method="post" action="<?php echo $myPath; ?>struct/player/myaccount.php">
+					<?php echo $key; ?>
+					<input id="submit" type="submit" value="Manage Your Account">
+					</form>
+				</li>
+				<?php	if ($currentlevel == $adminlevelneeded || $currentlevel == $devlevelneeded) {echo '<li><a class="admin-btn" href="' . $myPath . 'struct/main.php">Admin</a></li>';} ?>
+				<li><a class="btn" href="<?php echo $myPath; ?>logout.php">Sign out</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</header>
 
-			<nav role="navigation" class="navbar navbar-default navbar-fixed-top navbar-expand-lg">
-					<div class="container-fluid">
-						<!-- Brand and toggle get grouped for better mobile display -->
-						<div class="navbar-header">
-							<button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
-								<span class="sr-only">Toggle navigation</span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-							</button>
-							<a class="navbar-brand"><img style=" margin-top: -7px;" src="' . $myPath . '/img/logo_resp.png"></a>
-						</div>
-						<!-- Collection of nav links and other content for toggling -->
-						<div id="navbarCollapse" class="collapse navbar-collapse">
-							<ul class="nav navbar-nav">
-								<li class="nav-item"><a class="nav-link" href="' . $myPath . 'menus/home.php">Home</a></li>
-								<li class="nav-item"><a href="' . $myPath . 'struct/game/game-manage.php">Manage Games</a></li>';
 
-if ($currentlevel == $adminlevelneeded || $currentlevel == $devlevelneeded) {
-    echo '
-								<li class="nav-item"><a href="' . $myPath . 'struct/main.php">Admin</a></li>';
-}
-if ($currentlevel == $devlevelneeded) {
-    echo '
-								<li class="nav-item"><a href="' . $myPath . 'menus/testmenu.php">Test</a></li>';
-}
-echo '                      </ul>
 
-<ul class="nav navbar-nav navbar-right" >';
-if ($currentlevel != $adminlevelneeded && $currentlevel != $devlevelneeded) {
-    echo '                        <li class="nav-item">    <a class="nav-link" href="#">Match week: ' . $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'] . '</a></li>';
-}
-echo '                            <li class="nav-item">    <form class="form-inline" role="form" name ="myaccount" method="post" action="' . $myPath . 'struct/player/myaccount.php">
-                                <span class="glyphicon glyphicon-user"></span>' . $key . '<input id="submit" name="submit" type="submit" value="'. $_SESSION['nickname'] . '" class="navbar nav-button">
-                            </form></li>
-                        <li class="nav-item">    <a  class="nav-link" href="' . $myPath . 'logout.php"><span class="glyphicon glyphicon-log-in"></span> Sign out</a></li>
-</ul>
+<nav>
+	<a class="nav-item <?php echo $currentPage == 'home' ? 'active' : ''; ?>" href="<?php echo $myPath; ?>menus/home.php"><span class="nav-icon home-icon" style="background-image: url(<?php echo $myPath; ?>img/icons/home-grey.svg)"></span>Home</a>
+	<a class="nav-item <?php echo $currentPage == 'games' ? 'active' : ''; ?>" href="<?php echo $myPath; ?>menus/home.php"><span class="nav-icon games-icon" style="background-image: url(<?php echo $myPath; ?>img/icons/games-grey.svg)"></span>Games</a>
+	<a class="nav-item <?php echo $currentPage == 'create' ? 'active' : ''; ?>" href="<?php echo $myPath; ?>menus/home.php"><span class="nav-icon create-icon" style="background-image: url(<?php echo $myPath; ?>img/icons/create-grey.svg)"></span>Create</a>
+	<a class="nav-item <?php echo $currentPage == 'join' ? 'active' : ''; ?>" href="<?php echo $myPath; ?>menus/home.php"><span class="nav-icon join-icon" style="background-image: url(<?php echo $myPath; ?>img/icons/join-grey.svg)"></span>Join</a>
+	<a class="nav-item <?php echo $currentPage == 'manage' ? 'active' : ''; ?>" href="<?php echo $myPath; ?>struct/game/game-manage.php"><span class="nav-icon manage-icon" style="background-image: url(<?php echo $myPath; ?>img/icons/manage-grey.svg)"></span>Manage</a>			
+	
+</nav>
 
-						</div>
-					</div>
-				</nav>
-</section>
-	';
+
+
+<script>
+	function menuToggle(){
+		const toggleMenu = document.querySelector('.account');
+		toggleMenu.classList.toggle('active')
+	}
+</script>
+
+<?php
+		if ($currentlevel == $devlevelneeded) {	echo '<li><a href="' . $myPath . 'menus/testmenu.php">Test</a></li>';}
+		if ($currentlevel != $adminlevelneeded && $currentlevel != $devlevelneeded) {echo '<li><a class="nav-link" href="#">Match week: ' . $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'] . '</a></li>';}
 ?>

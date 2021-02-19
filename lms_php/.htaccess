@@ -1,34 +1,5 @@
-# Prevent Apache from serving .ht* files:
-<FilesMatch "^\.ht">
-Order allow,deny
-Deny from all
-</FilesMatch>
-Options -Indexes
-<IfModule mod_headers.c>
-Header set Strict-Transport-Security "max-age=631138519; includeSubDomains"
-Header set X-Frame-Options: deny
-Header set X-XSS-Protection: "1; mode=block"
-Header set X-Content-Type-Options nosniff
-Header set X-Frame-Options DENY
-Header unset Server
-Header always unset X-Powered-By
-Header unset X-Powered-By
-</IfModule>
-RewriteEngine On
-RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK|HEAD|DELETE|PUT|OPTIONS)
-RewriteRule .* - [F]
-RewriteCond %{SERVER_PORT} 80 
-RewriteCond %{REQUEST_URI} !^/[0-9]+\..+\.cpaneldcv$
-RewriteCond %{REQUEST_URI} !^/[A-F0-9]{32}\.txt(?:\ Comodo\ DCV)?$
-RewriteCond %{REQUEST_URI} !^/\.well-known/acme-challenge/[0-9a-zA-Z_-]+$
-RewriteRule ^(.*)$ https://retail.whfieldservices.com/$1 [R=301,L]
-<Files 403.shtml>
-order allow,deny
-allow from all
-</Files>
 
-deny from 178.238.230.32
-deny from 180.97.106.37
-# START - Disable server signature #
-ServerSignature Off
-# END - Disable server signature #
+
+# php -- BEGIN cPanel-generated handler, do not edit
+# This domain inherits the “PHP” package.
+# php -- END cPanel-generated handler, do not edit

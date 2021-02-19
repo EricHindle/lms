@@ -1,5 +1,5 @@
 <?php
-require_once 'db_connect.php';
+require 'db_connect.php';
 
 date_default_timezone_set('Europe/London');
 

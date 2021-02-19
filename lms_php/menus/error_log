@@ -1,0 +1,67 @@
+[11-Feb-2021 20:50:39 Europe/London] PHP Parse error:  syntax error, unexpected 'class' (T_CLASS), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 26
+[11-Feb-2021 20:50:41 Europe/London] PHP Parse error:  syntax error, unexpected 'class' (T_CLASS), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 26
+[11-Feb-2021 20:51:04 Europe/London] PHP Parse error:  syntax error, unexpected 'class' (T_CLASS), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 26
+[11-Feb-2021 22:53:16 Europe/London] PHP Parse error:  syntax error, unexpected 'class' (T_CLASS), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 22
+[11-Feb-2021 22:53:20 Europe/London] PHP Parse error:  syntax error, unexpected 'class' (T_CLASS), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 22
+[11-Feb-2021 22:53:38 Europe/London] PHP Parse error:  syntax error, unexpected 'class' (T_CLASS), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 22
+[11-Feb-2021 22:53:39 Europe/London] PHP Parse error:  syntax error, unexpected 'class' (T_CLASS), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 22
+[11-Feb-2021 22:53:39 Europe/London] PHP Parse error:  syntax error, unexpected 'class' (T_CLASS), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 22
+[11-Feb-2021 22:53:39 Europe/London] PHP Parse error:  syntax error, unexpected 'class' (T_CLASS), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 22
+[11-Feb-2021 23:13:35 Europe/London] PHP Parse error:  syntax error, unexpected 'home' (T_STRING), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 25
+[11-Feb-2021 23:13:37 Europe/London] PHP Parse error:  syntax error, unexpected 'home' (T_STRING), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 25
+[11-Feb-2021 23:14:28 Europe/London] PHP Parse error:  syntax error, unexpected 'home' (T_STRING), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 60
+[11-Feb-2021 23:14:30 Europe/London] PHP Parse error:  syntax error, unexpected 'home' (T_STRING), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 60
+[11-Feb-2021 23:17:10 Europe/London] PHP Parse error:  syntax error, unexpected 'home' (T_STRING), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 28
+[11-Feb-2021 23:17:11 Europe/London] PHP Parse error:  syntax error, unexpected 'home' (T_STRING), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 28
+[11-Feb-2021 23:17:12 Europe/London] PHP Parse error:  syntax error, unexpected 'home' (T_STRING), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 28
+[11-Feb-2021 23:18:00 Europe/London] PHP Parse error:  syntax error, unexpected 'home' (T_STRING), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 30
+[11-Feb-2021 23:18:01 Europe/London] PHP Parse error:  syntax error, unexpected 'home' (T_STRING), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 30
+[11-Feb-2021 23:19:03 Europe/London] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 30
+[11-Feb-2021 23:19:04 Europe/London] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 30
+[11-Feb-2021 23:19:05 Europe/London] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 30
+[11-Feb-2021 23:20:39 Europe/London] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 30
+[11-Feb-2021 23:20:39 Europe/London] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 30
+[11-Feb-2021 23:25:11 Europe/London] PHP Parse error:  syntax error, unexpected ''; echo '' (T_CONSTANT_ENCAPSED_STRING), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 30
+[11-Feb-2021 23:25:13 Europe/London] PHP Parse error:  syntax error, unexpected ''; echo '' (T_CONSTANT_ENCAPSED_STRING), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 30
+[11-Feb-2021 23:25:13 Europe/London] PHP Parse error:  syntax error, unexpected ''; echo '' (T_CONSTANT_ENCAPSED_STRING), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 30
+[11-Feb-2021 23:25:13 Europe/London] PHP Parse error:  syntax error, unexpected ''; echo '' (T_CONSTANT_ENCAPSED_STRING), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 30
+[11-Feb-2021 23:25:28 Europe/London] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 30
+[11-Feb-2021 23:51:23 Europe/London] PHP Parse error:  syntax error, unexpected '<', expecting end of file in /home/lastmanl/public_html/globNAV.php on line 7
+[11-Feb-2021 23:51:24 Europe/London] PHP Parse error:  syntax error, unexpected '<', expecting end of file in /home/lastmanl/public_html/globNAV.php on line 7
+[11-Feb-2021 23:51:39 Europe/London] PHP Parse error:  syntax error, unexpected '<', expecting end of file in /home/lastmanl/public_html/globNAV.php on line 7
+[11-Feb-2021 23:51:40 Europe/London] PHP Parse error:  syntax error, unexpected '<', expecting end of file in /home/lastmanl/public_html/globNAV.php on line 7
+[11-Feb-2021 23:51:40 Europe/London] PHP Parse error:  syntax error, unexpected '<', expecting end of file in /home/lastmanl/public_html/globNAV.php on line 7
+[11-Feb-2021 23:51:52 Europe/London] PHP Parse error:  syntax error, unexpected '<', expecting end of file in /home/lastmanl/public_html/globNAV.php on line 7
+[11-Feb-2021 23:51:52 Europe/London] PHP Parse error:  syntax error, unexpected '<', expecting end of file in /home/lastmanl/public_html/globNAV.php on line 7
+[11-Feb-2021 23:53:13 Europe/London] PHP Parse error:  syntax error, unexpected '<', expecting end of file in /home/lastmanl/public_html/globNAV.php on line 7
+[11-Feb-2021 23:53:13 Europe/London] PHP Parse error:  syntax error, unexpected '<', expecting end of file in /home/lastmanl/public_html/globNAV.php on line 7
+[12-Feb-2021 19:09:08 Europe/London] PHP Parse error:  syntax error, unexpected 'class' (T_CLASS), expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 39
+[12-Feb-2021 19:11:45 Europe/London] PHP Parse error:  syntax error, unexpected '}', expecting ',' or ';' in /home/lastmanl/public_html/globNAV.php on line 37
+[13-Feb-2021 09:43:42 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 18
+[13-Feb-2021 09:47:33 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 18
+[13-Feb-2021 09:47:35 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 18
+[13-Feb-2021 09:47:35 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 18
+[13-Feb-2021 09:47:38 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 18
+[13-Feb-2021 09:55:31 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 09:55:32 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 09:55:33 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 09:55:33 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 09:55:34 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 09:55:36 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 09:58:29 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 09:58:29 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 09:58:30 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 09:58:30 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 10:00:12 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 10:00:13 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 10:00:13 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 10:00:13 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 10:00:14 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 10:00:16 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 10:00:29 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 10:00:29 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 10:00:29 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 10:00:30 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 10:00:30 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 10:00:30 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
+[13-Feb-2021 10:00:34 Europe/London] PHP Parse error:  syntax error, unexpected 'nickname' (T_STRING) in /home/lastmanl/public_html/globNAV.php on line 16
