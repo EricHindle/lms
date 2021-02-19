@@ -114,7 +114,7 @@ if (login_check($mypdo) == true) {
                             </div>
                             <div class="row" style="margin-left:0px;">
                                <label for="gamestartweek">New start week:</label>
-                                <select class="form-control" id="gamestartweek" name="gamestartweek">';
+                                <select size=' . sizeof($remainingweeks) . ' class="form-control" id="gamestartweek" name="gamestartweek">';
                         foreach ($remainingweeks as $wk) {
                             $html .= '<option value="' . $wk['lms_week_no'] . '">' . $wk['lms_week'] . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
                         }

@@ -63,9 +63,10 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			                    <div class="tile green">
 		                	     <form class="form-horizontal" role="form" name ="gameadmin" method="post" action="' . $myPath . 'struct/game/game-admin.php">';
     $html .= $key;
+    $listsize = sizeof($statuslist) + 1;
     $html .= '					     <h3 class="title">Games</h3>
 			                         <div class="form-group" style="margin-left:10px;margin-right:10px;margin-bottom:0px">
-  			                            <select class="form-control col-md-6 col-sm-6" style="width:70%" id="status" name="status">
+  			                            <select size=' . $listsize . ' class="form-control col-md-6 col-sm-6" style="width:70%" id="status" name="status">
                                             <option value="0"><small>All</small></option>';
     foreach ($statuslist as $status) {
         $html .= '                          <option value="' . $status['lms_game_status_id'] . '"><small>' . $status['lms_game_status_text'] . '</small></option>';

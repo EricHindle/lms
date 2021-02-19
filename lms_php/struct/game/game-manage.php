@@ -75,7 +75,7 @@ if (login_check($mypdo) == true) {
 				                         </div>
                                          <div class="form-group" style="margin-left:16px;margin-right:16px">
                                                <label for="gamestartweek">Start week:</label>
-                                               <select class="form-control" id="gamestartweek" name="gamestartweek">';
+                                               <select size=' . sizeof($remainingweeks) . ' class="form-control" id="gamestartweek" name="gamestartweek">';
     foreach ($remainingweeks as $wk) {
         $html .= '<option value="' . $wk['lms_week_no'] . '">' . sprintf('%02d', $wk['lms_week']) . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
     }
@@ -83,7 +83,7 @@ if (login_check($mypdo) == true) {
 										 </div>
 				                         <div class="form-group" style="margin-left:16px;margin-right:16px">
 					                           <label for="leagueid">League</label>
-			                                   <select class="form-control id="leagueid" name="leagueid">';
+			                                   <select size=' . sizeof($leaguefetch) . ' class="form-control id="leagueid" name="leagueid">';
     foreach ($leaguefetch as $myLeague) {
         $html .= '                               <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
     }
@@ -103,7 +103,7 @@ if (login_check($mypdo) == true) {
     $html .= $key;
     $html .= '					<h3 class="title">Change a Game</h3>
 				                    <div class="form-group" style="margin-left:16px;margin-right:16px">
-			                            <select class="form-control" id="gameid" name="gameid">';
+			                            <select size=' . sizeof($gamefetch) . ' class="form-control" id="gameid" name="gameid">';
     foreach ($gamefetch as $myGame) {
         $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
     }

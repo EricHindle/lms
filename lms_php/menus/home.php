@@ -70,7 +70,7 @@ if (login_check($mypdo) == true) {
     $html .= $key;
     $html .= '
         <div class="" style="margin-left:16px;margin-right:16px">
-        <select class="" id="gameid" name="gameid">';
+        <select size='. sizeof($gamefetch) . ' class="" id="gameid" name="gameid">';
     foreach ($gamefetch as $myGame) {
         if ($myGame['lms_game_start_wkno'] <= $_SESSION['selectweekkey']) {
             $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
@@ -106,7 +106,7 @@ if (login_check($mypdo) == true) {
     $html .= $key;
     $html .= '					     <h3 class="">Show a Game</h3>
                 <div class="" style="margin-left:16px;margin-right:16px">
-                <select class="" id="gameid" name="gameid">';
+                <select size='. sizeof($gamefetch) . ' class="" id="gameid" name="gameid">';
     foreach ($gamefetch as $myGame) {
         $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
     }
