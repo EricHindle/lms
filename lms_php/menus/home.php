@@ -27,13 +27,15 @@ if (login_check($mypdo) == true) {
 		<html>
 			<head>
 			<style>
-.selection {
+.gameselection {
 height: 40px;
 width: 200px;
 border: none;
 border-radius: 2px;
 font-size: 16px;
 margin-bottom: 10px;
+}
+.graybutton {
 background-color: gray;
 }	
 			</style>    
@@ -77,7 +79,7 @@ background-color: gray;
     $html .= $key;
 
     foreach ($gamefetch as $myGame) {
-    $html .= '<button class="selection"  type="submit" name="gameid" value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</button></br>';
+    $html .= '<button class="gameselection graybutton"  type="submit" name="gameid" value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</button></br>';
     }
 
 
@@ -107,7 +109,7 @@ background-color: gray;
                 <form class="" role="form" name ="showgame" method="post" action="' . $myPath . 'struct/game/show-played-game.php">';
     $html .= $key;
     foreach ($gamefetch as $myGame) {
-    $html .= '<button class="selection"  type="submit" name="gameid" value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</button></br>';
+    $html .= '<button class="gameselection graybutton"  type="submit" name="gameid" value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</button></br>';
     }
     $html .= '          </form>
             </div>

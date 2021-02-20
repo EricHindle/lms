@@ -31,7 +31,21 @@ if (login_check($mypdo) == true) {
       <!doctype html>
 		<html>
 			<head>
-				
+							<style>
+.gameselection {
+height: 40px;
+width: 180px;
+border: none;
+border-radius: 2px;
+font-size: 16px;
+margin-bottom: 10px;
+}
+.greenbutton {
+background-color: #00A600;
+}
+
+		</style>    
+
 			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 			    <meta charset="UTF-8">
 			    
@@ -75,7 +89,7 @@ if (login_check($mypdo) == true) {
 				                         </div>
                                          <div class="form-group" style="margin-left:16px;margin-right:16px">
                                                <label for="gamestartweek">Start week:</label>
-                                               <select size=' . sizeof($remainingweeks) . ' class="form-control" id="gamestartweek" name="gamestartweek">';
+                                               <select class="form-control" id="gamestartweek" name="gamestartweek">';
     foreach ($remainingweeks as $wk) {
         $html .= '<option value="' . $wk['lms_week_no'] . '">' . sprintf('%02d', $wk['lms_week']) . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
     }
@@ -83,7 +97,7 @@ if (login_check($mypdo) == true) {
 										 </div>
 				                         <div class="form-group" style="margin-left:16px;margin-right:16px">
 					                           <label for="leagueid">League</label>
-			                                   <select size=' . sizeof($leaguefetch) . ' class="form-control id="leagueid" name="leagueid">';
+			                                   <select class="form-control id="leagueid" name="leagueid">';
     foreach ($leaguefetch as $myLeague) {
         $html .= '                               <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
     }
@@ -98,20 +112,16 @@ if (login_check($mypdo) == true) {
 			                </div>
 			                <div class="col-sm-4">
 			                    <div class="tile green">
-
+                              
 			                	<form class="form-horizontal" role="form" name ="showgame" method="post" action="show-game.php">';
     $html .= $key;
-    $html .= '					<h3 class="title">Change a Game</h3>
-				                    <div class="form-group" style="margin-left:16px;margin-right:16px">
-			                            <select size=' . sizeof($gamefetch) . ' class="form-control" id="gameid" name="gameid">';
+    $html .= '					
+				                    <div class="form-group" style="margin-left:4px;margin-right:4px;">
+			                            <h3 class="title">Change a Game</h3>';
     foreach ($gamefetch as $myGame) {
-        $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
+        $html .= '<button class="gameselection greenbutton"  type="submit" name="gameid" value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</button></br>';
     }
-    $html .= '	                    </select>
-				                    </div>
-				                    <div class="form-group" style="margin-left:16px;margin-right:16px">
-                                    
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
+    $html .= '	                   
 				                    </div>
                                     </form>
                                  <div class="col-lg-10">
@@ -125,13 +135,6 @@ if (login_check($mypdo) == true) {
 			          			</div>
 			                </div>
 			      		</div>
-
-
-
-
-
-
-
 
 
                         <div class="row">

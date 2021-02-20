@@ -36,7 +36,20 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
       <!doctype html>
 		<html>
 			<head>
-				
+											<style>
+.gameselection {
+height: 25px;
+width: 180px;
+border: none;
+border-radius: 2px;
+font-size: 16px;
+}
+.greenbutton {
+background-color: #00A600;
+}
+
+		</style>    
+
 			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 			    <meta charset="UTF-8">
 			    
@@ -65,31 +78,11 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 							</div>
 			            </div>
                         <div class="row">
-			                <div class="col-sm-4">
-			                    <div class="tile green">
-			                	<form class="form-horizontal" role="form" name ="showgame" method="post" action="show-game-admin.php">';
-                $html .= $key;
-                $html .= '					<h3 class="title">Show a Game</h3>
-				                     <div class="form-group" style="margin-left:10px;margin-right:10px;margin-bottom:0px">
-			                            <select class="form-control col-md-6 col-sm-6" style="width:70%" id="gameid" name="gameid">';
-                foreach ($gamefetch as $myGame) {
-                    if ($status == 0 || $status == $myGame['lms_game_status']) {
-                    $html .= '<option value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</option>';
-                    }
-                }
-                $html .= '	                    </select>
-                                         &nbsp;&nbsp;
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
-				                    </div>
-                                    </form>
-			          			</div>
-			                </div>
-			      		</div>
-                        <div class="row">
 
 
 			            	<div class="well col-md-10  textDark">
 				        		<h3>All Games</h3>
+			                	<form class="form-horizontal" role="form" name ="showgame" method="post" action="show-game-admin.php">
 					        	<table class="table table-bordered" id="keywords">
 									<thead>
 									<tr class="game">
@@ -124,10 +117,10 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                                 $rowcolor = 'silver';
                                 break;
                         }
-                        
+                        $html .= $key;
                         $html .= '
 									<tr style="color:' . $rowcolor . '">
-										<td>' . $rs['lms_game_name'] . '</td>
+										<td><button class="gameselection"  type="submit" name="gameid" value="' . $rs['lms_game_id'] . '">' . $rs['lms_game_name'] . '</button></td>
 										<td>' . sprintf('%02d', $rs['lms_week']) . '/' . $rs['lms_year'] . '</td>
                                         <td>' . $rs['lms_game_status_text'] . '</td>
                                         <td>' . $rs['lms_game_total_players'] . '</td>
@@ -142,6 +135,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                 $html .= '
 									</tbody>
 								</table>
+                            </form>
 							</div>
 
 

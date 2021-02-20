@@ -22,7 +22,19 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 		<!doctype html>
 		<html>
 			<head>
-				
+											<style>
+.typeselection {
+height: 30px;
+width: 100px;
+border: none;
+border-radius: 2px;
+font-size: 16px;
+margin-bottom: 4px;
+}
+.greenbutton {
+background-color: #00A600;
+}
+		</style>    
 			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 			    <meta charset="UTF-8">
 			    
@@ -63,18 +75,18 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			                    <div class="tile green">
 		                	     <form class="form-horizontal" role="form" name ="gameadmin" method="post" action="' . $myPath . 'struct/game/game-admin.php">';
     $html .= $key;
-    $listsize = sizeof($statuslist) + 1;
+
     $html .= '					     <h3 class="title">Games</h3>
 			                         <div class="form-group" style="margin-left:10px;margin-right:10px;margin-bottom:0px">
-  			                            <select size=' . $listsize . ' class="form-control col-md-6 col-sm-6" style="width:70%" id="status" name="status">
-                                            <option value="0"><small>All</small></option>';
+ 
+ <button class="typeselection greenbutton" type="submit" name="status" value="0">' . All . '</button></br>';
+
     foreach ($statuslist as $status) {
-        $html .= '                          <option value="' . $status['lms_game_status_id'] . '"><small>' . $status['lms_game_status_text'] . '</small></option>';
+        $html .= '<button class="typeselection greenbutton"  type="submit" name="status" value="' . $status['lms_game_status_id'] . '">' . $status['lms_game_status_text']  . '</button></br>';
+        
     }
     $html .= '	                    
-                                        </select>
-                                        &nbsp;&nbsp;
-                                        <input id="submit" name="submit" type="submit" value="Select" class="btn btn-primary btn-sm">
+                                  
 			                         </div>
                                   </form>
 			                    </div>
