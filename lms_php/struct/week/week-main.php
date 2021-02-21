@@ -20,7 +20,20 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 		<!doctype html>
 		<html>
 			<head>
-				
+															<style>
+.gameselection {
+height: 25px;
+width: 80px;
+border: none;
+border-radius: 2px;
+font-size: 16px;
+}
+.greenbutton {
+background-color: #00A600;
+}
+
+		</style>    
+
 			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 			    <meta charset="UTF-8">
 			    <title>Game Weeks</title>
@@ -74,29 +87,14 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 				            </div>
 			            ';
 
-    $html .= '			<div class="well col-md-3 col-sm-5 col-md-offset-1 col-sm-offset-1 textDark">
-			                	<form class="form" role="form" name ="editweek" method="post" action="edit-week.php">';
-    $html .= $key;
-    $html .= '					<h3 class="text-center">Edit Period</h3>
-				                    <div class="form-group">
-			                        	<label for="weekid">Choose period:</label>
-			                            <select class="form-control" id="weekid" name="weekid">';
-    foreach ($remainingweeks as $myweek) {
-        $html .= '<option value="' . $myweek['lms_week_no'] . '">' . $myweek['lms_year'] . '/' . sprintf('%02d', $myweek['lms_week']) . '&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp' . date_format(date_create($myweek['lms_week_start']), 'd-M-Y') . '</option>';
-    }
-    $html .= '	                    </select>
-				                    </div>
-				                    <div class="form-group">
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
-				                    </div>
-				                </form>
-				            </div>
-			            ';
-
     $html .= '		</div>
 						<div class = "row">
 				        	<div class="well col-md-7 textDark">
 				        		<h3>All periods</h3>
+
+			                	<form class="form" role="form" name ="editweek" method="post" action="edit-week.php">';
+    $html .= $key;
+    $html .= '	
 					        	<table class="table table-bordered" id="keywords">
 									<thead>
 									<tr class="week">
@@ -115,7 +113,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
         $dlDate = date_format(date_create($rs['lms_week_deadline']), 'd-M-Y');
         $html .= '
 									<tr>
-										<td>' . $rs['lms_week'] . '</td>
+                                        <td><button class="gameselection"  type="submit" name="weekid" value="' . $rs['lms_week_no'] . '">' . $rs['lms_week'] . '</button></td>
 										<td>' . $rs['lms_year'] . '</td>
 										<td>' . $stDate . '</td>
 										<td>' . $dlDate . '</td>
@@ -125,6 +123,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $html .= '
 									</tbody>
 								</table>
+</form>
 							</div>
 						</div>
 
