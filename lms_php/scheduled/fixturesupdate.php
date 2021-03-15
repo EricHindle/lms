@@ -32,7 +32,6 @@ function scraping_generic($url, $search, $logfile)
             }
             // get match block
             foreach ($fixturelist->find(".flc-match-item-inner") as $match) {
-
                 $hometeam = "";
                 $awayteam = "";
                 foreach ($match->find(".left") as $left) {
@@ -45,12 +44,12 @@ function scraping_generic($url, $search, $logfile)
                 if ($matchdate > $today) {
                     $matchlist[] = $hometeam . date('d-m-Y', $matchdate);
                     $matchlist[] = $awayteam . date('d-m-Y', $matchdate);
-                    if (save_match($hometeam, $matchdate, $logfile) == false) {
+                    if (save_match($hometeam, $matchdate, $logfile, $awayteam) == false) {
                         $thiserror = "** Unable to insert match : " . $hometeam . " " . date_format(date_create($matchdate), 'd-m-Y') . "\n";
                         fwrite($logfile, $thiserror);
                         $errormsg = $errormsg . $thiserror;
                     }
-                    if (save_match($awayteam, $matchdate, $logfile) == false) {
+                    if (save_match($awayteam, $matchdate, $logfile, $hometeam) == false) {
                         $thiserror = "** Unable to insert match : " . $awayteam . " " . date_format(date_create($matchdate), 'd-m-Y') . "\n";
                         fwrite($logfile, $thiserror);
                         $errormsg = $errormsg . $thiserror;
@@ -69,16 +68,11 @@ function scraping_generic($url, $search, $logfile)
                             $scoretext = trim(explode("<", $rscore->innertext, 2)[0]);
                         }
                     }
-                    
                     if (! is_numeric($homescore)) {
                         fwrite($logfile, $scoretext . "  " . $hometeam . " " . $homescore . " - " . $awayscore . " " . $awayteam . "\n");
                         save_result($hometeam, $matchdate, 0, "p", $logfile);
                         save_result($awayteam, $matchdate, 0, "p", $logfile);
                     } 
-                    
-                    
-                    
-                    
                 }
             }
         }
@@ -87,13 +81,28 @@ function scraping_generic($url, $search, $logfile)
     // check for replaced fixtures
     fwrite($logfile, "----- Checking for duplicate matches -----\n");
     $matchdata = get_all_future_matches();
-    
     foreach ($matchdata as $mch) {
         $teamabbr = $mch['lms_team_abbr'];
+        $teamid = $mch['lms_match_team'];
+        $oppid = $mch['lms_match_opp'];        
         $matchdate = date_format(date_create($mch['lms_match_date']), 'd-m-Y');
+        $sqldate = date_format(date_create($mch['lms_match_date']), 'Y-m-d');
         $matchid = $mch['lms_match_id'];
+        $matchweek = $mch['lms_match_weekno'];
         $found = in_array($teamabbr . $matchdate, $matchlist);
         if ($found == false) {
+            // match no longer taking place
+            
+            // transfer picks if team has another match with the same team that week.
+            $altmatches = get_rescheduled_match($matchweek, $sqldate, $teamid, $oppid);
+            if (count($altmatches) > 0){
+                $altmatch = $altmatches[0];
+                $transresult = transfer_picks($matchid,$altmatch['lms_match_id']);
+                if ($transresult != false){
+                    fwrite($logfile, "Transferred " . strval($transresult) . " picks \n");
+                }
+            }
+            
             fwrite($logfile, "Removing match : " . strval($matchid) . " " . $teamabbr . " " . $matchdate . "\n");
             if (delete_match($matchid) == false) {
                 $thiserror = "** Unable to remove match : " . strval($matchid) . " " . $teamabbr . " " . $matchdate . "\n";
@@ -108,7 +117,6 @@ function scraping_generic($url, $search, $logfile)
     // clean up memory
     $html->clear();
     unset($html);
-
     return;
 }
 

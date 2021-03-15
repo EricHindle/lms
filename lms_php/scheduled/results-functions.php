@@ -88,12 +88,13 @@ function save_result($teamabbr, $matchdate, $score, $wl, $logfile)
     return;
 }
 
-function save_match($teamabbr, $matchdate, $logfile)
+function save_match($teamabbr, $matchdate, $logfile, $oppabbr)
 {
     $isOK = true;
     $wkno = get_match_week($matchdate);
     // get team id
     $teamId = get_teamId_from_abbr($teamabbr);
+    $oppid = get_teamId_from_abbr($oppabbr);
     if ($teamId > 0) {
         // get league
         $leagueId = get_leagueId($teamId);
@@ -104,13 +105,14 @@ function save_match($teamabbr, $matchdate, $logfile)
         //    fwrite($logfile, "Match exists for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
         } else {
         //    fwrite($logfile, "** Match not found for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
-            if (insert_match($teamId, $matchdate, $wkno, '', $leagueId) == false) {
+            if (insert_match($teamId, $matchdate, $wkno, '', $leagueId, $oppid) == false) {
                 $isOK = false;
             }
             fwrite($logfile, "** Match inserted for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
         }
     } else {
         fwrite($logfile, "** No team found for " . $teamabbr . "\n");
+        $isOK = false;
     }
     return $isOK;
 }
@@ -134,7 +136,7 @@ function get_all_future_matches()
 {
     $today = date("Y-m-d");
     global $mypdo;
-    $matchsql = "SELECT lms_match_id,lms_match_team, lms_match_date, lms_team_abbr FROM v_lms_fixture WHERE lms_match_date > :today";
+    $matchsql = "SELECT lms_match_id,lms_match_team, lms_match_date, lms_team_abbr, lms_match_opp, lms_opp_abbr, lms_match_weekno FROM v_lms_fixture WHERE lms_match_date > :today";
     $matchquery = $mypdo->prepare($matchsql);
     $matchquery->bindParam(":today", $today);
     $matchquery->execute();
@@ -217,15 +219,16 @@ function update_match_wl($matchid, $matchresult)
     return;
 }
 
-function insert_match($teamId, $matchdate, $wkno, $wl, $league)
+function insert_match($teamId, $matchdate, $wkno, $wl, $league, $oppId)
 {
     global $mypdo;
-    $insertresult = "INSERT INTO lms_match (lms_match_weekno, lms_match_team, lms_match_date, lms_match_result, lms_match_league) VALUES (:weekno, :teamId, :matchdate, :wl, :league)";
+    $insertresult = "INSERT INTO lms_match (lms_match_weekno, lms_match_team, lms_match_date, lms_match_result, lms_match_league, lms_match_opp) VALUES (:weekno, :teamId, :matchdate, :wl, :league, :oppId)";
     $insertquery = $mypdo->prepare($insertresult);
     $insertquery->bindParam(':weekno', $wkno);
     $insertquery->bindParam(':matchdate', date("Y-m-d", $matchdate));
     $insertquery->bindParam(':teamId', $teamId, PDO::PARAM_INT);
     $insertquery->bindParam(':league', $league, PDO::PARAM_INT);
+    $insertquery->bindParam(':oppId', $oppId, PDO::PARAM_INT);
     $insertquery->bindParam(':wl', $wl);
     return $insertquery->execute();
 }
@@ -257,5 +260,28 @@ function get_match_week($matchdate)
     $lastweek = $weekfetch[$weekquery->rowCount() - 1];
     $matchweek = $lastweek['lms_week_no'];
     return $matchweek;
+}
+
+function get_rescheduled_match($matchweek, $matchdate, $teamid, $oppid) {
+    global $mypdo;
+    $matchsql = "SELECT * from lms_match where lms_match_weekno = :weekno and lms_match_team = :teamid and lms_match_opp = :oppid and lms_match_date != :matchdate ";
+    $matchquery = $mypdo->prepare($matchsql);
+    $matchquery->bindParam(":weekno",$matchweek);
+    $matchquery->bindParam(":teamid",$teamid, PDO::PARAM_INT);
+    $matchquery->bindParam(":oppid",$oppid, PDO::PARAM_INT);
+    $matchquery->bindParam(":matchdate", $matchdate);
+    $matchquery->execute();
+    $matchdata = $matchquery->fetchAll(PDO::FETCH_ASSOC);
+    return $matchdata;
+}
+
+function transfer_picks($matchid, $altmatchid) {
+        global $mypdo;
+   $transsql = "UPDATE lms_pick SET lms_pick_match_id= :altmatchid  WHERE lms_pick_match_id = :matchid" ;
+   $transquery = $mypdo->prepare($transsql);
+   $transquery->bindParam(':matchId', $matchid, PDO::PARAM_INT);
+   $transquery->bindParam(':altmatchId', $altmatchid, PDO::PARAM_INT);
+   return $transquery->execute();
+    
 }
 ?>
