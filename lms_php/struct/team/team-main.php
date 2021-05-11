@@ -12,7 +12,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $formKey = new formKey();
     $key = $formKey->outputKey();
 
-    $teamsql = "SELECT lms_team_id, lms_team_name, lms_team_active FROM lms_team ORDER BY lms_team_name ASC";
+    $teamsql = "SELECT lms_team_id, lms_team_name, lms_team_active, lms_team_abbr FROM lms_team ORDER BY lms_team_name ASC";
     $teamquery = $mypdo->prepare($teamsql);
     $teamquery->execute();
     $teamfetch = $teamquery->fetchAll(PDO::FETCH_ASSOC);
@@ -113,6 +113,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 									<thead>
 									<tr class="info">
 										<th>Name</th>
+                                        <th>Abbr</th>
 										<th>Active</th>
 									</tr>
 									</thead>
@@ -123,6 +124,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
         $html .= '
 									<tr>
 										<td>' . $rs['lms_team_name'] . '</td>
+                                        <td>' . $rs['lms_team_abbr'] . '</td>
 										<td>' . $active . '</td>
 									</tr>';
     }
