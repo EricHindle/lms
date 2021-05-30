@@ -7,7 +7,7 @@
 require '/home/lastmanl/public_html/includes/db_connect.php';
 require '/home/lastmanl/public_html/scheduled/email-functions.php'; 
 // require '../includes/db_connect.php';
-//require '../scheduled/email-functions.php'; 
+// require '../scheduled/email-functions.php'; 
 
 function activateGames($nextgameweek)
 {
@@ -68,6 +68,20 @@ function get_count_of_matches_with_no_result()
     return $selectcount;
 }
 
+function get_count_of_playing_teams_this_week($gameid, $matchweek) 
+{
+    global $mypdo;
+    $selectsql = "SELECT lms_match_team FROM lms_match WHERE lms_match_weekno = :matchweek AND lms_match_team IN (
+                  SELECT lms_league_team_team_id FROM lms_league_team WHERE lms_league_team_league_id IN (
+                  SELECT lms_game_league_league_id FROM lms_game_league WHERE lms_game_league_game_id = :gameid))";
+    $selectquery = $mypdo->prepare($selectsql);
+    $selectquery->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+    $selectquery->bindParam(':matchweek', $matchweek);
+    $selectquery->execute();
+    $selectcount = $selectquery->rowCount();
+    return $selectcount;
+}
+
 function get_current_deadline_date($selectweekkey)
 {
     global $mypdo;
@@ -112,6 +126,17 @@ function get_game_player_pick_count($gameid, $playerid)
     $pickquery->execute();
     $pickcount = $pickquery->rowCount();
     return $pickcount;
+}
+
+function get_leagues_for_game($gameid)
+{
+    global $mypdo;
+    $leaguesql = "SELECT lms_game_league_league_id FROM lms_game_league WHERE lms_game_league_game_id = :gameid";
+    $leaguequery = $mypdo->prepare($leaguesql);
+    $leaguequery->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+    $leaguequery->execute();
+    $leaguelist = $leaguequery->fetch(PDO::FETCH_ASSOC);
+    return $leaguelist;
 }
 
 function get_player($playerid)

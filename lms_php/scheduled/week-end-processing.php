@@ -1,4 +1,4 @@
-<?php
+<?php namespace scheduled;
 /*
  * HINDLEWARE
  * Copyright (C) 2020-21 Eric Hindle. All rights reserved.
@@ -33,7 +33,7 @@ if (check_start_date() == 1) {
     $missingresultct = get_count_of_matches_with_no_result();
 
     if ($missingresultct > 0) {
-        fwrite($logfile, "Warning!! " . strval($missingresultct) . " matches have not been resulted\n");
+        fwrite($logfile, "Warning!! " . strval($missingresultct) . "Some matches have not been resulted\n");
     }
 
     if ($weekstate <= 1) {
@@ -82,6 +82,15 @@ if (check_start_date() == 1) {
         $activeGames = get_active_games();
         fwrite($logfile, "Active games\n");
         foreach ($activeGames as $game) {
+            /*
+             * Check if this game has no matches this week.
+             */
+            $playingteams = get_count_of_playing_teams_this_week($game['lms_game_id'], $_SESSION['matchweek']);
+            
+            if ($playingteams == 0) {
+                fwrite($logfile, "Game " . strval($game['lms_game_id']) . " has no matches this week\n");
+                continue;
+            }
             $activePlayers = get_still_active_game_players($game['lms_game_id']);
             fwrite($logfile, "Active players for " . strval($game['lms_game_id']) . "\n");
             foreach ($activePlayers as $activePlayer) {
