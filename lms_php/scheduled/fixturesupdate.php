@@ -127,7 +127,8 @@ $logfile = fopen($myPath . "logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a
 fwrite($logfile, "Fixtures Update --------------------------------------\n");
 fwrite($logfile, date("Y-m-d") . "\n");
 
-$url = "https://www.thesportsman.com/football/competitions/england/premier-league/fixtures";
+// $url = "https://www.thesportsman.com/football/competitions/england/premier-league/fixtures";
+$url = "https://www.thesportsman.com/football/competitions/europe/european-championship";
 $search = ".fixture-list-contain";
 
 scraping_generic($url, $search, $logfile);
