@@ -97,12 +97,22 @@ function scraping_generic($url, $search, $logfile)
 $_SESSION['currentweek'] = get_global_value('currweek');
 $_SESSION['currentseason'] = get_global_value('currseason');
 $_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
+global $argv;
 $logfile = fopen($myPath . "logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a");
 fwrite($logfile, "Results Update --------------------------------------\n");
 fwrite($logfile, date("Y-m-d") . "\n");
 
-// $url = "https://www.thesportsman.com/football/competitions/england/premier-league/results";
-$url = "https://www.thesportsman.com/football/competitions/europe/european-championship/results";
+$urlId = 'prem';
+$url = "https://www.thesportsman.com/football/competitions/england/premier-league/results";
+
+foreach ($argv as $param) {
+    if (substr($param, 0,2) == 'u-') {
+        fwrite($logfile, "param : " . $param . "\n");
+        $urlId = substr($param, 2);
+    }
+}
+$url = get_global_value('results url ' . $urlId );
+
 $search = ".fixture-list-contain";
 
 scraping_generic($url, $search, $logfile);
