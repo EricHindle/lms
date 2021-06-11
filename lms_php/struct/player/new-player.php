@@ -43,13 +43,11 @@ $html .= '
 		</div>
         <input id="submit" name="submit" type="submit" value="Submit" class="btn">
 		</form>
-		</div>
 		<div class="light-text">
+<br/>
         <a href="' . $myPath . 'index.php" role="button">Back</a>
-			            ';
-
-$html .= '	      		
-			    	</div>
+</div>
+		</div>
 					</div>
 			</body>
 		</html>

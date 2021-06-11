@@ -34,10 +34,12 @@ $html .= '
 				<input type="text" class="form-field" name="email" id="email" placeholder="email address"  value="" >
         		<input id="submit" name="submit" type="submit" value="Submit" class="btn">
 			</form>
-		</div>	      		
 		<div class="light-text">
+<br/>
 			<a href="' . $myPath . 'index.php" role="button">Back</a>
 		</div>
+		</div>	      		
+
 	</div>
 </body>
 </html>

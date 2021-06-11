@@ -66,9 +66,10 @@ if (login_check($mypdo) == true) {
     $html .= $key;
 
     foreach ($gamefetch as $myGame) {
+        if ($myGame['lms_game_status'] < 3) {
     $html .= '<button class="gameselection graybutton"  type="submit" name="gameid" value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</button></br>';
     }
-
+    }
 
 
      $html .= '               

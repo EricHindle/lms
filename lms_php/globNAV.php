@@ -24,7 +24,9 @@ $devlevelneeded = 901;
 					<input id="submit" type="submit" value="Manage Your Account">
 					</form>
 				</li>
-				<?php	if ($currentlevel == $adminlevelneeded || $currentlevel == $devlevelneeded) {echo '<li><a class="admin-btn" href="' . $myPath . 'struct/main.php">Admin</a></li>';} ?>
+				<?php	if ($currentlevel == $adminlevelneeded || $currentlevel == $devlevelneeded) {echo '<li><a class="admin-btn" href="' . $myPath . 'struct/main.php">Admin</a></li>';} 
+				    	if ($currentlevel == $devlevelneeded) {echo '<li><a class="admin-btn" href="' . $myPath . 'menus\testmenu.php">Testing</a></li>';} ?>
+				
 				<li><a class="btn" href="<?php echo $myPath; ?>logout.php">Sign out</a></li>
 				
 			</ul>
@@ -52,7 +54,3 @@ $devlevelneeded = 901;
 	}
 </script>
 
-<?php
-		if ($currentlevel == $devlevelneeded) {	echo '<li><a href="' . $myPath . 'menus/testmenu.php">Test</a></li>';}
-		if ($currentlevel != $adminlevelneeded && $currentlevel != $devlevelneeded) {echo '<li><a class="nav-link" href="#">Match week: ' . $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'] . '</a></li>';}
-?>
