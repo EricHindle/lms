@@ -25,20 +25,7 @@ if (login_check($mypdo) == true) {
     echo '
 		<!doctype html>
 		<html>
-			<head>
-			<style>
-.gameselection {
-height: 40px;
-width: 200px;
-border: none;
-border-radius: 2px;
-font-size: 16px;
-margin-bottom: 10px;
-}
-.graybutton {
-background-color: gray;
-}	
-			</style>    
+			<head> 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			    <link rel="stylesheet" href="' . $myPath . 'css/style.css">
