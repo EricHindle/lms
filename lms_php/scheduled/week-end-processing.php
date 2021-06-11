@@ -33,7 +33,7 @@ if (check_start_date() == 1) {
     $missingresultct = get_count_of_matches_with_no_result();
 
     if ($missingresultct > 0) {
-        fwrite($logfile, "Warning!! " . strval($missingresultct) . "Some matches have not been resulted\n");
+        fwrite($logfile, "Warning !! Some matches (" . strval($missingresultct) . ") have not been resulted\n");
     }
 
     if ($weekstate <= 1) {
@@ -68,8 +68,14 @@ if (check_start_date() == 1) {
                         notify_postponed($playerid, $gameid);
                         fwrite($logfile, "Match postponed\n");
                     } else {
-                        notify_winner($playerid, $gameid);
-                        fwrite($logfile, "Winning pick\n");
+                        if ($rs['lms_match_result'] == 'w') {
+                            notify_winner($playerid, $gameid);
+                            fwrite($logfile, "Winning pick\n");
+                        } else {
+                            /* no result */
+                            fwrite($logfile, "Error !! Pick has not been resulted\n");
+                            $pickwl = '';
+                        }
                     }
                 }
                 set_pick_wl($gameid, $playerid, $matchid, $pickwl);
