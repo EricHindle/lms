@@ -121,14 +121,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             $html .= "<script>
 							alert('Missing values in POST');
-							window.location.href='" . $myPath . "testing/emailtest.php';
+							window.location.href='" . $myPath . "testing/jsontest.php';
 						</script>";
         }
     }
 } else {
     $html .= "<script>
 							alert('Not a POST');
-							window.location.href='" . $myPath . "testing/emailtest.php';
+							window.location.href='" . $myPath . "testing/jsontest.php';
 						</script>";
 }
 

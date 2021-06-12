@@ -1,5 +1,5 @@
 <?php
-$myPath = '../';
+$myPath = '../../';
 
 require_once $myPath . 'includes/functions.php';
 require_once $myPath . 'includes/formkey.class.php';

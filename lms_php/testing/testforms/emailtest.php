@@ -1,5 +1,5 @@
 <?php
-$myPath = '../';
+$myPath = '../../';
 
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';

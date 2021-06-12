@@ -1,8 +1,8 @@
 <?php
 $myPath = '../';
-require_once $myPath . 'includes/db_connect.php';
-require_once $myPath . 'includes/functions.php';
-require_once $myPath . 'includes/formkey.class.php';
+require $myPath . 'includes/db_connect.php';
+require $myPath . 'includes/functions.php';
+require $myPath . 'includes/formkey.class.php';
 
 sec_session_start();
 
@@ -43,15 +43,22 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 901) {
 			            <div class="row">
 			            	<div class="col-sm-4">
 			                    <div class="tile red">
-			                    	<a href="' . $myPath . 'testing/emailtest.php">
+			                    	<a href="' . $myPath . 'testing/testforms/emailtest.php">
 			                    		<h3 class="title" >Email test</h3>
+			                        </a>	
+			          			</div>
+			                </div>
+			            	<div class="col-sm-4">
+			                    <div class="tile blue">
+			                    	<a href="' . $myPath . 'testing/testforms/viewlog.php">
+			                    		<h3 class="title" >View Log</h3>
 			                        </a>	
 			          			</div>
 			                </div>
 			                <div class="col-sm-4">
 			                    <div class="tile green">
                                     <h3 class="title" >Read a JSON file</h3>
-				                	<form role="form" name ="json" method="post" action="' . $myPath . 'testing/jsontest.php">';
+				                	<form role="form" name ="json" method="post" action="' . $myPath . 'testing/testforms/jsontest.php">';
     $html .= $key;
     $html .= '                          <div class="form-group " style="margin-left:16px;margin-right:16px">
 					                        <input type="text" class="form-control" id="filename" name="filename" placeholder="file name">
@@ -67,7 +74,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == 901) {
                         <div class="row">
 			            	<div class="col-sm-4">
 			                    <div class="tile orange">
-			                    	<a href="' . $myPath . 'testing/encryptiontest.php">
+			                    	<a href="' . $myPath . 'testing/testforms/encryptiontest.php">
 			                    		<h3 class="title" >Encryption test</h3>
 			                        </a>	
 			          			</div>
