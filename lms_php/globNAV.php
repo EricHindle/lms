@@ -11,7 +11,7 @@ $devlevelneeded = 901;
 	</a>
 	
 	
-	<div class="account" onClick="menuToggle();">
+	<div class="account" style="z-index: 99;" onClick="menuToggle();">
 			<span class="account-icon" style="background-image: url(<?php echo $myPath; ?>img/icons/home-grey.svg)"></span>
 		<div class="account-name"> 
 		   	<?php echo $_SESSION['nickname'];?>
