@@ -26,8 +26,8 @@ if (login_check($mypdo) == true) {
 		<!doctype html>
 		<html>
 			<head> 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			    <link rel="stylesheet" href="' . $myPath . 'css/style.css">
                 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
 			</head>
@@ -35,72 +35,55 @@ if (login_check($mypdo) == true) {
 			<body>';
     include $myPath . 'globNAV.php';
     echo '
-				<section id="homeSection">
-			    <br><br>
-		        <div class="">
-		            <div class="">
-		                <div class="">
-		                    <h1><strong>Welcome ' . $_SESSION['nickname'] . '</strong></h1>
-		                    <br>
-		                </div>
-                    </div>
-                    <div class="">
-                        <div class="">
-                            <div class="">
-                               Match week: ';
-    $html .= $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'];
-    $html .= '
-                            </div>
-                        </div>
-                        <div class="">
-                            <div class="">
-                               Deadline for week &nbsp;' . sprintf('%02d', $_SESSION['currentweek'] + 1) . '&nbsp; picks is &nbsp;' . date_format(date_create($_SESSION['deadline']), 'd M Y');
-    $html .= '	            </div>
-                        </div>
-		            </div>';
 
-    $html .= '	    <div class="">
-    <h3 class="" >Make a Pick for</h3>
-        <div class="" style="margin-left:16px;margin-right:16px">
-    <form class="" role="form" name ="editpick" method="post" action="' . $myPath . 'struct/picks/pick-main.php">';
+		      <div class="container">
+                <div  class="box" style="padding:1em;width:400px;margin:10px;">
+                    <h2>Welcome, ' . $_SESSION['nickname'] . '</h2>
+                    Match week: ';
+    $html .= $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'];
+    $html .= '      </br/>
+                    Deadline for week &nbsp;' . sprintf('%02d', $_SESSION['currentweek'] + 1) . '&nbsp; picks is &nbsp;' . date_format(date_create($_SESSION['deadline']), 'd M Y');
+    $html .= '  </div>';
+
+    $html .= '	<div class="box" style="padding:1em;width:400px;margin:10px;">
+                    <h3 class="" >Make a Pick for</h3>
+                    <div class="" style="margin-left:16px;margin-right:16px">
+                        <form class="" role="form" name ="editpick" method="post" action="' . $myPath . 'struct/picks/pick-main.php">';
     $html .= $key;
 
     foreach ($gamefetch as $myGame) {
         if ($myGame['lms_game_status'] < 3) {
-    $html .= '<button class="gameselection graybutton"  type="submit" name="gameid" value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</button></br>';
+            $html .= '      <button class="gameselection graybutton"  type="submit" name="gameid" value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</button></br>';
+        }
     }
-    }
 
-
-     $html .= '               
-
-                <h5 class="" >(also view past picks)</h5>
-                </form>
-</div>
-                <div class="">
-                <div class="">
-                <h3 class="" >Join a Game</h3>
-                <form role="form" name ="edit" method="post" action="' . $myPath . 'struct/game/process-join-game.php">';
+    $html .= '          </form>
+                    </div>
+                </div>
+                <div class="box" style="padding:1em;width:400px;margin:10px;">
+                    <h3 class="" >Join a Game</h3>
+                    <form role="form" name ="edit" method="post" action="' . $myPath . 'struct/game/process-join-game.php">';
     $html .= $key;
-    $html .= '                          <div class="" style="margin-left:16px;margin-right:16px">
-                <input type="text" class="" id="gamecode" name="gamecode" placeholder="game code">
+    $html .= '          <div>
+                            <input type="text" style="padding-left:9px;"  id="gamecode" name="gamecode" placeholder="game code">
+                        </div>
+                        <div class="" style="margin-top:9px;">
+                            <input  class="gameselection graybutton"  id="submit2" name="submit" type="submit" value="Submit" >
+                        </div>
+                    </form>
                 </div>
-                <div class="" style="margin-left:16px;margin-right:16px">
-                <br>
-                <input class="" id="submit2" name="submit" type="submit" value="Submit" >
-                </div>
-                </form>
-                </div>
-                </div>
- <h3 class="">Show a Game</h3>
- <div class="" style="margin-left:16px;margin-right:16px">
-                <form class="" role="form" name ="showgame" method="post" action="' . $myPath . 'struct/game/show-played-game.php">';
+
+                <div class="box" style="padding:1em;width:400px;margin:10px;">
+                    <h3 class="">Show a Game</h3>
+                    <div class="" style="margin-left:16px;margin-right:16px">
+                        <form class="" role="form" name ="showgame" method="post" action="' . $myPath . 'struct/game/show-played-game.php">';
     $html .= $key;
     foreach ($gamefetch as $myGame) {
-    $html .= '<button class="gameselection graybutton"  type="submit" name="gameid" value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</button></br>';
+        $html .= '          <button class="gameselection graybutton"  type="submit" name="gameid" value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</button></br>';
     }
     $html .= '          </form>
-            </div>
+                    </div>
+                </div>
             <div class="">
             <div class="">
             <div class="" style="padding-top:10px;padding-bottom:0px;">
@@ -168,16 +151,16 @@ if (login_check($mypdo) == true) {
         } else {
             if ($pickcount > 0) {
                 $newline = '';
-                if ($pickcount == 2){
+                if ($pickcount == 2) {
                     $newline = '</br>';
                 }
-                if ($matchcount > 0){
-                $thispick = $matchweekpick['lms_team_name'] . ' (' . date_format(date_create($matchweekpick['lms_match_date']), 'd M Y') . ')';
+                if ($matchcount > 0) {
+                    $thispick = $matchweekpick['lms_team_name'] . ' (' . date_format(date_create($matchweekpick['lms_match_date']), 'd M Y') . ')';
                 }
-                if ($selectcount > 0){
-                $nextpick = $selectweekpick['lms_team_name'] . ' (' . date_format(date_create($selectweekpick['lms_match_date']), 'd M Y') . ')';
+                if ($selectcount > 0) {
+                    $nextpick = $selectweekpick['lms_team_name'] . ' (' . date_format(date_create($selectweekpick['lms_match_date']), 'd M Y') . ')';
                 }
-                $currentpick = $thispick . $newline . $nextpick;             
+                $currentpick = $thispick . $newline . $nextpick;
             } else {
                 if ($rs['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
                     $currentpick = '(waiting)';
@@ -202,8 +185,6 @@ if (login_check($mypdo) == true) {
 						</div>
 					</div>
 
-
-             </section>
 			 
 			 
 			 
@@ -212,11 +193,7 @@ if (login_check($mypdo) == true) {
        </html>
     	';
     echo $html;
-} 
-
-
-
-else {
+} else {
     header('Location: ' . $myPath . 'index.php?error=1');
 }
 
@@ -225,20 +202,17 @@ else {
 <?php $currentPage = 'home'; ?>
 
 <div class="page-container">
-  <a href="games.php" class="option">
-    <h2>My Games</h2>
-    <p>Make picks in your current games</p>
-  </a>
-  <a href="create.php"class="option">   
-    <h2>Create Game</h2>
-    <p>Create a football knockout Game</p>
-  </a>
-  <a href="join.php"class="option">   
-    <h2>Join Game</h2>
-    <p>Use a unique code to join a game</p>
-  </a>
-  <a href="manage.php" class="option">   
-    <h2>Manage</h2>
-    <p>Manage games you’ve created</p>
-  </a>
+	<a href="games.php" class="option">
+		<h2>My Games</h2>
+		<p>Make picks in your current games</p>
+	</a> <a href="create.php" class="option">
+		<h2>Create Game</h2>
+		<p>Create a football knockout Game</p>
+	</a> <a href="join.php" class="option">
+		<h2>Join Game</h2>
+		<p>Use a unique code to join a game</p>
+	</a> <a href="manage.php" class="option">
+		<h2>Manage</h2>
+		<p>Manage games you’ve created</p>
+	</a>
 </div>

@@ -7,13 +7,14 @@ require $myPath . 'includes/formkey.class.php';
 require $myPath . 'includes/mail-util.php';
 
 sec_session_start();
+$devlevelneeded = 901;
 $formKey = new formKey();
 $key = $formKey->outputKey();
 
+if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
+    $html = "";
 
-$html = "";
-
-echo '
+    echo '
 		<!doctype html>
 		<html>
 			<head>
@@ -45,7 +46,7 @@ echo '
 			</head>
 			        
 			<body>';
-$html .= '
+    $html .= '
 				<section id="homeSection">
 			        <div class="container">
 			        	<div class="row">
@@ -56,10 +57,10 @@ $html .= '
 			      		</div>
 			        	<div class = "row">';
 
-$html .= '			       <div class="well col-md-offset-1 col-md-8 col-sm-offset-1 col-sm-10 textDark">
+    $html .= '			       <div class="well col-md-offset-1 col-md-8 col-sm-offset-1 col-sm-10 textDark">
 			                  <form class="form-group" role="form" name ="emailtest" method="post" action="' . $myPath . 'testing/sendemail.php">';
-$html .= $key;
-$html .= '					     <h3 class="text-center">Enter Email Details</h3>
+    $html .= $key;
+    $html .= '					     <h3 class="text-center">Enter Email Details</h3>
 			                     <br>
                                  <div class="form-group">
                                     <input type="text" class="form-control" name="email"  id="email" placeholder="to email address"  value="" >
@@ -98,7 +99,7 @@ $html .= '					     <h3 class="text-center">Enter Email Details</h3>
 				          </div>
 			            ';
 
-$html .= '
+    $html .= '
 			    	</div>
 			    </section>
 			</body>
@@ -106,6 +107,8 @@ $html .= '
     
 		';
 
-echo $html;
-
+    echo $html;
+} else {
+    header('Location: ' . $myPath . 'index.php?error=1');
+}
 ?>

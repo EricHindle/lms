@@ -5,31 +5,32 @@ require_once $myPath . 'includes/functions.php';
 require_once $myPath . 'includes/formkey.class.php';
 require $myPath . 'struct/info/info_functions.php';
 sec_session_start();
+$devlevelneeded = 901;
 $formKey = new formKey();
 $key = $formKey->outputKey();
-$plaintext = '';
-$enctext = '';
-$encrypt = true;
+if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
+    $plaintext = '';
+    $enctext = '';
+    $encrypt = true;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $plaintext = (isset($_POST['plaintext']) ? $_POST['plaintext'] : '');
-    $enctext = (isset($_POST['enctext']) ? $_POST['enctext'] : '');
-    $encrypt = (isset($_POST['isencrypt']) ? true : false);
+        $plaintext = (isset($_POST['plaintext']) ? $_POST['plaintext'] : '');
+        $enctext = (isset($_POST['enctext']) ? $_POST['enctext'] : '');
+        $encrypt = (isset($_POST['isencrypt']) ? true : false);
 
-
-    if ($encrypt) {
-        $enctext = combobulate($plaintext, "e");
-    } else {
-        $plaintext = combobulate($enctext, "d");
+        if ($encrypt) {
+            $enctext = combobulate($plaintext, "e");
+        } else {
+            $plaintext = combobulate($enctext, "d");
+        }
     }
-}
 
-$isencrypt = ($encrypt ? 'checked' : '');
+    $isencrypt = ($encrypt ? 'checked' : '');
 
-$html = "";
+    $html = "";
 
-$html = ' <!doctype html>
+    $html = ' <!doctype html>
             <html>
             <head>
             
@@ -47,7 +48,7 @@ $html = ' <!doctype html>
 			</head>
                     
 			<body>';
-$html .= '
+    $html .= '
 				<section id="homeSection">
 			        <div class="container">
 			        	<div class="row">
@@ -58,10 +59,10 @@ $html .= '
 			      		</div>
 			        	<div class = "row">';
 
-$html .= '			       <div class="well col-md-offset-1 col-md-8 col-sm-offset-1 col-sm-10 textDark">
+    $html .= '			       <div class="well col-md-offset-1 col-md-8 col-sm-offset-1 col-sm-10 textDark">
 			                  <form class="form-group" role="form" name ="emailtest" method="post" action="' . $myPath . 'testing/encryptiontest.php">';
-$html .= $key;
-$html .= '					 
+    $html .= $key;
+    $html .= '					 
                                  <div class="form-group">
                                     <input type="text" class="form-control" name="plaintext"  id="plaintext" placeholder="plain text"  value="' . $plaintext . '" >
                                  </div>
@@ -75,7 +76,7 @@ $html .= '
                                 </div>
 ';
 
-$html .= '                 <div class="form-group">
+    $html .= '                 <div class="form-group">
 				                    <br>
 				                    <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
                                     <a href="' . $myPath . 'menus/testmenu.php" class="btn btn-primary btn-small" role="button" style="float:right">Back</a>
@@ -84,7 +85,7 @@ $html .= '                 <div class="form-group">
 				          </div>
 			            ';
 
-$html .= '
+    $html .= '
 			    	</div>
 			    </section>
 			</body>
@@ -92,6 +93,8 @@ $html .= '
                     
 		';
 
-echo $html;
-
+    echo $html;
+} else {
+    header('Location: ' . $myPath . 'index.php?error=1');
+}
 ?>   

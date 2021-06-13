@@ -9,22 +9,25 @@ require_once $myPath . 'includes/functions.php';
 require_once $myPath . 'includes/formkey.class.php';
 
 sec_session_start();
+$devlevelneeded = 901;
 $formKey = new formKey();
 $key = $formKey->outputKey();
-$_SESSION['currentweek'] = get_global_value('currweek');
-$_SESSION['currentseason'] = get_global_value('currseason');
-$_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
-$logfilename = "../../logs/lml-log-" . $_SESSION['matchweek'] . ".log";
-$logfile = fopen($logfilename, "r");
-$contents = '';
-if ($logfile) {
-    while (($line = fgets($logfile)) !== false) {
-        $contents .= $line . '<br/>';
-    }
 
-    fclose($logfile);
-}
-$html = ' <!doctype html>
+if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
+    $_SESSION['currentweek'] = get_global_value('currweek');
+    $_SESSION['currentseason'] = get_global_value('currseason');
+    $_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
+    $logfilename = "../../logs/lml-log-" . $_SESSION['matchweek'] . ".log";
+    $logfile = fopen($logfilename, "r");
+    $contents = '';
+    if ($logfile) {
+        while (($line = fgets($logfile)) !== false) {
+            $contents .= $line . '<br/>';
+        }
+
+        fclose($logfile);
+    }
+    $html = ' <!doctype html>
             <html>
             <head>
                 <meta charset="UTF-8">
@@ -35,22 +38,24 @@ $html = ' <!doctype html>
         	</head>
                     
         	<body>';
-$html .= '
+    $html .= '
 			     <div class="container">
 			         <div class="box" style="width:350px;padding: 0.5em;height: 80px;">
 			             <h3 style="text-align:center;">View Logfile</h3>
                          <h5 style="text-align:center; ">';
-$html .= $logfilename;
-$html .= '               </h5>
+    $html .= $logfilename;
+    $html .= '               </h5>
 			         </div>
                      <div class="box" style="width:90%;padding: 1em;text-align:left;margin:10px"> ' . $contents . ' </div>';
-$html .= '           <div style="padding:2em;">
+    $html .= '           <div style="padding:2em;">
 						  <a href="' . $myPath . 'menus/testmenu.php" class="btn" style="padding:15px;" role="button">Back</a>
 				     </div>
 			    </div>
 			</body>
 		</html>';
 
-echo $html;
-
+    echo $html;
+} else {
+    header('Location: ' . $myPath . 'index.php?error=1');
+}
 ?>   

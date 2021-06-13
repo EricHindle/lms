@@ -8,19 +8,21 @@ require_once $myPath . 'struct/email/email-functions.php';
 sec_session_start();
 $formKey = new formKey();
 $key = $formKey->outputKey();
+$devlevelneeded = 901;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (! isset($_POST['form_key']) || ! $formKey->validate()) {
-        header('Location: ' . $myPath . 'index.php?error=1');
-    } else {
-        if (isset($_POST['filename'])) {
-            $filename = $_POST['filename'];
+if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if (! isset($_POST['form_key']) || ! $formKey->validate()) {
+            header('Location: ' . $myPath . 'index.php?error=1');
+        } else {
+            if (isset($_POST['filename'])) {
+                $filename = $_POST['filename'];
 
-            $html = "";
+                $html = "";
 
-            $sentOk = sendemailusingtemplate('newaccount', 15, '', '', false);
+                $sentOk = sendemailusingtemplate('newaccount', 15, '', '', false);
 
-            $html = ' <!doctype html>
+                $html = ' <!doctype html>
             <html>
             <head>
             
@@ -51,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			</head>
                     
 			<body>';
-            $html .= '
+                $html .= '
 				<section id="homeSection">
 			        <div class="container">
 			        	<div class="row">
@@ -62,10 +64,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			      		</div>
 			        	<div class = "row">';
 
-            $html .= '			       <div class="well col-md-offset-1 col-md-8 col-sm-offset-1 col-sm-10 textDark">
+                $html .= '			       <div class="well col-md-offset-1 col-md-8 col-sm-offset-1 col-sm-10 textDark">
 			                  <form class="form-group" role="form" name ="emailtest" method="post" action="' . $myPath . 'testing/sendemail.php">';
-            $html .= $key;
-            $html .= '					     <h3 class="text-center">Enter Email Details</h3>
+                $html .= $key;
+                $html .= '					     <h3 class="text-center">Enter Email Details</h3>
 			                     <br>
                                  <div class="form-group">
                                     <input type="text" class="form-control" name="email"  id="email" placeholder="to email address"  value="' . $email . '" >
@@ -94,13 +96,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                  <div class="form-group">
                                     <input type="text" class="form-control" name="body"  id="body" placeholder="body"  value="' . $body . '" >
                                  </div>';
-            if ($sentOk) {
-                $html .= 'Email sent OK';
-            } else {
-                $html .= 'Email failed';
-            }
+                if ($sentOk) {
+                    $html .= 'Email sent OK';
+                } else {
+                    $html .= 'Email failed';
+                }
 
-            $html .= '                 <div class="form-group">
+                $html .= '                 <div class="form-group">
 				                    <br>
 				                    <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
                                     <a href="' . $myPath . 'menus/testmenu.php" class="btn btn-primary btn-small" role="button" style="float:right">Back</a>
@@ -109,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				          </div>
 			            ';
 
-            $html .= '
+                $html .= '
 			    	</div>
 			    </section>
 			</body>
@@ -117,21 +119,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     
 		';
 
-            echo $html;
-        } else {
-            $html .= "<script>
+                echo $html;
+            } else {
+                $html .= "<script>
 							alert('Missing values in POST');
 							window.location.href='" . $myPath . "testing/jsontest.php';
 						</script>";
+            }
         }
-    }
-} else {
-    $html .= "<script>
+    } else {
+        $html .= "<script>
 							alert('Not a POST');
 							window.location.href='" . $myPath . "testing/jsontest.php';
 						</script>";
+    }
+
+    echo $html;
+} else {
+    header('Location: ' . $myPath . 'index.php?error=1');
 }
-
-echo $html;
-
 ?>   
