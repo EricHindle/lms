@@ -36,7 +36,7 @@ if (login_check($mypdo) == true) {
     include $myPath . 'globNAV.php';
     echo '
 
-		      <div class="container">
+		      <div class="container" style="min-height:50vh;">
                 <div  class="box" style="padding:1em;width:400px;margin:10px;">
                     <h2>Welcome, ' . $_SESSION['nickname'] . '</h2>
                     Match week: ';
@@ -84,33 +84,22 @@ if (login_check($mypdo) == true) {
     $html .= '          </form>
                     </div>
                 </div>
-            <div class="">
-            <div class="">
-            <div class="" style="padding-top:10px;padding-bottom:0px;">
-            <a href="' . $myPath . 'struct/game/game-manage.php">
-            <h3 class="" style="text-align:center">Manage Games</h3>
-            </a>
-            </div>
-            </div>
-            </div>';
 
-    $html .= '      <div class="">
-		            	<div class="">
-			        		<h3>Games Played by ' . $_SESSION['nickname'] . '</h3>
-				        	<table class="" id="keywords">
-								<thead>
-    								<tr class="">
-    									<th>Name</th>
-    									<th>Start Wk</th>
-                                        <th>Game Status</th>
-                                        <th>Total Players</th>
-                                        <th>Active Players</th>
-                                        <th>My Status</th>
-                                        <th>Current picks</th>
-    								</tr>
-								</thead>
-								<tbody>
-									';
+                <div class="box table-games" style="margin:10px;padding:1em;">
+            		<h3>Games Played by ' . $_SESSION['nickname'] . '</h3>
+				    <table class="center" style="color:black;background-color:white;" id="keywords">
+                        <thead>
+                            <tr class="">
+								<th>Name</th>
+								<th>Start Wk</th>
+                                <th>Game Status</th>
+                                <th>Total Players</th>
+                                <th>Active Players</th>
+                                <th>My Status</th>
+                                <th>Current picks</th>
+							</tr>
+                        </thead>
+                        <tbody>';
 
     foreach ($gamefetch as $rs) {
         $gameid = $rs['lms_game_id'];
@@ -140,7 +129,7 @@ if (login_check($mypdo) == true) {
                 $rowcolor = 'black';
                 break;
             case 3:
-                $rowcolor = 'limegreen';
+                $rowcolor = 'green';
                 break;
             case 4:
                 $rowcolor = 'silver';
@@ -180,18 +169,12 @@ if (login_check($mypdo) == true) {
     								</tr>';
     }
     $html .= '
-								</tbody>
-							</table>
-						</div>
-					</div>
-
-			 
-			 
-			 
-			 
-          </body>
-       </html>
-    	';
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </body>
+    </html>';
     echo $html;
 } else {
     header('Location: ' . $myPath . 'index.php?error=1');
