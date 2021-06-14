@@ -160,7 +160,26 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                 		                                    </form>
                 	                                    </div>
 		                                            </div>';
+                        } else {
+                            $html .= '	             <div class = "row">
+                                                        <div class="well col-md-3 col-sm-3 textDark">
+                                                            <h3 class="text-center">Remove Game</h3>
+                                                            <h5 class="text-center">All details of the game will be removed permanently</h5>
+                						                    <form class="form-horizontal" style="margin-left:24px; margin-right:30px" role="form" name ="edit" method="post" action="process-remove-game.php">';
+                            $html .= $key;
+                            $html .= '
+                                    		                    <div class="form-group text-center">
+                                                                    <input type= "hidden" name= "id" value="' . $gameid . '" />
+                                    		                        <input id="submit" name="submit" type="submit" value="Remove the Game" class="btn btn-primary">
+                                    		                    </div>
+                		                                    </form>
+                	                                    </div>
+		                                            </div>';
                         }
+                        
+                        
+                        
+                        
                         $html .= '                  <div class="row">
                                     					<br>
                                     					<div class="col-xs-6">
