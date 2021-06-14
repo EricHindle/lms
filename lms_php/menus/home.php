@@ -52,7 +52,7 @@ if (login_check($mypdo) == true) {
     $html .= $key;
 
     foreach ($gamefetch as $myGame) {
-        if ($myGame['lms_game_status'] < 3 && $myGame['lms_week'] <= $_SESSION['selectweek']) {
+        if ($myGame['lms_game_status'] < 3 && $myGame['lms_game_player_status'] == 1 &&  $myGame['lms_week'] <= $_SESSION['selectweek']) {
             $html .= '      <button class="gameselection graybutton"  type="submit" name="gameid" value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</button></br>';
         }
     }
