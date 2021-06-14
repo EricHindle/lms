@@ -206,18 +206,19 @@ button {
 }
 
 .table-games td {
-  background:#3333;
-  padding: 10px; 
+  background:#121315;
+  padding: 15px; 
 }
 
 .table-games td:first-child {
   
   border-radius: 10px 0px 0px 10px;
-
+  padding-left:20px;
+  padding-right:0px;
 }
 
 .table-games td:last-child {
-
+  padding-right:15px;
   border-radius: 0px 10px 10px 0px;
 }
 
