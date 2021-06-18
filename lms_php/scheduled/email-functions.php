@@ -11,7 +11,7 @@ require $myPath . 'includes/mail-util.php';
 function sendemailusingtemplate($templatename, $playerid, $gameid, $values, $checkflag)
 {
     global $myPath;
-
+    
     $game = get_game($gameid);
     $player = get_player($playerid);
     $sentOk = true;
@@ -39,7 +39,7 @@ function replacemarkers($input, $player, $game, $values)
     $adminFromAddress = get_global_value('smtp_from_address');
     $adminFromName = get_global_value('smtp_from_name');
     $lmlurl = get_global_value('lml_url');
-
+    
     $output = $input;
     if (is_array($player)) {
         $output = str_replace('$email', $player['lms_player_email'], $output);

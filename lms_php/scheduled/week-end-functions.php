@@ -5,9 +5,9 @@
  */
 
 require '/home/lastmanl/public_html/includes/db_connect.php';
-require '/home/lastmanl/public_html/scheduled/email-functions.php'; 
+require '/home/lastmanl/public_html/scheduled/email-functions.php';
 // require '../includes/db_connect.php';
-// require '../scheduled/email-functions.php'; 
+// require '../scheduled/email-functions.php';
 
 function activateGames($nextgameweek)
 {
@@ -68,7 +68,7 @@ function get_count_of_matches_with_no_result()
     return $selectcount;
 }
 
-function get_count_of_playing_teams_this_week($gameid, $matchweek) 
+function get_count_of_playing_teams_this_week($gameid, $matchweek)
 {
     global $mypdo;
     $selectsql = "SELECT lms_match_team FROM lms_match WHERE lms_match_weekno = :matchweek AND lms_match_team IN (
@@ -171,6 +171,17 @@ function get_still_active_game_players($gameid)
     $gamequery->execute();
     $gamelist = $gamequery->fetchAll(PDO::FETCH_ASSOC);
     return $gamelist;
+}
+
+function get_week($weekno)
+{
+    global $mypdo;
+    $lookupsql = "SELECT * FROM lms_week WHERE lms_week_no = :weekno LIMIT 1";
+    $lookupquery = $mypdo->prepare($lookupsql);
+    $lookupquery->execute(array(
+        ':weekno' => $weekno
+    ));
+    return $lookupquery->fetch(PDO::FETCH_ASSOC);
 }
 
 function get_week_state($weekno)

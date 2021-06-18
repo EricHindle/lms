@@ -1,0 +1,9 @@
+{
+"toAddress": "$adminAddress",
+"toName": "$adminName",
+"fromAddress": "$adminAddress",
+"fromName": "$adminName",
+"bcc": "$bcc",
+"subject": "Last Man Live - Weekend Processing",
+"body": "$value0"
+}
