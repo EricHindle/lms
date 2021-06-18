@@ -31,9 +31,12 @@ if (count($week) > 0) {
     $msg = $msg . "Can't find week record for " . $_SESSION['matchweek'] . "\n";
 }
 
+$timenow =  strtotime("now");
+$timeweekend = strtotime($week['lms_week_end']);
+
 if (check_start_date() == 1) {
 
-    if (date_format(date_create($week['lms_week_end']), 'Y-m-d') < date('Y-m-d')) {
+    if ($timenow > $timeweekend) {
             
         fwrite($logfile, "Weekend processing for match week " . $_SESSION['matchweek'] . "\n");
         fwrite($logfile, "Week state " . strval($weekstate) . "\n");
