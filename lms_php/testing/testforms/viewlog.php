@@ -14,10 +14,21 @@ $formKey = new formKey();
 $key = $formKey->outputKey();
 
 if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
+    
     $_SESSION['currentweek'] = get_global_value('currweek');
     $_SESSION['currentseason'] = get_global_value('currseason');
     $_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
     $logfilename = "../../logs/lml-log-" . $_SESSION['matchweek'] . ".log";
+    $period = $_SESSION['matchweek'];
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if (isset($_POST['form_key'])) {
+            if (isset($_POST['period'])) {
+                $period = $_POST['period'];
+                $logfilename = "../../logs/lml-log-" . $period . ".log";
+            }
+        }
+    }
+    
     $logfile = fopen($logfilename, "r");
     $contents = '';
     if ($logfile) {
@@ -40,11 +51,20 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
         	<body>';
     $html .= '
 			     <div class="container">
-			         <div class="box" style="width:350px;padding: 0.5em;height: 80px;">
-			             <h3 style="text-align:center;">View Logfile</h3>
-                         <h5 style="text-align:center; ">';
-    $html .= $logfilename;
-    $html .= '               </h5>
+			         <div class="box" style="width:350px;padding: 0.5em;height: 160px;">
+
+                       <form role="form" name ="json" method="post" action="' . $myPath . 'testing/testforms/viewlog.php">';
+    $html .= $key;
+    $html .= '              
+                            <div class="form-group" style="margin-left:16px;margin-right:16px">
+					            <input id="submit2" name="submit" type="submit" value="View Logfile" class="btn" style="margin:10px;padding:5px;">
+					        </div>
+                            <div class="form-group " style="margin-left:16px;margin-right:16px">
+                                Period <input type="text" class="form-control" id="period" name="period" placeholder="period" value="' . $period .'">
+					        </div>
+
+					    </form>
+                        <h5>' . $logfilename . ' </h5>
 			         </div>
                      <div class="box" style="width:90%;padding: 1em;text-align:left;margin:10px"> ' . $contents . ' </div>';
     $html .= '           <div style="padding:2em;">
@@ -55,6 +75,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
 		</html>';
 
     echo $html;
+
 } else {
     header('Location: ' . $myPath . 'index.php?error=1');
 }
