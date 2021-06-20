@@ -83,11 +83,11 @@ if (login_check($mypdo) == true && $access > 900) {
 										                    <div class="form-group">
 										                    	
                                                                <label for="startdate">New start date:</label>
-                    					                       <input type="text" class="form-control" id="startdate" name="startdate" value="' . date_format(date_create($remainingweeks['lms_week_start']), 'Y-m-d') . '" placeholder="yyyy-mm-dd"><br>
+                    					                       <input type="text" class="form-control" id="startdate" name="startdate" value="' . date_format(date_create($remainingweeks['lms_week_start']), 'Y-m-d H:i:s') . '" placeholder="yyyy-mm-dd hh:mm:ss"><br>
                                                                <label for="deadline">New deadline:</label>
-                    					                       <input type="text" class="form-control" id="deadline" name="deadline" value="' . date_format(date_create($remainingweeks['lms_week_deadline']), 'Y-m-d') . '" placeholder="yyyy-mm-dd"><br>
+                    					                       <input type="text" class="form-control" id="deadline" name="deadline" value="' . date_format(date_create($remainingweeks['lms_week_deadline']), 'Y-m-d H:i:s') . '" placeholder="yyyy-mm-dd hh:mm:ss"><br>
                                                                <label for="enddate">New end date:</label>
-                    					                       <input type="text" class="form-control" id="enddate" name="enddate" value="' . date_format(date_create($remainingweeks['lms_week_end']), 'Y-m-d') . '" placeholder="yyyy-mm-dd"><br>
+                    					                       <input type="text" class="form-control" id="enddate" name="enddate" value="' . date_format(date_create($remainingweeks['lms_week_end']), 'Y-m-d H:i:s') . '" placeholder="yyyy-mm-dd hh:mm:ss"><br>
 
 															   <input type= "hidden" name= "id" value="' . $weekid . '" />
 										                    </div>

@@ -119,14 +119,14 @@ if (login_check($mypdo) == true) {
         $thispick = '';
         $nextpick = '';
         $rowcolor = 'black';
-        $selcolor = 'black';
-        $playercolor = 'black';
+        $selcolor = 'silver';
+        $playercolor = 'silver';
         switch ($rs['lms_game_status']) {
             case 1:
                 $rowcolor = 'blue';
                 break;
             case 2:
-                $rowcolor = 'black';
+                $rowcolor = 'white';
                 break;
             case 3:
                 $rowcolor = 'green';
