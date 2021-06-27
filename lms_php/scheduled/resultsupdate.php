@@ -37,7 +37,7 @@ function scraping_generic($url, $search, $logfile)
                 $isFulltime = false;
                 foreach ($match->find(".left") as $left) {
                     foreach ($left->find(".full-width-extra-info") as $ft) {
-                        if (trim($ft->innertext) == "FT") {
+                        if (trim($ft->innertext) == "FT" || trim($ft->innertext) == "AET") {
                             $isFulltime = true;
                         }
                     }
