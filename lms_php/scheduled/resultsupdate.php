@@ -63,7 +63,15 @@ function scraping_generic($url, $search, $logfile)
                     }                  
                     fwrite($logfile, "  " . $hometeam . " " . $homescore . " - " . $awayscore . " " . $awayteam . "\n");
                 }
-
+                // get score if penalties
+                foreach ($match->find(".flc-match-has-pens") as $pens) {
+                    $pens_score = explode(" ", $pens->innertext);
+                    $pos = array_search("win", $pens_score, false);
+                    $result = explode("-", $pens_score[intval($pos) + 1]);
+                    $homescore = $result[0];
+                    $awayscore = $result[1];
+                    fwrite($logfile, "  " . $hometeam . " " . $homescore . " - " . $awayscore . " " . $awayteam . " on penalties\n");
+                }
                 if (! is_numeric($homescore)) {
                     save_result($hometeam, $matchdate, $homescore, "p", $logfile);
                     save_result($awayteam, $matchdate, $awayscore, "p", $logfile);
