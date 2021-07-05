@@ -49,6 +49,7 @@ function scraping_generic($url, $search, $logfile)
                 foreach ($match->find(".right") as $right) {
                     $awayteam = get_team_abbreviation($right->innertext);
                 }
+                $logresulttext = '';
                 // get score
                 foreach ($match->find(".center") as $score) {
                     foreach ($score->find(".l-score") as $lscore) {
@@ -60,8 +61,8 @@ function scraping_generic($url, $search, $logfile)
                     foreach ($score->find(".flc-match-error") as $rscore) {
                         $homescore = 'p';
                         $awayscore = 'p';
-                    }                  
-                    fwrite($logfile, "  " . $hometeam . " " . $homescore . " - " . $awayscore . " " . $awayteam . "\n");
+                    }
+                    $logresulttext = "  " . $hometeam . " " . $homescore . " - " . $awayscore . " " . $awayteam . "\n";
                 }
                 // get score if penalties
                 foreach ($match->find(".flc-match-has-pens") as $pens) {
@@ -70,26 +71,30 @@ function scraping_generic($url, $search, $logfile)
                     $result = explode("-", $pens_score[intval($pos) + 1]);
                     $homescore = $result[0];
                     $awayscore = $result[1];
-                    fwrite($logfile, "  " . $hometeam . " " . $homescore . " - " . $awayscore . " " . $awayteam . " on penalties\n");
+                    $logresulttext = "  " . $hometeam . " " . $homescore . " - " . $awayscore . " " . $awayteam . " on penalties\n";
                 }
+                $resultupdated = false;
                 if (! is_numeric($homescore)) {
-                    save_result($hometeam, $matchdate, $homescore, "p", $logfile);
-                    save_result($awayteam, $matchdate, $awayscore, "p", $logfile);
+                    $resultupdated = $resultupdated || save_result($hometeam, $matchdate, $homescore, "p", $logfile);
+                    $resultupdated = $resultupdated || save_result($awayteam, $matchdate, $awayscore, "p", $logfile);
                 } else {
                     if ($homescore > $awayscore) {
-                        save_result($hometeam, $matchdate, $homescore, "w", $logfile);
-                        save_result($awayteam, $matchdate, $awayscore, "l", $logfile);
+                        $resultupdated = $resultupdated || save_result($hometeam, $matchdate, $homescore, "w", $logfile);
+                        $resultupdated = $resultupdated || save_result($awayteam, $matchdate, $awayscore, "l", $logfile);
                     }
 
                     if ($homescore < $awayscore) {
-                        save_result($hometeam, $matchdate, $homescore, "l", $logfile);
-                        save_result($awayteam, $matchdate, $awayscore, "w", $logfile);
+                        $resultupdated = $resultupdated || save_result($hometeam, $matchdate, $homescore, "l", $logfile);
+                        $resultupdated = $resultupdated || save_result($awayteam, $matchdate, $awayscore, "w", $logfile);
                     }
 
                     if ($homescore == $awayscore) {
-                        save_result($hometeam, $matchdate, $homescore, "d", $logfile);
-                        save_result($awayteam, $matchdate, $awayscore, "d", $logfile);
+                        $resultupdated = $resultupdated || save_result($hometeam, $matchdate, $homescore, "d", $logfile);
+                        $resultupdated = $resultupdated || save_result($awayteam, $matchdate, $awayscore, "d", $logfile);
                     }
+                }
+                if ($resultupdated) {
+                    fwrite($logfile, $logresulttext);
                 }
             }
         }

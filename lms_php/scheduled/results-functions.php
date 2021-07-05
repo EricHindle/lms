@@ -50,6 +50,7 @@ function get_team_abbreviation($teamtext)
 
 function save_result($teamabbr, $matchdate, $score, $wl, $logfile)
 {
+    $isResultUpdated = false;
     // get team id
     $teamId = get_teamId_from_abbr($teamabbr);
     if ($teamId > 0) {
@@ -85,7 +86,7 @@ function save_result($teamabbr, $matchdate, $score, $wl, $logfile)
     } else {
         fwrite($logfile, "** No team found for " . $teamabbr . "\n");
     }
-    return;
+    return $isResultUpdated;
 }
 
 function save_match($teamabbr, $matchdate, $logfile, $oppabbr)
