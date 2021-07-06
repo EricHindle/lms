@@ -22,12 +22,13 @@ function scraping_generic($url, $search, $logfile)
         // Found at least one
 
         foreach ($found->find(".fixture-list-contain-inner") as $fixturelist) {
+            $matchdatelogtext = '';
             $matchdate = "";
             // get match date block
             foreach ($fixturelist->find(".flc-comp-title") as $datetext) {
                 $textdate = trim(explode("<", $datetext->innertext, 2)[0]);
                 $matchdate = strtotime($textdate);
-                fwrite($logfile, "----- Match date: " . date('d-m-Y', $matchdate) . " -----\n");
+                $matchdatelogtext = "----- Match date: " . date('d-m-Y', $matchdate) . " -----\n";
             }
             // get match block
             foreach ($fixturelist->find(".flc-match-item-inner") as $match) {
@@ -94,7 +95,9 @@ function scraping_generic($url, $search, $logfile)
                     }
                 }
                 if ($resultupdated) {
+                    fwrite($logfile, $matchdatelogtext);
                     fwrite($logfile, $logresulttext);
+                    $matchdatelogtext = '';
                 }
             }
         }
@@ -129,6 +132,6 @@ $url = get_global_value('results url ' . $urlId );
 $search = ".fixture-list-contain";
 
 scraping_generic($url, $search, $logfile);
-
+fwrite($logfile, "Results update complete\n");
 fclose($logfile);
 ?>
