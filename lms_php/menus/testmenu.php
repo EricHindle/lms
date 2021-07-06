@@ -38,16 +38,6 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
                                 <h3 style="color:white;">View Log</h3>
                             </a>	
                         </div>
-
-                        <div class="btn" style="padding:3px;margin:3px;width:100%;">
-                            <a href="' . $myPath . 'testing/testforms/runjob.php?form_key=' . $formKey->formkey . '&cmd=/usr/local/bin/php /home/lastmanl/public_html/scheduled/fixturesupdate.php u-euro">
-                                <h3 style="color:white;">Run Fixture Update</h3>
-                            </a>	
-                        </div>
-
-
-
-	
                         <div class="btn" style="padding:3px;margin:3px;width:100%;">
                             <a href="' . $myPath . 'testing/testforms/emailtest.php">
                                 <h3 style="color:white;">Email test</h3>
