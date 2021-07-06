@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $html = "";
                 foreach ($emails as $inviteEmail) {
                     if ($inviteEmail != '') {
-                        sendemailusingtemplate('invitation', $playerid, $gameid, array(
+                        sendemailusingtemplate('invitation', $playerid, $gameid, 0, array(
                             $inviteEmail
                         ), false);
                     }

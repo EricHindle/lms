@@ -1,4 +1,5 @@
 <?php
+
 /*
  * HINDLEWARE
  * Copyright (C) 2020-21 Eric Hindle. All rights reserved.
@@ -10,7 +11,9 @@ require $myPath . 'scheduled/email-functions.php';
 
 function notify_error($playerid, $gameid, $errormsg)
 {
-    sendemailusingtemplate('error', $playerid, $gameid, array($errormsg), false);
+    sendemailusingtemplate('error', $playerid, $gameid, 0, array(
+        $errormsg
+    ), false);
 }
 
 function get_game($gameid)
@@ -33,6 +36,17 @@ function get_player($playerid)
     $playerquery->execute();
     $playerfetch = $playerquery->fetch(PDO::FETCH_ASSOC);
     return $playerfetch;
+}
+
+function get_team($teamid)
+{
+    global $mypdo;
+    $teamsql = "SELECT * FROM lms_team WHERE lms_team_id = :id LIMIT 1";
+    $teamquery = $mypdo->prepare($teamsql);
+    $teamquery->bindParam(":id", $teamid, PDO::PARAM_INT);
+    $teamquery->execute();
+    $teamfetch = $teamquery->fetch(PDO::FETCH_ASSOC);
+    return $teamfetch;
 }
 
 function get_team_abbreviation($teamtext)
@@ -103,9 +117,9 @@ function save_match($teamabbr, $matchdate, $logfile, $oppabbr)
         $matchId = get_matchId($teamId, $matchdate);
         // insert match
         if ($matchId > 0) {
-        //    fwrite($logfile, "Match exists for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
+            // fwrite($logfile, "Match exists for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
         } else {
-        //    fwrite($logfile, "** Match not found for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
+            // fwrite($logfile, "** Match not found for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
             if (insert_match($teamId, $matchdate, $wkno, '', $leagueId, $oppid) == false) {
                 $isOK = false;
             }
@@ -263,26 +277,27 @@ function get_match_week($matchdate)
     return $matchweek;
 }
 
-function get_rescheduled_match($matchweek, $matchdate, $teamid, $oppid) {
+function get_rescheduled_match($matchweek, $matchdate, $teamid, $oppid)
+{
     global $mypdo;
     $matchsql = "SELECT * from lms_match where lms_match_weekno = :weekno and lms_match_team = :teamid and lms_match_opp = :oppid and lms_match_date != :matchdate ";
     $matchquery = $mypdo->prepare($matchsql);
-    $matchquery->bindParam(":weekno",$matchweek);
-    $matchquery->bindParam(":teamid",$teamid, PDO::PARAM_INT);
-    $matchquery->bindParam(":oppid",$oppid, PDO::PARAM_INT);
+    $matchquery->bindParam(":weekno", $matchweek);
+    $matchquery->bindParam(":teamid", $teamid, PDO::PARAM_INT);
+    $matchquery->bindParam(":oppid", $oppid, PDO::PARAM_INT);
     $matchquery->bindParam(":matchdate", $matchdate);
     $matchquery->execute();
     $matchdata = $matchquery->fetchAll(PDO::FETCH_ASSOC);
     return $matchdata;
 }
 
-function transfer_picks($matchid, $altmatchid) {
-        global $mypdo;
-   $transsql = "UPDATE lms_pick SET lms_pick_match_id= :altmatchid  WHERE lms_pick_match_id = :matchid" ;
-   $transquery = $mypdo->prepare($transsql);
-   $transquery->bindParam(':matchId', $matchid, PDO::PARAM_INT);
-   $transquery->bindParam(':altmatchId', $altmatchid, PDO::PARAM_INT);
-   return $transquery->execute();
-    
+function transfer_picks($matchid, $altmatchid)
+{
+    global $mypdo;
+    $transsql = "UPDATE lms_pick SET lms_pick_match_id= :altmatchid  WHERE lms_pick_match_id = :matchid";
+    $transquery = $mypdo->prepare($transsql);
+    $transquery->bindParam(':matchId', $matchid, PDO::PARAM_INT);
+    $transquery->bindParam(':altmatchId', $altmatchid, PDO::PARAM_INT);
+    return $transquery->execute();
 }
 ?>

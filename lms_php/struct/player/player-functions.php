@@ -9,22 +9,22 @@ require $myPath . 'struct/email/email-functions.php';
 
 function notify_loser($playerid, $gameid)
 {
-    sendemailusingtemplate('teamlose', $playerid, $gameid, '', true);
+    sendemailusingtemplate('teamlose', $playerid, $gameid, 0, 0, '', true);
 }
 
 function notify_winner($playerid, $gameid)
 {
-    sendemailusingtemplate('teamwin', $playerid, $gameid, '', true);
+    sendemailusingtemplate('teamwin', $playerid, $gameid, 0, 0, '', true);
 }
 
 function notify_postponed($playerid, $gameid)
 {
-    sendemailusingtemplate('postponed', $playerid, $gameid, '', true);
+    sendemailusingtemplate('postponed', $playerid, $gameid, 0, 0, '', true);
 }
 
 function notify_no_pick($playerid, $gameid)
 {
-    sendemailusingtemplate('nopick', $playerid, $gameid, '', true);
+    sendemailusingtemplate('nopick', $playerid, $gameid, 0, 0, '', true);
 }
 
 ?>

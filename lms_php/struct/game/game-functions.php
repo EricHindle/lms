@@ -209,7 +209,7 @@ function sendcancelemailsforgame($gameid)
     $gamelist = get_still_active_game_players($gameid);
     foreach ($gamelist as $player) {
         $playerid = $player['lms_player_id'];
-        sendemailusingtemplate('cancel', $playerid, $gameid, '', true);
+        sendemailusingtemplate('cancel', $playerid, $gameid, 0, '', true);
     }
 }
 

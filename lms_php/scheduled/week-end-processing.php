@@ -198,7 +198,7 @@ if (check_start_date() == 1) {
 
 if (strlen($msg) > 0) {
     $msg = "Weekend processing for match week " . $_SESSION['matchweek'] . ". \n" . $msg;
-    sendemailusingtemplate('weekendprocessing', 0, 0, array(
+    sendemailusingtemplate('weekendprocessing', 0, 0, 0, array(
         $msg
     ), false);
 }

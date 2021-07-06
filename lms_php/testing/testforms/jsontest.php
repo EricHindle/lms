@@ -20,7 +20,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
 
                 $html = "";
 
-                $sentOk = sendemailusingtemplate('newaccount', 15, '', '', false);
+                $sentOk = sendemailusingtemplate('newaccount', 15, 0, 0, '', false);
 
                 $html = ' <!doctype html>
             <html>

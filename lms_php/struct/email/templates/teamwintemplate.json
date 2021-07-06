@@ -5,5 +5,5 @@
 "fromName": "$adminName",
 "bcc": "$bcc",
 "subject": "You are still in the game",
-"body": "The team you picked this week in the Last Man Live game $gameName was a winner. You are still in the game. Do not forget to make a pick for the new week. Login at $url"
+"body": "The team you picked this week ($teamName) in the Last Man Live game $gameName was a winner. You are still in the game. Do not forget to make a pick for the new week. Login at $url"
 }

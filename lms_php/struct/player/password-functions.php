@@ -50,7 +50,7 @@ function inserttemppassword($playerid, $hash)
 
 function sendpasswordemail($player, $newpwd)
 {
-    sendemailusingtemplate('temppassword', $player['lms_player_id'], '', array(
+    sendemailusingtemplate('temppassword', $player['lms_player_id'], 0, 0, array(
         $newpwd
     ), false);
 }

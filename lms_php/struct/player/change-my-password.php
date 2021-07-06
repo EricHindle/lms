@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             ':id' => $userid
                         ));
                         allowUser();
-                        sendemailusingtemplate('passwordchange', $userid, '', '', true);
+                        sendemailusingtemplate('passwordchange', $userid, 0, 0, '', true);
                     } else {
                         patchUser($passwordErr);
                     }

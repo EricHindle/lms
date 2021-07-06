@@ -96,7 +96,7 @@ function get_current_deadline_date($selectweekkey)
 function get_current_week_picks()
 {
     global $mypdo;
-    $picksql = "SELECT lms_pick_game_id, lms_pick_player_id, lms_pick_match_id, lms_match_result FROM v_lms_player_picks WHERE lms_match_weekno = :matchwk";
+    $picksql = "SELECT * FROM v_lms_player_picks WHERE lms_match_weekno = :matchwk";
     $pickquery = $mypdo->prepare($picksql);
     $pickquery->bindParam(':matchwk', $_SESSION['matchweek']);
     $pickquery->execute();
@@ -173,6 +173,17 @@ function get_still_active_game_players($gameid)
     return $gamelist;
 }
 
+function get_team($teamid)
+{
+    global $mypdo;
+    $teamsql = "SELECT * FROM lms_team WHERE lms_team_id = :id LIMIT 1";
+    $teamquery = $mypdo->prepare($teamsql);
+    $teamquery->bindParam(":id", $teamid, PDO::PARAM_INT);
+    $teamquery->execute();
+    $teamfetch = $teamquery->fetch(PDO::FETCH_ASSOC);
+    return $teamfetch;
+}
+
 function get_week($weekno)
 {
     global $mypdo;
@@ -203,22 +214,22 @@ function get_week_state($weekno)
 
 function notify_loser($playerid, $gameid)
 {
-    sendemailusingtemplate('teamlose', $playerid, $gameid, '', true);
+    sendemailusingtemplate('teamlose', $playerid, $gameid, 0, '', true);
 }
 
 function notify_postponed($playerid, $gameid)
 {
-    sendemailusingtemplate('postponed', $playerid, $gameid, '', true);
+    sendemailusingtemplate('postponed', $playerid, $gameid, 0, '', true);
 }
 
 function notify_winner($playerid, $gameid)
 {
-    sendemailusingtemplate('teamwin', $playerid, $gameid, '', true);
+    sendemailusingtemplate('teamwin', $playerid, $gameid, 0, '', true);
 }
 
 function notify_no_pick($playerid, $gameid)
 {
-    sendemailusingtemplate('nopick', $playerid, $gameid, '', true);
+    sendemailusingtemplate('nopick', $playerid, $gameid, 0, '', true);
 }
 
 function set_game_complete($gameid)

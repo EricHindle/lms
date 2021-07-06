@@ -56,7 +56,7 @@ if (login_check($mypdo) == true) {
                             ));
                             $leagueadded = $stmtaddgameleague->rowCount();
                             add_player_to_game($gameid, $_SESSION['user_id']);
-                            sendemailusingtemplate('newgame', $playerid, $gameid, '', true);
+                            sendemailusingtemplate('newgame', $playerid, $gameid, 0, '', true);
                             $html .= "<script>              
 									alert('Game added.');
 									window.location.href='game-manage.php';

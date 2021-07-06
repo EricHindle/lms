@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $added = $stmtadduser->rowCount();
                         if ($added == 1) {
                             $playerid = $mypdo->lastInsertId();
-                            sendemailusingtemplate('newaccount', $playerid, '', '', '', true);
+                            sendemailusingtemplate('newaccount', $playerid, 0, 0, '', true);
                         }
                         $html .= "<script>
 											alert('Account added.');

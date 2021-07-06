@@ -8,12 +8,13 @@ $myPath = '/home/lastmanl/public_html/';
 // $myPath =  "../";
 require $myPath . 'includes/mail-util.php';
 
-function sendemailusingtemplate($templatename, $playerid, $gameid, $values, $checkflag)
+function sendemailusingtemplate($templatename, $playerid, $gameid, $teamid, $values, $checkflag)
 {
     global $myPath;
     
     $game = get_game($gameid);
     $player = get_player($playerid);
+    $team = get_team($teamid);
     $sentOk = true;
     if ($checkflag == false || $player['lms_player_send_email'] == 1) {
         $sentOk = false;
@@ -21,20 +22,20 @@ function sendemailusingtemplate($templatename, $playerid, $gameid, $values, $che
         $strJsonFileContents = file_get_contents($filename);
         if ($strJsonFileContents) {
             $array = json_decode($strJsonFileContents, true);
-            $email = replacemarkers($array['toAddress'], $player, $game, $values);
-            $name = replacemarkers($array['toName'], $player, $game, $values);
-            $fromemail = replacemarkers($array['fromAddress'], $player, $game, $values);
-            $fromname = replacemarkers($array['fromName'], $player, $game, $values);
-            $bcc = replacemarkers($array['bcc'], $player, $game, $values);
-            $subject = replacemarkers($array['subject'], $player, $game, $values);
-            $body = replacemarkers($array['body'], $player, $game, $values);
+            $email = replacemarkers($array['toAddress'], $player, $game, $team, $values);
+            $name = replacemarkers($array['toName'], $player, $game, $team, $values);
+            $fromemail = replacemarkers($array['fromAddress'], $player, $game, $team, $values);
+            $fromname = replacemarkers($array['fromName'], $player, $game, $team, $values);
+            $bcc = replacemarkers($array['bcc'], $player, $game, $team, $values);
+            $subject = replacemarkers($array['subject'], $player, $game, $team, $values);
+            $body = replacemarkers($array['body'], $player, $game, $team, $values);
             $sentOk = sendmail($email, $subject, $body, $name, $bcc, $fromemail, $fromname);
         }
     }
     return $sentOk;
 }
 
-function replacemarkers($input, $player, $game, $values)
+function replacemarkers($input, $player, $game, $team, $values)
 {
     $adminFromAddress = get_global_value('smtp_from_address');
     $adminFromName = get_global_value('smtp_from_name');
@@ -50,6 +51,10 @@ function replacemarkers($input, $player, $game, $values)
         $output = str_replace('$gameName', $game['lms_game_name'], $output);
         $output = str_replace('$gameCode', $game['lms_game_code'], $output);
     }
+     if (is_array($team)) {
+        $output = str_replace('$teamName', $team['lms_team_name'], $output);
+        $output = str_replace('$teamAbbr', $team['lms_team_abbr'], $output);
+     }
     $output = str_replace('$adminAddress', $adminFromAddress, $output);
     $output = str_replace('$adminName', $adminFromName, $output);
     $output = str_replace('$url', $lmlurl, $output);
