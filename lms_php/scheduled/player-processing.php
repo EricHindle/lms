@@ -6,7 +6,7 @@ namespace scheduled;
  * Copyright (C) 2021 Eric Hindle. All rights reserved.
  */
 $myPath = '/home/lastmanl/public_html/';
-$myPath = "../";
+// $myPath = "../";
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'scheduled/week-end-functions.php';
