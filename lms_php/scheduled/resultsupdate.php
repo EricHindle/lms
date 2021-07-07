@@ -76,22 +76,22 @@ function scraping_generic($url, $search, $logfile)
                 }
                 $resultupdated = false;
                 if (! is_numeric($homescore)) {
-                    $resultupdated = $resultupdated || save_result($hometeam, $matchdate, $homescore, "p", $logfile);
-                    $resultupdated = $resultupdated || save_result($awayteam, $matchdate, $awayscore, "p", $logfile);
+                    $resultupdated = save_result($hometeam, $matchdate, $homescore, "p", $logfile) || $resultupdated;
+                    $resultupdated = save_result($awayteam, $matchdate, $awayscore, "p", $logfile) || $resultupdated;
                 } else {
                     if ($homescore > $awayscore) {
-                        $resultupdated = $resultupdated || save_result($hometeam, $matchdate, $homescore, "w", $logfile);
-                        $resultupdated = $resultupdated || save_result($awayteam, $matchdate, $awayscore, "l", $logfile);
+                        $resultupdated = save_result($hometeam, $matchdate, $homescore, "w", $logfile) || $resultupdated;
+                        $resultupdated = save_result($awayteam, $matchdate, $awayscore, "l", $logfile) || $resultupdated;
                     }
 
                     if ($homescore < $awayscore) {
-                        $resultupdated = $resultupdated || save_result($hometeam, $matchdate, $homescore, "l", $logfile);
-                        $resultupdated = $resultupdated || save_result($awayteam, $matchdate, $awayscore, "w", $logfile);
+                        $resultupdated = save_result($hometeam, $matchdate, $homescore, "l", $logfile) || $resultupdated;
+                        $resultupdated = save_result($awayteam, $matchdate, $awayscore, "w", $logfile) || $resultupdated;
                     }
 
                     if ($homescore == $awayscore) {
-                        $resultupdated = $resultupdated || save_result($hometeam, $matchdate, $homescore, "d", $logfile);
-                        $resultupdated = $resultupdated || save_result($awayteam, $matchdate, $awayscore, "d", $logfile);
+                        $resultupdated = save_result($hometeam, $matchdate, $homescore, "d", $logfile) || $resultupdated;
+                        $resultupdated = save_result($awayteam, $matchdate, $awayscore, "d", $logfile) || $resultupdated;
                     }
                 }
                 if ($resultupdated) {
@@ -122,12 +122,12 @@ $urlId = 'prem';
 $url = "https://www.thesportsman.com/football/competitions/england/premier-league/results";
 
 foreach ($argv as $param) {
-    if (substr($param, 0,2) == 'u-') {
+    if (substr($param, 0, 2) == 'u-') {
         fwrite($logfile, "param : " . $param . "\n");
         $urlId = substr($param, 2);
     }
 }
-$url = get_global_value('results url ' . $urlId );
+$url = get_global_value('results url ' . $urlId);
 
 $search = ".fixture-list-contain";
 
