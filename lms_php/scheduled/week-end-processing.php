@@ -21,7 +21,7 @@ $_SESSION['deadline'] = get_current_deadline_date($_SESSION['selectweekkey']);
 
 $logfile = fopen($myPath . "logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a");
 fwrite($logfile, "Weekend Processing --------------------------------------\n");
-fwrite($logfile, date("Y-m-d") . "\n");
+fwrite($logfile, date("Y-m-d H:i:s") . "\n");
 $msg = '';
 $week = get_week($_SESSION['matchweek']);
 $weekstate = 99;
