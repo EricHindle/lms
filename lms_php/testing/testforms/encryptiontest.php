@@ -1,5 +1,6 @@
 <?php
-$myPath = '../../';
+$myPath = '/home/lastmanl/public_html/';
+// $myPath = '../../';
 
 require_once $myPath . 'includes/functions.php';
 require_once $myPath . 'includes/formkey.class.php';
@@ -18,11 +19,15 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
         $plaintext = (isset($_POST['plaintext']) ? $_POST['plaintext'] : '');
         $enctext = (isset($_POST['enctext']) ? $_POST['enctext'] : '');
         $encrypt = (isset($_POST['isencrypt']) ? true : false);
-
+        $enciv = (isset($_POST['enciv']) ? $_POST['enciv'] : '');
         if ($encrypt) {
-            $enctext = combobulate($plaintext, "e");
+            $encarray = explode('hindleware' , combobulate($plaintext, "e",""));
+            $enctext = $encarray[0];
+            $enciv = $encarray[1];
+            
         } else {
-            $plaintext = combobulate($enctext, "d");
+            $encarray = explode('hindleware' , combobulate($enctext, "d",$enciv));
+            $plaintext = $encarray[0];
         }
     }
 
@@ -60,7 +65,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
 			        	<div class = "row">';
 
     $html .= '			       <div class="well col-md-offset-1 col-md-8 col-sm-offset-1 col-sm-10 textDark">
-			                  <form class="form-group" role="form" name ="emailtest" method="post" action="' . $myPath . 'testing/encryptiontest.php">';
+			                  <form class="form-group" role="form" name ="emailtest" method="post" action="' . $myPath . 'testing/testforms/encryptiontest.php">';
     $html .= $key;
     $html .= '					 
                                  <div class="form-group">
@@ -69,6 +74,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
                    
                                  <div class="form-group">
                                     <input type="text" class="form-control" name="enctext"  id="enctext" placeholder="encrypted text"  value="' . $enctext . '" >
+                                    <input type="hidden" name="enciv" id="enciv" value="' . $enciv . '" />
                                  </div>
                                 <div class="form-group">
                                        <input type="checkbox" style="margin-left:20px;" name="isencrypt" id="isencrypt" value="true" ' . $isencrypt . ' >
