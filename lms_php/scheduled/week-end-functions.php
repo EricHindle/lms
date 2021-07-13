@@ -212,17 +212,17 @@ function get_week_state($weekno)
     return $weekstate;
 }
 
-function notify_loser($playerid, $gameid)
+function notify_loser($playerid, $gameid, $teamid)
 {
-    sendemailusingtemplate('teamlose', $playerid, $gameid, 0, '', true);
+    sendemailusingtemplate('teamlose', $playerid, $gameid, $teamid, '', true);
 }
 
-function notify_postponed($playerid, $gameid)
+function notify_postponed($playerid, $gameid, $teamid)
 {
-    sendemailusingtemplate('postponed', $playerid, $gameid, 0, '', true);
+    sendemailusingtemplate('postponed', $playerid, $gameid, $teamid, '', true);
 }
 
-function notify_winner($playerid, $gameid)
+function notify_winner($playerid, $gameid, $teamid)
 {
     sendemailusingtemplate('teamwin', $playerid, $gameid, 0, '', true);
 }
