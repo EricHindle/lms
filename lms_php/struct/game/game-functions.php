@@ -39,15 +39,23 @@ function add_player_to_game($gameid, $playerid)
             $upquery->bindParam(':total', $total, PDO::PARAM_INT);
             $upquery->bindParam(':active', $active, PDO::PARAM_INT);
             $upquery->execute();
-        }
 
-        $teamsql = "SELECT lms_team_id, lms_team_name FROM lms_team WHERE lms_team_active = 1 ORDER BY lms_team_name ASC";
-        $teamquery = $mypdo->prepare($teamsql);
-        $teamquery->execute();
-        $teamfetch = $teamquery->fetchAll(PDO::FETCH_ASSOC);
+            
+          $teamsql =   "SELECT lms_team_id, lms_team_name FROM lms_team t
+            JOIN lms_league_team lt on t.lms_team_id = lt.lms_league_team_team_id
+            WHERE t.lms_team_active = 1 and
+            lt.lms_league_team_league_id IN
+            (SELECT lms_game_league_league_id from lms_game_league where lms_game_league_game_id = :gameid)
+            ORDER BY lms_team_name ASC";
 
-        foreach ($teamfetch as $rs) {
-            insert_available_team($playerid, $gameid, $rs['lms_team_id']);
+            $teamquery = $mypdo->prepare($teamsql);
+            $teamquery->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+            $teamquery->execute();
+            $teamfetch = $teamquery->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($teamfetch as $rs) {
+                insert_available_team($playerid, $gameid, $rs['lms_team_id']);
+            }
         }
     }
     return $joinok;
@@ -213,16 +221,18 @@ function sendcancelemailsforgame($gameid)
     }
 }
 
-function check_game_exists($gameid){
+function check_game_exists($gameid)
+{
     global $mypdo;
     $gamesql = "SELECT * FROM lms_game WHERE lms_game_id = :gameid LIMIT 1";
     $gamequery = $mypdo->prepare($gamesql);
-    $gamequery->bindParam(":gameid", $gameid, PDO::PARAM_INT);    
+    $gamequery->bindParam(":gameid", $gameid, PDO::PARAM_INT);
     $gamequery->execute();
     return $gamequery->rowCount();
 }
 
-function remove_available_picks($gameid) {
+function remove_available_picks($gameid)
+{
     global $mypdo;
     $delsql = "DELETE FROM lms_available_picks WHERE lms_available_picks_game =:gameid";
     $delquery = $mypdo->prepare($delsql);
@@ -231,7 +241,8 @@ function remove_available_picks($gameid) {
     return $delquery->rowCount();
 }
 
-function remove_game_league($gameid) {
+function remove_game_league($gameid)
+{
     global $mypdo;
     $delsql = "DELETE FROM lms_game_league WHERE lms_game_league_game_id =:gameid";
     $delquery = $mypdo->prepare($delsql);
@@ -240,7 +251,8 @@ function remove_game_league($gameid) {
     return $delquery->rowCount();
 }
 
-function remove_game_player($gameid) {
+function remove_game_player($gameid)
+{
     global $mypdo;
     $delsql = "DELETE FROM lms_game_player WHERE lms_game_id =:gameid";
     $delquery = $mypdo->prepare($delsql);
@@ -249,7 +261,8 @@ function remove_game_player($gameid) {
     return $delquery->rowCount();
 }
 
-function remove_pick($gameid) {
+function remove_pick($gameid)
+{
     global $mypdo;
     $delsql = "DELETE FROM lms_pick WHERE lms_pick_game_id =:gameid";
     $delquery = $mypdo->prepare($delsql);
@@ -258,7 +271,8 @@ function remove_pick($gameid) {
     return $delquery->rowCount();
 }
 
-function remove_game($gameid) {
+function remove_game($gameid)
+{
     global $mypdo;
     $delsql = "DELETE FROM lms_game WHERE lms_game_id =:gameid";
     $delquery = $mypdo->prepare($delsql);
