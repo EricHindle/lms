@@ -17,10 +17,10 @@ if (login_check($mypdo) == true && $access > 900) {
         if (! isset($_POST['form_key']) || ! $formKey->validate()) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
-            if (isset($_POST['id'], $_POST['teamname'])) {
+            if (isset($_POST['id'], $_POST['teamname'], $_POST['teamabbr'])) {
                 $teamid = sanitize_int($_POST['id']);
                 $teamname = $_POST['teamname'];
-
+                $teamabbr = $_POST['teamabbr'];
                 $isactive = (isset($_POST['isactive']) ? $_POST['isactive'] : "false");
                 $myactive = ($isactive == "true" ? 1 : 0);
 
@@ -41,10 +41,11 @@ if (login_check($mypdo) == true && $access > 900) {
                         date_default_timezone_set('Europe/London');
                         $phptime = time();
                         $mysqltime = date("Y-m-d H:i:s", $phptime);
-                        $upsql = "UPDATE lms_team SET lms_team_name = :teamname, lms_team_active = :active WHERE lms_team_id = :id";
+                        $upsql = "UPDATE lms_team SET lms_team_name = :teamname, lms_team_active = :active, lms_team_abbr = :abbr WHERE lms_team_id = :id";
                         $upquery = $mypdo->prepare($upsql);
                         $upquery->bindParam(':id', $teamid, PDO::PARAM_INT);
                         $upquery->bindParam(':teamname', $teamname);
+                        $upquery->bindParam(':abbr', $teamabbr);
                         $upquery->bindParam(':active', $myactive, PDO::PARAM_INT);
                         $upquery->execute();
                         $upcount = $upquery->rowCount();
