@@ -6,6 +6,10 @@
   font-family: "Poppins", sans-serif;
 }
 
+html {
+  overflow-y: scroll;
+}
+
 body {
   min-height: 80vh;
   margin-bottom: 12vh;
@@ -52,6 +56,8 @@ button {
 }
 
 .game-list-container {
+  margin-top: 20px;
+  margin-bottom: 10px;
   width:80%;
 }
 
@@ -117,6 +123,11 @@ button {
   border: none;
 }
 
+.form-text {
+  font-size: 14px;
+  color: #585858;
+}
+
 .btn {
   width: 100%;
   color: #ffffff;
@@ -169,6 +180,8 @@ button {
   display: flex;
   width: 100%;
   justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 30px;
 }
 .join-game-box {
   background-color: white;
@@ -232,6 +245,8 @@ button {
   font-size: 12px;
   color: #353535;
 }
+
+
 
 
 @media only screen and (max-width: 550px) {

@@ -22,7 +22,7 @@ if (login_check($mypdo) == true && $access > 900) {
                 if ($teamid) {
 
                     $html = "";
-                    $teamsql = "SELECT lms_team_id, lms_team_name, lms_team_active FROM lms_team WHERE lms_team_id = :id";
+                    $teamsql = "SELECT lms_team_id, lms_team_name, lms_team_active, lms_team_abbr FROM lms_team WHERE lms_team_id = :id";
                     $teamquery = $mypdo->prepare($teamsql);
                     $teamquery->execute(array(
                         ':id' => $teamid
@@ -113,7 +113,9 @@ if (login_check($mypdo) == true && $access > 900) {
 										                    <div class="form-group">
 										                    	
                                                                <label for="teamname">New name:</label>
-                    					                       <input type="text" class="form-control" id="teamname" name="teamname" value="' . $teamfetch['lms_team_name'] . '"><br>
+                    					                       <input type="text" class="form-control" id="teamname" name="teamname" value="' . $teamfetch['lms_team_name'] . '">
+                                                               <label for="teamabbr">Abbreviation:</label>
+                                                               <input type="text" class="form-control" id="teamabbr" name="teamabbr" value="' . $teamfetch['lms_team_abbr'] . '">
                                                                <input type="checkbox" style="margin-left:20px;" name="isactive" id="isactive" value="true" ' . $isactive . ' >
                                                                <label for="isactive">&nbsp is Active</label>
 															   <input type= "hidden" name= "id" value="' . $teamid . '" />

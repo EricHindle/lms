@@ -21,7 +21,7 @@ $_SESSION['deadline'] = get_current_deadline_date($_SESSION['selectweekkey']);
 
 $logfile = fopen($myPath . "logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a");
 fwrite($logfile, "Weekend Processing --------------------------------------\n");
-fwrite($logfile, date("Y-m-d") . "\n");
+fwrite($logfile, date("Y-m-d H:i:s") . "\n");
 $msg = '';
 $week = get_week($_SESSION['matchweek']);
 $weekstate = 99;
@@ -66,6 +66,7 @@ if (check_start_date() == 1) {
                 $gameid = $rs['lms_pick_game_id'];
                 $playerid = $rs['lms_pick_player_id'];
                 $matchid = $rs['lms_pick_match_id'];
+                $teamid = $rs['lms_team_id'];
                 $gameplayer = get_game_player($gameid, $playerid);
                 fwrite($logfile, "Player " . strval($playerid) . " Game " . strval($gameid) . " Match " . strval($matchid) . "\n");
                 if ($gameplayer['lms_game_player_status'] == 1) {
@@ -75,15 +76,15 @@ if (check_start_date() == 1) {
                         set_game_player_out($gameid, $playerid);
                         fwrite($logfile, "Player out of game\n");
                         $pickwl = 'l';
-                        notify_loser($playerid, $gameid);
+                        notify_loser($playerid, $gameid, $teamid);
                     } else {
                         $pickwl = 'w';
                         if ($rs['lms_match_result'] == 'p') {
-                            notify_postponed($playerid, $gameid);
+                            notify_postponed($playerid, $gameid, $teamid);
                             fwrite($logfile, "Match postponed\n");
                         } else {
                             if ($rs['lms_match_result'] == 'w') {
-                                notify_winner($playerid, $gameid);
+                                notify_winner($playerid, $gameid, $teamid);
                                 fwrite($logfile, "Winning pick\n");
                             } else {
                                 /* no result */

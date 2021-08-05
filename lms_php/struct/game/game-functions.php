@@ -39,16 +39,24 @@ function add_player_to_game($gameid, $playerid)
             $upquery->bindParam(':total', $total, PDO::PARAM_INT);
             $upquery->bindParam(':active', $active, PDO::PARAM_INT);
             $upquery->execute();
-        }
 
-        $teamsql = "SELECT lms_team_id, lms_team_name FROM lms_team WHERE lms_team_active = 1 ORDER BY lms_team_name ASC";
+            
+          $teamsql =   "SELECT lms_team_id, lms_team_name FROM lms_team t
+            JOIN lms_league_team lt on t.lms_team_id = lt.lms_league_team_team_id
+            WHERE t.lms_team_active = 1 and
+            lt.lms_league_team_league_id IN
+            (SELECT lms_game_league_league_id from lms_game_league where lms_game_league_game_id = :gameid)
+            ORDER BY lms_team_name ASC";
+
         $teamquery = $mypdo->prepare($teamsql);
+            $teamquery->bindParam(':gameid', $gameid, PDO::PARAM_INT);
         $teamquery->execute();
         $teamfetch = $teamquery->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($teamfetch as $rs) {
             insert_available_team($playerid, $gameid, $rs['lms_team_id']);
         }
+    }
     }
     return $joinok;
 }

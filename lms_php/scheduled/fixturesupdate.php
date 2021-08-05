@@ -126,7 +126,7 @@ $_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
 global $argv;
 $logfile = fopen($myPath . "logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a");
 fwrite($logfile, "Fixtures Update --------------------------------------\n");
-fwrite($logfile, date("Y-m-d") . "\n");
+fwrite($logfile, date("Y-m-d H:i:s") . "\n");
 
 $urlId = 'prem';
 $url = "https://www.thesportsman.com/football/competitions/england/premier-league/fixtures";
