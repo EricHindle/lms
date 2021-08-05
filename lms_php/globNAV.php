@@ -34,11 +34,13 @@ $devlevelneeded = 901;
 	</div>
 </header>
 
+
+
 <nav>
 	<a class="nav-item <?php echo $currentPage == 'home' ? 'active' : ''; ?>" href="<?php echo $myPath; ?>menus/home.php"><span class="nav-icon home-icon" style="background-image: url(<?php echo $myPath; ?>img/icons/home-grey.svg)"></span>Home</a>
 	<a class="nav-item <?php echo $currentPage == 'games' ? 'active' : ''; ?>" href="<?php echo $myPath; ?>menus/game-list.php"><span class="nav-icon games-icon" style="background-image: url(<?php echo $myPath; ?>img/icons/games-grey.svg)"></span>Games</a>
 	<a class="nav-item <?php echo $currentPage == 'create' ? 'active' : ''; ?>" href="<?php echo $myPath; ?>struct/game/game-create.php"><span class="nav-icon create-icon" style="background-image: url(<?php echo $myPath; ?>img/icons/create-grey.svg)"></span>Create</a>
-	<a class="nav-item <?php echo $currentPage == 'join' ? 'active' : ''; ?>" href="<?php echo $myPath; ?>menus/home.php"><span class="nav-icon join-icon" style="background-image: url(<?php echo $myPath; ?>img/icons/join-grey.svg)"></span>Join</a>
+	<a class="nav-item <?php echo $currentPage == 'join' ? 'active' : ''; ?>" href="<?php echo $myPath; ?>menus/join.php"><span class="nav-icon join-icon" style="background-image: url(<?php echo $myPath; ?>img/icons/join-grey.svg)"></span>Join</a>
 	<a class="nav-item <?php echo $currentPage == 'manage' ? 'active' : ''; ?>" href="<?php echo $myPath; ?>struct/game/game-manage.php"><span class="nav-icon manage-icon" style="background-image: url(<?php echo $myPath; ?>img/icons/manage-grey.svg)"></span>Manage</a>			
 	
 </nav>
