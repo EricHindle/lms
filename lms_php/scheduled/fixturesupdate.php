@@ -6,9 +6,11 @@
  */
 $myPath = '/home/lastmanl/public_html/';
 // $myPath = "../";
+$logtext = '';
 require $myPath . 'scheduled/simple_html_dom.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'scheduled/results-functions.php';
+
 
 function scraping_generic($url, $search, $logfile)
 {
@@ -23,12 +25,13 @@ function scraping_generic($url, $search, $logfile)
         // Found at least one
         $matchlist = array();
         foreach ($found->find(".fixture-list-contain-inner") as $fixturelist) {
-
+            $logtext = '';
             // get match date block
             foreach ($fixturelist->find(".flc-comp-title") as $datetext) {
                 $textdate = trim(explode("<", $datetext->innertext, 2)[0]);
                 $matchdate = strtotime($textdate);
-                fwrite($logfile, "----- Match date: " . date('d-m-Y', $matchdate) . " -----\n");
+              //  fwrite($logfile, "----- Match date: " . date('d-m-Y', $matchdate) . " -----\n");
+                $matchdatetext = "----- Match date: " . date('d-m-Y', $matchdate) . " -----\n";
             }
             // get match block
             foreach ($fixturelist->find(".flc-match-item-inner") as $match) {
@@ -46,12 +49,14 @@ function scraping_generic($url, $search, $logfile)
                     $matchlist[] = $awayteam . date('d-m-Y', $matchdate);
                     if (save_match($hometeam, $matchdate, $logfile, $awayteam) == false) {
                         $thiserror = "** Unable to insert match : " . $hometeam . " " . date_format(date_create($matchdate), 'd-m-Y') . "\n";
-                        fwrite($logfile, $thiserror);
+                    //    fwrite($logfile, $thiserror);
+                        $logtext .= $thiserror;
                         $errormsg = $errormsg . $thiserror;
                     }
                     if (save_match($awayteam, $matchdate, $logfile, $hometeam) == false) {
                         $thiserror = "** Unable to insert match : " . $awayteam . " " . date_format(date_create($matchdate), 'd-m-Y') . "\n";
-                        fwrite($logfile, $thiserror);
+                    //    fwrite($logfile, $thiserror);
+                        $logtext .= $thiserror;
                         $errormsg = $errormsg . $thiserror;
                     }
                 } else {
@@ -75,8 +80,14 @@ function scraping_generic($url, $search, $logfile)
                     } 
                 }
             }
+            if ($logtext != ''){
+                fwrite($logfile,$matchdatetext.$logtext);
+            }
+            
+            
         }
     }
+    fwrite($logfile,"----- Match update complete ------\n");
 
     // check for replaced fixtures
     fwrite($logfile, "----- Checking for duplicate matches -----\n");
