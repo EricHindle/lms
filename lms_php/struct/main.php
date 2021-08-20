@@ -35,7 +35,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $html .= '
                 <div class="container">
                     <div class="box" style="padding:1em;">
-                        <h2>Administation</h2>
+                        <h2>Administration</h2>
                     </div>
                     <div class="box" style="padding:1em;padding-left:10%;padding-right:10%;margin:10px;">
                         <div class="btn" style="padding:3px;margin:3px;width:100%;">
@@ -84,7 +84,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 
 
                     <div class="box" style="padding:1em;margin:10px;">
-                        <h3>Games/h3>
+                        <h3>Games</h3>
                         <form role="form" name ="gameadmin" method="post" action="' . $myPath . 'struct/game/game-admin.php">';
     $html .= $key;
     $html .= ' 
