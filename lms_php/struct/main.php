@@ -1,7 +1,7 @@
 <?php
 /*
  * HINDLEWARE
- * Copyright (C) 2020 Eric Hindle. All rights reserved.
+ * Copyright (C) 2020-21 Eric Hindle. All rights reserved.
  */
 $myPath = '../';
 require $myPath . 'includes/db_connect.php';
@@ -9,6 +9,7 @@ require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
 sec_session_start();
 $formKey = new formKey();
+$currentPage = '';
 $key = $formKey->outputKey();
 if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 
@@ -22,152 +23,90 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 		<!doctype html>
 		<html>
 			<head>
-											<style>
-.typeselection {
-height: 30px;
-width: 100px;
-border: none;
-border-radius: 2px;
-font-size: 16px;
-margin-bottom: 4px;
-}
-.greenbutton {
-background-color: #00A600;
-}
-		</style>    
-			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-			    <meta charset="UTF-8">
-			    
+ 			    <meta charset="UTF-8">
 			    <title>Admin</title>
-			    
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
-			    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
-			    <link rel="stylesheet" href="' . $myPath . 'css/rethome.css">
-			    <script src="' . $myPath . 'js/jquery.js"></script>
-			    <script src="' . $myPath . 'js/bootstrap.min.js"></script>
-			</head>
+                <link rel="stylesheet" href="' . $myPath . '../css/style.css" type="text/css">
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+        	</head>
 
 			<body>';
     include $myPath . 'globNAV.php';
-    echo '
-				<section id="homeSection">
-			    <br><br>
-			        <div class="container">
-			            <div class="row">
-			                <div class="col-md-7">
-			                    <h1><strong>Admin</strong></h1>
-			                    <br>
-			                </div>
-							<div class="col-md-1">
-								<a href="' . $myPath . 'menus/home.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
-							</div>
-			            </div>
-			            <div class="row">
-			            	<div class="col-sm-4">
-			                    <div class="tile red">
-			                    	<a href="' . $myPath . 'struct/player/player-main.php">
-			                    		<h3 class="title" >Players</h3>
-			                            <p>Player Management</p>
-			                        </a>	
-			          			</div>
-			                </div>
-			                <div class="col-sm-4">
-			                    <div class="tile green">
-		                	     <form class="form-horizontal" role="form" name ="gameadmin" method="post" action="' . $myPath . 'struct/game/game-admin.php">';
-    $html .= $key;
+    $html .= '
+                <div class="container">
+                    <div class="box" style="padding:1em;">
+                        <h2>Administation</h2>
+                    </div>
+                    <div class="box" style="padding:1em;padding-left:10%;padding-right:10%;margin:10px;">
+                        <div class="btn" style="padding:3px;margin:3px;width:100%;">
+                            <a href="' . $myPath . 'struct/player/player-main.php">
+                                <h3 style="color:white;">Players</h3>
+                            </a>
+                        </div>
+                        <div class="btn" style="padding:3px;margin:3px;width:100%;">
+                            <a href="' . $myPath . 'struct/week/week-main.php">
+                                <h3 style="color:white;">Periods</h3>
+                            </a>
+                        </div>
+                        <div class="btn" style="padding:3px;margin:3px;width:100%;">
+                            <a href="' . $myPath . 'struct/team/team-main.php">
+                                <h3 style="color:white;" >Teams</h3>
+                            </a>
+                        </div>
+            
+            
+                        <div class="btn" style="padding:3px;margin:3px;width:100%;">
+                            <a href="' . $myPath . 'struct/league/league-main.php">
+                                <h3 style="color:white;">Leagues</h3>
+                            </a>
+                        </div>
+                        <div class="btn" style="padding:3px;margin:3px;width:100%;">
+                            <a href="' . $myPath . 'struct/info/info-main.php">
+                                <h3 style="color:white;" >Settings</h3>
+                            </a>
+                        </div>
+                    </div>
 
-    $html .= '					     <h3 class="title">Games</h3>
-			                         <div class="form-group" style="margin-left:10px;margin-right:10px;margin-bottom:0px">
- 
- <button class="typeselection greenbutton" type="submit" name="status" value="0">' . All . '</button></br>';
+
+                    <div class="box" style="padding:1em;margin:10px;">
+                        <h3>Matches for :</h3>
+                        <form role="form" name ="matchmain" method="post" action="' . $myPath . 'struct/match/match-main.php">';
+    $html .= $key;
+    $html .= '              <div class="form-group " style="margin-left:16px;margin-right:16px">
+                                <input type="text" class="form-control" id="matchperiod" name="matchperiod" placeholder="yyyyww">
+					        </div>
+                            <div class="form-group" style="margin-left:16px;margin-right:16px">
+					            <input id="submit" name="submit" type="submit" value="Submit" class="btn" style="margin:10px;padding:5px;width:50%;">
+					        </div>
+					    </form>
+			        </div>
+
+
+
+                    <div class="box" style="padding:1em;margin:10px;">
+                        <h3>Games/h3>
+                        <form role="form" name ="gameadmin" method="post" action="' . $myPath . 'struct/game/game-admin.php">';
+    $html .= $key;
+    $html .= ' 
+                            <div class="form-group" style="margin-left:10px;margin-right:10px;margin-bottom:0px">
+                                <button class="btn" style="margin:10px;padding:5px;width:50%;" type="submit" name="status" value="0">All</button>';
 
     foreach ($statuslist as $status) {
-        $html .= '<button class="typeselection greenbutton"  type="submit" name="status" value="' . $status['lms_game_status_id'] . '">' . $status['lms_game_status_text']  . '</button></br>';
-        
+        $html .= '              <button class="btn" style="margin:10px;padding:5px;width:50%;" type="submit" name="status" value="' . $status['lms_game_status_id'] . '">' . $status['lms_game_status_text']  . '</button>';
     }
     $html .= '	                    
-                                  
-			                         </div>
-                                  </form>
-			                    </div>
-			      		    </div>
-                        </div>
-                        <div class="row">
-			                <div class="col-sm-4">
-			                    <div class="tile black">
-			                    	<a href="' . $myPath . 'struct/week/weekend-admin.php">
-			                    		<h3 class="title" >Weekend</h3>
-			                            <p>Weekend Processing</p>
-			                        </a>	
-			          			</div>
-			                </div>
-			            	<div class="col-sm-4">
-			                    <div class="tile teal">
-			                    	<a href="' . $myPath . 'struct/week/week-main.php">
-			                    		<h3 class="title" >Periods</h3>
-			                            <p>Calendar Management</p>
-			                        </a>	
-			          			</div>
-			                </div>
-                        </div>
-			      		<div class="row">
-			            	<div class="col-sm-4">
-			                    <div class="tile orange">
-			                    	<a href="' . $myPath . 'struct/team/team-main.php">
-			                    		<h3 class="title" >Teams</h3>
-			                            <p>Team Management</p>
-			                        </a>	
-			          			</div>
-			                </div>
-			            	<div class="col-sm-4">
-			                    <div class="tile blue">
-			                    	<a href="' . $myPath . 'struct/league/league-main.php">
-			                    		<h3 class="title" >Leagues</h3>
-			                            <p>League Management</p>
-			                        </a>	
-			          			</div>
-			                </div>
-			      		</div>
-			      		<div class="row">
-                            <div class="col-sm-4">
-    		                    <div class="tile purple">
-		                	     <form class="form-horizontal" role="form" name ="matchmain" method="post" action="' . $myPath . 'struct/match/match-main.php">';
-    $html .= $key;
-    $html .= '					     <h3 class="title">Match</h3>
-			                         <div class="form-group" style="margin-left:10px;margin-right:10px;margin-bottom:0px">
-      			                         <div class="col-sm-8">Manage matches for:</div>
-                                         <div class="col-sm-4" style="padding-left: 5px;padding-right: 5px;">
-                                              <input type="text" class="form-control" style="height:30px" id="matchperiod" name="matchperiod" maxlength="6" placeholder = "yyyyww" />
-                                         </div>
-                                         <div class="col-sm-5">
-                                             <input id="submit" name="submit" type="submit" value="Select" class="btn btn-primary btn-sm">
-                                         </div>
-			                         </div>
-                                  </form>	
-    		          			</div>
-                            </div>
-			            	<div class="col-sm-4">
-			                    <div class="tile grey">
-			                    	<a href="' . $myPath . 'struct/info/info-main.php">
-			                    		<h3 class="title" >Info</h3>
-			                            <p>Configuration Management</p>
-			                        </a>	
-			          			</div>
-			                </div>
-			      		</div>
-			      		<div class="row">
-							<br>
-							<div class="col-xs-6">
-								<a href="' . $myPath . 'menus/home.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
-								<br>
-							</div>
-						</div>
-			      		<br><br><br><br>
-    		    	</div>
-    		    </section>
-    		</body>
-    	</html>';
+				            </div>
+				        </form>
+			        </div>
+
+                    <div style="padding:2em;">
+                        <a href="' . $myPath . 'menus/home.php" class="btn" style="padding:15px;" role="button">Back</a>
+                    </div>
+            	</div>
+            </body>
+        </html>';
     echo $html;
+    
 } else {
     header('Location: ' . $myPath . 'index.php?error=1');
 }

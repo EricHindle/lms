@@ -11,6 +11,7 @@ require $myPath . 'includes/formkey.class.php';
 sec_session_start();
 $devlevelneeded = 901;
 $formKey = new formKey();
+$currentPage = '';
 $key = $formKey->outputKey();
 
 if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
