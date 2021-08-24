@@ -8,6 +8,7 @@ require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
 sec_session_start();
+$currentPage = '';
 if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $formKey = new formKey();
     $key = $formKey->outputKey();
@@ -24,16 +25,14 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 		<html>
 			<head>
 				
-			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 			    <meta charset="UTF-8">
-			    
 			    <title>Player Admin</title>
 			    
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
-			    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
-			    <link rel="stylesheet" href="' . $myPath . 'css/rethome.css">
+			    <link rel="stylesheet" href="' . $myPath . 'css/style.css" type="text/css">
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+
 			    <script src="' . $myPath . 'js/jquery.js"></script>
-			    <script src="' . $myPath . 'js/bootstrap.min.js"></script>
 			    <script src="' . $myPath . 'js/jquery.tablesorter.js"></script>
 			    <script>
 		            $(function(){
@@ -94,150 +93,113 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			<body>';
     include $myPath . 'globNAV.php';
     $html .= '
-				<section id="homeSection">
-			    <br><br>
-			        <div class="container">
-			        	<div class="row">
-			                <div class="col-md-9">
-			                    <h1><strong>Player Admin</strong></h1>
-			                </div>
-							<div class="col-md-1">
-								<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
-							</div>
-			      		</div>
-			        	<div class = "row">';
+<div class="container">
+        <div class="box"  style="padding:1em;">
+            <h2>Player Admin</h2>
+        </div>
 
-    $html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
-			                	<form class="form-horizontal" role="form" name ="addplayer" method="post" action="add-player.php">';
+        <div class="box" style="padding:1em;padding-left:2%;padding-right:2%;margin:10px;">
+            <h3 class="text-center">New Player</h3>
+            <form class="form-horizontal" role="form" name ="addplayer" method="post" action="add-player.php">';
     $html .= $key;
-    $html .= '					<h3 class="text-center">Add Player</h3>
-				                    <div class="form-group">
-				                    	<label for="email">Email address :</label>
-				                    	<input type="text" class="form-control" id="email" name="email" maxlength="100" placeholder="email" />
-				                    	<label for="password">Password (no spaces or special characters):</label>
-					                    <input type="text" class="form-control" id="password" name="password" placeholder="password" />
-					                    <label for="fname">Forename (no special characters):</label>
-					                    <input type="text" class="form-control" id="fname" name="fname" placeholder="forename" />
-					                    <label for="sname">Surname (no special characters):</label>
-					                    <input type="text" class="form-control" id="sname" name="sname" placeholder="surname" />
-					                    <label for="screenname">Screen name (no special characters):</label>
-					                    <input type="text" class="form-control" id="screenname" name="screenname" placeholder="screen name" />
-					                    <input type="checkbox" name="isadmin" value="true"> Administrator<br>';
-    $html .= '	                 
-				                    </div>
-				                    <div class="form-group">
-				                    	<br>
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
-				                    </div>
-				                </form>
-				            </div>
-			            ';
+    $html .= '
+                <div class="form-group">
+                	<input type="text" class="form-field" style="padding:10px" id="email" name="email" maxlength="100" placeholder="email" /><br/>
+                    <input type="text" class="form-field" style="padding:10px" id="password" name="password" placeholder="password" /><br/>
+                    <input type="text" class="form-field" style="padding:10px" id="fname" name="fname" placeholder="forename" /><br/>
+                    <input type="text" class="form-field" style="padding:10px" id="sname" name="sname" placeholder="surname" /><br/>
+                    <input type="text" class="form-field" style="padding:10px" id="screenname" name="screenname" placeholder="screen name" /><br/>
+                    <input type="checkbox" name="isadmin" value="true"> Administrator<br>
+                </div>
+                <div class="form-group">
+                	<br>
+                    <button type="submit" name="submit" id="submit" value="Submit" class="btn">Add Player</button>
+                </div>
+            </form>
+        </div>
 
-    $html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
-			                	<form class="form-horizontal" role="form" name ="edituser" method="post" action="edit-player.php">';
+        <div class="box" style="padding:1em;padding-left:2%;padding-right:2%;margin:10px;">
+            <h3 class="text-center">Edit Player</h3>
+            <form class="form-horizontal" role="form" name ="edituser" method="post" action="edit-player.php">';
     $html .= $key;
-    $html .= '					<h3 class="text-center">Edit Player</h3>
-			                  
-				                    <div class="form-group">
-			                        	<label for="user">Choose Player:</label>
-			                            <select class="form-control" id="user" name="user">';
+    $html .= '
+                <div class="form-group">
+                    <select class="form-field" style="padding:10px" id="user" name="user">';
     foreach ($cafetch as $myUser) {
-        $html .= '<option value="' . $myUser['lms_player_id'] . '">' . $myUser['lms_player_screen_name'] . ' <small>(' . $myUser['lms_player_email'] . ')<small></option>';
+        $html .= '      <option value="' . $myUser['lms_player_id'] . '">' . $myUser['lms_player_screen_name'] . ' <small>(' . $myUser['lms_player_email'] . ')<small></option>';
     }
-    $html .= '	                    </select>
-				                    </div>
-				                    <div class="form-group">
-				                    
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
-				                    </div>
-				                </form>
-				            </div>
-			            ';
+    $html .= '	    </select>
+                </div>
+				<div class="form-group">
+                    <input id="submit" name="submit" type="submit" value="Select" class="btn">
+				</div>
+            </form>
+        </div>
 
-    $html .= '			<div class="well col-md-4 col-md-offset-1 textDark">
-			                	<form class="form-horizontal" role="form" name ="edituser" method="post" action="change-password.php" onsubmit="return validatePassReset()">';
+        <div class="box" style="padding:1em;padding-left:2%;padding-right:2%;margin:10px;">
+            <h3 class="text-center">Change Password</h3>
+            <form class="form-horizontal" role="form" name ="edituser" method="post" action="change-password.php" onsubmit="return validatePassReset()">';
     $html .= $key;
-    $html .= '					<h3 class="text-center">Change Password</h3>
-									<h5>Password must contain at least 8 characters, including UPPERCASE, lowercase and numbers.</h5>
-			                    	<br>
-				                    <div class="form-group">
-			                        	<label for="user">Choose Player:</label>
-			                            <select class="form-control" id="user" name="user">';
-    foreach ($cafetch as $myUser) {
-        $html .= '<option value="' . $myUser['lms_player_id'] . '">' . $myUser['lms_player_screen_name'] . ' <small>(' . $myUser['lms_player_email'] . ')<small></option>';
-    }
-    $html .= '	                    </select>
-									</div>
-                                    <div class="form-group">
-                                        <label for="pwd1">New password:</label>
-                                        <input name="pwd1" id="pwd1" class="form-control" title="Password must contain at least 8 characters, including UPPERCASE, lowercase and numbers." type="password" onChange="checkPasswordMatch()">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="pwd1">Confirm password:</label>
-                                        <input id="pwd2" name="pwd2" class="form-control" title="Please enter the same Password as above." type="password" onChange="checkPasswordMatch()">
-                                    </div>
-				                    <div class="form-group">
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
-				                    </div>
-				                </form>
-				            </div>
-			            ';
+    $html .= '  <div class="form-group">
 
-    $html .= '		</div>
-						<div class = "row">
-				        	<div class="well col-md-10 col-md-offset-1 col-sm-12  textDark">
-				        		<h3>All Players</h3>
-					        	<table class="table table-bordered" id="keywords">
-									<thead>
-									<tr class="info">
-										<th>Login</th>
-										<th>Forename</th>
-										<th>Surname</th>
-										<th>Screen Name</th>
-										<th>Access</th>
-                                        <th>Active</th>
-									</tr>
-									</thead>
-									<tbody>
+                    <select class="form-field" style="padding:10px" id="user" name="user">';
+    foreach ($cafetch as $myUser) {
+        $html .= '      <option value="' . $myUser['lms_player_id'] . '">' . $myUser['lms_player_screen_name'] . ' <small>(' . $myUser['lms_player_email'] . ')<small></option>';
+    }
+    $html .= '	    </select>
+				</div>
+
+                <div class="form-group">
+                        <label for="pwd1">New password:</label>
+                        <input name="pwd1" id="pwd1" class="form-field"  style="padding:10px" title="Password must contain at least 8 characters, including UPPERCASE, lowercase and numbers." type="password" onChange="checkPasswordMatch()">
+                </div>
+                <div class="form-group">
+                        <label for="pwd1">Confirm password:</label>
+                        <input id="pwd2" name="pwd2" class="form-field"  style="padding:10px" title="Please enter the same Password as above." type="password" onChange="checkPasswordMatch()">
+                </div>
+                <div class="form-group">
+                        <input id="submit" name="submit" type="submit" value="Submit" class="btn">
+                </div>
+            </form>
+        </div>
+        <div class="box" style="text-align:left;width:850px;padding:1em;margin:10px;">
+    		<h3 style="text-align:center">All Players</h3>
+        	<table class="table table-bordered" id="keywords">
+				<thead>
+				    <tr class="info">
+					   <th>Login</th>
+					   <th>Forename</th>
+					   <th>Surname</th>
+					   <th>Screen Name</th>
+					   <th>Access</th>
+                       <th>Active</th>
+				    </tr>
+			    </thead>
+			    <tbody>
 									';
     foreach ($cafetch as $rs) {
 
         $active = ($rs['lms_active'] == 1 ? 'Yes' : 'No');
-        $rowcolor = ($rs['lms_active'] == 1 ? 'black' : 'silver');
-        $rowcolor = ($rs['lms_access'] > 900 ? 'blue' : $rowcolor);
+        $rowcolor = ($rs['lms_active'] == 1 ? 'white' : 'silver');
+        $rowcolor = ($rs['lms_access'] > 900 ? 'yellow' : $rowcolor);
         $html .= '
-									<tr style="color:' . $rowcolor . '">
-										<td>' . $rs['lms_player_login'] . '</td>
-										<td>' . $rs['lms_player_forename'] . '</td>
-										<td>' . $rs['lms_player_surname'] . '</td>
-										<td>' . $rs['lms_player_screen_name'] . '</td>
-										<td>' . $rs['lms_access'] . '</td>
-                                        <td>' . $active . '</td>
-									</tr>';
+    				<tr style="color:' . $rowcolor . '">
+    					<td>' . $rs['lms_player_login'] . '</td>
+    					<td>' . $rs['lms_player_forename'] . '</td>
+    					<td>' . $rs['lms_player_surname'] . '</td>
+    					<td>' . $rs['lms_player_screen_name'] . '</td>
+    					<td>' . $rs['lms_access'] . '</td>
+                        <td>' . $active . '</td>
+    				</tr>';
     }
     $html .= '
-									</tbody>
-								</table>
-							</div>
-						</div>
-
-				        ';
-
-    $html .= '	      		
-			      		<div class="row">
-							<br>
-							<div class="col-xs-6">
-								<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-lg" role="button">Back</a>
-								<br>
-							</div>
-						</div>
-			      		<br><br><br><br>
-			    	</div>
-			    </section>
-			</body>
-		</html>
-
-		';
+			     </tbody>
+		      </table>
+        </div>
+        <div style="padding:2em;">
+            <a href="' . $myPath . 'menus/home.php" class="btn" style="padding:15px;" role="button">Back</a>
+        </div>
+        ';
     echo $html;
 } else {
     header('Location: ' . $myPath . 'index.php?error=1');
