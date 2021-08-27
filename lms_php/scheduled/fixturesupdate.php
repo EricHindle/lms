@@ -48,13 +48,14 @@ function scraping_generic($url, $search, $logfile)
                     $matchlist[] = $hometeam . date('d-m-Y', $matchdate);
                     $matchlist[] = $awayteam . date('d-m-Y', $matchdate);
                     if (save_match($hometeam, $matchdate, $logfile, $awayteam) == false) {
-                        $thiserror = "** Unable to insert match : " . $hometeam . " " . date_format(date_create($matchdate), 'd-m-Y') . "\n";
+                        $dt = new DateTime("@$matchdate");
+                        $thiserror = "** Unable to insert match : " . $hometeam . " " . date_format($dt, 'd-m-Y') . "\n";
                     //    fwrite($logfile, $thiserror);
                         $logtext .= $thiserror;
                         $errormsg = $errormsg . $thiserror;
                     }
                     if (save_match($awayteam, $matchdate, $logfile, $hometeam) == false) {
-                        $thiserror = "** Unable to insert match : " . $awayteam . " " . date_format(date_create($matchdate), 'd-m-Y') . "\n";
+                        $thiserror = "** Unable to insert match : " . $awayteam . " " . date_format($dt, 'd-m-Y') . "\n";
                     //    fwrite($logfile, $thiserror);
                         $logtext .= $thiserror;
                         $errormsg = $errormsg . $thiserror;
@@ -95,9 +96,10 @@ function scraping_generic($url, $search, $logfile)
     foreach ($matchdata as $mch) {
         $teamabbr = $mch['lms_team_abbr'];
         $teamid = $mch['lms_match_team'];
-        $oppid = $mch['lms_match_opp'];        
-        $matchdate = date_format(date_create($mch['lms_match_date']), 'd-m-Y');
-        $sqldate = date_format(date_create($mch['lms_match_date']), 'Y-m-d');
+        $oppid = $mch['lms_match_opp']; 
+        $matchtime = strtotime($mch['lms_match_date']);
+        $matchdate = date('d-m-Y',$matchtime);
+        $sqldate = date('Y-m-d',$matchtime);
         $matchid = $mch['lms_match_id'];
         $matchweek = $mch['lms_match_weekno'];
         $found = in_array($teamabbr . $matchdate, $matchlist);

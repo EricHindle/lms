@@ -59,6 +59,16 @@ function get_team_abbreviation($teamtext)
     } elseif (count($teamnamearray) > 1) {
         $teamabbr = substr($teamnamearray[0], 0, 1) . substr($teamnamearray[1], 0, 2);
     }
+    
+    global $mypdo;
+    $teamsql = "SELECT * FROM v_lms_team_lookup WHERE lms_team_abbr_abbr = :abbr LIMIT 1";
+    $teamquery = $mypdo->prepare($teamsql);
+    $teamquery->bindParam(":abbr", $teamabbr);
+    $teamquery->execute();
+    $teamfetch = $teamquery->fetch(PDO::FETCH_ASSOC);
+    if ($teamquery->rowCount() == 1) {
+        $teamabbr = $teamfetch['lms_team_abbr'];
+    }
     return strtoupper($teamabbr);
 }
 
@@ -142,13 +152,13 @@ function get_teamId_from_abbr($teamabbr)
 {
     $teamId = - 1;
     global $mypdo;
-    $teamsql = "SELECT * FROM lms_team WHERE lms_team_abbr = :abbr LIMIT 1";
+    $teamsql = "SELECT * FROM lms_team_abbr WHERE lms_team_abbr_abbr = :abbr LIMIT 1";
     $teamquery = $mypdo->prepare($teamsql);
     $teamquery->bindParam(":abbr", $teamabbr);
     $teamquery->execute();
     $teamfetch = $teamquery->fetch(PDO::FETCH_ASSOC);
     if ($teamquery->rowCount() == 1) {
-        $teamId = $teamfetch['lms_team_id'];
+        $teamId = $teamfetch['lms_team_abbr_team_id'];
     }
     return $teamId;
 }
@@ -178,10 +188,11 @@ function delete_match($matchId)
 function get_result($teamId, $matchdate)
 {
     global $mypdo;
+    $mdt = date("Y-m-d", $matchdate);
     $resultsql = "SELECT * FROM lms_results WHERE lms_match_date = :matchdate and lms_match_team = :teamId LIMIT 1";
     $resultquery = $mypdo->prepare($resultsql);
     $resultquery->bindParam(":teamId", $teamId);
-    $resultquery->bindParam(":matchdate", date('Y-m-d', $matchdate));
+    $resultquery->bindParam(":matchdate", $mdt);
     $resultquery->execute();
     $resultfetch = $resultquery->fetch(PDO::FETCH_ASSOC);
     return $resultfetch;
@@ -190,9 +201,10 @@ function get_result($teamId, $matchdate)
 function insert_result($teamId, $matchdate, $score, $wl)
 {
     global $mypdo;
+    $mdt = date("Y-m-d", $matchdate);
     $insertresult = "INSERT INTO lms_results (lms_match_date,lms_match_team,lms_match_team_score,lms_match_team_wl) VALUES (:matchdate,:teamId,:score,:wl)";
     $stmtaddweek = $mypdo->prepare($insertresult);
-    $stmtaddweek->bindParam(':matchdate', date("Y-m-d", $matchdate));
+    $stmtaddweek->bindParam(':matchdate', $mdt);
     $stmtaddweek->bindParam(':teamId', $teamId, PDO::PARAM_INT);
     $stmtaddweek->bindParam(':score', $score, PDO::PARAM_INT);
     $stmtaddweek->bindParam(':wl', $wl);
@@ -203,9 +215,10 @@ function insert_result($teamId, $matchdate, $score, $wl)
 function update_result($teamId, $matchdate, $score, $wl)
 {
     global $mypdo;
+    $mdt = date("Y-m-d", $matchdate);
     $updresultsql = "UPDATE lms_results SET lms_match_team_score = :score, lms_match_team_wl = :wl WHERE lms_match_date = :matchdate AND lms_match_team = :teamId";
     $updresultquery = $mypdo->prepare($updresultsql);
-    $updresultquery->bindParam(':matchdate', date("Y-m-d", $matchdate));
+    $updresultquery->bindParam(':matchdate', $mdt);
     $updresultquery->bindParam(':teamId', $teamId, PDO::PARAM_INT);
     $updresultquery->bindParam(':score', $score, PDO::PARAM_INT);
     $updresultquery->bindParam(':wl', $wl);
@@ -244,10 +257,11 @@ function update_match_wl($matchid, $matchresult)
 function insert_match($teamId, $matchdate, $wkno, $wl, $league, $oppId)
 {
     global $mypdo;
+    $mdt = date("Y-m-d", $matchdate);
     $insertresult = "INSERT INTO lms_match (lms_match_weekno, lms_match_team, lms_match_date, lms_match_result, lms_match_league, lms_match_opp) VALUES (:weekno, :teamId, :matchdate, :wl, :league, :oppId)";
     $insertquery = $mypdo->prepare($insertresult);
     $insertquery->bindParam(':weekno', $wkno);
-    $insertquery->bindParam(':matchdate', date("Y-m-d", $matchdate));
+    $insertquery->bindParam(':matchdate', $mdt);
     $insertquery->bindParam(':teamId', $teamId, PDO::PARAM_INT);
     $insertquery->bindParam(':league', $league, PDO::PARAM_INT);
     $insertquery->bindParam(':oppId', $oppId, PDO::PARAM_INT);
