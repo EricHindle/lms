@@ -34,25 +34,21 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
                         <h2>Development and Testing</h2>
                     </div>
                     <div class="box" style="padding:1em;padding-left:10%;padding-right:10%;margin:10px;">
-                        <div class="btn" style="padding:3px;margin:3px;width:100%;">
+                        <div class="btn graybutton" style="padding:3px;margin:3px;width:100%;">
                             <a href="' . $myPath . 'testing/testforms/viewlog.php">
                                 <h3 style="color:white;">View Log</h3>
                             </a>	
                         </div>
-                        <div class="btn" style="padding:3px;margin:3px;width:100%;">
+                        <div class="btn graybutton" style="padding:3px;margin:3px;width:100%;">
                             <a href="' . $myPath . 'testing/testforms/emailtest.php">
                                 <h3 style="color:white;">Email test</h3>
                             </a>	
                         </div>
-                        <div class="btn" style="padding:3px;margin:3px;width:100%;">
+                        <div class="btn graybutton" style="padding:3px;margin:3px;width:100%;">
                             <a href="' . $myPath . 'testing/testforms/encryptiontest.php">
                                 <h3 style="color:white;" >Encryption test</h3>
                             </a>
                         </div>
-                        <div class="light-text">
-                            <a href="' . $myPath . 'menus/home.php" role="button">Back</a>
-                        </div>	
-
                     </div>
                     <div class="box" style="padding:1em;margin:10px;">
                         <h3>Read a JSON file</h3>
@@ -62,13 +58,10 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
                                 <input type="text" class="form-control" id="filename" name="filename" placeholder="file name">
 					        </div>
                             <div class="form-group" style="margin-left:16px;margin-right:16px">
-					            <input id="submit2" name="submit" type="submit" value="Submit" class="btn" style="margin:10px;padding:5px;width:50%;">
+					            <input id="submit2" name="submit" type="submit" value="Submit" class="btn graybutton" style="margin:10px;padding:5px;width:50%;">
 					        </div>
 					    </form>
 			        </div>
-                    <div style="padding:2em;">
-                        <a href="' . $myPath . 'menus/home.php" class="btn" style="padding:15px;" role="button">Back</a>
-                    </div>
 		    	</div>
             </body>
         </html>';

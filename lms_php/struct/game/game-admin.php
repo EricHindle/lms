@@ -10,6 +10,7 @@ require $myPath . 'includes/formkey.class.php';
 require $myPath . 'includes/lookup-functions.php';
 
 sec_session_start();
+$currentPage = '';
 $formKey = new formKey();
 if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $status = 0;
