@@ -247,7 +247,9 @@ button {
 }
 
 
+.table-bordered {border:solid 1px silver;border-collapse: collapse;}
 
+.table-bordered td,tr,th {padding:2px;border:solid 1px silver;border-collapse: collapse;}
 
 @media only screen and (max-width: 550px) {
   .box {
