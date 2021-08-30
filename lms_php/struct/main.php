@@ -65,6 +65,10 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                                 <h3 style="color:white;" >Settings</h3>
                             </a>
                         </div>
+                        <div class="light-text">
+                            <a href="' . $myPath . 'menus/home.php" role="button">Back</a>
+                        </div>
+
                     </div>
 
 

@@ -23,7 +23,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
                 <meta charset="UTF-8">
                 <title>View Logfile</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <link rel="stylesheet" href="' . $myPath . '../css/style.css" type="text/css">
+                <link rel="stylesheet" href="' . $myPath . 'css/style.css" type="text/css">
                 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
         	</head>
 			<body>';
@@ -47,8 +47,12 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
                         <div class="btn" style="padding:3px;margin:3px;width:100%;">
                             <a href="' . $myPath . 'testing/testforms/encryptiontest.php">
                                 <h3 style="color:white;" >Encryption test</h3>
-                            </a>	
+                            </a>
                         </div>
+                        <div class="light-text">
+                            <a href="' . $myPath . 'menus/home.php" role="button">Back</a>
+                        </div>	
+
                     </div>
                     <div class="box" style="padding:1em;margin:10px;">
                         <h3>Read a JSON file</h3>
