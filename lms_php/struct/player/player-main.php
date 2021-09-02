@@ -113,7 +113,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                 </div>
                 <div class="form-group">
                 	<br>
-                    <button type="submit" name="submit" id="submit" value="Submit" class="btn">Add Player</button>
+                    <button type="submit" name="submit" id="submit" value="Submit" class="btn graybutton" style="padding:5px;width:50%;">Add Player</button>
                 </div>
             </form>
         </div>
@@ -131,7 +131,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $html .= '	    </select>
                 </div>
 				<div class="form-group">
-                    <input id="submit" name="submit" type="submit" value="Select" class="btn">
+                    <input id="submit" name="submit" type="submit" value="Select" class="btn graybutton" style="padding:5px;width:50%;">
 				</div>
             </form>
         </div>
@@ -158,7 +158,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                         <input id="pwd2" name="pwd2" class="form-field"  style="padding:10px" title="Please enter the same Password as above." type="password" onChange="checkPasswordMatch()">
                 </div>
                 <div class="form-group">
-                        <input id="submit" name="submit" type="submit" value="Submit" class="btn">
+                        <input id="submit" name="submit" type="submit" value="Submit" class="btn graybutton" style="padding:5px;width:50%;">
                 </div>
             </form>
         </div>

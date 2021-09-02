@@ -8,40 +8,29 @@ require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
 sec_session_start();
+$currentPage = '';
 if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $formKey = new formKey();
     $key = $formKey->outputKey();
-    $weeksql = "SELECT * FROM lms_week ORDER BY lms_week_no ASC ";
+    $weeksql = "SELECT * FROM lms_week WHERE lms_year = :season and lms_week > :week ORDER BY lms_week_no ASC ";
     $weekquery = $mypdo->prepare($weeksql);
+    $weekquery->bindParam(":season", $_SESSION['currentseason'], PDO::PARAM_INT);
+    $weekquery->bindParam(":week", $_SESSION['currentweek'], PDO::PARAM_INT);
     $weekquery->execute();
     $remainingweeks = $weekquery->fetchAll(PDO::FETCH_ASSOC);
     $html = "";
     echo '
 		<!doctype html>
 		<html>
+		<!doctype html>
+		<html>
 			<head>
-															<style>
-.gameselection {
-height: 25px;
-width: 80px;
-border: none;
-border-radius: 2px;
-font-size: 16px;
-}
-.greenbutton {
-background-color: #00A600;
-}
-
-		</style>    
-
-			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-			    <meta charset="UTF-8">
-			    <title>Game Weeks</title>
+ 			    <meta charset="UTF-8">
+			    <title>LML Game Weeks</title>
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
-			    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
-			    <link rel="stylesheet" href="' . $myPath . 'css/rethome.css">
+                <link rel="stylesheet" href="' . $myPath . 'css/style.css" type="text/css">
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
 			    <script src="' . $myPath . 'js/jquery.js"></script>
-			    <script src="' . $myPath . 'js/bootstrap.min.js"></script>
 			    <script src="' . $myPath . 'js/jquery.tablesorter.js"></script>
 			    <script>
 		            $(function(){
@@ -53,56 +42,49 @@ background-color: #00A600;
 			<body>';
     include $myPath . 'globNAV.php';
     $html .= '
-				<section id="homeSection">
-			    <br><br>
-			        <div class="container">
-			        	<div class="row">
-			                <div class="col-md-6">
-			                    <h1><strong>Period Admin</strong></h1>
-			                </div>
-							<div class="col-md-1">
-								<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
-							</div>
-			      		</div>
-			        	<div class = "row">';
-
-    $html .= '			<div class="well col-md-3 col-sm-5 textDark">
-			                	<form class="form" role="form" name ="addweek" method="post" action="add-week.php">';
+                <div class="container">
+                    <div class="box" style="padding:1em;">
+                        <h2>Game Weeks</h2>
+                    </div>
+                    <div class="box" style="padding:1em;margin:10px;">
+                        <h3>Add Game Weeks</h3>
+			                <form role="form" name ="addweek" method="post" action="add-week.php">';
     $html .= $key;
-    $html .= '					<h3 class="text-center">Add Period</h3>
-				                    <div class="form-group">
-				                    	<label for="weekyear">Year number:</label>
-					                    <input type="text" class="form-control" id="weekyear" name="weekyear" placeholder="Year" />
-				                    	<label for="weeknumber">Week number:</label>
-					                    <input type="text" class="form-control" id="weeknumber" name="weeknumber" placeholder="Week" />
-                                     	<label for="weekstart">Start date:</label>
-                                        <input type="text" class="form-control" id="weekstart" name="weekstart" placeholder="yyyy-mm-dd" />
-                                     	<label for="weekcount">No. of periods to generate:</label>
-                                        <input type="text" class="form-control" id="weekcount" name="weekcount" placeholder="##" value = 1 />
+    $html .= '	
+		                    <div class="form-group"  style="padding-left:10px;text-align:left;">
+                                <label class="form-text" style="display:inline-block;width:40%;text-align:left">Season:</label>
+					                    <input type="text" class="form-field" id="weekyear" name="weekyear" placeholder="Season YYyy" />
+     <label class="form-text" style="display:inline-block;width:40%;text-align:left">Week:</label>
+					                    <input type="text" class="form-field" id="weeknumber" name="weeknumber" placeholder="Week" />
+     <label class="form-text" style="display:inline-block;width:40%;text-align:left">Week start date:</label>
+                                        <input type="text" class="form-field" id="weekstart" name="weekstart" placeholder="yyyy-mm-dd" />
+     <label class="form-text" style="display:inline-block;width:40%;text-align:left">Number of weeks:</label>
+                                        <input type="text" class="form-field" id="weekcount" name="weekcount" placeholder="##" value = 1 />
 				                    </div>
-				                    <div class="form-group">
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
-				                    </div>
+             <div class="form-group" style="margin-left:16px;margin-right:16px">
+					            <input id="submit" name="submit" type="submit" value="Add Weeks" class="btn graybutton" style="padding:5px;width:50%;">
+					        </div>
 				                </form>
-				            </div>
+
+</div>
+
 			            ';
 
-    $html .= '		</div>
-						<div class = "row">
-				        	<div class="well col-md-7 textDark">
-				        		<h3>All periods</h3>
+    $html .= '		 <div class="box" style="padding:1em;margin:10px">
+
+				        		<h3>Select week to edit</h3>
 
 			                	<form class="form" role="form" name ="editweek" method="post" action="edit-week.php">';
     $html .= $key;
     $html .= '	
 					        	<table class="table table-bordered" id="keywords">
 									<thead>
-									<tr class="week">
-										<th>Period No.</th>
-										<th>Season</th>
-                                        <th>Start Date</th>
-                                        <th>Pick Deadline</th>
-                                        <th>End Date</th>
+									<tr>
+										<th style="width:80px;text-align:center;">Week No.</th>
+										<th style="width:80px">Season</th>
+                                        <th style="width:120px">Start Date</th>
+                                        <th style="width:120px">Pick Deadline</th>
+                                        <th style="width:120px">End Date</th>
 									</tr>
 									</thead>
 									<tbody>
@@ -113,7 +95,7 @@ background-color: #00A600;
         $dlDate = date_format(date_create($rs['lms_week_deadline']), 'd-M-Y');
         $html .= '
 									<tr>
-                                        <td><button class="gameselection"  type="submit" name="weekid" value="' . $rs['lms_week_no'] . '">' . $rs['lms_week'] . '</button></td>
+                                        <td><button type="submit" name="weekid" value="' . $rs['lms_week_no'] . '">' . $rs['lms_week'] . '</button></td>
 										<td>' . $rs['lms_year'] . '</td>
 										<td>' . $stDate . '</td>
 										<td>' . $dlDate . '</td>
@@ -125,21 +107,11 @@ background-color: #00A600;
 								</table>
 </form>
 							</div>
-						</div>
 
 				        ';
 
     $html .= '	      		
-			      		<div class="row">
-							<br>
-							<div class="col-xs-6">
-								<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-lg" role="button">Back</a>
-								<br>
-							</div>
-						</div>
-			      		<br><br><br><br>
-			    	</div>
-			    </section>
+
 			</body>
 		</html>
 

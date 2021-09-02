@@ -59,7 +59,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                                 </div>
 			                </div>
                             <div class="form-group" style="margin-left:16px;margin-right:16px">
-					            <input id="submit" name="submit" type="submit" value="Submit" class="btn graybutton" style="padding:5px;width:50%;">
+					            <input id="submit" name="submit" type="submit" value="Add League" class="btn graybutton" style="padding:5px;width:50%;">
 					        </div>
 					    </form>
 			        </div>
@@ -76,7 +76,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 $html .= '	                     </select>
                             </div>
                             <div class="form-group" style="margin-left:16px;margin-right:16px">
-					            <input id="submit" name="submit" type="submit" value="Submit" class="btn graybutton" style="padding:5px;width:50%;">
+					            <input id="submit" name="submit" type="submit" value="Select" class="btn graybutton" style="padding:5px;width:50%;">
 					        </div>
                         </form>
                     </div>

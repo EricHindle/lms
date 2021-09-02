@@ -10,6 +10,7 @@ require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
 
 sec_session_start();
+$currentPage = '';
 $formKey = new formKey();
 $access = sanitize_int($_SESSION['retaccess']);
 if (login_check($mypdo) == true && $access > 900) {
