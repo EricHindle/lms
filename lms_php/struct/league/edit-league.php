@@ -10,6 +10,7 @@ require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
 
 sec_session_start();
+$currentPage = '';
 $formKey = new formKey();
 $access = sanitize_int($_SESSION['retaccess']);
 if (login_check($mypdo) == true && $access > 900) {
@@ -28,9 +29,7 @@ if (login_check($mypdo) == true && $access > 900) {
                         ':id' => $gameid
                     ));
                     $leaguecount = $leaguequery->rowCount();
-
                     if ($leaguecount > 0) {
-                        
                         $key = $formKey->outputKey();
                         $leaguefetch = $leaguequery->fetch(PDO::FETCH_ASSOC);
                         $issupported = "";
@@ -38,96 +37,69 @@ if (login_check($mypdo) == true && $access > 900) {
                             $issupported = "checked";
                         }
                         echo '
-								<!doctype html>
-								<html>
-									<head>
-										
-									    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-									    <meta charset="UTF-8">
-									    
-									    <title>Edit League</title>
-									    
-									    <meta name="viewport" content="width=device-width, initial-scale=1">
-									    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
-									    <link rel="stylesheet" href="' . $myPath . 'css/rethome.css">
-									    <script src="' . $myPath . 'js/jquery.js"></script>
-									    <script src="' . $myPath . 'js/bootstrap.min.js"></script>
-									</head>
+		<!doctype html>
+		<html>
+			<head>
+ 			    <meta charset="UTF-8">
+			    <title>LML Leagues</title>
+			    <meta name="viewport" content="width=device-width, initial-scale=1">
+                <link rel="stylesheet" href="' . $myPath . 'css/style.css" type="text/css">
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+			</head>
 
-									<body>';
+			<body>';
                         include $myPath . 'globNAV.php';
                         $html .= '
-										<section id="homeSection">
-									    <br><br>
-									        <div class="container">
-									        	<div class="row">
-									                <div class="col-md-8">
-									                    <h1><strong>Edit League</strong></h1>
-									                </div>
-									      		</div>
-									        	<div class = "row">';
-
-                        $html .= '			<div class="well col-md-6 col-md-offset-1 textDark">
-									                	<form class="form-horizontal" role="form" name ="edit" method="post" action="process-edit-league.php">';
+                <div class="container">
+                    <div class="box" style="padding:1em;">
+                        <h2>Edit League</h2>
+                    </div>
+                    <div class="box" style="padding:1em;margin:10px;">
+                        <form role="form" name ="edit" method="post" action="process-edit-league.php">';
                         $html .= $key;
-                        $html .= '					<h3 class="text-center">Edit League</h3>
-									                    	<br>
-									                    	<div class="form-group">
-																<label class="control-label col-sm-2" for="name">Name:</label>
-																<div class="col-sm-4">
-																 	<p class="form-control-static" name="name">' . $leaguefetch['lms_league_name'] . '</p>
-																</div>
-																<label class="control-label col-sm-2" for="abbr">Abbr:</label>
-																<div class="col-sm-4">
-																 	<p class="form-control-static" name="abbr">' . $leaguefetch['lms_league_abbr'] . '</p>
-																</div>
-
-															</div>
-
-															<div class="form-group">
-																<label class="control-label col-sm-2" for="osupported">Status:</label>
-																<div class="col-sm-4">';
+                        $html .= '
+               	            <div class="form-group" style="padding:25px;text-align:left;">
+                                <div>
+                                    <label class="form-text" style="display:inline-block;width:30%;text-align:left">League Name:</label>' . $leaguefetch['lms_league_name'] . '
+                                </div>
+                                <div>
+                                    <label class="form-text" style="display:inline-block;width:30%;text-align:left">Abbr:</label>' . $leaguefetch['lms_league_abbr'] . '
+                                </div>
+                                <div>
+                                    <label class="form-text" style="display:inline-block;width:30%;text-align:left">Status:</label>';
                         if ($leaguefetch['lms_league_supported'] == 1) {
-                            $html .= '					<p class="form-control-static" name="oosupported">Supported</p>';
+                            $html .= 'Supported';
                         } else {
-                            $html .= '					<p class="form-control-static" name="oosupported">Not supported</p>';
+                            $html .= 'Not supported';
                         }
+        $html .= '              </div>
+                            </div>
+		                    <div class="form-group"  style="padding-left:10px;text-align:left;">
+                                <label class="form-text" style="display:inline-block;width:40%;text-align:left">New name:</label>
+                                <input type="text" class="form-field" id="leaguename" name="leaguename" value="' . $leaguefetch['lms_league_name'] . '"><br>
+                                <label class="form-text"  style="display:inline-block;width:40%;text-align:left">New abbr (4 chrs max):</label>    
+                                <input type="text" class="form-field" id="leagueabbr" name="leagueabbr" value="' . $leaguefetch['lms_league_abbr'] . '"><br>
+                                <label class="form-text"  style="display:inline-block;width:40%;text-align:left"> </label>
+                                <input type="checkbox"  name="issupported" id="issupported" value="true" ' . $issupported . ' >
+                                <label for="issupported">&nbsp is Supported</label>
+                                <input type= "hidden" name= "id" value="' . $gameid . '" />
+					        </div>
+                            <div class="form-group" style="padding-top:25px;margin-left:16px;margin-right:16px">
+					            <input id="submit" name="submit" type="submit" value="Submit" class="btn graybutton" style="padding:5px;width:50%;">
+					        </div>
 
-                        $html .= '					</div>
-															</div>
-										                    <div class="form-group">
-										                    	
-                                                               <label for="leaguename">New name:</label>
-                    					                       <input type="text" class="form-control" id="leaguename" name="leaguename" value="' . $leaguefetch['lms_league_name'] . '"><br>
-                                                               <label for="leagueabbr">New abbr (4 chrs max):</label>
-                    					                       <input type="text" class="form-control" id="leagueabbr" name="leagueabbr" value="' . $leaguefetch['lms_league_abbr'] . '"><br>
+		                </form>
 
-                                                               <input type="checkbox" style="margin-left:20px;" name="issupported" id="issupported" value="true" ' . $issupported . ' >
-                                                               <label for="issupported">&nbsp is Supported</label>
-															   <input type= "hidden" name= "id" value="' . $gameid . '" />
-										                    </div>
-	
 
-										                    <div class="form-group">
-										                    	<br>
-										                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
-										                    </div>
-										                </form>
-										            </div>
-										        </div>
-										        <div class="row">
-													<br>
-													<div class="col-xs-6">
-														<a href="' . $myPath . 'struct/league/league-main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
-														<br>
-													</div>
-												</div>
-									      		<br><br><br><br>
-									    	</div>
-									    </section>
-									</body>
-								</html>
-									            ';
+                            <div class="light-text">
+					            <a href="' . $myPath . 'struct/league/league-main.php">Back</a>
+					        </div>
+
+		            </div>
+		        </div>
+			</body>
+		</html>
+		';
                     } else {
                         $html .= "<script>
 										alert('There was a problem. Please check details and try again.');

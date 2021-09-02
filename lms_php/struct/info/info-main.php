@@ -25,11 +25,12 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 		<html>
 			<head>
  			    <meta charset="UTF-8">
-			    <title>Configuration</title>
+			    <title>LML Configuration</title>
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
                 <link rel="stylesheet" href="' . $myPath . 'css/style.css" type="text/css">
                 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
-			    <script src="' . $myPath . 'js/jquery.tablesorter.js"></script>
+			    <script src="' . $myPath . 'js/jquery.js"></script>
+                <script src="' . $myPath . 'js/jquery.tablesorter.js"></script>
 			    <script>
 		            $(function(){
 		            $(\'#keywords\').tablesorter(); 
@@ -50,16 +51,10 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $html .= $key;
     $html .= '              <div class="form-group" style="margin:12px">
                                 <div>
-                                    <label style="display:inline-block;width:25%;text-align:left">
-                                        Value Name:
-                                    </label>
-		                            <input type="text" style="margin-left:25px;margin-bottom:15px" id="infoid" name="infoid" placeholder="Value name" />
+		                            <input type="text" class="form-field" id="infoid" name="infoid" placeholder="Value name" />
                                 </div>
     	                    	<div>
-                                    <label style="display:inline-block;width:25%;text-align:left">
-                                        Value:
-                                    </label>
-    		                        <input type="text" style="margin-left:25px;margin-bottom:15px"  id="infovalue" name="infovalue" placeholder="Value" />
+    		                        <input type="text" class="form-field" id="infovalue" name="infovalue" placeholder="Value" />
                                 </div>
 			                </div>
                             <div class="form-group" style="margin-left:16px;margin-right:16px">
@@ -73,8 +68,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $html .= $key;
     $html .= ' 
 			                <div class="form-group" style="margin:12px">
-			                     <label style="display:inline-block;width:25%;text-align:left">Choose value:</label>
-			                     <select style="margin-left:25px;margin-bottom:15px" id="infoid" name="infoid">';
+			                     <select class="form-dropdown" id="infoid" name="infoid">';
     foreach ($infofetch as $myinfo) {
 $html .= '                          <option value="' . $myinfo['lms_info_id'] . '">' . $myinfo['lms_info_id'] . '</option>';
     }
@@ -85,11 +79,8 @@ $html .= '	                     </select>
 					        </div>
                         </form>
                     </div>
- ';
-    $html .= '		
                     <div class="box" style="padding:1em;margin:10px;text-align:left">
     	        		<h3>All values</h3>
-
 			        	<table class="table table-bordered" id="keywords">
 						  <thead>
 						      <tr class="info">
@@ -109,11 +100,7 @@ $html .= '	                     </select>
     $html .= '
 						 </tbody>
                     </table>
-
 				</div>
-				        ';
-
-    $html .= '	      		
             </div>
 		</body>
 	</html>

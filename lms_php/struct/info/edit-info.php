@@ -34,70 +34,49 @@ if (login_check($mypdo) == true && $access > 900) {
                         $key = $formKey->outputKey();
                         $infofetch = $infoquery->fetch(PDO::FETCH_ASSOC);
                         echo '
-								<!doctype html>
-								<html>
-									<head>
-										
-									    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-									    <meta charset="UTF-8">
-									    
-									    <title>Edit info</title>
-									    
-									    <meta name="viewport" content="width=device-width, initial-scale=1">
-									    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
-									    <link rel="stylesheet" href="' . $myPath . 'css/rethome.css">
-									    <script src="' . $myPath . 'js/jquery.js"></script>
-									    <script src="' . $myPath . 'js/bootstrap.min.js"></script>
-									</head>
+		<!doctype html>
+		<html>
+			<head>
+ 			    <meta charset="UTF-8">
+			    <title>LML Settings</title>
+			    <meta name="viewport" content="width=device-width, initial-scale=1">
+                <link rel="stylesheet" href="' . $myPath . 'css/style.css" type="text/css">
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+			</head>
 
 									<body>';
                         include $myPath . 'globNAV.php';
                         $html .= '
-										<section id="homeSection">
-									    <br><br>
-									        <div class="container">
-									        	<div class="row">
-									                <div class="col-md-8">
-									                    <h1><strong>Edit Configuration Value</strong></h1>
-									                </div>
-									      		</div>
-									        	<div class = "row">';
-                        $html .= '			        <div class="well col-md-6 col-md-offset-1 textDark">
-									                	<form class="form-horizontal" role="form" name ="edit" method="post" action="process-edit-info.php">';
-                        $html .= $key;
-                        $html .= '					        <h3 class="text-center">Edit value</h3>
-									                    	<br>
-									                    	<div class="form-group">
-																<label class="col-sm-3" for="name">Value name:</label>
-																<div class="col-sm-3">
-																 	<p class="form-control-static" name="name">' . $infofetch['lms_info_id'] . '</p>
-																</div>
-															</div>
 
-										                    <div class="form-group">
-										                    	
-                                                               <label for="infoname">New value:</label>
-                    					                       <input type="text" class="form-control" id="infovalue" name="infovalue" value="' . $infofetch['lms_info_value'] . '"><br>
-															   <input type= "hidden" name= "id" value="' . $gameid . '" />
-										                    </div>
-										                    <div class="form-group">
-										                    	<br>
-										                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
-										                    </div>
-										                </form>
-										            </div>
-										        </div>
-										        <div class="row">
-													<br>
-													<div class="col-xs-6">
-														<a href="' . $myPath . 'struct/info/info-main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
-														<br>
-													</div>
-												</div>
-									      		<br><br><br><br>
-									    	</div>
-									    </section>
-									</body>
+									        <div class="container">
+                    <div class="box" style="padding:1em;">
+                        <h2>Edit Setting</h2>
+                    </div>
+                    <div class="box" style="padding:1em;margin:10px;">
+                     	<form role="form" name ="edit" method="post" action="process-edit-info.php">';
+                        $html .= $key;
+                        $html .= '					  
+               	            <div class="form-group" style="padding:25px;text-align:left;">
+                                <div>
+									<label class="form-text" style="display:inline-block;width:30%;text-align:left">Value name:</label>' . $infofetch['lms_info_id'] . '
+								</div>
+							</div>
+
+		                    <div class="form-group"  style="padding-left:10px;text-align:left;">	                    	
+                               <label class="form-text" style="display:inline-block;width:40%;text-align:left">New value:</label>
+		                       <input type="text" class="form-field" id="infovalue" name="infovalue" value="' . $infofetch['lms_info_value'] . '"><br>
+							   <input type= "hidden" name= "id" value="' . $gameid . '" />
+		                    </div>
+                            <div class="form-group" style="padding-top:25px;margin-left:16px;margin-right:16px">
+					            <input id="submit" name="submit" type="submit" value="Submit" class="btn graybutton" style="padding:5px;width:50%;">
+					        </div>
+		                </form>
+                            <div class="light-text">
+					            <a href="' . $myPath . 'struct/info/info-main.php">Back</a>
+					        </div>
+		            </div>
+		        </div>
+	</body>
 								</html>
 									            ';
                     } else {
