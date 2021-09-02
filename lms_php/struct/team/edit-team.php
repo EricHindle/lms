@@ -10,6 +10,7 @@ require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
 
 sec_session_start();
+$currentPage = '';
 $formKey = new formKey();
 $access = sanitize_int($_SESSION['retaccess']);
 if (login_check($mypdo) == true && $access > 900) {
@@ -28,7 +29,6 @@ if (login_check($mypdo) == true && $access > 900) {
                         ':id' => $teamid
                     ));
                     $teamcount = $teamquery->rowCount();
-
                     if ($teamcount > 0) {
                         $leaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr FROM lms_league_team 
                                         JOIN lms_league ON lms_league_team_league_id = lms_league_id 
@@ -39,7 +39,6 @@ if (login_check($mypdo) == true && $access > 900) {
                             ':teamid' => $teamid
                         ));
                         $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
-
                         $allleaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr FROM lms_league
                                             WHERE lms_league_supported = 1 
                                                 AND lms_league_id NOT IN 
@@ -50,7 +49,6 @@ if (login_check($mypdo) == true && $access > 900) {
                             ':teamid' => $teamid
                         ));
                         $allleaguefetch = $allleaguequery->fetchAll(PDO::FETCH_ASSOC);
-
                         $key = $formKey->outputKey();
                         $teamfetch = $teamquery->fetch(PDO::FETCH_ASSOC);
                         $isactive = "";
@@ -58,69 +56,58 @@ if (login_check($mypdo) == true && $access > 900) {
                             $isactive = "checked";
                         }
                         echo '
-								<!doctype html>
-								<html>
-									<head>
-										
-									    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-									    <meta charset="UTF-8">
-									    
-									    <title>Edit Team</title>
-									    
-									    <meta name="viewport" content="width=device-width, initial-scale=1">
-									    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
-									    <link rel="stylesheet" href="' . $myPath . 'css/rethome.css">
-									    <script src="' . $myPath . 'js/jquery.js"></script>
-									    <script src="' . $myPath . 'js/bootstrap.min.js"></script>
-									</head>
+		<!doctype html>
+		<html>
+			<head>
+ 			    <meta charset="UTF-8">
+			    <title>LML Teams</title>
+			    <meta name="viewport" content="width=device-width, initial-scale=1">
+                <link rel="stylesheet" href="' . $myPath . 'css/style.css" type="text/css">
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+			</head>
 
-									<body>';
-                        include $myPath . 'globNAV.php';
-                        $html .= '
-										<section id="homeSection">
-									    <br><br>
-									        <div class="container">
-									        	<div class="row">
-									                <div class="col-md-8">
-									                    <h1><strong>Edit Team</strong></h1>
-									                </div>
-									      		</div>
-									        	<div class = "row">';
-
-                        $html .= '			<div class="well col-md-6 col-md-offset-1 textDark">
-									                	<form class="form-horizontal" role="form" name ="edit" method="post" action="process-edit-team.php">';
+			<body>';
+        include $myPath . 'globNAV.php';
+        $html .= '
+                <div class="container">
+                    <div class="box" style="padding:1em;">
+                        <h2>Edit Team</h2>
+                    </div>
+                    <div class="box" style="padding:1em;margin:10px;">
+                        <form role="form" name ="edit" method="post" action="process-edit-team.php">';
                         $html .= $key;
-                        $html .= '					<h3 class="text-center">Edit Team</h3>
-									                    	<br>
-									                    	<div class="form-group">
-																<label class="control-label col-sm-2" for="name">Name:</label>
-																<div class="col-sm-4">
-																 	<p class="form-control-static" name="name">' . $teamfetch['lms_team_name'] . '</p>
-																</div>
-															</div>
-
-															<div class="form-group">
-																<label class="control-label col-sm-2" for="oactive">Status:</label>
-																<div class="col-sm-4">';
+                        $html .= '
+               	            <div class="form-group" style="padding:25px;text-align:left;">
+                                <div>
+                                    <label class="form-text" style="display:inline-block;width:30%;text-align:left">Team Name:</label>' . $teamfetch['lms_team_name'] . '
+                                </div>
+                                <div>
+                                    <label class="form-text" style="display:inline-block;width:30%;text-align:left">Abbr:</label>' . $teamfetch['lms_team_abbr'] . '
+                                </div>
+                                <div>
+                                    <label class="form-text" style="display:inline-block;width:30%;text-align:left">Status:</label>';
                         if ($teamfetch['lms_team_active'] == 1) {
-                            $html .= '					<p class="form-control-static" name="ooactive">Active</p>';
+                            $html .= 'Active';
                         } else {
-                            $html .= '					<p class="form-control-static" name="ooactive">Inactive</p>';
+                            $html .= 'Inactive';
                         }
-
-                        $html .= '					</div>
-															</div>
-										                    <div class="form-group">
-										                    	
-                                                               <label for="teamname">New name:</label>
-                    					                       <input type="text" class="form-control" id="teamname" name="teamname" value="' . $teamfetch['lms_team_name'] . '">
-                                                               <label for="teamabbr">Abbreviation:</label>
-                                                               <input type="text" class="form-control" id="teamabbr" name="teamabbr" value="' . $teamfetch['lms_team_abbr'] . '">
-                                                               <input type="checkbox" style="margin-left:20px;" name="isactive" id="isactive" value="true" ' . $isactive . ' >
-                                                               <label for="isactive">&nbsp is Active</label>
-															   <input type= "hidden" name= "id" value="' . $teamid . '" />
-										                    </div>
-					        	<table class="table table-bordered" id="keywords">
+        $html .= '              </div>
+                            </div>
+		                    <div class="form-group"  style="padding-left:10px;text-align:left;">
+                                <label class="form-text" style="display:inline-block;width:40%;text-align:left">New name:</label>
+                                <input type="text" class="form-field" id="teamname" name="teamname" value="' . $teamfetch['lms_team_name'] . '"><br>
+                                <label class="form-text"  style="display:inline-block;width:40%;text-align:left">New abbr (3 chrs max):</label>    
+                                <input type="text" class="form-field" id="teamabbr" name="teamabbr" value="' . $teamfetch['lms_team_abbr'] . '"><br>
+                                <label class="form-text"  style="display:inline-block;width:30%;text-align:left"> </label>
+                                <input type="checkbox"  name="isactive" id="isactive" value="true" ' . $isactive . ' >
+                                <label style="color:#909090;" for="issupported">&nbsp is an Active Team</label>
+                                <input type= "hidden" name= "id" value="' . $teamid . '" />
+					        </div>
+                            <div style="padding-top:25px;" >
+                                <h4>Leagues for Team</h4>
+                            </div>
+                            <div class="form-group"  style="padding:10px;padding-bottom:20px  ;text-align:left;">
+					        	<table class="table table-games table-bordered" id="keywords">
 									<thead>
 									<tr class="info">
 										<th>Leagues</th>
@@ -131,48 +118,46 @@ if (login_check($mypdo) == true && $access > 900) {
 									';
                         foreach ($leaguefetch as $rs) {
                             $html .= '
-									<tr>
-										<td>' . $rs['lms_league_name'] . '</td>
-                                        <td><input type="checkbox" style="margin-left:20px;" name="rmv-' . $rs['lms_league_id'] . '" id="rmv-' . $rs['lms_league_id'] . '" value="true" ></td>
-									</tr>';
+    									<tr>
+    										<td>' . $rs['lms_league_name'] . '</td>
+                                            <td><input type="checkbox" style="margin-left:20px;" name="rmv-' . $rs['lms_league_id'] . '" id="rmv-' . $rs['lms_league_id'] . '" value="true" ></td>
+    									</tr>';
                         }
                         $html .= '
 									</tbody>
-								</table>';
+								</table>
+                            </div>
+                        ';
                         if (! empty($allleaguefetch)) {
-                            $html .= '                         <div class="form-group">
-                                      <label for="addleague">&nbsp; Add League &nbsp;&nbsp;</label>
-									   <input type= "checkbox" name= "addleague" id="addleague" value="true" />
-								</div>	
-				                    <div class="form-group" >
-			                            <select class="form-control col-md-6 col-sm-6" style="width:70%" id="leagueid" name="leagueid">';
+                            $html .= '                         
+                            <div class="form-group">
+                                <label for="addleague">&nbsp; Add League &nbsp;&nbsp;</label>
+							    <input type= "checkbox" name= "addleague" id="addleague" value="true" />
+							</div>	
+				            <div class="form-group" >
+	                            <select class="form-dropdown col-md-6 col-sm-6" style="width:70%" id="leagueid" name="leagueid">';
                             foreach ($allleaguefetch as $myLeague) {
-                                $html .= '                        <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
+                                $html .= ' <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
                             }
-                            $html .= '	                        </select></br></br>
-                                    </div>';
+                            $html .= '
+    	                        </select>
+                            </div>';
                         }
+                        $html .= '							
+                            <div class="form-group" style="padding-top:25px;margin-left:16px;margin-right:16px">
+					            <input id="submit" name="submit" type="submit" value="Submit" class="btn graybutton" style="padding:5px;width:50%;">
+					        </div>	                    
+						</form>
+                        <div class="light-text">
+        		            <a href="' . $myPath . 'struct/team/team-main.php">Back</a>
+				        </div>
+		            </div>
+		        </div>
 
-                        $html .= '								                    <div class="form-group">
-										                    	<br>
-										                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
-										                    </div>
-										                </form>
-										            </div>
-										        </div>
-										        <div class="row">
-													<br>
-													<div class="col-xs-6">
-														<a href="' . $myPath . 'struct/team/team-main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
-														<br>
-													</div>
-												</div>
-									      		<br><br><br><br>
-									    	</div>
-									    </section>
-									</body>
-								</html>
-									            ';
+
+			</body>
+		</html>
+		 ';
                     } else {
                         $html .= "<script>
 										alert('There was a problem. Please check details and try again.');

@@ -19,14 +19,14 @@ if (login_check($mypdo) == true && $access > 900) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
             if (isset($_POST['league'])) {
-                $gameid = sanitize_int($_POST['league']);
-                if ($gameid) {
+                $leagueid = sanitize_int($_POST['league']);
+                if ($leagueid) {
 
                     $html = "";
                     $leaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr, lms_league_supported FROM lms_league WHERE lms_league_id = :id";
                     $leaguequery = $mypdo->prepare($leaguesql);
                     $leaguequery->execute(array(
-                        ':id' => $gameid
+                        ':id' => $leagueid
                     ));
                     $leaguecount = $leaguequery->rowCount();
                     if ($leaguecount > 0) {
@@ -82,7 +82,7 @@ if (login_check($mypdo) == true && $access > 900) {
                                 <label class="form-text"  style="display:inline-block;width:40%;text-align:left"> </label>
                                 <input type="checkbox"  name="issupported" id="issupported" value="true" ' . $issupported . ' >
                                 <label for="issupported">&nbsp is Supported</label>
-                                <input type= "hidden" name= "id" value="' . $gameid . '" />
+                                <input type= "hidden" name= "id" value="' . $leagueid . '" />
 					        </div>
                             <div class="form-group" style="padding-top:25px;margin-left:16px;margin-right:16px">
 					            <input id="submit" name="submit" type="submit" value="Submit" class="btn graybutton" style="padding:5px;width:50%;">
