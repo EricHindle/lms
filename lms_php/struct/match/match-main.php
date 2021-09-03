@@ -10,6 +10,7 @@ require $myPath . 'includes/formkey.class.php';
 require $myPath . 'includes/lookup-functions.php';
 
 sec_session_start();
+$currentPage = '';
 if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $formKey = new formKey();
     $key = $formKey->outputKey();
@@ -42,17 +43,12 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 		<!doctype html>
 		<html>
 			<head>
-				
-			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-			    <meta charset="UTF-8">
-			    
-			    <title>Match administration</title>
-			    
+ 			    <meta charset="UTF-8">
+			    <title>LML Matches</title>
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
-			    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
-			    <link rel="stylesheet" href="' . $myPath . 'css/rethome.css">
+                <link rel="stylesheet" href="' . $myPath . 'css/style.css" type="text/css">
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
 			    <script src="' . $myPath . 'js/jquery.js"></script>
-			    <script src="' . $myPath . 'js/bootstrap.min.js"></script>
 			    <script src="' . $myPath . 'js/jquery.tablesorter.js"></script>
 			    <script>
 		            $(function(){
@@ -64,70 +60,59 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			<body>';
     include $myPath . 'globNAV.php';
     $html .= '
-				<section id="homeSection">
-			    <br><br>
+
 			        <div class="container">
-			        	<div class="row">
-			                <div class="col-md-8">
-			                    <h1><strong>Match Admin</strong></h1>
-			                </div>
-							<div class="col-md-1">
-								<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-sm" style="margin-bottom:10px;margin-top:20px" role="button">Back</a>
-							</div>
-			      		</div>
-                        <div class="row">';
-    $html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
-			                	<form class="form-horizontal" role="form" name ="genmatch" method="post" action="gen-match.php">';
+                    <div class="box" style="padding:1em;">
+                        <h2>Matches</h2>
+                    </div>
+                    <div class="box" style="padding:1em;margin:10px;">
+                        <h3>Generate Matches</h3>
+			            <form role="form" name ="genmatch" method="post" action="gen-match.php">';
     $html .= $key;
-    $html .= '					<h3 class="text-center">Generate Matches</h3>
-				                    <div class="form-group">
-			                        	<label for="weekid">Choose period:</label>
-			                            <select class="form-control" id="weekid" name="weekid">';
+    $html .= '					
+				            <div class="form-group">
+			                        	<label class="form-text" for="weekid">Choose period:</label>
+			                            <select class="form-dropdown" id="weekid" name="weekid">';
     foreach ($remainingweeks as $myweek) {
-        $html .= '<option value="' . $myweek['lms_week_no'] . '">' . $myweek['lms_year'] . '/' . sprintf('%02d', $myweek['lms_week']) . '&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp' . date_format(date_create($myweek['lms_week_start']), 'd-M-Y') . '</option>';
+        $html .= '                          <option value="' . $myweek['lms_week_no'] . '">' . $myweek['lms_year'] . '/' . sprintf('%02d', $myweek['lms_week']) . '&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp' . date_format(date_create($myweek['lms_week_start']), 'd-M-Y') . '</option>';
     }
-    $html .= '	                    </select>
+    $html .= '	                         </select>
 				                    </div>
-				                    <div class="form-group">
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
-				                    </div>
+                                    <div class="form-group" style="margin-left:16px;margin-right:16px">
+        					            <input id="submit" name="submit" type="submit" value="Add Matches" class="btn graybutton" style="padding:5px;width:50%;">
+        					        </div>
                                 </form>
                             </div>
-			            ';
-
-    $html .= '			<div class="well col-md-3 col-md-offset-1 textDark">
-			                	<form class="form-horizontal" role="form" name ="editmatch" method="post" action="edit-match.php">';
+                            <div class="box" style="padding:1em;margin:10px">
+                                <h3>Edit Match</h3>
+			                	<form role="form" name ="editmatch" method="post" action="edit-match.php">';
     $html .= $key;
-    $html .= '					<h3 class="text-center">Edit Match</h3>
+    $html .= '					
 				                    <div class="form-group">
-			                        	<label for="matchid">Choose match:</label>
-			                            <select class="form-control" id="matchid" name="matchid">';
+			                        	<label class="form-text" for="matchid">Choose match:</label>
+			                            <select class="form-dropdown" id="matchid" name="matchid">';
     foreach ($matchfetch as $mymatch) {
-        $html .= '<option value="' . $mymatch['lms_match_id'] . '">' . $mymatch['lms_team_name'] . '&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp' . date_format(date_create($mymatch['lms_match_date']), 'd-M-Y') . '</option>';
+        $html .= '                          <option value="' . $mymatch['lms_match_id'] . '">' . $mymatch['lms_team_name'] . '&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp' . date_format(date_create($mymatch['lms_match_date']), 'd-M-Y') . '</option>';
     }
-    $html .= '	                    </select>   
-                                    <input type= "hidden" name= "matchperiod" value="' . $matchperiod . '" />
+    $html .= '	                         </select>   
+                                         <input type= "hidden" name= "matchperiod" value="' . $matchperiod . '" />
 				                    </div>
-				                    <div class="form-group">
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary btn-sm">
-				                    </div>
+                                    <div class="form-group" style="margin-left:16px;margin-right:16px">
+        					            <input id="submit" name="submit" type="submit" value="Select" class="btn graybutton" style="padding:5px;width:50%;">
+        					        </div>
 				                </form>
-				            </div>';
-
-    $html .= '
-                        </div>
-						<div class = "row">
-				        	<div class="well col-md-9 textDark">
-				        		<h3>Period ' . $tableperiod . ' matches</h3>
-					        	<table class="table table-bordered" id="keywords">
+				            </div>
+                            <div class="box" style="padding:1em;margin:10px">
+                                <h3>Matches</h3>
+                                <table class="table table-bordered" id="keywords">
 									<thead>
-									<tr class="match">
-										<th>Period No.</th>
-										<th>Season</th>
-                                        <th>Team</th>
-                                        <th>Match Date</th>
-                                        <th>Result</th>
-									</tr>
+    									<tr class="match">
+    										<th>Week No.</th>
+    										<th>Season</th>
+                                            <th>Team</th>
+                                            <th>Match Date</th>
+                                            <th>Result</th>
+    									</tr>
 									</thead>
 									<tbody>
 									';
@@ -165,21 +150,6 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 									</tbody>
 								</table>
 							</div>
-						</div>
-
-				        ';
-
-    $html .= '	      		
-			      		<div class="row">
-							<br>
-							<div class="col-xs-6">
-								<a href="' . $myPath . 'struct/main.php" class="btn btn-primary btn-lg push-to-bottom" role="button">Back</a>
-								<br>
-							</div>
-						</div>
-			      		<br><br><br><br>
-			    	</div>
-			    </section>
 			</body>
 		</html>
 

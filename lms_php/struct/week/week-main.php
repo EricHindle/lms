@@ -22,8 +22,6 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     echo '
 		<!doctype html>
 		<html>
-		<!doctype html>
-		<html>
 			<head>
  			    <meta charset="UTF-8">
 			    <title>LML Game Weeks</title>
@@ -53,41 +51,35 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $html .= '	
 		                    <div class="form-group"  style="padding-left:10px;text-align:left;">
                                 <label class="form-text" style="display:inline-block;width:40%;text-align:left">Season:</label>
-					                    <input type="text" class="form-field" id="weekyear" name="weekyear" placeholder="Season YYyy" />
-     <label class="form-text" style="display:inline-block;width:40%;text-align:left">Week:</label>
-					                    <input type="text" class="form-field" id="weeknumber" name="weeknumber" placeholder="Week" />
-     <label class="form-text" style="display:inline-block;width:40%;text-align:left">Week start date:</label>
-                                        <input type="text" class="form-field" id="weekstart" name="weekstart" placeholder="yyyy-mm-dd" />
-     <label class="form-text" style="display:inline-block;width:40%;text-align:left">Number of weeks:</label>
-                                        <input type="text" class="form-field" id="weekcount" name="weekcount" placeholder="##" value = 1 />
-				                    </div>
-             <div class="form-group" style="margin-left:16px;margin-right:16px">
+					            <input type="text" class="form-field" id="weekyear" name="weekyear" placeholder="Season YYyy" />
+                                <label class="form-text" style="display:inline-block;width:40%;text-align:left">Week:</label>
+					            <input type="text" class="form-field" id="weeknumber" name="weeknumber" placeholder="Week" />
+                                <label class="form-text" style="display:inline-block;width:40%;text-align:left">Week start date:</label>
+                                <input type="text" class="form-field" id="weekstart" name="weekstart" placeholder="yyyy-mm-dd" />
+                                <label class="form-text" style="display:inline-block;width:40%;text-align:left">Number of weeks:</label>
+                                <input type="text" class="form-field" id="weekcount" name="weekcount" placeholder="##" value = 1 />
+				            </div>
+                            <div class="form-group" style="margin-left:16px;margin-right:16px">
 					            <input id="submit" name="submit" type="submit" value="Add Weeks" class="btn graybutton" style="padding:5px;width:50%;">
 					        </div>
-				                </form>
-
-</div>
-
-			            ';
-
-    $html .= '		 <div class="box" style="padding:1em;margin:10px">
-
-				        		<h3>Select week to edit</h3>
-
-			                	<form class="form" role="form" name ="editweek" method="post" action="edit-week.php">';
+		                </form>
+                    </div>
+                    <div class="box" style="padding:1em;margin:10px">
+    	        		<h3>Select week to edit</h3>
+	                	<form class="form" role="form" name ="editweek" method="post" action="edit-week.php">';
     $html .= $key;
     $html .= '	
-					        	<table class="table table-bordered" id="keywords">
-									<thead>
-									<tr>
-										<th style="width:80px;text-align:center;">Week No.</th>
-										<th style="width:80px">Season</th>
-                                        <th style="width:120px">Start Date</th>
-                                        <th style="width:120px">Pick Deadline</th>
-                                        <th style="width:120px">End Date</th>
-									</tr>
-									</thead>
-									<tbody>
+				        	<table class="table table-bordered" id="keywords">
+								<thead>
+								<tr>
+									<th style="width:80px;text-align:center;">Week No.</th>
+									<th style="width:80px">Season</th>
+                                    <th style="width:120px">Start Date</th>
+                                    <th style="width:120px">Pick Deadline</th>
+                                    <th style="width:120px">End Date</th>
+								</tr>
+								</thead>
+								<tbody>
 									';
     foreach ($remainingweeks as $rs) {
         $stDate = date_format(date_create($rs['lms_week_start']), 'd-M-Y');

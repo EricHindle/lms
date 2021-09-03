@@ -10,6 +10,7 @@ require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
 
 sec_session_start();
+$currentPage = '';
 $formKey = new formKey();
 $access = sanitize_int($_SESSION['retaccess']);
 if (login_check($mypdo) == true && $access > 900) {
@@ -98,7 +99,7 @@ if (login_check($mypdo) == true && $access > 900) {
 																<div class="col-sm-1">
 																 	<p class="form-control-static" name="season" id="season">' . $matchfetch['lms_year'] . '</p>
 																</div>
-																<label class="col-sm-1" for="period">Period:</label>
+																<label class="col-sm-1" for="period">Week:</label>
 																<div class="col-sm-1">
 																 	<p class="form-control-static" name="period" id="period">' . $matchfetch['lms_week'] . '</p>
 																</div>

@@ -94,7 +94,7 @@ if (login_check($mypdo) == true && $access > 900) {
         $html .= '              </div>
                             </div>
 		                    <div class="form-group"  style="padding-left:10px;text-align:left;">
-                                <label class="form-text" style="display:inline-block;width:40%;text-align:left">New name:</label>
+                                <label  >New name:</label>
                                 <input type="text" class="form-field" id="teamname" name="teamname" value="' . $teamfetch['lms_team_name'] . '"><br>
                                 <label class="form-text"  style="display:inline-block;width:40%;text-align:left">New abbr (3 chrs max):</label>    
                                 <input type="text" class="form-field" id="teamabbr" name="teamabbr" value="' . $teamfetch['lms_team_abbr'] . '"><br>
