@@ -10,6 +10,7 @@ require $myPath . 'includes/formkey.class.php';
 require $myPath . 'includes/lookup-functions.php';
 
 sec_session_start();
+$currentPage = '';
 $formKey = new formKey();
 if (login_check($mypdo) == true) {
 
@@ -62,49 +63,46 @@ if (login_check($mypdo) == true) {
                     $html = "";
                     $key = $formKey->outputKey();
                     echo '
-                          <!doctype html>
-                    		<html>
-                    			<head>
-                    				
-                    			    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-                    			    <meta charset="UTF-8">
-                    			    
-                    			    <title>Home</title>
-                    			    
-                    			    <meta name="viewport" content="width=device-width, initial-scale=1">
-                    			    <link rel="stylesheet" href="' . $myPath . 'css/bootstrap.min.css">
-                    			    <link rel="stylesheet" href="' . $myPath . 'css/rethome.css">
-                    			    <script src="' . $myPath . 'js/jquery.js"></script>
-                    			    <script src="' . $myPath . 'js/bootstrap.min.js"></script>
-                    			</head>
-                    
-                    			<body>';
+		<!doctype html>
+		<html>
+			<head>
+ 			    <meta charset="UTF-8">
+			    <title>LML Game Weeks</title>
+			    <meta name="viewport" content="width=device-width, initial-scale=1">
+                <link rel="stylesheet" href="' . $myPath . 'css/style.css" type="text/css">
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+			    <script src="' . $myPath . 'js/jquery.js"></script>
+			    <script src="' . $myPath . 'js/jquery.tablesorter.js"></script>
+			    <script>
+		            $(function(){
+		            $(\'#keywords\').tablesorter(); 
+		            });
+		        </script>
+			</head>
+
+			<body>';
                     include $myPath . 'globNAV.php';
                     $html .= '
-                    				<section id="homeSection">
-                    			    <br><br>
-                    			        <div class="container">
-                    			            <div class="row">
-                    			                <div class="col-md-12">
-                    			                    <h1><strong>Selections</strong></h1>
-                    			                    <br>
-                    			                </div>
-                    			            </div>
-                        <div class="row">
-			            	<div class="well col-md-8  textDark">
-				        		<h3>' . $_SESSION['nickname'] . ' Selections for ' . $gamename . '</h3>
-					        	<table class="table table-bordered" id="keywords">
-									<thead>
-									<tr class="game">
-										<th>Match Week</th>
-                                        <th>Match Date</th>
-                                        <th>Team</th>
-                                        <th>Outcome</th>
-									</tr>
-									</thead>
-									<tbody>
+                <div class="container">
+                    <div class="box" style="padding:1em;">
+                        <h2>Selections</h2>
+                    </div>
+                    <div class="box" style="padding:1em;margin:10px">
+    	        		<h4>Game : ' . $gamename . '</h4>
+';
+                    $html .= $key;
+                    $html .= '	
+			        	<table class="table table-bordered" id="keywords">
+							<thead>
+    							<tr class="game">
+    								<th>Game Week</th>
+                                    <th>Match Date</th>
+                                    <th>Team</th>
+                                    <th>Outcome</th>
+    							</tr>
+							</thead>
+							<tbody>
 									';
-
                     foreach ($pickfetch as $rs) {
                         $result = 'no result';
                         switch ($rs['lms_match_result']) {
@@ -131,50 +129,41 @@ if (login_check($mypdo) == true) {
 									</tr>';
                     }
                     $html .= '
-									</tbody>
-								</table>
-							</div>
+								</tbody>
+							</table>
 						</div>';
+
                     if (time() < strtotime(get_deadline_date())) {
                         if ($gps['lms_game_player_status'] == "1") {
-                            $html .= '    <div class="row">
-			            	<div class="col-sm-6">
-			                    <div class="tile red">
-		                    		    <h3 class="title" >Select a Team for Week ' . $_SESSION['selectweek'] . '</h3>
+                            $html .= '    
+                        <div class="box" style="padding:1em;margin:10px">
+                            <h4 class="title" >Select a Team for week ' . $_SESSION['selectweek'] . '</h4>
 					                	
-			                	<form class="form-horizontal" role="form" name ="editpick" method="post" action="process-pick.php">';
+		                	<form role="form" name ="editpick" method="post" action="process-pick.php">';
                             $html .= $key;
                             $html .= '
-				                    <div class="col-sm-9">
-			                            <select class="form-control" id="matchid" name="matchid">';
+				                <div class="form-group" style="margin:12px">
+		                            <select class="form-dropdown" id="matchid" name="matchid">';
                             foreach ($availfetch as $mypick) {
-                                $html .= '<option value="' . $mypick['lms_match_id'] . '">' . date_format(date_create($mypick['lms_match_date']), 'd-M') . '&nbsp;&nbsp;&nbsp;&nbsp;' . $mypick['lms_team_name'] . '</option>';
+                                $html .= '  <option value="' . $mypick['lms_match_id'] . '">' . date_format(date_create($mypick['lms_match_date']), 'd-M') . '&nbsp;&nbsp;&nbsp;&nbsp;' . $mypick['lms_team_name'] . '</option>';
                             }
-                            $html .= '	</select>
-				                    </div>
-				                    <div class="col-sm-2 col-sm-offset-1">
-                                        <input type= "hidden" name= "gameid" value="' . $gameid . '" />
-	                                    <input type= "hidden" name= "currentpickteam" value="' . $currentpickteam . '" />
-	                                    <input type= "hidden" name= "currentpickmatch" value="' . $currentpickmatch . '" />
-				                        <input id="submit" name="submit" type="submit" value="Submit" class="btn btn-primary">
-				                    </div>
-                                    </form>
-			          			</div>
-			                </div>
+                            $html .= '</select>
+                                </div>
+                                <div class="col-sm-2 col-sm-offset-1">
+                                    <input type= "hidden" name= "gameid" value="' . $gameid . '" />
+                                    <input type= "hidden" name= "currentpickteam" value="' . $currentpickteam . '" />
+                                    <input type= "hidden" name= "currentpickmatch" value="' . $currentpickmatch . '" />
+                                </div>
+                                <div class="form-group" style="margin-left:16px;margin-right:16px">
+                                    <input id="submit" name="submit" type="submit" value="Select" class="btn graybutton" style="padding:5px;width:50%;">
+                                </div>
+                            </form>
                         </div>';
                         }
                     }
-                    $html .= '		<div class="row">
-							<div class="col-xs-6">
-								<a href="' . $myPath . 'menus/home.php" class="btn btn-primary btn-lg" role="button">Back</a>
-								<br>
-							</div>
-						</div>
-			    	</div>
-			    </section>
-		</body>
-	</html>
-
+                    $html .= '		
+                    </body>
+                </html>
 		';
                 } else {
                     $html .= "<script>

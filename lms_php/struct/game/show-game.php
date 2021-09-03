@@ -12,6 +12,7 @@ require $myPath . 'includes/lookup-functions.php';
 require $myPath . 'struct/picks/pick-functions.php';
 
 sec_session_start();
+$currentPage = '';
 $formKey = new formKey();
 if (login_check($mypdo) == true) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {

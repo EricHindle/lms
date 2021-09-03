@@ -124,13 +124,13 @@ if (login_check($mypdo) == true) {
         $playercolor = 'silver';
         switch ($rs['lms_game_status']) {
             case 1:
-                $rowcolor = 'blue';
+                $rowcolor = 'lightblue';
                 break;
             case 2:
-                $rowcolor = 'white';
+                $rowcolor = 'lightyellow';
                 break;
             case 3:
-                $rowcolor = 'green';
+                $rowcolor = 'lightgreen';
                 break;
             case 4:
                 $rowcolor = 'silver';
