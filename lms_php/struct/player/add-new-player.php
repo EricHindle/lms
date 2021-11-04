@@ -50,33 +50,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 										window.location.href='new-player.php';
 									</script>";
                     } else {
-                        date_default_timezone_set('Europe/London');
-                        $phptime = time();
-                        $mysqltime = date("Y-m-d H:i:s", $phptime);
-                        $hash = password_hash($password, PASSWORD_DEFAULT, [
-                            'cost' => 11
-                        ]);
-                        $sqladduser = "INSERT INTO lms_player (lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active, lms_player_send_email, lms_player_created) VALUES (:username, :password, :fname, :sname, :screenname, :email, :retaccess, 1, :sendemail, :create)";
-                        $stmtadduser = $mypdo->prepare($sqladduser);
-                        $stmtadduser->bindParam(':username', $email);
-                        $stmtadduser->bindParam(':password', $hash);
-                        $stmtadduser->bindParam(':fname', $fname);
-                        $stmtadduser->bindParam(':sname', $sname);
-                        $stmtadduser->bindParam(':screenname', $screenname);
-                        $stmtadduser->bindParam(':email', $email);
-                        $stmtadduser->bindParam(':retaccess', $myaccess, PDO::PARAM_INT);
-                        $stmtadduser->bindParam(':sendemail', $sendemail, PDO::PARAM_INT);
-                        $stmtadduser->bindParam(':create', $mysqltime);
-                        $stmtadduser->execute();
-                        $added = $stmtadduser->rowCount();
-                        if ($added == 1) {
-                            $playerid = $mypdo->lastInsertId();
-                            sendemailusingtemplate('newaccount', $playerid, 0, 0, '', true);
+                        if ($fname == $sname && (empty($sname) || strpos($sname, ' ') !== false )) {
+                            $html .= "<script>
+										alert('Forename and surname should be in separate boxes');
+										window.location.href='new-player.php';
+									</script>";
+                        } else {
+                            date_default_timezone_set('Europe/London');
+                            $phptime = time();
+                            $mysqltime = date("Y-m-d H:i:s", $phptime);
+                            $hash = password_hash($password, PASSWORD_DEFAULT, [
+                                'cost' => 11
+                            ]);
+                            $sqladduser = "INSERT INTO lms_player (lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active, lms_player_send_email, lms_player_created) VALUES (:username, :password, :fname, :sname, :screenname, :email, :retaccess, 1, :sendemail, :create)";
+                            $stmtadduser = $mypdo->prepare($sqladduser);
+                            $stmtadduser->bindParam(':username', $email);
+                            $stmtadduser->bindParam(':password', $hash);
+                            $stmtadduser->bindParam(':fname', $fname);
+                            $stmtadduser->bindParam(':sname', $sname);
+                            $stmtadduser->bindParam(':screenname', $screenname);
+                            $stmtadduser->bindParam(':email', $email);
+                            $stmtadduser->bindParam(':retaccess', $myaccess, PDO::PARAM_INT);
+                            $stmtadduser->bindParam(':sendemail', $sendemail, PDO::PARAM_INT);
+                            $stmtadduser->bindParam(':create', $mysqltime);
+                            $stmtadduser->execute();
+                            $added = $stmtadduser->rowCount();
+                            if ($added == 1) {
+                                $playerid = $mypdo->lastInsertId();
+                                sendemailusingtemplate('newaccount', $playerid, 0, 0, '', true);
+                            }
+                            $html .= "<script>
+    											alert('Account added.');
+    											window.location.href='" . $myPath . "index.php';
+    										</script>";
                         }
-                        $html .= "<script>
-											alert('Account added.');
-											window.location.href='" . $myPath . "index.php';
-										</script>";
                     }
                 }
                 echo $html;
