@@ -14,6 +14,7 @@ require $myPath . 'scheduled/results-functions.php';
 
 function scraping_generic($url, $search, $logfile)
 {
+    global $logtext;
     $errormsg = '';
     fwrite($logfile, "Reading the url: " . $url . "\n");
     // create HTML DOM
@@ -21,6 +22,7 @@ function scraping_generic($url, $search, $logfile)
     fwrite($logfile, "Url has been read." . "\n");
     $matchdate = "";
     // get fixture list block
+    fwrite($logfile,"----- Match search  -----\n");
     foreach ($html->find($search) as $found) {
         // Found at least one
         $matchlist = array();
@@ -124,6 +126,7 @@ function scraping_generic($url, $search, $logfile)
             }
         }
     }
+    fwrite($logfile, "----- Duplicate match check complete -----\n");
     if ($errormsg != ''){
           notify_error(0, 0, $errormsg);
     }
