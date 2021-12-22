@@ -60,7 +60,7 @@ if (login_check($mypdo) == true && $access > 900) {
 		<html>
 			<head>
  			    <meta charset="UTF-8">
-			    <title>LML Teams</title>
+			    <title>LML Edit Team</title>
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
                 <link rel="stylesheet" href="' . $myPath . 'css/style.css" type="text/css">
                 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
@@ -94,9 +94,9 @@ if (login_check($mypdo) == true && $access > 900) {
         $html .= '              </div>
                             </div>
 		                    <div class="form-group"  style="padding-left:10px;text-align:left;">
-                                <label  >New name:</label>
+                                <label class="form-text">New name:</label>
                                 <input type="text" class="form-field" id="teamname" name="teamname" value="' . $teamfetch['lms_team_name'] . '"><br>
-                                <label class="form-text"  style="display:inline-block;width:40%;text-align:left">New abbr (3 chrs max):</label>    
+                                <label class="form-text">New abbr (3 chrs max):</label>    
                                 <input type="text" class="form-field" id="teamabbr" name="teamabbr" value="' . $teamfetch['lms_team_abbr'] . '"><br>
                                 <label class="form-text"  style="display:inline-block;width:30%;text-align:left"> </label>
                                 <input type="checkbox"  name="isactive" id="isactive" value="true" ' . $isactive . ' >
@@ -135,7 +135,7 @@ if (login_check($mypdo) == true && $access > 900) {
 							    <input type= "checkbox" name= "addleague" id="addleague" value="true" />
 							</div>	
 				            <div class="form-group" >
-	                            <select class="form-dropdown col-md-6 col-sm-6" style="width:70%" id="leagueid" name="leagueid">';
+	                            <select class="form-dropdown" style="width:70%" id="leagueid" name="leagueid">';
                             foreach ($allleaguefetch as $myLeague) {
                                 $html .= ' <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
                             }
