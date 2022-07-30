@@ -185,18 +185,4 @@ if (login_check($mypdo) == true) {
 
 <?php $currentPage = 'home'; ?>
 
-<div class="page-container">
-	<a href="games.php" class="option">
-		<h2>My Games</h2>
-		<p>Make picks in your current games</p>
-	</a> <a href="create.php" class="option">
-		<h2>Create Game</h2>
-		<p>Create a football knockout Game</p>
-	</a> <a href="join.php" class="option">
-		<h2>Join Game</h2>
-		<p>Use a unique code to join a game</p>
-	</a> <a href="manage.php" class="option">
-		<h2>Manage</h2>
-		<p>Manage games you’ve created</p>
-	</a>
-</div>
+
