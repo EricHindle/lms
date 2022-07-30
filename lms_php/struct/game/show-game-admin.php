@@ -116,7 +116,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                             } else {
                                 if ($pickfetch || $nextpickfetch) {
                                     $newline = '';
-                                    if ($pickfetch && $nextpickfetch){
+                                    if ($pickfetch && $nextpickfetch) {
                                         $newline = '</br>';
                                     }
                                     if ($pickfetch) {
@@ -125,7 +125,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                                     if ($nextpickfetch) {
                                         $nextpick = $nextpickfetch['lms_team_name'] . ' (' . date_format(date_create($nextpickfetch['lms_match_date']), 'd M Y') . ')';
                                     }
-                                    $currentpick =  $thispick . $newline .  $nextpick;
+                                    $currentpick = $thispick . $newline . $nextpick;
                                 } else {
                                     if ($gamefetch['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
                                         $currentpick = '(waiting)';
@@ -177,10 +177,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                 	                                    </div>
 		                                            </div>';
                         }
-                        
-                        
-                        
-                        
+
                         $html .= '                  <div class="row">
                                     					<br>
                                     					<div class="col-xs-6">

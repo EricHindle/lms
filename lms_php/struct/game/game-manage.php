@@ -33,7 +33,6 @@ if (login_check($mypdo) == true) {
     echo '
       <!doctype html>
 		<html>
-		<html>
 			<head>
  			    <meta charset="UTF-8">
 			    <title>LML Games</title>
