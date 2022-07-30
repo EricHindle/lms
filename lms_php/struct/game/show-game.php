@@ -12,7 +12,7 @@ require $myPath . 'includes/lookup-functions.php';
 require $myPath . 'struct/picks/pick-functions.php';
 
 sec_session_start();
-$currentPage = '';
+$currentPage = 'manage';
 $formKey = new formKey();
 if (login_check($mypdo) == true) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -33,6 +33,7 @@ if (login_check($mypdo) == true) {
                     $gamecount = $gamequery->rowCount();
 
                     if ($gamecount > 0) {
+
                         $allleaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr FROM lms_league
                                             WHERE lms_league_supported = 1
                                                 AND lms_league_id NOT IN
@@ -46,6 +47,12 @@ if (login_check($mypdo) == true) {
 
                         $key = $formKey->outputKey();
                         $gamefetch = $gamequery->fetch(PDO::FETCH_ASSOC);
+
+                        $enabled = "";
+                        if ($gamefetch['lms_game_status'] > 1) {
+                            $enabled = "disabled";
+                        }
+
                         $gamename = $gamefetch['lms_game_name'];
                         $remainingweeks = get_remaining_weeks(false);
 
@@ -95,20 +102,25 @@ if (login_check($mypdo) == true) {
                                 <label class="form-text" style="margin-top:10px;font-size:16px;display:inline-block;width:90%;background:lightblue;color:black;text-align:center">' . $gamefetch['lms_game_status_text'] . ' </label>
                             </div>
                         </div>
+
                         <form role="form" name ="edit" method="post" action="process-edit-game.php">';
                         $html .= $key;
                         $html .= '     
                             <div class="form-group"  style="padding-left:10px;text-align:left;">
                                 <label class="form-text">New name:</label>
-                                <input type="text" class="form-field" id="gamename" name="gamename" value="' . $gamefetch['lms_game_name'] . '"><br>
-                                <label  class="form-text">New start week:</label>
+                                <input type="text" class="form-field" id="gamename" name="gamename" value="' . $gamefetch['lms_game_name'] . '"><br>';
+                        if ($gamefetch['lms_game_status'] == 1) {
+                            $html .= '<label  class="form-text">New start week:</label>
                                 <select class="form-dropdown" id="gamestartweek" name="gamestartweek">';
-                        foreach ($remainingweeks as $wk) {
-                            $html .= '<option value="' . $wk['lms_week_no'] . '">' . $wk['lms_week'] . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
+                            foreach ($remainingweeks as $wk) {
+                                $html .= '<option value="' . $wk['lms_week_no'] . '">' . $wk['lms_week'] . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
+                            }
+                            $html .= '
+                                </select>';
+                        } else {
+                            $html .= '<input type= "hidden" name= "gamestartweek" value="' . $gamefetch['lms_game_start_wkno'] . '" />';
                         }
-                        $html .= '
-                                </select>
-                                <input type= "hidden" name= "id" value="' . $gameid . '" />
+                        $html .= '    <input type= "hidden" name= "id" value="' . $gameid . '" />
 		                    </div>
                             <div class="form-group">
                                 <label for="iscancel">&nbsp Cancel this game</label>
@@ -118,28 +130,25 @@ if (login_check($mypdo) == true) {
                                 <h4>Leagues for Game</h4>
                             </div>
                             <div class="form-group"  style="padding:25px;padding-bottom:20px  ;text-align:left;">
-                                <table class="table table-bordered" id="keywords">
+                                <table class="table table-bordered" id="leagues">
                                     <thead>
                                         <tr class="info">
                                             <th>Leagues</th>
                                             <th>Remove</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-';
+                                    <tbody>';
                         foreach ($leaguefetch as $rs) {
                             $html .= '
                                         <tr>
                                             <td>' . $rs['lms_league_name'] . '</td>
-                                            <td><input type= "checkbox" style="margin-left:20px;" name="rmv-' . $rs['lms_league_id'] . '" id="rmv-' . $rs['lms_league_id'] . '" value="true" ></td>
+                                            <td><input type= "checkbox" style="margin-left:20px;" name="rmv-' . $rs['lms_league_id'] . '" id="rmv-' . $rs['lms_league_id'] . '" value="true"  ' . $enabled . '></td>
                                         </tr>';
                         }
                         $html .= '  
                                     </tbody>
                                 </table>
-                            </div>
-';
-
+                            </div>';
                         if (! empty($allleaguefetch)) {
                             $html .= '
                             <div class="form-group">
@@ -147,7 +156,7 @@ if (login_check($mypdo) == true) {
 								  <input type= "checkbox" name= "addleague" id="addleague" value="true" />
                             </div>
                             <div class="form-group">
-                                <select class="form-dropdown" style="width:70%" id="leagueid" name="leagueid">';
+                                <select class="form-dropdown" style="width:70%" id="leagueid" name="leagueid" ' . $enabled . '>';
                             foreach ($allleaguefetch as $myLeague) {
                                 $html .= ' <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
                             }
@@ -162,9 +171,13 @@ if (login_check($mypdo) == true) {
                                     <label class="form-text">Current week selection deadline: </label>' . date_format(date_create($deadline), 'd M Y') . '
                                 </div>
                                    ';
+                        } else {
+                            $html .= '
+                            <div style="padding:25px;text-align:left;margin-bottom:20px;">
+                                   ';
                         }
                         $html .= ' 
-                                <table class="table table-bordered" id="keywords">
+                                <table class="table table-bordered" id="picks">
 								    <thead>
     									<tr class="info">
     										<th>Player Name</th>
@@ -174,7 +187,6 @@ if (login_check($mypdo) == true) {
 									</thead>
 							    	<tbody>
     									';
-
                         foreach ($gameplayerfetch as $rs) {
                             $pickfetch = get_current_player_pick($gameid, $rs['lms_player_id']);
                             $nextpickfetch = get_next_player_pick($gameid, $rs['lms_player_id']);
@@ -216,45 +228,42 @@ if (login_check($mypdo) == true) {
 									</tbody>
 								</table>
                             </div>
-                            <div class="form-group" style="padding-top:15px;margin-left:16px;margin-right:16px">
+                            <div class="form-group" style="padding-top:10px;margin-left:16px;margin-right:16px">
 					            <input id="submit" name="submit" type="submit" value="Submit" class="btn graybutton" style="padding:5px;width:50%;">
 					        </div>	
 		                </form>
-                    </div> ';
+                    </div>';
                         if ($gamefetch['lms_game_status'] == 1) {
-
                             $html .= '
-                    <div class="box" style="padding:1em;margin:10px;">
-                        <h3 class="text-center">Invite Players</h3>
-                        <form class="form-group" role="form" name ="inviteplayer" method="post" action="' . $myPath . 'struct/player/invite-player.php">';
+                        <div class="box" style="padding:1em;margin:10px;">
+                            <h3 class="text-center">Invite Players</h3>
+                            <form class="form-group" role="form" name ="inviteplayer" method="post" action="' . $myPath . 'struct/player/invite-player.php">';
                             $html .= $key;
                             $html .= '
-                            <input type= "hidden" name= "gameid" value="' . $gameid . '" />
-                            <h4>Email Addresses</h4>
-                            <div class="form-group">
-                                    <input type="text" class="form-field" name="email1"  id="email1" placeholder="new player 1"> <br>
-                                    <input type="text" class="form-field" name="email2"  id="email2" placeholder="new player 2"> <br>
-                                    <input type="text" class="form-field" name="email3"  id="email3" placeholder="new player 3"> <br>
-                                    <input type="text" class="form-field" name="email4"  id="email4" placeholder="new player 4"> <br>
-                            </div>
-                            <div class="form-group" style="padding-top:25px;margin-left:16px;margin-right:16px">
-					            <input id="submit" name="submit" type="submit" value="Submit" class="btn graybutton" style="padding:5px;width:50%;">
-					        </div>	
-                        </form>
+                                <input type= "hidden" name= "gameid" value="' . $gameid . '" />
+                                <h4>Email Addresses</h4>
+                                <div class="form-group">
+                                        <input type="text" class="form-field" name="email1"  id="email1" placeholder="new player 1"> <br>
+                                        <input type="text" class="form-field" name="email2"  id="email2" placeholder="new player 2"> <br>
+                                        <input type="text" class="form-field" name="email3"  id="email3" placeholder="new player 3"> <br>
+                                        <input type="text" class="form-field" name="email4"  id="email4" placeholder="new player 4"> <br>
+                                </div>
+                                <div class="form-group" style="padding-top:5px;margin-left:16px;margin-right:16px">
+    					            <input id="submit" name="submit" type="submit" value="Submit" class="btn graybutton" style="padding:5px;width:50%;">
+    					        </div>	
+                            </form>
                     </div>';
                         }
                         $html .= '	
                 </div>
             </body>
-        </html>
-									            ';
+        </html>';
                     } else {
                         $html .= "<script>
 										alert('There was a problem. Please check details and try again.');
 										window.location.href='game-manage.php';
 									</script>";
                     }
-
                     echo $html;
                 } else {
                     echo "<script>

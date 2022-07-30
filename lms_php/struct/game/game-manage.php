@@ -10,7 +10,7 @@ require $myPath . 'includes/formkey.class.php';
 require $myPath . 'includes/lookup-functions.php';
 
 sec_session_start();
-$currentPage = '';
+$currentPage = 'manage';
 $formKey = new formKey();
 if (login_check($mypdo) == true) {
     $gamesql = "SELECT lms_game_id, lms_game_start_wkno, lms_game_name, lms_game_code, lms_game_status, lms_game_status_text, 
