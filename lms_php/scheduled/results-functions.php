@@ -284,6 +284,17 @@ function get_leagueId($teamId)
     return $leagueId;
 }
 
+function get_league_from_abbr($abbr)
+{
+    global $mypdo;
+    $leaguesql = "SELECT * FROM lms_league WHERE lms_league_abbr = :abbr LIMIT 1";
+    $leaguequery = $mypdo->prepare($leaguesql);
+    $leaguequery->bindParam(":abbr", $abbr);
+    $leaguequery->execute();
+    $leagueRow = $leaguequery->fetch(PDO::FETCH_ASSOC);
+    return $leagueRow;
+}
+
 function get_match_week($matchdate)
 {
     $mdt = date("Y-m-d", $matchdate);

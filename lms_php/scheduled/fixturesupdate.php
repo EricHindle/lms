@@ -144,7 +144,7 @@ $logfile = fopen($myPath . "logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a
 fwrite($logfile, "Fixtures Update --------------------------------------\n");
 fwrite($logfile, date("Y-m-d H:i:s") . "\n");
 
-$urlId = 'prem';
+$urlId = 'epl';
 $url = "https://www.thesportsman.com/football/competitions/england/premier-league/fixtures";
 
 foreach ($argv as $param) {
@@ -154,6 +154,9 @@ foreach ($argv as $param) {
     }
 }
 $url = get_global_value('fixtures url ' . $urlId );
+$league = get_league_from_abbr($urlId);
+
+fwrite($logfile,"League: " . $league['lms_league_name'] . "\n");
 
 $search = ".fixture-list-contain";
 
