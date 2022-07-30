@@ -206,6 +206,10 @@ if (login_check($mypdo) == true) {
                         $html .= '			  </tbody>
 							               </table>
 						                </div>';
+                        $html .= '
+                </div>
+            </body>
+        </html>';
                     } else {
                         $html .= "      <script>
 										   alert('There was a problem. Please check details and try again.');
