@@ -2,7 +2,7 @@
 
 /*
  * HINDLEWARE
- * Copyright (C) 2020-21 Eric Hindle. All rights reserved.
+ * Copyright (C) 2020-22 Eric Hindle. All rights reserved.
  */
 $myPath = '/home/lastmanl/public_html/';
 // $myPath = "../";
@@ -118,7 +118,7 @@ $logfile = fopen($myPath . "logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a
 fwrite($logfile, "Results Update --------------------------------------\n");
 fwrite($logfile, date("Y-m-d H:i:s") . "\n");
 
-$urlId = 'prem';
+$urlId = 'epl';
 $url = "https://www.thesportsman.com/football/competitions/england/premier-league/results";
 
 foreach ($argv as $param) {
@@ -128,6 +128,9 @@ foreach ($argv as $param) {
     }
 }
 $url = get_global_value('results url ' . $urlId);
+$league = get_league_from_abbr($urlId);
+
+fwrite($logfile,"League: " . $league['lms_league_name'] . "\n");
 
 $search = ".fixture-list-contain";
 

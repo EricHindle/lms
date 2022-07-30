@@ -2,7 +2,7 @@
 
 /*
  * HINDLEWARE
- * Copyright (C) 2020-21 Eric Hindle. All rights reserved.
+ * Copyright (C) 2020-22 Eric Hindle. All rights reserved.
  */
 $myPath = '/home/lastmanl/public_html/';
 // $myPath = "../";
@@ -12,7 +12,7 @@ require $myPath . 'includes/functions.php';
 require $myPath . 'scheduled/results-functions.php';
 
 
-function scraping_generic($url, $search, $logfile)
+function scraping_generic($url, $search, $logfile, $leagueId)
 {
     global $logtext;
     $errormsg = '';
@@ -104,7 +104,8 @@ function scraping_generic($url, $search, $logfile)
         $sqldate = date('Y-m-d',$matchtime);
         $matchid = $mch['lms_match_id'];
         $matchweek = $mch['lms_match_weekno'];
-        $found = in_array($teamabbr . $matchdate, $matchlist);
+        $matchleague =$mch['lms_match_league'];
+        $found = in_array($teamabbr . $matchdate, $matchlist) && $matchleague == $leagueId;
         if ($found == false) {
             // match no longer taking place
             
@@ -160,7 +161,7 @@ fwrite($logfile,"League: " . $league['lms_league_name'] . "\n");
 
 $search = ".fixture-list-contain";
 
-scraping_generic($url, $search, $logfile);
+scraping_generic($url, $search, $logfile, $league['lms_league_id']);
 
 fclose($logfile);
 ?>

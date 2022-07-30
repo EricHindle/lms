@@ -8,6 +8,7 @@ $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
+require $myPath . 'struct/team/team_functions.php';
 
 sec_session_start();
 $formKey = new formKey();
@@ -37,7 +38,12 @@ if (login_check($mypdo) == true && $access > 900) {
                     $teamcount = $teamquery->rowCount();
                     $alerttext = "";
                     if ($teamcount > 0) {
-
+                        remove_abbr_for_team($teamid);
+                        $abbrlist = explode(', ',$teamabbr);
+                        foreach ($abbrlist as $abbr) {
+                            insert_team_abbr($teamid, $abbr);
+                        }
+                        
                         date_default_timezone_set('Europe/London');
                         $phptime = time();
                         $mysqltime = date("Y-m-d H:i:s", $phptime);
@@ -45,7 +51,7 @@ if (login_check($mypdo) == true && $access > 900) {
                         $upquery = $mypdo->prepare($upsql);
                         $upquery->bindParam(':id', $teamid, PDO::PARAM_INT);
                         $upquery->bindParam(':teamname', $teamname);
-                        $upquery->bindParam(':abbr', $teamabbr);
+                        $upquery->bindParam(':abbr', $abbrlist[0]);
                         $upquery->bindParam(':active', $myactive, PDO::PARAM_INT);
                         $upquery->execute();
                         $upcount = $upquery->rowCount();

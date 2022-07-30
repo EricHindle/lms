@@ -21,7 +21,7 @@ if (login_check($mypdo) == true && $access > 900) {
             if (isset($_POST['team'])) {
                 $teamid = sanitize_int($_POST['team']);
                 if ($teamid) {
-
+                    $abbrlist = "";
                     $html = "";
                     $teamsql = "SELECT lms_team_id, lms_team_name, lms_team_active, lms_team_abbr FROM lms_team WHERE lms_team_id = :id";
                     $teamquery = $mypdo->prepare($teamsql);
@@ -54,6 +54,20 @@ if (login_check($mypdo) == true && $access > 900) {
                         $isactive = "";
                         if ($teamfetch["lms_team_active"] == 1) {
                             $isactive = "checked";
+                        }
+                        $abbrsql = "SELECT * FROM lastmanl_lms.lms_team_abbr WHERE lms_team_abbr_team_id = :teamid;";
+                        $abbrquery = $mypdo->prepare($abbrsql);
+                        $abbrquery->execute(array(
+                            ':teamid' => $teamid
+                        ));
+                        $abbrfetch = $abbrquery->fetchAll(PDO::FETCH_ASSOC);
+                        if (! empty($abbrfetch)) {
+                            foreach ($abbrfetch as $abbrRow) {
+                                if ($abbrlist != ""){
+                                    $abbrlist .= ", ";
+                                }
+                                $abbrlist .= $abbrRow['lms_team_abbr_abbr'];
+                            }
                         }
                         echo '
 		<!doctype html>
@@ -97,7 +111,7 @@ if (login_check($mypdo) == true && $access > 900) {
                                 <label class="form-text">New name:</label>
                                 <input type="text" class="form-field" id="teamname" name="teamname" value="' . $teamfetch['lms_team_name'] . '"><br>
                                 <label class="form-text">New abbr (3 chrs max):</label>    
-                                <input type="text" class="form-field" id="teamabbr" name="teamabbr" value="' . $teamfetch['lms_team_abbr'] . '"><br>
+                                <input type="text" class="form-field" id="teamabbr" name="teamabbr" value="' . $abbrlist . '"><br>
                                 <label class="form-text"  style="display:inline-block;width:30%;text-align:left"> </label>
                                 <input type="checkbox"  name="isactive" id="isactive" value="true" ' . $isactive . ' >
                                 <label style="color:#909090;" for="issupported">&nbsp is an Active Team</label>
