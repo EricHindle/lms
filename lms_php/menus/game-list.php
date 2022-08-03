@@ -31,9 +31,6 @@ if (login_check($mypdo) == true) {
     echo '
 <div class="page-container">
 
-    
-<div class="game-list-container">
-
         ';
             foreach ($gamefetch as $rs) {
                 $gameid = $rs['lms_game_id'];
@@ -57,16 +54,16 @@ if (login_check($mypdo) == true) {
                 $playercolor = 'black';
                 switch ($rs['lms_game_status']) {
                     case 1:
-                        $rowcolor = 'blue';
+                        $rowcolor = 'status-recruiting';
                         break;
                     case 2:
-                        $rowcolor = 'status-waiting';
+                        $rowcolor = 'status-playing';
                         break;
                     case 3:
                         $rowcolor = 'status-out';
                         break;
                     case 4:
-                        $rowcolor = 'silver';
+                        $rowcolor = 'cancelled';
                         break;
                 }
                 if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
@@ -78,10 +75,10 @@ if (login_check($mypdo) == true) {
                             $newline = '</br>';
                         }
                         if ($matchcount > 0){
-                        $thispick = $matchweekpick['lms_team_name'] . ' (' . date_format(date_create($matchweekpick['lms_match_date']), 'd M Y') . ')';
+                        $thispick = $matchweekpick['lms_team_name'];
                         }
                         if ($selectcount > 0){
-                        $nextpick = $selectweekpick['lms_team_name'] . ' (' . date_format(date_create($selectweekpick['lms_match_date']), 'd M Y') . ')';
+                        $nextpick = $selectweekpick['lms_team_name'];
                         }
                         $currentpick = $thispick . $newline . $nextpick;             
                     } else {
@@ -93,38 +90,53 @@ if (login_check($mypdo) == true) {
                 }
                 $html .= '
             
-                <form class="" role="form" name ="showgame" method="post" action="' . $myPath . 'struct/game/show-played-game.php">';
+                <form class="game-card-form" role="form" name ="showgame" method="post" action="' . $myPath . 'struct/game/show-played-game.php">';
                 $html .= $key;
-                $html .= '<button style="width:100%" type="submit" name="gameid" value="' . $rs['lms_game_id'] . '">
+                $html .= '<button class="game-button" type="submit" name="gameid" value="' . $rs['lms_game_id'] . '">
                 
+                <style>
+                </style>
+
+                <div class="game-card ">
+                    <table>
+                        <tr>
+                            <th colspan="2" border="0">
+                            <div><h2>' . $rs['lms_game_name'] . '</h2></div>
+                            <div id="divider" style="background-color:#CC1417; height: 3px; width:25%; margin-top:2px; margin-bottom:7px;"></div>
+                            </th>
+                        </tr>
                 
-                <table class="table-games">
-                    <tr class="' . $rowcolor . '">
-                        <td class="table-gameName">
-                            <div class="table-columnTitle">Game Name:</div>
-                            <div>' . $rs['lms_game_name'] . '</div>
+                        <tr>
+                            <td width="50%">
+                            <div class="table-columnTitle">Your Status</div>
+                            <div>' . $rs['lms_game_player_status_text'] . '</div>
                         </td>  	
-                        <td>
+                            <td width="50%">
                             <div class="table-columnTitle">Game Status:</div>
                             <div>' . $rs['lms_game_status_text'] . '</div>
                         </td>
                         <td>
-                            <div class="table-columnTitle">Players:</div>
+                            <div class="table-columnTitle">Players</div>
                             <div>' . $rs['lms_game_still_active'] . ' / ' . $rs['lms_game_total_players'] . '</div>
                         </td>
-                        <td>
-                            <div class="table-columnTitle">Your Status:</div>
-                            <div>' . $rs['lms_game_player_status_text'] . '</div>
-                        </td>
-                        <td>
-                            <div class="table-columnTitle">Your pick:</div>
-                            <div>' . $currentpick . '</div>
-                        </td>
-                        <td>
-                            <div>></div>
+                        </tr>
+                        <tr>
+                        <td colspan="2" class="your-pick-table">
+                        <div class="table-columnTitle">This Weeks Pick:</div>
+                        <div><h3><b>' . $currentpick . '</b></h3></div>
+                        <div class="table-columnTitle">Fixture: (' . date_format(date_create($selectweekpick['lms_match_date']), 'd M Y') . ')</div>
                         </td>
                     </tr>
                 </table>
+                </div>
+
+
+
+
+
+
+
+
             </button>
             </form>
             
@@ -134,20 +146,6 @@ if (login_check($mypdo) == true) {
 
     </div>
 
-    <div class="join-game-container">
-        <div class="join-game-box">
-            <div class="join-game-title">
-                <h2>Join a Game</h2>
-                <p>Enter a code to join an already existing game.</p>
-            </div>
-            <form class="join-game-form" role="form" name ="edit" method="post" action="' . $myPath . 'struct/game/process-join-game.php">';
-                $html .= $key;
-                $html .= '
-                <input type="text" class="form-field" style="background-color:#f2f2f2;margin-bottom:0;" id="gamecode" name="gamecode" placeholder="Enter Game Code">
-                <button type="submit" name="submit" id="submit" value="Submit" class="btn" style="border-radius:0px 20px 20px 0px">Join Game</button>
-            </form>
-        </div>
-    </div>
 </div>
 
 </body>

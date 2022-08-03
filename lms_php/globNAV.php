@@ -7,7 +7,7 @@ $devlevelneeded = 901;
 <header>
 	<link rel="stylesheet" href="<?php echo $myPath; ?>css/nav.css">
 	<a href="<?php echo $myPath; ?>menus/home.php">
-		<img src="<?php echo $myPath; ?>img/Lastman-Logo.png" alt="logo" class="logo-image" />
+		<img id="logo" src="<?php echo $myPath; ?>img/Lastman-Logo.png" alt="logo" class="logo-image" />
 	</a>
 	
 	

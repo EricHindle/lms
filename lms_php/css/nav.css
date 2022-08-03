@@ -185,7 +185,75 @@ a.nav-item:hover .nav-icon  {
 
 .nav-item.active .nav-icon {
   filter: brightness(1000%);
+
 }
+
+
+
+
+
+@media screen and (max-width: 840px) {
+
+
+
+  nav {
+
+    padding: 0px;
+
+  }
+
+
+
+}
+
+
+
+@media screen and (max-width: 550px) {
+
+
+
+  header {
+
+    padding: 0.5em 1em;
+
+  }
+
+
+
+  #logo{      
+
+    content:url("../img/lml-mobile.png");
+
+  } 
+
+
+
+  .nav-icon {
+
+    width: 23px;
+
+    height: 23px;
+
+  }
+
+ 
+
+  a.nav-item:link, a.nav-item:visited {
+
+  font-size: 0.75em;
+
+  font-weight: 400;
+
+}
+
+
+
+
+
+
+
+}
+
 
 
 

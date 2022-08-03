@@ -247,18 +247,47 @@ button {
 }
 
 
-.table-bordered {border:solid 1px silver;border-collapse: collapse;}
+.your-pick-table {
+  height: 70px;
+}   
 
-.table-bordered td,tr,th {padding:2px;border:solid 1px silver;border-collapse: collapse;}
+td {
+  height: 50px;
+} 
+
+
+.game-card {
+  text-align: left;
+  color: white;
+  background-color: #121415;
+  padding: 3em;
+  width: 550px;
+  filter: drop-shadow(10px 10px 5px #00000033);                
+}
+
+
+.game-list-cont {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  width:80%;
+}
+
+
 
 @media only screen and (max-width: 550px) {
+
+  .page-container {
+    padding-top: 20px;
+  }
+
   .box {
     padding: 1em;
     width: 90%;
     filter: drop-shadow(0px 0px 0px #121415);
   }
   body {
-    background: #121415;
+
+    
   }
   .btn {
     font-size: 1em;
@@ -270,4 +299,22 @@ button {
     margin-bottom: 15px;
     font-size: 1em;
   }
+
+
+  .game-button {
+    width: 100%;
+  }
+  
+  
+  .game-card-form {
+    width: 90%;
+  }
+  
+  .game-card {
+    width: 100%;
+    padding: 1em;
+    filter: drop-shadow(0px 0px 0px #121415);
+  }
+
+
 }
