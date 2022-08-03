@@ -167,7 +167,7 @@ function get_all_future_matches()
 {
     $today = date("Y-m-d");
     global $mypdo;
-    $matchsql = "SELECT lms_match_id,lms_match_team, lms_match_date, lms_team_abbr, lms_match_opp, lms_opp_abbr, lms_match_weekno FROM v_lms_fixture WHERE lms_match_date > :today";
+    $matchsql = "SELECT lms_match_id,lms_match_team, lms_match_date, lms_team_abbr, lms_match_opp, lms_opp_abbr, lms_match_weekno, lms_match_league FROM v_lms_fixture WHERE lms_match_date > :today";
     $matchquery = $mypdo->prepare($matchsql);
     $matchquery->bindParam(":today", $today);
     $matchquery->execute();
