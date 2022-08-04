@@ -55,7 +55,7 @@ if (login_check($mypdo) == true) {
 							<html>
                     			<head>
                      			    <meta charset="UTF-8">
-                    			    <title>LML Game Weeks</title>
+                    			    <title>' . $gamename . ' - Last Man Live</title>
                     			    <meta name="viewport" content="width=device-width, initial-scale=1">
                                     <link rel="stylesheet" href="' . $myPath . 'css/style.css" type="text/css">
                                     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
@@ -71,51 +71,107 @@ if (login_check($mypdo) == true) {
 								<body>';
                         include $myPath . 'globNAV.php';
                         $html .= '
-                  		           <div class="container" style="min-height:50vh;">
-                                      <div  class="box" style="padding:1em;width:400px;margin:10px;">
-                                         <h2>' . $gamename . '</h2> 
-                                         </br>
-                                         Game start week: ' . sprintf("%02d", $gamefetch['lms_week']) . '&nbsp&nbsp Start date: ' . date_format(date_create($gamefetch['lms_week_start']), 'd M Y') ;
-                        $html .= '       </br>   
-                                         <div class = "text-center" style="background:midnightblue;color:white">' .  $gamefetch['lms_game_status_text'] . '</div>
-                                         </br>
-                                         Current Match week: ';
+                                    <div class="container">
+                                        <div  class="game-card" style="margin-bottom: 20px;">
+                                            <div class="status-bar cancelled">Game Status: ' . $gamefetch['lms_game_status_text'] . '</div>
+                                        
+                                            <table style="padding-bottom: 3em;" class="game-table">
+                                                <tr>
+                                                    <th colspan="2" border="0">                            
+                                                    <div><h2>' . $gamename . '</h2></div>
+                                                    <div id="divider" style="background-color:#CC1417; height: 3px; width:25%; margin-top:2px; margin-bottom:7px;"></div>
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <div class="table-columnTitle">Starting week:</div>
+                                                        <div>Week: ' . sprintf("%02d", $gamefetch['lms_week']) . ' - ' . date_format(date_create($gamefetch['lms_week_start']), 'd M Y');
+                        $html .= '</div>
+                                                    </td>
+                                                                        
+                                                    <td>
+                                                    </td>
+                                                    
+                                                    <td width="50%">
+                                                        <div class="table-columnTitle">Game Status:</div>
+                                                        <div> ' . $gamefetch['lms_game_status_text'] . ' </div>
+                                    
+                                                    </td>  
+                                        
+                                                </tr>
+                                    
+                                                <tr>
+                                                    <td width="50%">
+                                                    <div class="table-columnTitle">Current Week:</div>
+                                                    <div>';
                         $html .= $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'];
+                        $html .= ' </div>
+                                                    </td>
+                                                                      
+                                                    <td>
+                                                    </td>
+                                                
+                                                    <td width="50%">
+                                                    
+                                                    <div class="table-columnTitle">Leagues:</div>
+                                                    <div><ul>';
+                        foreach ($leaguefetch as $rs) {
+                            $html .= '<li>';
+                            $html .= $rs['lms_league_name'] . '</li>';
+                        }
+                        $html .= '         
+                                                        </ul>
+                                                            </div>                     
+                                    
+                                                    </td>
+                                                </tr>
+                                            
+                                            </table>
+                                    
+                                        </div> ';
+
                         /* If game in play */
                         if ($gamefetch['lms_game_status'] == 2) {
                             $html .= '   </br>
                                          Deadline for week &nbsp;' . sprintf('%02d', $_SESSION['currentweek'] + 1) . '&nbsp; picks is &nbsp;' . date_format(date_create($_SESSION['deadline']), 'd M Y');
                         }
-                        $html .= '    </div>';
-                        /* leagues */
-                        $html .= '    <div  class="box" style="padding:1em;width:400px;margin:10px;">
-                                         <table class="center" id="keywords">
-                                            <thead>
-                                                <tr>
-                                                   <th>Leagues</th>
-                                                </tr>
-                                              </thead>
-                                              <tbody>';
-                        foreach ($leaguefetch as $rs) {
-                            $html .= '
-                                                 <tr>
-                                                    <td>' . $rs['lms_league_name'] . '</td>
-                                                 </tr>';
-                        }
-                        $html .= '            </tbody>
-                                         </table>
-                                           </div>';
+                        $html .= ' ';
+
+                        // /* leagues */
+                        // $html .= ' <div class="box" style="padding:1em;width:400px;margin:10px;">
+                        // <table class="center" id="keywords">
+                        // <thead>
+                        // <tr>
+                        // <th>Leagues</th>
+                        // </tr>
+                        // </thead>
+                        // <tbody>';
+                        // foreach ($leaguefetch as $rs) {
+                        // $html .= '
+                        // <tr>
+                        // <td>' . $rs['lms_league_name'] . '</td>
+                        // </tr>';
+                        // }
+                        // $html .= ' </tbody>
+                        // </table>
+                        // </div>';
+
                         /* players */
-                        $html .= '            <div class="box" style="padding:1em;margin:10px">
-			        	                         <table class="table table-bordered center" id="keywords">
-							                        <thead>
-                                            		   <tr>
-                        							      <th>Player Name</th>
-                        								  <th>Player Status</th>
-                                                          <th>Current picks</th>
-                         							   </tr>
-                    							    </thead>
-							                     <tbody>';
+                        $html .= '            
+                                        <div class="game-card" style="margin-bottom: 20px;">
+                                    	    <table style="padding-bottom: 3em;" class="game-table" id="keywords">
+                                                    <tr>
+                                                    <th colspan="3" border="0">                            
+                                                    <div><h2>Players</h2></div>
+                                                    <div id="divider" style="background-color:#CC1417; height: 3px; width:25%; margin-top:2px; margin-bottom:7px;"></div>
+                                                    </th>
+                                                    </tr>                
+                                                <tr>
+                                                    <td width="30%"><div class="table-columnTitle">Name</div></td>
+                                                    <td width="30%"><div class="table-columnTitle">Status</div></td>
+                                                    <td width="40%"><div class="table-columnTitle">Pick</div></td>
+                                                </tr>
+                                    		<tbody>';
                         foreach ($gameplayerfetch as $rs) {
                             $pickfetch = get_current_player_pick($gameid, $rs['lms_player_id']);
                             $nextpickfetch = get_next_player_pick($gameid, $rs['lms_player_id']);
@@ -133,10 +189,10 @@ if (login_check($mypdo) == true) {
                                         $newline = '</br>';
                                     }
                                     if ($pickfetch) {
-                                        $thispick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd M Y') . ')';
+                                        $thispick = $pickfetch['lms_team_name'] . ' <span class="table-columnTitle">(' . date_format(date_create($pickfetch['lms_match_date']), 'd M') . ')</span>';
                                     }
                                     if ($nextpickfetch) {
-                                        $nextpick = $nextpickfetch['lms_team_name'] . ' (' . date_format(date_create($nextpickfetch['lms_match_date']), 'd M Y') . ')';
+                                        $nextpick = $nextpickfetch['lms_team_name'] . ' <span class="table-columnTitle">(' . date_format(date_create($nextpickfetch['lms_match_date']), 'd M') . ')</span>';
                                     }
                                     $currentpick = $thispick . $newline . $nextpick;
                                 } else {
@@ -148,27 +204,34 @@ if (login_check($mypdo) == true) {
                             }
 
                             $html .= '
-                            				        <tr style="color:' . $rowcolor . '">
-                            					       <td>' . $rs['lms_player_screen_name'] . '</td>
-                                                       <td>' . $rs['lms_game_player_status_text'] . '</td>
-                                                       <td style="color:' . $selcolor . '">' . $currentpick . '</td>
-                            					    </tr>';
+                    				        <tr style="color:' . $rowcolor . '">
+                    					       <td><b>' . $rs['lms_player_screen_name'] . '</b></td>
+                                               <td>' . $rs['lms_game_player_status_text'] . '</td>
+                                               <td style="color:' . $selcolor . '">' . $currentpick . '</td>
+                    					    </tr>';
                         }
-                        $html .= '		         </tbody>
-							                  </table>
-						                   </div>';
+                        $html .= '		    </tbody>
+					                  </table>
+				                   </div>';
                         /* Selection history */
-                        $html .= '         <div class="box" style="padding:1em;margin:10px">
-			        	                      <table class="table table-bordered center" id="keywords">
-							                     <thead>
-    							                    <tr class="game">
-                    								   <th>Game Week</th>
-                                                       <th>Match Date</th>
-                                                       <th>Team</th>
-                                                       <th>Outcome</th>
-                    							    </tr>
-                							     </thead>
-                							  <tbody>';
+                        $html .= '         
+                        
+                                   <div class="game-card" style="margin-bottom: 20px;">
+                                        <table style="padding-bottom: 3em;" class="game-table" id="keywords">
+                                            <tr>
+                                                <th colspan="3" border="0">                            
+                                                <div><h2>Pick History</h2></div>
+                                                <div id="divider" style="background-color:#CC1417; height: 3px; width:25%; margin-top:2px; margin-bottom:7px;"></div>
+                                                </th>
+                                            </tr> 
+						                    <tr>
+                                            <td width="20%"><div class="table-columnTitle">Week</div></td>
+                                            <td width="20%"><div class="table-columnTitle">Date</div></td>
+                                            <td width="40%"><div class="table-columnTitle">Pick</div></td>
+                                            <td width="20%"><div class="table-columnTitle">Result</div></td>
+            							    </tr>
+                                                                                                            
+                                                                                ';
                         /*
                          * Get all the players picks for the selected game
                          */
@@ -179,7 +242,19 @@ if (login_check($mypdo) == true) {
                         $pickquery->bindParam(':game', $gameid, PDO::PARAM_INT);
                         $pickquery->execute();
                         $pickfetch = $pickquery->fetchAll(PDO::FETCH_ASSOC);
+
+                        /*
+                         * Get the current picked match id
+                         */
+                        $currentpickmatch = 0;
+                        $currentpickteam = 0;
+
                         foreach ($pickfetch as $rs) {
+                            if ($rs['lms_match_weekno'] == $_SESSION['selectweekkey']) {
+                                $currentpickmatch = $rs['lms_pick_match_id'];
+                                $currentpickteam = $rs['lms_team_id'];
+                            }
+
                             $result = 'no result';
                             switch ($rs['lms_match_result']) {
                                 case 'w':
@@ -198,7 +273,7 @@ if (login_check($mypdo) == true) {
                             $html .= '
             									 <tr>
             									 	 <td>' . sprintf('%02d', $rs['lms_week']) . '/' . $rs['lms_year'] . '</td>
-                                                     <td>' . date_format(date_create($rs['lms_match_date']), 'd-M-Y') . '</td>
+                                                     <td>' . date_format(date_create($rs['lms_match_date']), 'd M') . '</td>
                                                      <td>' . $rs['lms_team_name'] . '</td>
                                                      <td>' . $result . '</td>
             									 </tr>';
@@ -206,7 +281,61 @@ if (login_check($mypdo) == true) {
                         $html .= '			  </tbody>
 							               </table>
 						                </div>';
+
+                        /*
+                         * Get all the matches for the current week featuring the available teams left in this game for the player
+                         */
+                        $availsql = "SELECT lms_match_id, lms_team_name, lms_match_date FROM v_lms_match where (lms_match_team in
+                                    (SELECT lms_available_picks_team FROM v_lms_available_picks WHERE lms_available_picks_player_id = :player and lms_available_picks_game = :game)
+                                        or lms_match_team in (SELECT lms_match_team FROM lms_match WHERE lms_match_id = :currentpick) )
+                                         and lms_match_weekno = :weekno and lms_match_id <> :currentpick ORDER BY lms_team_name, lms_match_date";
+                        $availquery = $mypdo->prepare($availsql);
+                        $availquery->bindParam(':player', $player, PDO::PARAM_INT);
+                        $availquery->bindParam(':game', $gameid, PDO::PARAM_INT);
+                        $availquery->bindParam(':currentpick', $currentpickmatch, PDO::PARAM_INT);
+                        $availquery->bindParam(':weekno', $_SESSION['selectweekkey']);
+                        $availquery->execute();
+                        $availfetch = $availquery->fetchAll(PDO::FETCH_ASSOC);
+
+                        $gps = get_game_player_status($gameid, $player);
+
+                        $select = 'Pick a Team';
+                        if ($currentpickmatch > 0) {
+                            $select = 'Change pick';
+                        }
+
+                        if (time() < strtotime(get_deadline_date())) {
+                            if ($gps['lms_game_player_status'] == "1") {
+                                $html .= '    
+                        <div class="game-card" style="margin-bottom: 20px;">
+                            <div style="margin:20px;">
+    		                	<form role="form" name ="editpick" method="post" action="' . $myPath . 'struct/picks/process-pick.php">
+                                    <h4 class="title" >' . $select . ' for week ' . $_SESSION['selectweek'] . '</h4>';
+                                    $html .= $key;
+                                    $html .= '
+    				                <div class="form-group" style="margin:12px">
+    		                            <select class="form-dropdown" id="matchid" name="matchid">';
+                                    foreach ($availfetch as $mypick) {
+                                        $html .= '  <option value="' . $mypick['lms_match_id'] . '">' . date_format(date_create($mypick['lms_match_date']), 'd-M') . '&nbsp;&nbsp;&nbsp;&nbsp;' . $mypick['lms_team_name'] . '</option>';
+                                    }
+                                    $html .= '</select>
+                                    </div>
+                                    <div>
+                                        <input type= "hidden" name= "gameid" value="' . $gameid . '" />
+                                        <input type= "hidden" name= "currentpickteam" value="' . $currentpickteam . '" />
+                                        <input type= "hidden" name= "currentpickmatch" value="' . $currentpickmatch . '" />
+                                    </div>
+                                    <div class="form-group" style="margin-left:16px;margin-right:16px">
+                                        <input id="submit" name="submit" type="submit" value="Select" class="btn graybutton" style="padding:5px;width:50%;">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>';
+                            }
+                        }
+
                         $html .= '
+                    </div>
                 </div>
             </body>
         </html>';
@@ -234,4 +363,5 @@ if (login_check($mypdo) == true) {
 } else {
     header('Location: ' . $myPath . 'index.php?error=1');
 }
+
 ?>

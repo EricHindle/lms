@@ -40,7 +40,7 @@ if (login_check($mypdo) == true) {
 
                         $html .= "<script>
 									alert('Selection updated successfully.');
-									window.location.href='" . $myPath . "menus/home.php';
+									window.location.href='" . $myPath . "menus/game-list.php';
 								</script>";
                     } else {
                         $html .= "<script>

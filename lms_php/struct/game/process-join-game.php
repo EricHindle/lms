@@ -12,6 +12,7 @@ require $myPath . 'struct/game/game-functions.php';
 
 sec_session_start();
 $formKey = new formKey();
+$currentPage = 'join';
 if (login_check($mypdo) == true) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (! isset($_POST['form_key']) || ! $formKey->validate()) {
