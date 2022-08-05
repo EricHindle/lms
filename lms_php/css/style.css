@@ -248,7 +248,7 @@ button {
 
 
 .your-pick-table {
-  height: 70px;
+  height: 90px;
 }   
 
 td {
@@ -260,11 +260,14 @@ td {
   text-align: left;
   color: white;
   background-color: #121415;
-  padding: 3em;
+  padding: 0px;
   width: 550px;
   filter: drop-shadow(10px 10px 5px #00000033);                
 }
 
+.game-table {
+  padding: 3em 3em 1em 3em;
+}
 
 .game-list-cont {
   margin-top: 20px;
@@ -272,9 +275,43 @@ td {
   width:80%;
 }
 
+.status-bar {
+  padding: 10px 3.5em;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 2px;
+
+}
+
+.status-recruiting {
+  background-color: #13678A;
+}
+
+.status-playing {
+  background-color: #65A603;
+}
+
+.status-out {
+  background-color: #cc1f17;
+}
+
+.cancelled {
+  background-color: #7c7c7c;
+}
+
+.game-button {
+  margin-bottom: 40px;
+}
+
 
 
 @media only screen and (max-width: 550px) {
+
+
+  .status-bar {
+    padding: 5px 1.25em;
+  }
 
   .page-container {
     padding-top: 20px;
@@ -305,14 +342,16 @@ td {
     width: 100%;
   }
   
-  
+  .game-table {
+    padding: 1em 1em 0.20em 1em;
+  }
   .game-card-form {
     width: 90%;
   }
   
   .game-card {
     width: 100%;
-    padding: 1em;
+    padding: 0px;
     filter: drop-shadow(0px 0px 0px #121415);
   }
 
