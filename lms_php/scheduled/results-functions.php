@@ -113,7 +113,7 @@ function save_result($teamabbr, $matchdate, $score, $wl, $logfile)
     return $isResultUpdated;
 }
 
-function save_match($teamabbr, $matchdate, $logfile, $oppabbr)
+function save_match($teamabbr, $matchdate, $logfile, $oppabbr, $homeaway)
 {
     global $logtext;
     $mdt = date("Y-m-d", $matchdate);
@@ -132,7 +132,7 @@ function save_match($teamabbr, $matchdate, $logfile, $oppabbr)
             // $logtext .= "Match exists for " . $teamabbr . " on " . $mdt . "\n";
         } else {
             // fwrite($logfile, "** Match not found for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
-            if (insert_match($teamId, $matchdate, $wkno, '', $leagueId, $oppid) == false) {
+            if (insert_match($teamId, $matchdate, $wkno, '', $leagueId, $oppid, $homeaway) == false) {
                 $isOK = false;
             } else {
            //     fwrite($logfile, "** Match inserted for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
@@ -254,11 +254,11 @@ function update_match_wl($matchid, $matchresult)
     return;
 }
 
-function insert_match($teamId, $matchdate, $wkno, $wl, $league, $oppId)
+function insert_match($teamId, $matchdate, $wkno, $wl, $league, $oppId, $homeaway)
 {
     global $mypdo;
     $mdt = date("Y-m-d", $matchdate);
-    $insertresult = "INSERT INTO lms_match (lms_match_weekno, lms_match_team, lms_match_date, lms_match_result, lms_match_league, lms_match_opp) VALUES (:weekno, :teamId, :matchdate, :wl, :league, :oppId)";
+    $insertresult = "INSERT INTO lms_match (lms_match_weekno, lms_match_team, lms_match_date, lms_match_result, lms_match_league, lms_match_opp, lms_match_ha) VALUES (:weekno, :teamId, :matchdate, :wl, :league, :oppId, :homeaway)";
     $insertquery = $mypdo->prepare($insertresult);
     $insertquery->bindParam(':weekno', $wkno);
     $insertquery->bindParam(':matchdate', $mdt);
@@ -266,6 +266,7 @@ function insert_match($teamId, $matchdate, $wkno, $wl, $league, $oppId)
     $insertquery->bindParam(':league', $league, PDO::PARAM_INT);
     $insertquery->bindParam(':oppId', $oppId, PDO::PARAM_INT);
     $insertquery->bindParam(':wl', $wl);
+    $insertquery->bindParam(':homeaway', $homeaway);
     return $insertquery->execute();
 }
 

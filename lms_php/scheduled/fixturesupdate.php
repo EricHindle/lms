@@ -49,14 +49,14 @@ function scraping_generic($url, $search, $logfile, $leagueId)
                 if ($matchdate > $today) {
                     $matchlist[] = $hometeam . date('d-m-Y', $matchdate);
                     $matchlist[] = $awayteam . date('d-m-Y', $matchdate);
-                    if (save_match($hometeam, $matchdate, $logfile, $awayteam) == false) {
+                    if (save_match($hometeam, $matchdate, $logfile, $awayteam, 'h') == false) {
                         $dt = new DateTime("@$matchdate");
                         $thiserror = "** Unable to insert match : " . $hometeam . " " . date_format($dt, 'd-m-Y') . "\n";
                     //    fwrite($logfile, $thiserror);
                         $logtext .= $thiserror;
                         $errormsg = $errormsg . $thiserror;
                     }
-                    if (save_match($awayteam, $matchdate, $logfile, $hometeam) == false) {
+                    if (save_match($awayteam, $matchdate, $logfile, $hometeam, 'a') == false) {
                         $thiserror = "** Unable to insert match : " . $awayteam . " " . date_format($dt, 'd-m-Y') . "\n";
                     //    fwrite($logfile, $thiserror);
                         $logtext .= $thiserror;
