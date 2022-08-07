@@ -24,6 +24,12 @@ $devlevelneeded = 901;
 					<input id="submit" type="submit" value="Manage Your Account">
 					</form>
 				</li>
+				<li>
+					<form class="txt-btn" role="form" name ="results" method="post" action="<?php echo $myPath; ?>struct/match/show-results.php">
+					<?php echo $key; ?>
+					<input id="submit" type="submit" value="Results">
+					</form>
+				</li>
 				<?php	if ($currentlevel == $adminlevelneeded || $currentlevel == $devlevelneeded) {echo '<li><a class="admin-btn" href="' . $myPath . 'struct/main.php">Admin</a></li>';} 
 				    	if ($currentlevel == $devlevelneeded) {echo '<li><a class="admin-btn" href="' . $myPath . 'menus\testmenu.php">Testing</a></li>';} ?>
 				
