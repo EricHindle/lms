@@ -24,158 +24,160 @@ $html = '';
 if (login_check($mypdo) == true) {
     echo '
 		<!doctype html>
-		<html>
-			<head> 
+<html>
+	<head> 
                 <meta charset="UTF-8" />
                 <title>Last Man Live</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			    <link rel="stylesheet" href="' . $myPath . 'css/style.css">
                 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
-			</head>
+	</head>
 
-			<body>';
+	<body>';
     include $myPath . 'globNAV.php';
     echo '
 
-		      <div class="container" style="min-height:50vh;">
-                <div  class="box" style="padding:1em;width:400px;margin:10px;">
+		<div class="container">
+            <div  class="box" style="margin-top:20px;">
                     <h2>Welcome, ' . $_SESSION['nickname'] . '</h2>
-                    Match week: ';
-    $html .= $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'];
-    $html .= '      </br/>
-                    Deadline for week &nbsp;' . sprintf('%02d', $_SESSION['currentweek'] + 1) . '&nbsp; picks is &nbsp;' . date_format(date_create($_SESSION['deadline']), 'd M Y');
-    $html .= '  </div>';
-
-    $html .= '	<div class="box" style="padding:1em;width:400px;margin:10px;">
-                    <h3 class="" >Make a Pick for</h3>
-                    <div class="" style="margin-left:16px;margin-right:16px">
-                        <form class="" role="form" name ="editpick" method="post" action="' . $myPath . 'struct/picks/pick-main.php">';
-    $html .= $key;
-
-    foreach ($gamefetch as $myGame) {
-        if ($myGame['lms_game_status'] < 3 && $myGame['lms_game_player_status'] == 1 &&  $myGame['lms_week'] <= $_SESSION['selectweek']) {
-            $html .= '      <button class="gameselection graybutton"  type="submit" name="gameid" value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</button></br>';
-        }
-    }
-
-    $html .= '          </form>
-                    </div>
-                </div>
-                <div class="box" style="padding:1em;width:400px;margin:10px;">
-                    <h3 class="" >Join a Game</h3>
-                    <form role="form" name ="edit" method="post" action="' . $myPath . 'struct/game/process-join-game.php">';
-    $html .= $key;
-    $html .= '          <div>
-                            <input type="text" style="padding-left:9px;"  id="gamecode" name="gamecode" placeholder="game code">
-                        </div>
-                        <div class="" style="margin-top:9px;">
-                            <input  class="gameselection graybutton"  id="submit2" name="submit" type="submit" value="Submit" >
-                        </div>
-                    </form>
-                </div>
-
-                <div class="box" style="padding:1em;width:400px;margin:10px;">
-                    <h3 class="">Show a Game</h3>
-                    <div class="" style="margin-left:16px;margin-right:16px">
-                        <form class="" role="form" name ="showgame" method="post" action="' . $myPath . 'struct/game/show-played-game.php">';
-    $html .= $key;
-    foreach ($gamefetch as $myGame) {
-        $html .= '          <button class="gameselection graybutton"  type="submit" name="gameid" value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</button></br>';
-    }
-    $html .= '          </form>
-                    </div>
-                </div>
-
-                <div class="box table-games" style="margin:10px;padding:1em;">
-            		<h3>Games Played by ' . $_SESSION['nickname'] . '</h3>
-				    <table class="center" style="color:black;background-color:white;" id="keywords">
-                        <thead>
-                            <tr class="">
-								<th>Name</th>
-								<th>Start Wk</th>
-                                <th>Game Status</th>
-                                <th>Total Players</th>
-                                <th>Active Players</th>
-                                <th>My Status</th>
-                                <th>Current picks</th>
-							</tr>
-                        </thead>
-                        <tbody>';
-
-    foreach ($gamefetch as $rs) {
-        $gameid = $rs['lms_game_id'];
-        $pickquery = $mypdo->prepare($picksql);
-        $pickquery->bindParam(':player', $playerid, PDO::PARAM_INT);
-        $pickquery->bindParam(':game', $gameid, PDO::PARAM_INT);
-        $pickquery->bindParam(':matchwk', $_SESSION['matchweek']);
-        $pickquery->execute();
-        $matchcount = $pickquery->rowCount();
-        $matchweekpick = $pickquery->fetch(PDO::FETCH_ASSOC);
-        $pickquery->bindParam(':matchwk', $_SESSION['selectweekkey']);
-        $pickquery->execute();
-        $selectweekpick = $pickquery->fetch(PDO::FETCH_ASSOC);
-        $selectcount = $pickquery->rowCount();
-        $pickcount = $matchcount + $selectcount;
-        $currentpick = '';
-        $thispick = '';
-        $nextpick = '';
-        $rowcolor = 'black';
-        $selcolor = 'silver';
-        $playercolor = 'silver';
-        switch ($rs['lms_game_status']) {
-            case 1:
-                $rowcolor = 'lightblue';
-                break;
-            case 2:
-                $rowcolor = 'lightyellow';
-                break;
-            case 3:
-                $rowcolor = 'lightgreen';
-                break;
-            case 4:
-                $rowcolor = 'silver';
-                break;
-        }
-        if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
-            $playercolor = $rs['lms_game_player_status'] == 2 ? 'red' : 'silver';
-        } else {
-            if ($pickcount > 0) {
-                $newline = '';
-                if ($pickcount == 2) {
-                    $newline = '</br>';
-                }
-                if ($matchcount > 0) {
-                    $thispick = $matchweekpick['lms_team_name'] . ' (' . date_format(date_create($matchweekpick['lms_match_date']), 'd M Y') . ')';
-                }
-                if ($selectcount > 0) {
-                    $nextpick = $selectweekpick['lms_team_name'] . ' (' . date_format(date_create($selectweekpick['lms_match_date']), 'd M Y') . ')';
-                }
-                $currentpick = $thispick . $newline . $nextpick;
-            } else {
-                if ($rs['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
-                    $currentpick = '(waiting)';
-                    $selcolor = 'crimson';
-                }
-            }
-        }
-        $html .= '
-    								<tr style="color:' . $rowcolor . '">
-    									<td>' . $rs['lms_game_name'] . '</td>
-						         		<td>' . sprintf('%02d', $rs['lms_week']) . '/' . $rs['lms_year'] . '</td>    	
-                                        <td>' . $rs['lms_game_status_text'] . '</td>
-                                        <td>' . $rs['lms_game_total_players'] . '</td>
-                                        <td>' . $rs['lms_game_still_active'] . '</td>
-                                        <td style="color:' . $playercolor . '">' . $rs['lms_game_player_status_text'] . '</td>
-                                        <td style="color:' . $selcolor . '">' . $currentpick . '</td>
-    								</tr>';
-    }
-    $html .= '
-                        </tbody>
-                    </table>
-                </div>
+                    Current Match Week: <b>';
+    $html .= $_SESSION['currentweek'];
+    $html .= '      </b>
+    </div>
+    
+    <div class="status-bar-deadline-home">Deadline for week ' . sprintf('%02d', $_SESSION['currentweek'] + 1) . ' pick is: ' . date_format(date_create($_SESSION['deadline']), 'd M Y');
+    $html .= '  </div>
+    
+    <div class="box">
+                <h2>Join a Game</h2>
+                    <p>Enter a code to join an already existing game.</p><br>
+                <form class="form-horizontal" role="form" name ="edit" method="post" action="' . $myPath . 'struct/game/process-join-game.php">';
+                    $html .= $key;
+                    $html .= '
+                    <input type="text" class="form-field" id="gamecode" name="gamecode" placeholder="Enter Game Code">
+                    <button type="submit" name="submit" id="submit" value="Submit" class="btn">Join Game</button>
+                </form>
             </div>
-        </body>
-    </html>';
+            ';
+            foreach ($gamefetch as $rs) {
+                $gameid = $rs['lms_game_id'];
+                $pickquery = $mypdo->prepare($picksql);
+                $pickquery->bindParam(':player', $playerid, PDO::PARAM_INT);
+                $pickquery->bindParam(':game', $gameid, PDO::PARAM_INT);
+                $pickquery->bindParam(':matchwk', $_SESSION['matchweek']);
+                $pickquery->execute();
+                $matchcount = $pickquery->rowCount();
+                $matchweekpick = $pickquery->fetch(PDO::FETCH_ASSOC);
+                $pickquery->bindParam(':matchwk', $_SESSION['selectweekkey']);
+                $pickquery->execute();
+                $selectweekpick = $pickquery->fetch(PDO::FETCH_ASSOC);
+                $selectcount = $pickquery->rowCount();
+                $pickcount = $matchcount + $selectcount;
+                $currentpick = 'No Pick';
+                $thispick = 'No Pick';
+                $nextpick = '';
+                $rowcolor = 'black';
+                $selcolor = 'black';
+                $playercolor = 'black';
+                switch ($rs['lms_game_status']) {
+                    case 1:
+                        $rowcolor = 'status-recruiting';
+                        break;
+                    case 2:
+                        $rowcolor = 'status-playing';
+                        break;
+                    case 3:
+                        $rowcolor = 'status-out';
+                        break;
+                    case 4:
+                        $rowcolor = 'cancelled';
+                        break;
+                }
+                if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
+                    $playercolor = $rs['lms_game_player_status'] == 2 ? 'red' : 'silver';
+                    if ($rs['lms_game_player_status'] == 2){
+                        if ($matchcount > 0) {
+                            $thispick = $matchweekpick['lms_team_name'];
+                        }
+                    }
+                } else {
+                    if ($pickcount > 0) {
+                        $newline = '';
+                        if ($pickcount == 2) {
+                            $newline = '</br>';
+                        }
+                        if ($matchcount > 0) {
+                            $thispick = $matchweekpick['lms_team_name'];
+                        }
+                        if ($selectcount > 0) {
+                            $nextpick = $selectweekpick['lms_team_name'];
+                        }
+                        $currentpick = $thispick . $newline . $nextpick;
+                    } else {
+                        if ($rs['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
+                            $currentpick = '(waiting)';
+                            $thispick = '(waiting)';
+                            $selcolor = 'crimson';
+                        }
+                    }
+                }
+                $html .= '
+                    
+                        <form class="game-card-form" role="form" name ="showgame" method="post" action="' . $myPath . 'struct/game/show-played-game.php">';
+                $html .= $key;
+                $html .= '<button class="game-button" type="submit" name="gameid" value="' . $rs['lms_game_id'] . '">
+                        
+                        <style>
+                        </style>
+        
+                        <div class="game-card">
+                            <table class="game-table">
+                                <tr>
+                                    <th colspan="2" border="0">
+                                    <div><h2>' . $rs['lms_game_name'] . '</h2></div>
+                                    <div id="divider" style="background-color:#CC1417; height: 3px; width:25%; margin-top:2px; margin-bottom:7px;"></div>
+                                    </th>
+                                </tr>
+                                
+                                <tr>
+                                    <td width="50%">
+                                    <div class="table-columnTitle">Your Status</div>
+                                    <div>' . $rs['lms_game_player_status_text'] . '</div>
+                                    </td>
+                                    <td width="50%">
+                                    <div class="table-columnTitle">Game Status:</div>
+                                    <div>' . $rs['lms_game_status_text'] . '</div>
+                                    </td>
+                                    <td>
+                                    <div class="table-columnTitle">Players</div>
+                                    <div>' . $rs['lms_game_still_active'] . ' / ' . $rs['lms_game_total_players'] . '</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="your-pick-table">
+                                        <div class="table-columnTitle">This Weeks Pick:</div>
+                                        <div><h3><b>' . $thispick . '</b></h3></div>';
+                if ($selectcount > 0) {
+                    $html .= '          <div class="table-columnTitle">Fixture: (' . date_format(date_create($selectweekpick['lms_match_date']), 'd M Y') . ')</div> ';
+                }
+                $html .= '          </td>
+                                    <td>
+                                    <img style="width:30px" src="' . $myPath . 'img/icons/PickButton.svg">
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="status-bar ' . $rowcolor . '">' . $rs['lms_game_status_text'] . '</div>
+                        </div>
+                    </button>
+                    </form>';
+            }
+            $html .= '
+                </div>
+
+
+        </div>
+    </body>
+</html>';
     echo $html;
 } else {
     header('Location: ' . $myPath . 'index.php?error=1');

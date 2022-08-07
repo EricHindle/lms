@@ -96,8 +96,10 @@ if (check_start_date() == 1) {
                     set_pick_wl($gameid, $playerid, $matchid, $pickwl);
                     fwrite($logfile, "Pick result set\n");
                 } else {
+                    /*
                     fwrite($logfile, "Player no longer active in this game - removing pick\n");
                     delete_pick($playerid, $gameid, $matchid);
+                    */
                 }
             }
             $activeGames = get_active_games();

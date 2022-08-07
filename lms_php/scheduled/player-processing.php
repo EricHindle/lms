@@ -38,6 +38,7 @@ foreach ($picks as $rs) {
         $teamname = $rs['lms_team_name'];
         $gamename = $rs['lms_game_name'];
         $matchid = $rs['lms_pick_match_id'];
+        $teamid = $rs['lms_team_id'];
         $gameplayer = get_game_player($gameid, $playerid);
         if ($gameplayer['lms_game_player_status'] == 1) {
             fwrite($logfile, "Player " . strval($playerid) . " " . $screenname . " Game " . strval($gameid) . " " . $gamename . " Match " . strval($matchid) . " " . $teamname . "\n");
@@ -46,15 +47,15 @@ foreach ($picks as $rs) {
                 set_game_player_out($gameid, $playerid);
                 fwrite($logfile, "Player out of game (".  $rs['lms_match_result'] .")\n");
                 $pickwl = 'l';
-                notify_loser($playerid, $gameid);
+                notify_loser($playerid, $gameid, $teamid);
             } else {
                 $pickwl = 'w';
                 if ($rs['lms_match_result'] == 'p') {
-                    notify_postponed($playerid, $gameid);
+                    notify_postponed($playerid, $gameid, $teamid);
                     fwrite($logfile, "Match postponed\n");
                 } else {
                     if ($rs['lms_match_result'] == 'w') {
-                        notify_winner($playerid, $gameid);
+                        notify_winner($playerid, $gameid, $teamid);
                         fwrite($logfile, "Winning pick\n");
                     } else {
                         /* no result */
