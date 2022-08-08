@@ -5,5 +5,5 @@
 "fromName": "$adminName",
 "bcc": "$bcc",
 "subject": "Your Last Man Live game has been created",
-"body": "A new game called $gameName has been created for you. The game code is $gameCode . You can invite your friends to join the game using this code. You can send invitations from the Show Game page."
+"body": "A new game called '$gameName' has been created for you. The game code is $gameCode . You can invite your friends to join the game using this code. You can send invitations from the Manage Game page."
 }
