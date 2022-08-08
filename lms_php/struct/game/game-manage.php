@@ -51,75 +51,68 @@ if (login_check($mypdo) == true) {
     include $myPath . 'globNAV.php';
     $html .= '
                 <div class="container">
-                    <div class="box" style="padding:1em;">
+        <div  class="box" style="margin-top:20px;">
                         <h2>Manage My Games</h2>
+            <p>Add/remove leagues, Change game name, Change game start week, Cancel the game</p>
                     </div>
-                    <div class="box" style="padding:1em;margin:10px;">
-                        <h3 class="title">Choose a game to change</h3>
-                        <form role="form" name ="showgame" method="post" action="show-game.php">';
+
+    
+    
+    <form class="game-card-form" role="form" name ="showgame" method="post" action="show-game.php">';
+
     $html .= $key;
-    $html .= '					
-				            <div class="form-group" style="margin-left:4px;margin-right:4px;">
-	';		                            
+
+    $html .= '';		 
+
     foreach ($gamefetch as $myGame) {
         if ($myGame['lms_game_status'] < 3) {
-            $html .= '              <button class="gameselection graybutton"  type="submit" name="gameid" value="' . $myGame['lms_game_id'] . '">' . $myGame['lms_game_name'] . '</button></br>';
-        }
-    }
     $html .= '	                   
-		                    </div>
-                        </form>
-                        <div class="form-text">
-                          Add/remove leagues : Change game name<br />Change game start week : Cancel the game
-                        </div>
-          			</div>
-                    <div class="box" style="padding:1em;text-align:left">
-		        		<h4>Games Managed by ' . $_SESSION['nickname'] . '</h4>
-			        	<table class="table table-bordered" id="keywords">
-							<thead>
-							<tr class="game">
-								<th>Name</th>
-								<th>Start Wk</th>
-                                <th>Game Status</th>
-                                <th>Total Players</th>
-                                <th>Active Players</th>
-                                <th>Game Code</th>
+            
+            <div class="game-card"  style="margin-bottom:20px">
+            <button style="width:100%" class="game-button" type="submit" name="gameid" value="' . $myGame['lms_game_id'] . '">
+ 
+                <table class="game-table" style="padding-bottom:3em">
+                    <tr>
+                        <th colspan="2" border="0">
+                        <div><h2>' . $myGame['lms_game_name'] . '</h2></div>
+                        <div id="divider" style="background-color:#CC1417; height: 3px; width:25%; margin-top:2px; margin-bottom:7px;"></div>
+                        </th>
 							</tr>
-						</thead>
-						<tbody>
+                    <tr>
+                        <td width="50%">
+                        <div class="table-columnTitle">Game Week</div>
+                        <div>' . sprintf('%02d', $myGame['lms_week']) . '</div>
+                        </td>
+                        <td width="50%">
+                        <div class="table-columnTitle">Game Status:</div>
+                        <div>' . $myGame['lms_game_status_text'] . '</div>
+                        </td>
+                        <td>
+                        <div class="table-columnTitle">Players</div>
+                        <div>' . $myGame['lms_game_still_active'] . ' / ' . $myGame['lms_game_total_players'] . '</div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                    <td colspan="2" >
+                        <div class="table-columnTitle">Game Code:</div>
+                        <div class="game-code">' . $myGame['lms_game_code'] . '</div>'; $html .= '          </td>
+                    <td>
+                    <img style="width:30px" src="' . $myPath . 'img/icons/PickButton.svg">
+                    </td>
+                </tr>
+                </table>
+            </button>
+            </div>
+            
+            
 									';
-    foreach ($gamefetch as $rs) {
-        $rowcolor = 'black';
-        switch ($rs['lms_game_status']) {
-            case 1:
-                $rowcolor = 'lightblue';
-                break;
-            case 2:
-                $rowcolor = 'lightyellow';
-                break;
-            case 3:
-                $rowcolor = 'lightgreen';
-                break;
-            case 4:
-                $rowcolor = 'silver';
-                break;
         }
-    
-        $html .= '
-                            <tr style="color:' . $rowcolor . '">
-                            	<td>' . $rs['lms_game_name'] . '</td>
-                            	<td>' . sprintf('%02d', $rs['lms_week']) . '/' . $rs['lms_year'] . '</td>
-                                <td>' . $rs['lms_game_status_text'] . '</td>
-                                <td>' . $rs['lms_game_total_players'] . '</td>
-                                <td>' . $rs['lms_game_still_active'] . '</td>
-                                <td style="font-family:courier">' . $rs['lms_game_code'] . '</td>
-                            </tr>';
     }
     $html .= '
-                		</tbody>
-                	</table>
-                </div>
-            </div>
+
+            </form>
+
 		</body>
 	</html>
 		';

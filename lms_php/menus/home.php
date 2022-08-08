@@ -78,7 +78,7 @@ if (login_check($mypdo) == true) {
                 $nextpick = '';
                 $rowcolor = 'black';
                 $selcolor = 'black';
-                $playercolor = 'black';
+                $playercolor = 'status-playing';
                 switch ($rs['lms_game_status']) {
                     case 1:
                         $rowcolor = 'status-recruiting';
@@ -94,7 +94,7 @@ if (login_check($mypdo) == true) {
                         break;
                 }
                 if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
-                    $playercolor = $rs['lms_game_player_status'] == 2 ? 'red' : 'silver';
+                    $playercolor = $rs['lms_game_player_status'] == 2 ? 'status-out' : 'status-playing';
                     if ($rs['lms_game_player_status'] == 2){
                         if ($matchcount > 0) {
                             $thispick = $matchweekpick['lms_team_name'];
@@ -166,15 +166,13 @@ if (login_check($mypdo) == true) {
                                     </td>
                                 </tr>
                             </table>
-                            <div class="status-bar ' . $rowcolor . '">' . $rs['lms_game_status_text'] . '</div>
+                            <div class="status-bar ' . $playercolor . '">Your Status: ' . $rs['lms_game_player_status_text'] . '</div>
                         </div>
                     </button>
                     </form>';
             }
             $html .= '
                 </div>
-
-
         </div>
     </body>
 </html>';

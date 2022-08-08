@@ -72,7 +72,9 @@ cursor: pointer;
 .account .account-menu .btn {
   width: 100%;
   color: #ffffff;
-  background: #cc1f17;
+
+  background: #af150d;
+
   font-size: 1em;
   font-weight: 700;
   text-transform: uppercase;
@@ -84,7 +86,9 @@ cursor: pointer;
 }
 
 .account .account-menu .btn:hover {
-  background: #B61B14;
+
+  background: #af150d;
+
 }
 
 
@@ -167,7 +171,9 @@ a.nav-item.active {
 
 .nav-item:hover,
 .nav-item.active {
-  border-top: solid #cc1517;
+
+  border-top: solid #af150d;
+
   border-top-width: 0.3em;
 }
 

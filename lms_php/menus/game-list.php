@@ -29,7 +29,7 @@ if (login_check($mypdo) == true) {
             ';
     include $myPath . 'globNAV.php';
     echo '
-<div class="page-container">
+<div class="container">
 
         ';
     foreach ($gamefetch as $rs) {
@@ -47,11 +47,11 @@ if (login_check($mypdo) == true) {
         $selectcount = $pickquery->rowCount();
         $pickcount = $matchcount + $selectcount;
         $currentpick = 'No Pick';
-        $thispick = '';
+        $thispick = 'No Pick';
         $nextpick = '';
         $rowcolor = 'black';
         $selcolor = 'black';
-        $playercolor = 'black';
+        $playercolor = 'status-playing';
         switch ($rs['lms_game_status']) {
             case 1:
                 $rowcolor = 'status-recruiting';
@@ -67,7 +67,12 @@ if (login_check($mypdo) == true) {
                 break;
         }
         if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
-            $playercolor = $rs['lms_game_player_status'] == 2 ? 'red' : 'silver';
+            $playercolor = $rs['lms_game_player_status'] == 2 ? 'status-out' : 'status-playing';
+            if ($rs['lms_game_player_status'] == 2){
+                if ($matchcount > 0) {
+                    $thispick = $matchweekpick['lms_team_name'];
+                }
+            }
         } else {
             if ($pickcount > 0) {
                 $newline = '';
@@ -84,6 +89,7 @@ if (login_check($mypdo) == true) {
             } else {
                 if ($rs['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
                     $currentpick = '(waiting)';
+                    $thispick = '(waiting)';
                     $selcolor = 'crimson';
                 }
             }
@@ -93,10 +99,6 @@ if (login_check($mypdo) == true) {
                 <form class="game-card-form" role="form" name ="showgame" method="post" action="' . $myPath . 'struct/game/show-played-game.php">';
         $html .= $key;
         $html .= '<button class="game-button" type="submit" name="gameid" value="' . $rs['lms_game_id'] . '">
-                
-                <style>
-                </style>
-
                 <div class="game-card">
                     <table class="game-table">
                         <tr>
@@ -123,7 +125,7 @@ if (login_check($mypdo) == true) {
                         <tr>
                             <td colspan="2" class="your-pick-table">
                                 <div class="table-columnTitle">This Weeks Pick:</div>
-                                <div><h3><b>' . $currentpick . '</b></h3></div>';
+                                <div><h3><b>' . $thispick . '</b></h3></div>';
         if ($selectcount > 0) {
             $html .= '          <div class="table-columnTitle">Fixture: (' . date_format(date_create($selectweekpick['lms_match_date']), 'd M Y') . ')</div> ';
         }
@@ -133,7 +135,7 @@ if (login_check($mypdo) == true) {
                             </td>
                         </tr>
                     </table>
-                    <div class="status-bar ' . $rowcolor . '">' . $rs['lms_game_player_status_text'] . '</div>
+                    <div class="status-bar ' . $playercolor . '">Your Status: ' . $rs['lms_game_player_status_text'] . '</div>
                 </div>
             </button>
             </form>';

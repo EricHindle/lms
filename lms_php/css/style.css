@@ -91,7 +91,7 @@ button {
 .error-message {
   margin-top: 20px;
   margin-bottom: 20px;
-  color: #cc1f17;
+  color: #af150d;
 }
 
 .box {
@@ -131,7 +131,7 @@ button {
 .btn {
   width: 100%;
   color: #ffffff;
-  background: #cc1f17;
+  background: #af150d;
   font-size: 1.2em;
   font-weight: 700;
   text-transform: uppercase;
@@ -265,14 +265,47 @@ td {
   filter: drop-shadow(10px 10px 5px #00000033);                
 }
 
-.game-table {
-  padding: 3em 3em 1em 3em;
+.pick-card {
+  text-align: left;
+  color: white;
+  background-color: #121415;
+  padding: 0px;
+  width: 550px;
+  filter: drop-shadow(10px 10px 5px #00000033);                
 }
+
+.game-pick-card {
+  text-align: left;
+  color: white;
+  background-color: #121415;
+  padding: 0px;
+  width: 550px;
+  filter: drop-shadow(10px 10px 5px #00000033);                
+}
+
+.game-table {
+  width: 100%;
+  padding: 3em 3em 1em 3em;
+  text-align: left;
+}
+
+
+.game-table td {
+  padding-right: 10px;
+}
+
 
 .game-list-cont {
   margin-top: 20px;
   margin-bottom: 10px;
   width:80%;
+}
+
+.game-code {
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
 }
 
 .status-bar {
@@ -281,7 +314,27 @@ td {
   font-weight: 600;
   font-size: 14px;
   letter-spacing: 2px;
+}
 
+.status-bar-deadline {
+  background-color:#af150d;
+  padding: 10px 3.5em;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+.status-bar-deadline-home {
+  background-color:#af150d;
+  padding: 10px 3.5em;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-align:center;
+  width: 550px;
+  margin-bottom: 20px;
 }
 
 .status-recruiting {
@@ -293,24 +346,51 @@ td {
 }
 
 .status-out {
-  background-color: #cc1f17;
+  background-color: #af150d;
 }
 
 .cancelled {
   background-color: #7c7c7c;
 }
 
-.game-button {
-  margin-bottom: 40px;
+
+.pick-card {
+  padding: 3em; 
 }
 
-
+.game-card-form {
+  margin-top:20px;
+}
 
 @media only screen and (max-width: 550px) {
 
 
+  .status-bar-deadline-home {
+    padding: 5px 1.25em;
+    letter-spacing: 0px;
+    width: 90%;
+  }
+
+  .game-pick-card {
+    width: 90%;
+    padding: 0px;
+    filter: drop-shadow(0px 0px 0px #121415);
+  }
+
+
+  .pick-card {
+    width: 90%;
+    padding: 1em;
+    filter: drop-shadow(0px 0px 0px #121415);
+  }
+
   .status-bar {
     padding: 5px 1.25em;
+  }
+  
+  .status-bar-deadline {
+    padding: 5px 1.25em;
+    letter-spacing: 0px;
   }
 
   .page-container {
