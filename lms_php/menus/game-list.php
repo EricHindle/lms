@@ -172,16 +172,6 @@ if (login_check($mypdo) == true) {
     header('Location: ' . $myPath . 'index.php?error=1');
 }
 
-function get_selection_start_date($gamestartweek)
-{
-    global $mypdo;
-    $previousweek = $gamestartweek - 1;
-    $weeksql = "SELECT lms_week_start FROM lms_week WHERE lms_week_no = :weekno LIMIT 1";
-    $weekquery = $mypdo->prepare($weeksql);
-    $weekquery->bindParam(":weekno", $previousweek, PDO::PARAM_INT);
-    $weekquery->execute();
-    $weekfetch = $weekquery->fetch(PDO::FETCH_ASSOC);
-    return $weekfetch['lms_week_start'];
-}
+
 
 ?> 
