@@ -62,11 +62,11 @@ if (login_check($mypdo) == true) {
 
     $html .= $key;
 
-    $html .= '';		 
+    $html .= '';
 
     foreach ($gamefetch as $myGame) {
         if ($myGame['lms_game_status'] < 3) {
-    $html .= '	                   
+            $html .= '	                   
             
             <div class="game-card"  style="margin-bottom:20px">
             <button style="width:100%" class="game-button" type="submit" name="gameid" value="' . $myGame['lms_game_id'] . '">
@@ -96,7 +96,8 @@ if (login_check($mypdo) == true) {
                     <tr>
                     <td colspan="2" >
                         <div class="table-columnTitle">Game Code:</div>
-                        <div class="game-code">' . $myGame['lms_game_code'] . '</div>'; $html .= '          </td>
+                        <div class="game-code">' . $myGame['lms_game_code'] . '</div>';
+            $html .= '</td>
                     <td>
                     <img style="width:30px" src="' . $myPath . 'img/icons/PickButton.svg">
                     </td>

@@ -25,7 +25,7 @@ if (login_check($mypdo) == true) {
                     $deadline = get_deadline_date();
                     $html = "";
 
-                    $gamesql = "SELECT lms_game_start_wkno, lms_game_name, lms_week, lms_year, lms_game_status_text, lms_game_status, lms_week_start FROM v_lms_game WHERE lms_game_id = :id";
+                    $gamesql = "SELECT lms_game_start_wkno, lms_game_name, lms_week, lms_year, lms_game_status_text, lms_game_status, lms_week_start, lms_game_code FROM v_lms_game WHERE lms_game_id = :id";
                     $gamequery = $mypdo->prepare($gamesql);
                     $gamequery->execute(array(
                         ':id' => $gameid
@@ -36,7 +36,7 @@ if (login_check($mypdo) == true) {
                         $key = $formKey->outputKey();
                         $gamefetch = $gamequery->fetch(PDO::FETCH_ASSOC);
                         $gamename = $gamefetch['lms_game_name'];
-                        $gameplayersql = "SELECT lms_game_player_status, lms_player_screen_name, lms_game_player_status_text, lms_player_id FROM v_lms_player_games WHERE lms_game_id = :game";
+                        $gameplayersql = "SELECT lms_game_player_status, lms_player_screen_name, lms_game_player_status_text, lms_player_id, lms_game_code FROM v_lms_player_games WHERE lms_game_id = :game";
                         $gameplayerquery = $mypdo->prepare($gameplayersql);
                         $gameplayerquery->bindParam(":game", $gameid, PDO::PARAM_INT);
                         $gameplayerquery->execute();
@@ -86,32 +86,37 @@ if (login_check($mypdo) == true) {
                                                     <td width="50%">
                                                         <div class="table-columnTitle">Starting week:</div>
                                                         <div><b>' . sprintf("%02d", $gamefetch['lms_week']) . '</b> - ' . date_format(date_create($gamefetch['lms_week_start']), 'd M');
-                        $html .= '</div>
+                        $html .= '                      </div>
                                                     </td>
                                                             
                                                     <td width="50%">
                                                     <div class="table-columnTitle">Current Week:</div>
                                                     <div><b>';
                         $html .= $_SESSION['currentweek'];
-                        $html .= ' </b></div>
+                        $html .= '                       </b></div>
                                                     </td>
                                         
                                                 </tr>
                                     
                                                 <tr>
                                                 
-                                                    <td colspan="2">
+                                                    <td>
                                                     
-                                                    <div class="table-columnTitle">Leagues:</div>
-                                                    <div>';
+                                                        <div class="table-columnTitle">Leagues:</div>
+                                                        <div>';
                         foreach ($leaguefetch as $rs) {
                             $html .= '';
                             $html .= $rs['lms_league_name'] . '<br>';
                         }
                         $html .= '         
                                                         
-                                                            </div>                     
+                                                        </div>                     
                                     
+                                                    </td>
+                                                    <td>
+                                                        <div class="table-columnTitle">Game Code:</div>
+                        <div class="game-code">' . $gamefetch['lms_game_code'] . '</div>'; 
+                        $html .= '                                 <div>
                                                     </td>
                                                 </tr>
                                             
@@ -204,8 +209,9 @@ if (login_check($mypdo) == true) {
                         /*
                          * Get all the players picks for the selected game
                          */
+                        
                         $player = $_SESSION['user_id'];
-                        $picksql = "SELECT lms_pick_match_id, lms_match_result, lms_match_weekno, lms_week, lms_year,lms_match_date, lms_team_id, lms_team_name FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game ORDER BY lms_match_weekno";
+                        $picksql = "SELECT lms_pick_match_id, lms_match_result, lms_match_weekno, lms_week, lms_year,lms_match_date, lms_team_id, lms_team_name, lms_match_ha, lms_match_opp FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game ORDER BY lms_match_weekno";
                         $pickquery = $mypdo->prepare($picksql);
                         $pickquery->bindParam(':player', $player, PDO::PARAM_INT);
                         $pickquery->bindParam(':game', $gameid, PDO::PARAM_INT);
@@ -217,11 +223,18 @@ if (login_check($mypdo) == true) {
                          */
                         $currentpickmatch = 0;
                         $currentpickteam = 0;
-
+                        $currentteampair = '';
                         foreach ($pickfetch as $rs) {
                             if ($rs['lms_match_weekno'] == $_SESSION['selectweekkey']) {
                                 $currentpickmatch = $rs['lms_pick_match_id'];
                                 $currentpickteam = $rs['lms_team_id'];
+                         /*       if ($rs['lms_match_ha'] == "h") {
+                                    $currentteampair = strtoupper($rs['lms_team_name']) . " (v " . $rs['lms_match_opp'] . ')';
+                                } else {
+                                    $currentteampair = '(' . $rs['lms_match_opp'] . " v) " . strtoupper($rs['lms_team_name']);
+                                }
+                         */
+                                $currentteampair = $rs['lms_team_name'] . " (v " . $rs['lms_match_opp'] . ')';
                             }
 
                             $result = 'no result';
@@ -282,16 +295,18 @@ if (login_check($mypdo) == true) {
                         }
                         $html .= '</div>';
 
-                        $select = 'Make A Pick';
-                        if ($currentpickmatch > 0) {
-                            $select = 'Change Pick';
-                        }
-
                         if (time() < strtotime(get_deadline_date())) {
                             if ($gps['lms_game_player_status'] == "1") {
-                                $html .= '    
-                        <div class="pick-card" style="margin-bottom: 20px;">
-    		                	<form role="form" name ="editpick" method="post" action="' . $myPath . 'struct/picks/process-pick.php">
+                                $html .= '<div class="pick-card" style="margin-bottom: 20px;padding-top:1em">';
+
+                                $select = 'Make A Pick';
+                                if ($currentpickmatch > 0) {
+                                    $select = 'Change Pick';
+
+                                    $html .= '<div class="table-columnTitle" style="text-align:center;"> Current pick: ' . $currentteampair . '</div>';
+                                }
+
+                                $html .= '<form role="form" name ="editpick" method="post" action="' . $myPath . 'struct/picks/process-pick.php">
                                     <div><h2>' . $select . '</h2></div>
                                     <div id="divider" style="background-color:#CC1417; height: 3px; width:25%; margin-top:2px; margin-bottom:17px;"></div>';
                                 $html .= $key;
