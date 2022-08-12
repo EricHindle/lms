@@ -38,7 +38,7 @@ if (login_check($mypdo) == true) {
     ';
     $html .= $formKey->outputKey();
     $html .= '
-    <input type="email" class="form-field" name="username"  id="username" placeholder="email" autocomplete="on" autocompletetype="email">
+    <input class="form-field" name="username"  id="username" placeholder="email/phone no." autocomplete="on">
             
     <input type="password" class="form-field" name="password" id="password" placeholder="password" autocomplete="on">
     

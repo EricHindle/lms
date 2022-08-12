@@ -22,7 +22,7 @@ if (login_check($mypdo) == true) {
             if ($userid) {
 
                 $html = "";
-                $usersql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active FROM lms_player WHERE lms_player_id = :id";
+                $usersql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_player_mobile, lms_access, lms_active FROM lms_player WHERE lms_player_id = :id";
                 $userquery = $mypdo->prepare($usersql);
                 $userquery->execute(array(
                     ':id' => $userid
@@ -48,62 +48,66 @@ if (login_check($mypdo) == true) {
 
 									<title>My Account</title>   
 								</head>
-<body>';
+                                <body>';
                     include $myPath . 'globNAV.php';
                     $html .= '
-	<div class="page-container" style="align-items: baseline;">
-		<div class="box" style="margin: 2em;">
-			    <form role="form" name="details" method="post" action="process-myaccount.php" class="form-horizontal">';
+                                	<div class="page-container" style="align-items: baseline;">
+                                		<div class="box" style="margin: 2em;">
+                            			    <form role="form" name="details" method="post" action="process-myaccount.php" class="form-horizontal">';
                     $html .= $key;
                     $html .= '
-					<h2>Account Details</h2>
-                        <div class="form-group" style="text-align:left">
-                            <label for="email" class="form-text">Email:</label><br>
-                            <input type="text"  class="form-field" name="email"  id="email" value="' . $userfetch['lms_player_email'] . '">
-                        </div>
-                        <div class="form-group" style="text-align:left">
-                            <label for="fname" class="form-text">Forename:</label><br>
-                            <input type="text"  class="form-field" id="fname" name="fname" value="' . $userfetch['lms_player_forename'] . '">
-                        </div>
-                        <div class="form-group" style="text-align:left">
-                            <label for="sname" class="form-text">Surname:</label><br>
-                            <input type="text"  class="form-field" id="sname" name="sname" value="' . $userfetch['lms_player_surname'] . '">
-                        </div>
-                        <div class="form-group" style="text-align:left">
-                        	<label  for="screenname" class="form-text">Screen name:</label><br>
-                            <input type="text"  class="form-field" id="screenname" name="screenname" value="' . $userfetch['lms_player_screen_name'] . '">
-                                                                 </div>
-                            									 <div class="form-group">
-                                                                    <input type= "hidden" name= "userid" value="' . $userid . '" />
-                            <input id="submit" name="submit" type="submit" value="Save Changes" class="btn">
-                            				                     </div>
-                            								</form>
-                            							</div>';
+                        					<h2>Account Details</h2>
+                                            <div class="form-group" style="text-align:left">
+                                                <label for="fname" class="form-text">Forename:</label><br>
+                                                <input type="text"  class="form-field" id="fname" name="fname" value="' . $userfetch['lms_player_forename'] . '">
+                                            </div>
+                                            <div class="form-group" style="text-align:left">
+                                                <label for="sname" class="form-text">Surname:</label><br>
+                                                <input type="text"  class="form-field" id="sname" name="sname" value="' . $userfetch['lms_player_surname'] . '">
+                                            </div>
+                                            <div class="form-group" style="text-align:left">
+                                                <label for="mobile" class="form-text">Phone number:</label><br>
+                                                <input type="text"  class="form-field" id="mobile" name="mobile" value="' . $userfetch['lms_player_mobile'] . '">
+                                            </div>
+                                            <div class="form-group" style="text-align:left">
+                                                <label for="email" class="form-text">Email:</label><br>
+                                                <input type="text"  class="form-field" name="email"  id="email" value="' . $userfetch['lms_player_email'] . '">
+                                            </div>
+                                            <div class="form-group" style="text-align:left">
+                                            	<label  for="screenname" class="form-text">Screen name:</label><br>
+                                                <input type="text"  class="form-field" id="screenname" name="screenname" value="' . $userfetch['lms_player_screen_name'] . '">
+                                            </div>
+        									<div class="form-group">
+                                                <input type= "hidden" name= "userid" value="' . $userid . '" />
+                                                <input id="submit" name="submit" type="submit" value="Save Changes" class="btn">
+        				                    </div>
+        								</form>
+        							</div>';
 
                     $html .= '
-		<div class="box">			
-			                	                            <form role="form" name ="password" method="post" action="change-my-password.php">';
+                                    <div class="box">			
+    	                               <form role="form" name ="password" method="post" action="change-my-password.php">';
                     $html .= $key;
                     $html .= '
-					<h2>Change Password</h2>
-                        <p class="form-text" style="margin-bottom:10px;">Password must contain at least 8 characters, including UPPERCASE, lowercase and numbers.</p>
-                                                                <div class="form-group">
-                            <input name="pwd1" id="pwd1" class="form-field" type="password" placeholder="New Password">
-                                                                </div>
-                                                                <div class="form-group">
-                            <input id="pwd2" name="pwd2" class="form-field" title="Please enter the same Password as above." type="password" placeholder="Confirm New Password">
-                                                                </div>
-                            				                    <div class="form-group">
-                                                                    <input type= "hidden" name= "username" value="' . $username . '" />
-                            <input id="submit" name="submit" type="submit" value="Update Password" class="btn">
-                            				                    </div>
-                            				                </form>
-                            			             </div>         ';
-    $html .= '					                     
-                            						</div>
+                    					<h2>Change Password</h2>
+                                            <p class="form-text" style="margin-bottom:10px;">Password must contain at least 8 characters, including UPPERCASE, lowercase and numbers.</p>
+                                            <div class="form-group">
+                                                <input name="pwd1" id="pwd1" class="form-field" type="password" placeholder="New Password">
+                                            </div>
+                                            <div class="form-group">
+                                                <input id="pwd2" name="pwd2" class="form-field" title="Please enter the same Password as above." type="password" placeholder="Confirm New Password">
+                                            </div>
+        				                    <div class="form-group">
+                                                <input type= "hidden" name= "username" value="' . $username . '" />
+                                                <input id="submit" name="submit" type="submit" value="Update Password" class="btn">
+        				                    </div>
+        				                </form>
+        			             </div>         ';
+                    $html .= '					                     
+                            </div>
 
-</body>
-</html>
+                        </body>
+                    </html>
 									            ';
                 } else {
                     $html .= "<script>

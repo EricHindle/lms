@@ -33,6 +33,7 @@ function sec_session_start()
     session_regenerate_id(true);
 }
 
+/*
 function check_password($username, $password)
 {
     global $mypdo;
@@ -54,6 +55,7 @@ function check_password($username, $password)
         return false;
     }
 }
+*/
 
 function gettemppassword($playerid)
 {
@@ -78,7 +80,9 @@ function removetemppassword($playerid)
 
 function login($username, $password, $mypdo)
 {
-    $sql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active FROM lms_player WHERE lms_player_login = :username LIMIT 1";
+    $sql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_player_mobile, lms_access, lms_active 
+                FROM lms_player 
+                WHERE lms_player_login = :username OR lms_player_mobile = :username LIMIT 1";
     $query = $mypdo->prepare($sql);
     $query->execute(array(
         ':username' => $username
@@ -92,6 +96,7 @@ function login($username, $password, $mypdo)
         $fname = $fetch['lms_player_forename'];
         $sname = $fetch['lms_player_surname'];
         $email = $fetch['lms_player_email'];
+        $mobile = $fetch['lms_player_mobile'];
         $nickname = $fetch['lms_player_screen_name'];
         $retaccess = $fetch['lms_access'];
         $isactive = $fetch['lms_active'];
@@ -120,6 +125,7 @@ function login($username, $password, $mypdo)
             $_SESSION['fname'] = $fname;
             $_SESSION['sname'] = $sname;
             $_SESSION['email'] = $email;
+            $_SESSION['mobile'] = $mobile;
             $_SESSION['nickname'] = $nickname;
             $_SESSION['retaccess'] = $retaccess;
             if (getenv('HTTP_X_REAL_IP')) {

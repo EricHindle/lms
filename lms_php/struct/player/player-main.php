@@ -13,7 +13,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $formKey = new formKey();
     $key = $formKey->outputKey();
 
-    $playerchangesql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active FROM lms_player ORDER BY lms_player_screen_name ASC";
+    $playerchangesql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_player_mobile, lms_access, lms_active FROM lms_player ORDER BY lms_player_screen_name ASC";
     $playerchangequery = $mypdo->prepare($playerchangesql);
     $playerchangequery->execute();
     $cafetch = $playerchangequery->fetchAll(PDO::FETCH_ASSOC);
@@ -108,6 +108,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                     <input type="text" class="form-field" style="padding:10px" id="password" name="password" placeholder="password" /><br/>
                     <input type="text" class="form-field" style="padding:10px" id="fname" name="fname" placeholder="forename" /><br/>
                     <input type="text" class="form-field" style="padding:10px" id="sname" name="sname" placeholder="surname" /><br/>
+                    <input type="text" class="form-field" style="padding:10px" id="mobile" name="mobile" placeholder="phone number" /><br/>
                     <input type="text" class="form-field" style="padding:10px" id="screenname" name="screenname" placeholder="screen name" /><br/>
                     <input type="checkbox" name="isadmin" value="true"> Administrator<br>
                 </div>

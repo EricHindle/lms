@@ -21,7 +21,7 @@ echo '
     	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
     	<link rel="stylesheet" href="' . $myPath . 'css/style.css">
     	<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
-    	<title>Last Man Live - Reset Password</title>
+    	<title>Last Man Live - Create Account</title>
 </head>
 <body>
 <div class="container">
@@ -35,6 +35,7 @@ $html .= '
                 <input type="password" class="form-field" name="confirm"  id="confirm" placeholder="confirm password" autocomplete="off"  value="" >
                 <input type="text" class="form-field" name="fname" id="fname" placeholder="first name" />
                 <input type="text" class="form-field" name="sname" id="sname" placeholder="surname" />
+                <input type="text" class="form-field" name="mobile" id="mobile" placeholder="phone number" />
                 <input type="text" class="form-field" name="screenname" id="screenname"  placeholder="screen name" />
         		<input type="hidden" name="isadmin" value="false">
         		<div class="form-checkbox">

@@ -23,14 +23,16 @@ if (login_check($mypdo) == true) {
                 $sname = $_POST['sname'];
                 $screenname = $_POST['screenname'];
                 $email = $_POST['email'];
+                $mobile = $_POST['mobile'];
                 if ($userid) {
                     $html = "";
-                    $upsql = "UPDATE lms_player SET lms_player_email = :email, lms_player_login = :email, lms_player_forename = :forename, lms_player_surname = :surname, lms_player_screen_name = :screenname WHERE lms_player_id = :userid";
+                    $upsql = "UPDATE lms_player SET lms_player_email = :email, lms_player_login = :email, lms_player_forename = :forename, lms_player_surname = :surname, lms_player_screen_name = :screenname, lms_player_mobile = :mobile WHERE lms_player_id = :userid";
                     $upduser = $mypdo->prepare($upsql);
                     $upduser->bindParam(':forename', $fname);
                     $upduser->bindParam(':surname', $sname);
                     $upduser->bindParam(':screenname', $screenname);
                     $upduser->bindParam(':email', $email);
+                    $upduser->bindParam(':mobile', $mobile);
                     $upduser->bindParam(':userid', $userid, PDO::PARAM_INT);
                     $upduser->execute();
                     $upcount = $upduser->rowCount();
@@ -39,6 +41,7 @@ if (login_check($mypdo) == true) {
                         $_SESSION['fname'] = $fname;
                         $_SESSION['sname'] = $sname;
                         $_SESSION['email'] = $email;
+                        $_SESSION['mobile'] = $mobile;
                         $html .= "<script>
 												alert('Details updated successfully.');
 												window.location.href='" . $myPath . "menus/home.php';
