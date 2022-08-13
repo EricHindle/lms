@@ -57,12 +57,13 @@ if (login_check($mypdo) == true) {
 
     foreach ($resultsfetch as $result) {
         if (! $first && $weekno != $result['lms_match_weekno']) {
-            $html .= '</div>';
+            $html .= '    </table>
+                      </div>';
         }
 
         $dispweekno = substr_replace($result['lms_match_weekno'], "/", 4, 0);
         $dispweekno = substr_replace($dispweekno, "-", 2, 0);
-        if ($first && $weekno != $result['lms_match_weekno']) {
+        if ($weekno != $result['lms_match_weekno']) {
             $html .= '<div  class="game-card" style="margin-bottom: 20px;">
                          <table style="padding-bottom: 3em;" class="game-table">
                                                 <tr>
