@@ -65,6 +65,7 @@ if (login_check($mypdo) == true) {
     $html .= '';
 
     foreach ($gamefetch as $myGame) {
+        $joinmessage = 'Please join my Last Man Live game called ' . $myGame['lms_game_name'] . '. %0D%0A The code is ' . $myGame['lms_game_code'] . '. %0D%0A';
         if ($myGame['lms_game_status'] < 3) {
             $html .= '	                   
             
@@ -94,9 +95,19 @@ if (login_check($mypdo) == true) {
                     </tr>
 
                     <tr>
-                    <td colspan="2" >
-                        <div class="table-columnTitle">Game Code:</div>
-                        <div class="game-code">' . $myGame['lms_game_code'] . '</div>';
+                        <td colspan = 2>
+                            <div class="table-columnTitle">Game Code:</div>
+                            <div class="game-code">
+                                <input class="game-code" style="width:50%;text-align:center" type="text"  id="gamecode" name="gamecode" value="' . $myGame['lms_game_code'] . '">';
+            if ($myGame['lms_game_status'] == 1) {
+                $html .= '      <a href="https://twitter.com/share?url=https://lastmanlive.co.uk&text=' . $joinmessage . '" onclick="javascript:window.open(this.href, \'\', \'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600\');return false;" target="_blank" title="Share on Twitter">
+                                    <img border="0" alt="Twitter" src="' . $myPath . 'img/twitterbutton.png" width="25" height="25">
+                                </a>
+                                <a href="https://wa.me?text=' . $joinmessage . ' https://lastmanlive.co.uk" onClick="javascript:window.open(this.href, \'\', \'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600\');return false;" target="_blank" title="Share on whatsapp">
+                                    <img border="0" alt="WhatsApp" src="' . $myPath . 'img/whatsapp.png" width="25" height="25">
+                                </a>';
+            }
+            $html .= '     </div>';
             $html .= '</td>
                     <td>
                     <img style="width:30px" src="' . $myPath . 'img/icons/PickButton.svg">
