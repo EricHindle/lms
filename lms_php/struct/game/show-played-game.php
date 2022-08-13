@@ -50,6 +50,9 @@ if (login_check($mypdo) == true) {
                             ':gameid' => $gameid
                         ));
                         $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
+                        
+                        $joinmessage = 'Please join my Last Man Live game called ' . $gamefetch['lms_game_name'] . '. %0D%0A The code is '.  $gamefetch['lms_game_code'] . '. %0D%0A';
+
                         echo '
 							<!doctype html>
 							<html>
@@ -117,6 +120,12 @@ if (login_check($mypdo) == true) {
                                                         <div class="table-columnTitle">Game Code:</div>
                                                         <div class="game-code">
                                                             <input class="game-code" style="width:50%;" type="text"  id="gamecode" name="gamecode" value="' .  $gamefetch['lms_game_code']. '">
+                                                            <a href="https://twitter.com/share?url=https://lastmanlive.co.uk&text='.  $joinmessage . '" onclick="javascript:window.open(this.href, \'\', \'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600\');return false;" target="_blank" title="Share on Twitter">
+                                                                <img border="0" alt="Twitter" src="' . $myPath . 'img/twitterbutton.png" width="25" height="25">
+                                                            </a>
+                                                            <a href="https://wa.me?text='.  $joinmessage . ' https://lastmanlive.co.uk" onClick="javascript:window.open(this.href, \'\', \'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600\');return false;" target="_blank" title="Share on whatsapp">
+                                                                <img border="0" alt="WhatsApp" src="' . $myPath . 'img/whatsapp.png" width="25" height="25">
+                                                            </a>
                                                         </div>
                                                     </td>
                                                 </tr>
