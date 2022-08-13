@@ -26,33 +26,26 @@ if (login_check($mypdo) == true && $access > 900) {
                 $screenname = sanitize_message_string($_POST['screenname']);
                 $isadmin = (isset($_POST['isadmin']) ? $_POST['isadmin'] : "false");
                 $myaccess = ($isadmin == 'true' ? 999 : 0);
+                $isdupemail = false;
+                $isdupmobile = false;
                 if ($email) {
-                    $cusql = "SELECT lms_player_id FROM lms_player WHERE lms_player_email = :email LIMIT 1";
-                    $cuquery = $mypdo->prepare($cusql);
-                    $cuquery->execute(array(
-                        ':email' => $email
-                    ));
-                    $emailcount = $cuquery->rowCount();
+                    
+                    $isdupemail = get_player_by_email($email);
                 }
                 if ($mobile) {
-                    $cusql = "SELECT lms_player_id FROM lms_player WHERE lms_player_mobile = :mobile LIMIT 1";
-                    $cuquery = $mypdo->prepare($cusql);
-                    $cuquery->execute(array(
-                        ':mobile' => $mobile
-                    ));
-                    $mobilecount = $cuquery->rowCount();
+                    $isdupmobile = get_player_by_mobile($mobile);
                 }
 
                 if ($email && $password && $fname && $sname && $screenname) {
                     $html = "";
 
-                    if ($emailcount > 0) {
+                    if ($isdupemail) {
                         $html .= "<script>
 										alert('Email already in use please pick another email address.');
 										window.location.href='player-main.php';
 									</script>";
                     } else {
-                        if ($mobilecount > 0) {
+                        if ($isdupmobile) {
                             $html .= "<script>
 										alert('Phone already in use please use another phone number.');
 										window.location.href='player-main.php';

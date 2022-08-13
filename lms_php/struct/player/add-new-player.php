@@ -27,7 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $issendemail = (isset($_POST['issendemail']) ? $_POST['issendemail'] : false);
             $sendemail = ($issendemail ? 1 : 0);
             $myaccess = 0;
-
+            $isdupemail = false;
+            $isdupmobile = false;
             if ($email && $password && $confirm && $fname && $sname && $screenname) {
                 $html = "";
 
@@ -37,14 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     							window.location.href='new-player.php';
     						</script>";
                 } else {
-                    $cusql = "SELECT lms_player_id FROM lms_player WHERE lms_player_email = :email LIMIT 1";
-                    $cuquery = $mypdo->prepare($cusql);
-                    $cuquery->execute(array(
-                        ':email' => $email
-                    ));
-                    $cucount = $cuquery->rowCount();
+                    $isdupemail = get_player_by_email($email);
 
-                    if ($cucount > 0) {
+                    if ($isdupemail) {
                         $html .= "<script>
 										alert('Email already in use please use another email address.');
 										window.location.href='new-player.php';
@@ -52,16 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     } else {
                         if (isset($_POST['mobile'])) {
                             $mobile = $_POST['mobile'];
-                            $cusql = "SELECT lms_player_id FROM lms_player WHERE lms_player_mobile = :mobile LIMIT 1";
-                            $cuquery = $mypdo->prepare($cusql);
-                            $cuquery->execute(array(
-                                ':mobile' => $mobile
-                            ));
-                            $cucount = $cuquery->rowCount();
+                            
+                            $isdupmobile = get_player_by_mobile($mobile);
+                            
                         } else {
                             $mobile = '';
                         }
-                        if ($cucount > 0) {
+                        if ($isdupmobile) {
                             $html .= "<script>
 										alert('Phone number already in use please use another number.');
 										window.location.href='new-player.php';

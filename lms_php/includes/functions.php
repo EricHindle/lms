@@ -34,29 +34,28 @@ function sec_session_start()
 }
 
 /*
-function check_password($username, $password)
-{
-    global $mypdo;
-    $sql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active FROM lms_player WHERE lms_player_login = :username LIMIT 1";
-    $query = $mypdo->prepare($sql);
-    $query->execute(array(
-        ':username' => $username
-    ));
-    $fetch = $query->fetch(PDO::FETCH_ASSOC);
-    if ($fetch) {
-        $db_password = $fetch['lms_player_password'];
-        $check = password_verify($password, $db_password);
-        if ($check) {
-            return true;
-        } else {
-            return false;
-        }
-    } else {
-        return false;
-    }
-}
-*/
-
+ * function check_password($username, $password)
+ * {
+ * global $mypdo;
+ * $sql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active FROM lms_player WHERE lms_player_login = :username LIMIT 1";
+ * $query = $mypdo->prepare($sql);
+ * $query->execute(array(
+ * ':username' => $username
+ * ));
+ * $fetch = $query->fetch(PDO::FETCH_ASSOC);
+ * if ($fetch) {
+ * $db_password = $fetch['lms_player_password'];
+ * $check = password_verify($password, $db_password);
+ * if ($check) {
+ * return true;
+ * } else {
+ * return false;
+ * }
+ * } else {
+ * return false;
+ * }
+ * }
+ */
 function gettemppassword($playerid)
 {
     global $mypdo;
@@ -342,4 +341,27 @@ function get_selection_start_date($gamestartweek)
     return $weekfetch['lms_week_start'];
 }
 
+function get_player_by_email($email)
+{
+    global $mypdo;
+    $playersql = "SELECT lms_player_id FROM lms_player WHERE lms_player_email = :email LIMIT 1";
+    $playerquery = $mypdo->prepare($playersql);
+    $playerquery->execute(array(
+        ':email' => $email
+    ));
+    $player = $playerquery->fetch(PDO::FETCH_ASSOC);
+    return $player;
+}
+
+function get_player_by_mobile($mobile)
+{
+    global $mypdo;
+    $playersql = "SELECT lms_player_id FROM lms_player WHERE lms_player_mobile = :mobile LIMIT 1";
+    $playerquery = $mypdo->prepare($playersql);
+    $playerquery->execute(array(
+        ':mobile' => $mobile
+    ));
+    $player = $playerquery->fetch(PDO::FETCH_ASSOC);
+    return $player;
+}
 ?>

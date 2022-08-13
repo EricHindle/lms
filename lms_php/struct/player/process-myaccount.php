@@ -24,35 +24,59 @@ if (login_check($mypdo) == true) {
                 $screenname = $_POST['screenname'];
                 $email = $_POST['email'];
                 $mobile = $_POST['mobile'];
+                $html = "";
                 if ($userid) {
-                    $html = "";
-                    $upsql = "UPDATE lms_player SET lms_player_email = :email, lms_player_login = :email, lms_player_forename = :forename, lms_player_surname = :surname, lms_player_screen_name = :screenname, lms_player_mobile = :mobile WHERE lms_player_id = :userid";
-                    $upduser = $mypdo->prepare($upsql);
-                    $upduser->bindParam(':forename', $fname);
-                    $upduser->bindParam(':surname', $sname);
-                    $upduser->bindParam(':screenname', $screenname);
-                    $upduser->bindParam(':email', $email);
-                    $upduser->bindParam(':mobile', $mobile);
-                    $upduser->bindParam(':userid', $userid, PDO::PARAM_INT);
-                    $upduser->execute();
-                    $upcount = $upduser->rowCount();
-                    if ($upcount > 0) {
-                        $_SESSION['nickname'] = $screenname;
-                        $_SESSION['fname'] = $fname;
-                        $_SESSION['sname'] = $sname;
-                        $_SESSION['email'] = $email;
-                        $_SESSION['mobile'] = $mobile;
+
+                    $player = get_player_by_email($email);
+
+                    if ($player && $player['lms_player_id'] != $userid) {
                         $html .= "<script>
+										alert('Email already in use please use another email address.');
+										window.location.href='" . $myPath . "menus/home.php';
+									</script>";
+                    } else {
+                        if (isset($_POST['mobile'])) {
+                            $mobile = $_POST['mobile'];
+
+                            $player = get_player_by_mobile($mobile);
+                        } else {
+                            $mobile = '';
+                        }
+                        if ($player && $player['lms_player_id'] != $userid) {
+                            $html .= "<script>
+										alert('Phone number already in use please use another number.');
+										window.location.href='" . $myPath . "menus/home.php';
+									</script>";
+                        } else {
+
+                            $upsql = "UPDATE lms_player SET lms_player_email = :email, lms_player_login = :email, lms_player_forename = :forename, lms_player_surname = :surname, lms_player_screen_name = :screenname, lms_player_mobile = :mobile WHERE lms_player_id = :userid";
+                            $upduser = $mypdo->prepare($upsql);
+                            $upduser->bindParam(':forename', $fname);
+                            $upduser->bindParam(':surname', $sname);
+                            $upduser->bindParam(':screenname', $screenname);
+                            $upduser->bindParam(':email', $email);
+                            $upduser->bindParam(':mobile', $mobile);
+                            $upduser->bindParam(':userid', $userid, PDO::PARAM_INT);
+                            $upduser->execute();
+                            $upcount = $upduser->rowCount();
+                            if ($upcount > 0) {
+                                $_SESSION['nickname'] = $screenname;
+                                $_SESSION['fname'] = $fname;
+                                $_SESSION['sname'] = $sname;
+                                $_SESSION['email'] = $email;
+                                $_SESSION['mobile'] = $mobile;
+                                $html .= "<script>
 												alert('Details updated successfully.');
 												window.location.href='" . $myPath . "menus/home.php';
 											</script>";
-                    } else {
-                        $html .= "<script>
+                            } else {
+                                $html .= "<script>
 										alert('Record not changed');
 										window.location.href='" . $myPath . "menus/home.php';
 									</script>";
+                            }
+                        }
                     }
-
                     echo $html;
                 } else {
                     echo "<script>
