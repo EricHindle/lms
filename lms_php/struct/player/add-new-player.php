@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 										window.location.href='new-player.php';
 									</script>";
                     } else {
-                        if (isset($_POST['mobile'])) {
+                        if (isset($_POST['mobile']) && strlen($_POST['mobile']) > 0) {
                             $mobile = $_POST['mobile'];
                             
                             $isdupmobile = get_player_by_mobile($mobile);

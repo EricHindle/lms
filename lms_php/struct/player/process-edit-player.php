@@ -43,7 +43,7 @@ if (login_check($mypdo) == true && $access > 900) {
 										window.location.href='" . $myPath . "menus/home.php';
 									</script>";
                     } else {
-                        if (isset($_POST['mobile'])) {
+                        if (isset($_POST['mobile']) && strlen($_POST['mobile']) > 0) {
                             $mobile = $_POST['mobile'];
 
                             $player = get_player_by_mobile($mobile);
