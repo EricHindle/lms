@@ -212,9 +212,10 @@ function get_week_state($weekno)
     return $weekstate;
 }
 
-function notify_loser($playerid, $gameid, $teamid)
+function notify_loser($playerid, $gameid, $teamid, $matchid)
 {
-    sendemailusingtemplate('teamlose', $playerid, $gameid, $teamid, '', true);
+    $result = get_match_result($matchid);
+    sendemailusingtemplate('teamlose', $playerid, $gameid, $teamid, array($result), true);
 }
 
 function notify_postponed($playerid, $gameid, $teamid)
@@ -245,6 +246,9 @@ function set_game_complete($gameid)
 
 function set_game_player_out($gameid, $playerid)
 {
+    /*
+     * Set player status to 2
+     */
     global $mypdo;
     $upsql = "UPDATE lms_game_player SET lms_game_player_status = 2 WHERE lms_game_id = :gameid and lms_player_id = :playerid";
     $upquery = $mypdo->prepare($upsql);
@@ -252,6 +256,13 @@ function set_game_player_out($gameid, $playerid)
     $upquery->bindParam(':playerid', $playerid, PDO::PARAM_INT);
     $upquery->execute();
     $upCount = $upquery->rowCount();
+    /*
+     * Remove any future picks for this player/game
+     */
+    remove_future_picks($gameid, $playerid);
+    /*
+     * If player updated, reduce the number of active players on the game
+     */
     if ($upCount > 0) {
         $game = get_game($gameid);
         $stillActive = max(0, $game['lms_game_still_active'] - 1);
@@ -261,6 +272,24 @@ function set_game_player_out($gameid, $playerid)
         $updgamequery->bindParam(':stillactive', $stillActive, PDO::PARAM_INT);
         $updgamequery->execute();
         $upCount = $updgamequery->rowCount();
+    }
+}
+
+function remove_future_picks($gameid, $playerid)
+/*
+ * If player is out of the game, any future picks are not required
+ */
+{
+    global $mypdo;
+    $selfgsql = "SELECT * FROM lastmanl_lms.v_lms_player_picks WHERE lms_match_weekno > :matchwk and lms_pick_player_id = :playerid and lms_pick_game_id = :gameid; ";
+    $selfgquery = $mypdo->prepare($selfgsql);
+    $selfgquery->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+    $selfgquery->bindParam(':playerid', $playerid, PDO::PARAM_INT);
+    $selfgquery->bindParam(':matchwk', $_SESSION['matchweek']);
+    $selfgquery->execute();
+    $selfglist = $selfgquery->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($selfglist as $selfg) {
+        delete_pick($playerid, $gameid, $selfg['lms_pick_match_id']);
     }
 }
 
@@ -302,10 +331,25 @@ function set_week_state($weekid, $newstate)
     return $upcount;
 }
 
-
-
-
-
-
+function get_match_result($matchid)
+{
+    global $mypdo;
+    $resultssql = "SELECT * FROM v_lms_results WHERE lms_match_id = :matchid LIMIT 1;";
+    $resultsquery = $mypdo->prepare($resultssql);
+    $resultsquery->bindParam(":matchid", $matchid);
+    $resultsquery->execute();
+    $result = $resultsquery->fetch(PDO::FETCH_ASSOC);
+    $ateam = $result['home_team_name'];
+    $bteam = $result['away_team_name'];
+    $ascore = $result['home_score'];
+    $bscore = $result['away_score'];
+    $resulttext = '';
+    if ($result['lms_match_ha'] == 'h') {
+        $resulttext = $ateam . ' ' . $ascore . ' - ' . $bscore . ' ' . $bteam;
+    } else {
+        $resulttext = $bteam . ' ' . $bscore . ' - ' . $ascore . ' ' . $ateam;
+    }
+    return $resulttext;
+}
 
 ?>

@@ -19,7 +19,7 @@ if (login_check($mypdo) == true) {
     $html = "";
     $thisweek = $_SESSION['matchweek'];
     $lastweek = $thisweek - 1;
-    $resultssql = "SELECT * FROM v_lms_results WHERE lms_match_weekno = :thisweek OR lms_match_weekno = :lastweek;";
+    $resultssql = "SELECT * FROM v_lms_results WHERE lms_match_ha = 'h' AND (lms_match_weekno = :thisweek OR lms_match_weekno = :lastweek);";
     $resultsquery = $mypdo->prepare($resultssql);
     $resultsquery->bindParam(":thisweek", $thisweek);
     $resultsquery->bindParam(":lastweek", $lastweek);

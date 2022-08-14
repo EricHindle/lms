@@ -76,7 +76,7 @@ if (check_start_date() == 1) {
                         set_game_player_out($gameid, $playerid);
                         fwrite($logfile, "Player out of game\n");
                         $pickwl = 'l';
-                        notify_loser($playerid, $gameid, $teamid);
+                        notify_loser($playerid, $gameid, $teamid, $matchid);
                     } else {
                         $pickwl = 'w';
                         if ($rs['lms_match_result'] == 'p') {

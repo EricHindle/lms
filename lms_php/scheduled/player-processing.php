@@ -14,6 +14,10 @@ require $myPath . 'scheduled/week-end-functions.php';
 $_SESSION['currentweek'] = get_global_value('currweek');
 $_SESSION['currentseason'] = get_global_value('currseason');
 $_SESSION['selectweek'] = get_global_value('selectweek');
+/* 
+ * Match week yyyyww is the current season and week
+ * Select week is the week that is open for picks
+ */
 $_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
 $_SESSION['selectweekkey'] = $_SESSION['currentseason'] . $_SESSION['selectweek'];
 $_SESSION['selperiod'] = $_SESSION['selectweek'] . '/' . $_SESSION['currentseason'];
@@ -31,7 +35,16 @@ fwrite($logfile, date("Y-m-d H:i:s") . "\n");
 $picks = get_current_week_picks();
 fwrite($logfile, "Current week picks for active players\n");
 foreach ($picks as $rs) {
-    if ($rs['lms_match_result'] != '') {
+    /*
+     * Ignore games not in-play
+     */
+    if($rs['lms_game_status'] != 2){
+        continue;
+    }
+    /*
+     * If the match has been resulted but pick has not been marked up
+     */
+    if ($rs['lms_match_result'] != '' && $rs['lms_pick_wl'] == '') {
         $gameid = $rs['lms_pick_game_id'];
         $playerid = $rs['lms_pick_player_id'];
         $screenname = $rs['lms_player_screen_name'];
@@ -47,7 +60,7 @@ foreach ($picks as $rs) {
                 set_game_player_out($gameid, $playerid);
                 fwrite($logfile, "Player out of game (".  $rs['lms_match_result'] .")\n");
                 $pickwl = 'l';
-                notify_loser($playerid, $gameid, $teamid);
+                notify_loser($playerid, $gameid, $teamid, $matchid);
             } else {
                 $pickwl = 'w';
                 if ($rs['lms_match_result'] == 'p') {
@@ -73,7 +86,7 @@ $activeGames = get_active_games();
 fwrite($logfile, "Active games\n");
 foreach ($activeGames as $game) {
     /*
-     * Check if this game has no matches this week.
+     * Check if this game has no matches this week. 
      */
     $playingteams = get_count_of_playing_teams_this_week($game['lms_game_id'], $_SESSION['matchweek']);
 
@@ -81,6 +94,9 @@ foreach ($activeGames as $game) {
         fwrite($logfile, "Game " . strval($game['lms_game_id']) . " " . $game['lms_game_name'] . " has no matches this week\n");
         continue;
     }
+    /*
+     * Check for any active players who have not made a pick this week and mark them out.
+     */
     $activePlayers = get_still_active_game_players($game['lms_game_id']);
     fwrite($logfile, "Active players for " . strval($game['lms_game_id']) . " " . $game['lms_game_name'] . "\n");
     foreach ($activePlayers as $activePlayer) {

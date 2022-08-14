@@ -50,7 +50,7 @@ if (login_check($mypdo) == true) {
                             ':gameid' => $gameid
                         ));
                         $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
-                        
+
                         echo '
 							<!doctype html>
 							<html>
@@ -206,7 +206,7 @@ if (login_check($mypdo) == true) {
                         /*
                          * Get all the players picks for the selected game
                          */
-                        
+
                         $player = $_SESSION['user_id'];
                         $picksql = "SELECT lms_pick_match_id, lms_match_result, lms_match_weekno, lms_week, lms_year,lms_match_date, lms_team_id, lms_team_name, lms_match_ha, lms_match_opp FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game ORDER BY lms_match_weekno";
                         $pickquery = $mypdo->prepare($picksql);
@@ -225,12 +225,13 @@ if (login_check($mypdo) == true) {
                             if ($rs['lms_match_weekno'] == $_SESSION['selectweekkey']) {
                                 $currentpickmatch = $rs['lms_pick_match_id'];
                                 $currentpickteam = $rs['lms_team_id'];
-                         /*       if ($rs['lms_match_ha'] == "h") {
-                                    $currentteampair = strtoupper($rs['lms_team_name']) . " (v " . $rs['lms_match_opp'] . ')';
-                                } else {
-                                    $currentteampair = '(' . $rs['lms_match_opp'] . " v) " . strtoupper($rs['lms_team_name']);
-                                }
-                         */
+                                /*
+                                 * if ($rs['lms_match_ha'] == "h") {
+                                 * $currentteampair = strtoupper($rs['lms_team_name']) . " (v " . $rs['lms_match_opp'] . ')';
+                                 * } else {
+                                 * $currentteampair = '(' . $rs['lms_match_opp'] . " v) " . strtoupper($rs['lms_team_name']);
+                                 * }
+                                 */
                                 $currentteampair = $rs['lms_team_name'] . " (v " . $rs['lms_match_opp'] . ')';
                             }
 
@@ -352,29 +353,28 @@ if (login_check($mypdo) == true) {
                             $nextpickfetch = get_next_player_pick($gameid, $rs['lms_player_id']);
                             $currentpick = 'No Pick';
                             $thispick = 'No Pick';
-                            $nextpick = 'No Pick';
+                            $nextpick = '';
                             $rowcolor = 'white';
                             $selcolor = 'white';
                             if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
                                 $rowcolor = $rs['lms_game_player_status'] == 2 ? 'red' : 'silver';
+                            }
+                            if ($pickfetch || $nextpickfetch) {
+                                $newline = '';
+                                if ($pickfetch && $nextpickfetch) {
+                                    $newline = '</br>';
+                                }
+                                if ($pickfetch) {
+                                    $thispick = $pickfetch['lms_team_name'] . ' <br><span class="table-columnTitle">(' . date_format(date_create($pickfetch['lms_match_date']), 'd M') . ')</span>';
+                                }
+                                if ($nextpickfetch && $rs['lms_game_player_status'] == 1) {
+                                    $nextpick = $nextpickfetch['lms_team_name'] . ' <br><span class="table-columnTitle">(' . date_format(date_create($nextpickfetch['lms_match_date']), 'd M') . ')</span>';
+                                }
+                                $currentpick = $thispick . $newline . $nextpick;
                             } else {
-                                if ($pickfetch || $nextpickfetch) {
-                                    $newline = '';
-                                    if ($pickfetch && $nextpickfetch) {
-                                        $newline = '</br>';
-                                    }
-                                    if ($pickfetch) {
-                                        $thispick = $pickfetch['lms_team_name'] . ' <br><span class="table-columnTitle">(' . date_format(date_create($pickfetch['lms_match_date']), 'd M') . ')</span>';
-                                    }
-                                    if ($nextpickfetch) {
-                                        $nextpick = $nextpickfetch['lms_team_name'] . ' <br><span class="table-columnTitle">(' . date_format(date_create($nextpickfetch['lms_match_date']), 'd M') . ')</span>';
-                                    }
-                                    $currentpick = $thispick . $newline . $nextpick;
-                                } else {
-                                    if ($gamefetch['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
-                                        $currentpick = '(waiting)';
-                                        $selcolor = 'crimson';
-                                    }
+                                if ($gamefetch['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
+                                    $currentpick = '(waiting)';
+                                    $selcolor = 'crimson';
                                 }
                             }
 
