@@ -5,5 +5,5 @@
 "fromName": "$name",
 "bcc": "$bcc",
 "subject": "Join my Last Man Live game",
-"body": "Please join my Last Man Live game called '$gameName' .<br> The game code is: $gameCode .<br>  Register or Login at $url"
+"body": "Please join my <b>Last Man Live</b> game called <span style='color:blue'>$gameName</span>.<br><br>The game code is: <span style='color:blue'>$gameCode</span>.<br><br>Register or Login at $url<br><br><img src='https://lastmanlive.co.uk/img/lml_logo.jpg' width='40' height='40' >"
 }
