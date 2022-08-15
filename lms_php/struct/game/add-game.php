@@ -12,6 +12,7 @@ require $myPath . 'struct/game/game-functions.php';
 
 sec_session_start();
 $formKey = new formKey();
+$currentPage = '';
 if (login_check($mypdo) == true) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (! isset($_POST['form_key']) || ! $formKey->validate()) {
@@ -57,10 +58,107 @@ if (login_check($mypdo) == true) {
                             $leagueadded = $stmtaddgameleague->rowCount();
                             add_player_to_game($gameid, $_SESSION['user_id']);
                             sendemailusingtemplate('newgame', $playerid, $gameid, 0, '', true);
-                            $html .= "<script>              
-									alert('Game added.');
-									window.location.href='game-manage.php';
-								  </script>";
+                            $key = $formKey->outputKey();
+                            echo '
+      <!doctype html>
+		<html>
+			<head>
+ 			    <meta charset="UTF-8">
+			    <title>LML Games</title>
+			    <meta name="viewport" content="width=device-width, initial-scale=1">
+                <link rel="stylesheet" href="' . $myPath . 'css/style.css" type="text/css">
+                <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+			    <script src="' . $myPath . 'js/jquery.js"></script>
+			    <script src="' . $myPath . 'js/jquery.tablesorter.js"></script>
+			    <script>
+		            $(function(){
+		            $(\'#keywords\').tablesorter();
+		            });
+		        </script>
+			</head>
+			<body>';
+                            include $myPath . 'globNAV.php';
+                            $html .= '
+                <div class="container">';
+                            $html .= $key;
+                            $joinmessage = 'Please join my Last Man Live game called ' . $gamename . '. %0D%0A The code is ' . $gamecode . '. %0D%0A';
+
+                            $html .= '
+                <div class="game-card"  style="margin-bottom:20px">
+                               
+                    <table class="game-table" style="padding-bottom:3em">
+                        <tr>
+                            <th colspan="2" border="0">
+                                <div><h2>' . $gamename . '</h2></div>
+                                <div id="divider" style="background-color:#CC1417; height: 3px; width:25%; margin-top:2px; margin-bottom:7px;"></div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td width="50%">
+                                <div class="table-columnTitle">Start Week</div>
+                                <div>' . sprintf('%02d', $gamestartweek) . '</div>
+                            </td>
+
+                            <td width="50%">
+                                <div class="table-columnTitle">Game Status:</div>
+                                <div>Created</div>
+                            </td>
+                        </tr>
+                                
+                        <tr>
+                            <td width="50%">
+                                <div class="table-columnTitle">Game Code:</div>
+                                <div class="game-code">
+                                    <input class="game-code" style="width:50%;text-align:center" type="text"  id="gamecode" name="gamecode" value="' . $gamecode . '">
+                                </div>
+                            </td>
+                            <td width="50%">
+                                <div class="table-columnTitle">Share</div>
+                                <div>
+                                    <a href="https://twitter.com/share?url=https://lastmanlive.co.uk&text=' . $joinmessage . '" onclick="javascript:window.open(this.href, \'\', \'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600\');return false;" target="_blank" title="Share on Twitter">
+                                        <img border="0" alt="Twitter" src="' . $myPath . 'img/twitterbutton.png" width="25" height="25">
+                                    </a>
+                                    <a href="https://wa.me?text=' . $joinmessage . ' https://lastmanlive.co.uk" onClick="javascript:window.open(this.href, \'\', \'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600\');return false;" target="_blank" title="Share on whatsapp">
+                                        <img border="0" alt="WhatsApp" src="' . $myPath . 'img/whatsapp.png" width="25" height="25">
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                                 
+                </div>
+                <div class="game-pick-card">
+                    <table class="game-table">
+                        <tr>
+                            <th>
+                                <h2>Invite Players</h2>
+                                <div id="divider" style="background-color:#CC1417; height: 3px; width:25%; margin-top:2px; margin-bottom:7px;"></div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <form class="form-group" role="form" name ="inviteplayer" method="post" action="' . $myPath . 'struct/player/invite-player.php">';
+                            $html .= $key;
+                            $html .= '
+                                    <input type= "hidden" name= "gameid" value="' . $gameid . '" />
+                                    <h4>Email Addresses</h4>
+                                    <div class="form-group">
+                                            <input type="text" class="form-field" name="email1"  id="email1" placeholder="new player 1"> <br>
+                                            <input type="text" class="form-field" name="email2"  id="email2" placeholder="new player 2"> <br>
+                                            <input type="text" class="form-field" name="email3"  id="email3" placeholder="new player 3"> <br>
+                                            <input type="text" class="form-field" name="email4"  id="email4" placeholder="new player 4"> <br>
+                                    </div>
+                                    <div class="form-group">
+                                        <input id="submit" name="submit" type="submit" value="Invite" class="btn">
+    					            </div>	
+                                </form>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </body>
+        </html>
+        ';
                         } else {
                             $html .= "<script>
 									alert('Game was not added.');
