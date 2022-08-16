@@ -83,7 +83,7 @@ if (check_start_date() == 1) {
                         fwrite($logfile, "Player still active in this game\n");
                         $pickwl = '';
                         if ($rs['lms_match_result'] == 'l' or $rs['lms_match_result'] == 'd') {
-                            set_game_player_out($gameid, $playerid);
+                            set_game_player_out($gameid, $playerid, $_SESSION['matchweek']);
                             fwrite($logfile, "Player out of game\n");
                             $pickwl = 'l';
                             notify_loser($playerid, $gameid, $teamid, $matchid);
@@ -127,7 +127,7 @@ if (check_start_date() == 1) {
                     $playerid = $activePlayer['lms_player_id'];
                     fwrite($logfile, "Player " . strval($playerid) . " \n");
                     if (get_game_player_pick_count($gameid, $playerid) == 0) {
-                        set_game_player_out($gameid, $playerid);
+                        set_game_player_out($gameid, $playerid, $_SESSION['matchweek']);
                         fwrite($logfile, "Player out of game - no pick\n");
                         notify_no_pick($playerid, $gameid);
                     }

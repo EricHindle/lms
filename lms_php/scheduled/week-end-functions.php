@@ -245,16 +245,17 @@ function set_game_complete($gameid)
     return $upCount;
 }
 
-function set_game_player_out($gameid, $playerid)
+function set_game_player_out($gameid, $playerid, $elimwk)
 {
     /*
      * Set player status to 2
      */
     global $mypdo;
-    $upsql = "UPDATE lms_game_player SET lms_game_player_status = 2 WHERE lms_game_id = :gameid and lms_player_id = :playerid";
+    $upsql = "UPDATE lms_game_player SET lms_game_player_status = 2, lms_game_player_elimination_week = :elimwk WHERE lms_game_id = :gameid and lms_player_id = :playerid";
     $upquery = $mypdo->prepare($upsql);
     $upquery->bindParam(':gameid', $gameid, PDO::PARAM_INT);
     $upquery->bindParam(':playerid', $playerid, PDO::PARAM_INT);
+    $upquery->bindParam(':elimwk', $elimwk);
     $upquery->execute();
     $upCount = $upquery->rowCount();
     /*

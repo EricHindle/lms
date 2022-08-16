@@ -57,7 +57,7 @@ foreach ($picks as $rs) {
             fwrite($logfile, "Player " . strval($playerid) . " " . $screenname . " Game " . strval($gameid) . " " . $gamename . " Match " . strval($matchid) . " " . $teamname . "\n");
             $pickwl = '';
             if ($rs['lms_match_result'] == 'l' or $rs['lms_match_result'] == 'd') {
-                set_game_player_out($gameid, $playerid);
+                set_game_player_out($gameid, $playerid, $_SESSION['matchweek']);
                 fwrite($logfile, "Player out of game (".  $rs['lms_match_result'] .")\n");
                 $pickwl = 'l';
                 notify_loser($playerid, $gameid, $teamid, $matchid);
@@ -105,7 +105,7 @@ foreach ($activeGames as $game) {
         $screenname =  $activePlayer['lms_player_screen_name'];
         fwrite($logfile, "Player " . strval($playerid) . " " . $screenname . " \n");
         if (get_game_player_pick_count($gameid, $playerid) == 0) {
-            set_game_player_out($gameid, $playerid);
+            set_game_player_out($gameid, $playerid, $_SESSION['matchweek']);
             fwrite($logfile, "Player out of game - no pick\n");
             notify_no_pick($playerid, $gameid);
         }
