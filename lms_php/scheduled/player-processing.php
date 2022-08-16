@@ -68,7 +68,7 @@ foreach ($picks as $rs) {
                     fwrite($logfile, "Match postponed\n");
                 } else {
                     if ($rs['lms_match_result'] == 'w') {
-                        notify_winner($playerid, $gameid, $teamid);
+                        notify_winner($playerid, $gameid, $teamid, $matchid);
                         fwrite($logfile, "Winning pick\n");
                     } else {
                         /* no result */

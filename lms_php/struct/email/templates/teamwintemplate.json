@@ -5,5 +5,5 @@
 "fromName": "$adminName",
 "bcc": "$bcc",
 "subject": "You are still in the game",
-"body": "The team you picked this week ($teamName) in the Last Man Live game'$gameName' was a winner. <br> You are still in the game. <br>Do not forget to make a pick for the new week. Login at $url"
+"body": "$value0 <br><brt>The team you picked this week ($teamName) in the <b>Last Man Live</b> game<span style='color:blue'>$gameName</span> was a winner. <br><br> You are still in the game. <br><br>Do not forget to make a pick for the new week. Login at $url<br><br><img src='https://lastmanlive.co.uk/img/lml_logo.jpg' width='40' height='40' >"
 }
