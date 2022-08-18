@@ -11,22 +11,18 @@ $key = $formKey->outputKey();
 if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
     $plaintext = '';
     $enctext = '';
-    $encrypt = true;
+    $dectext = '';
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $plaintext = (isset($_POST['plaintext']) ? $_POST['plaintext'] : '');
         $enctext = (isset($_POST['enctext']) ? $_POST['enctext'] : '');
-        $encrypt = (isset($_POST['isencrypt']) ? true : false);
+        $dectext = (isset($_POST['dectext']) ? $_POST['dectext'] : '');
 
-        if ($encrypt) {
             $enctext = combobulate($plaintext, "e");
-        } else {
-            $plaintext = combobulate($enctext, "d");
-        }
-    }
 
-    $isencrypt = ($encrypt ? 'checked' : '');
+            $dectext = combobulate($enctext, "d");
+    }
 
     $html = "";
 
@@ -60,7 +56,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
 			        	<div class = "row">';
 
     $html .= '			       <div class="well col-md-offset-1 col-md-8 col-sm-offset-1 col-sm-10 textDark">
-			                  <form class="form-group" role="form" name ="emailtest" method="post" action="' . $myPath . 'testing/encryptiontest.php">';
+			                  <form class="form-group" role="form" name ="emailtest" method="post" action="' . $myPath . 'testing/testforms/encryptiontest.php">';
     $html .= $key;
     $html .= '					 
                                  <div class="form-group">
@@ -70,10 +66,11 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
                                  <div class="form-group">
                                     <input type="text" class="form-control" name="enctext"  id="enctext" placeholder="encrypted text"  value="' . $enctext . '" >
                                  </div>
-                                <div class="form-group">
-                                       <input type="checkbox" style="margin-left:20px;" name="isencrypt" id="isencrypt" value="true" ' . $isencrypt . ' >
-                                       <label for="issendemail">&nbsp encrypt</label>
-                                </div>
+
+                                 <div class="form-group">
+                                    <input type="text" class="form-control" name="dectext"  id="dectext" placeholder="decrypted text"  value="' . $dectext . '" >
+                                 </div>
+
 ';
 
     $html .= '                 <div class="form-group">
