@@ -1,5 +1,6 @@
 <?php
 require 'db_connect.php';
+require 'info_functions.php';
 
 date_default_timezone_set('Europe/London');
 
@@ -327,6 +328,50 @@ function generate_password()
         $randstr = str_shuffle($randstr);
     }
     return $passcode;
+}
+
+function get_ekey()
+{
+    $pre = get_global_value('hw_pre_length');
+    $post = get_global_value('hw_post_length');
+    return get_combobulator_a($pre, $post);
+}
+
+function get_eiv()
+{
+    $pre = get_global_value('hw_pre_length');
+    $post = get_global_value('hw_post_length');
+    return get_combobulator_b($pre, $post);
+}
+
+function get_key()
+{
+    $pre = get_global_value('hw_pre_length');
+    $post = get_global_value('hw_post_length');
+    $dkeye = get_global_value('hw_1') . get_global_value('hw_2');
+    $dkeyd = combobulate(substr($dkeye, $pre, strlen($dkeye) - $pre - $post), 'd', get_ekey(), get_eiv());
+    return $dkeyd;
+}
+
+function get_iv()
+{
+    $pre = get_global_value('hw_pre_length');
+    $post = get_global_value('hw_post_length');
+    $dive = get_global_value('hw_3') . get_global_value('hw_4');
+    $divd = combobulate(substr($dive, $pre, strlen($dive) - $pre - $post), 'd', get_ekey(), get_eiv());
+    return $divd;
+}
+
+function decrypt($encstring)
+{
+    $decstring = combobulate($encstring, 'd', $_SESSION['hwkey'], $_SESSION['hwiv']);
+    return $decstring;
+}
+
+function encrypt($decstring)
+{
+    $encstring = combobulate($decstring, 'e', $_SESSION['hwkey'], $_SESSION['hwiv']);
+    return $encstring;
 }
 
 function get_selection_start_date($gamestartweek)

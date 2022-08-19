@@ -12,6 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST['username'], $_POST['password'])) {
             $username = $_POST['username'];
             $password = $_POST['password'];
+            $_SESSION['hwkey'] = get_key();
+            $_SESSION['hwiv'] = get_iv();
             if (strlen($username) > 5) {
                 if (login($username, $password, $mypdo) == true) {
                     header('Location: menus/home.php');

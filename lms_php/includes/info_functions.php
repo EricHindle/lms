@@ -4,10 +4,8 @@
  * HINDLEWARE
  * Copyright (C) 2020 Eric Hindle. All rights reserved.
  */
-function combobulate($string, $action = 'e')
+function combobulate($string, $action = 'e', $secret_key, $secret_iv)
 {
-    $secret_key = get_combobulation_key();
-    $secret_iv = get_combobulation_iv();
     $output = false;
     $encrypt_method = "AES-256-CBC";
     $key = hash('sha256', $secret_key);
@@ -22,11 +20,24 @@ function combobulate($string, $action = 'e')
 
 function get_combobulation_key()
 {
-    return 'sdvniksdfkivhckbdvkjydouiadsfkbvcib';
+    return 'asdfkisdvniksdfkivhckbdvkjydouiadsfkbvcibskjyg';
 }
 
 function get_combobulation_iv()
 {
-    return 'asdfkiasdkybsdfkiybsdkjbhsdkvhjdfaskjyg';
+    return 'sdvnikasdfkiasdkybsdfkiybsdkjbhsdkvhjdfaskjygbvcib';
 }
+
+function get_combobulator_a($pre, $post)
+{
+    $hw_a = get_combobulation_key();
+    return substr($hw_a, $pre, strlen($hw_a) - $pre - $post);
+}
+
+function get_combobulator_b($pre, $post)
+{
+    $hw_b = get_combobulation_iv();
+    return substr($hw_b, $pre, strlen($hw_b) - $pre - $post);
+}
+
 ?>

@@ -3,7 +3,7 @@ $myPath = '../../';
 
 require_once $myPath . 'includes/functions.php';
 require_once $myPath . 'includes/formkey.class.php';
-require $myPath . 'struct/info/info_functions.php';
+
 sec_session_start();
 $devlevelneeded = 901;
 $formKey = new formKey();
@@ -19,9 +19,9 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
         $enctext = (isset($_POST['enctext']) ? $_POST['enctext'] : '');
         $dectext = (isset($_POST['dectext']) ? $_POST['dectext'] : '');
 
-            $enctext = combobulate($plaintext, "e");
+            $enctext = encrypt($plaintext);
 
-            $dectext = combobulate($enctext, "d");
+            $dectext = decrypt($enctext);
     }
 
     $html = "";
