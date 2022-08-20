@@ -293,21 +293,31 @@ function get_current_period_start()
 function get_global_value($valuename)
 {
     global $mypdo;
-    $infosql = "SELECT lms_info_value FROM lms_info WHERE lms_info_id = :valname";
+    $infosql = "SELECT lms_info_value, lms_info_enc FROM lms_info WHERE lms_info_id = :valname";
     $infoquery = $mypdo->prepare($infosql);
     $infoquery->bindParam(':valname', $valuename);
     $infoquery->execute();
     $infofetch = $infoquery->fetch(PDO::FETCH_ASSOC);
-    return $infofetch['lms_info_value'];
+    $infovalue = $infofetch['lms_info_value'];
+    if ($infofetch['lms_info_enc'] == 1){
+        $infovalue = decrypt($infofetch['lms_info_value']);
+    }
+    return $infovalue;
 }
 
-function set_global_value($valuename, $infovalue)
+function set_global_value($valuename, $infovalue, $enc)
 {
+    $infoenc = 0;
+    if ($enc){
+        $infovalue = encrypt($infovalue);
+        $infoenc = 1;
+    }
     global $mypdo;
-    $upsql = "UPDATE lms_info SET lms_info_value = :infovalue WHERE lms_info_id = :id";
+    $upsql = "UPDATE lms_info SET lms_info_value = :infovalue, lms_info_enc = :enc WHERE lms_info_id = :id";
     $upquery = $mypdo->prepare($upsql);
     $upquery->bindParam(':id', $valuename);
     $upquery->bindParam(':infovalue', $infovalue);
+    $upquery->bindParam(':enc', $infoenc);
     $upquery->execute();
     return $upquery->rowCount();
 }

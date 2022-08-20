@@ -23,7 +23,7 @@ if (login_check($mypdo) == true && $access > 900) {
                 if ($gameid) {
 
                     $html = "";
-                    $infosql = "SELECT lms_info_id, lms_info_value FROM lms_info WHERE lms_info_id = :id";
+                    $infosql = "SELECT lms_info_id, lms_info_value, lms_info_enc FROM lms_info WHERE lms_info_id = :id";
                     $infoquery = $mypdo->prepare($infosql);
                     $infoquery->execute(array(
                         ':id' => $gameid
@@ -55,6 +55,12 @@ if (login_check($mypdo) == true && $access > 900) {
                     <div class="box" style="padding:1em;margin:10px;">
                      	<form role="form" name ="edit" method="post" action="process-edit-info.php">';
                         $html .= $key;
+                        $enc = "";
+                           $infovalue = $infofetch['lms_info_value'];
+                        if($infofetch['lms_info_enc']  == 1) {
+                             $enc = "checked";
+                               $infovalue = decrypt($infovalue);
+                        }
                         $html .= '					  
                	            <div class="form-group" style="padding:25px;text-align:left;">
                                 <div>
@@ -64,7 +70,9 @@ if (login_check($mypdo) == true && $access > 900) {
 
 		                    <div class="form-group"  style="padding-left:10px;text-align:left;">	                    	
                                <label class="form-text" style="display:inline-block;width:40%;text-align:left">New value:</label>
-		                       <input type="text" class="form-field" id="infovalue" name="infovalue" value="' . $infofetch['lms_info_value'] . '"><br>
+		                       <input type="text" class="form-field" id="infovalue" name="infovalue" value="' . $infovalue . '"><br>
+                               <input type="checkbox" style="margin-left:20px;" name="infoenc" id="infoenc" value="true" ' . $enc . ' >
+                               <label for="infoenc">&nbsp Encrypted value</label>
 							   <input type= "hidden" name= "id" value="' . $gameid . '" />
 		                    </div>
                             <div class="form-group" style="padding-top:25px;margin-left:16px;margin-right:16px">

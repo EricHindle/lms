@@ -56,6 +56,10 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     	                    	<div>
     		                        <input type="text" class="form-field" id="infovalue" name="infovalue" placeholder="Value" />
                                 </div>
+                                <div>
+                                    <input type="checkbox" style="margin-left:20px;" name="infoenc" id="infoenc" value="true" >
+                                    <label for="infoenc">&nbsp Encrypted value</label>
+                                </div>
 			                </div>
                             <div class="form-group" style="margin-left:16px;margin-right:16px">
 					            <input id="submit" name="submit" type="submit" value="Submit" class="btn graybutton" style="padding:5px;width:50%;">
@@ -91,10 +95,14 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 						  <tbody>
 									';
     foreach ($infofetch as $rs) {
+        $infovalue  = $rs['lms_info_value'];
+        if ($rs['lms_info_enc'] == 1) {
+            $infovalue = '[encrypted]';
+        }
         $html .= '
         					<tr>
         						<td>' . $rs['lms_info_id'] . '</td>
-        						<td>' . $rs['lms_info_value'] . '</td>
+        						<td>' . $infovalue . '</td>
         					</tr>';
     }
     $html .= '

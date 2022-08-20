@@ -20,6 +20,10 @@ if (login_check($mypdo) == true && $access > 900) {
             if (isset($_POST['id'], $_POST['infovalue'])) {
                 $gameid = $_POST['id'];
                 $infovalue = $_POST['infovalue'];
+                $enc = 0;
+                if (isset($_POST['infoenc']) && $_POST['infoenc']) {
+                    $enc = 1;
+                }
                 if ($gameid && $infovalue) {
                     $html = "";
 
@@ -29,13 +33,17 @@ if (login_check($mypdo) == true && $access > 900) {
                     $infoquery->execute();
                     $infocount = $infoquery->rowCount();
                     if ($infocount > 0) {
+                        if ($enc == 1){
+                            $infovalue = encrypt($infovalue);
+                        }
                         date_default_timezone_set('Europe/London');
                         $phptime = time();
                         $mysqltime = date("Y-m-d H:i:s", $phptime);
-                        $upsql = "UPDATE lms_info SET lms_info_value = :infovalue WHERE lms_info_id = :id";
+                        $upsql = "UPDATE lms_info SET lms_info_value = :infovalue, lms_info_enc = :infoenc WHERE lms_info_id = :id";
                         $upquery = $mypdo->prepare($upsql);
                         $upquery->bindParam(':id', $gameid);
                         $upquery->bindParam(':infovalue', $infovalue);
+                        $upquery->bindParam(':infoenc', $enc);
                         $upquery->execute();
                         $upcount = $upquery->rowCount();
                         if ($upcount > 0) {
