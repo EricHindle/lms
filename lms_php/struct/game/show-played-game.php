@@ -280,7 +280,8 @@ if (login_check($mypdo) == true) {
                         $availfetch = $availquery->fetchAll(PDO::FETCH_ASSOC);
 
                         $gps = get_game_player_status($gameid, $player);
-
+                        $gamestatus = get_current_game_status($gameid)['lms_game_status'];
+                        
                         $html .= '<div>';
                         foreach ($availfetch as $mypick) {
                             $teampair = "";
@@ -294,7 +295,7 @@ if (login_check($mypdo) == true) {
                         $html .= '</div>';
 
                         if (time() < strtotime(get_deadline_date())) {
-                            if ($gps['lms_game_player_status'] == "1") {
+                            if ($gps['lms_game_player_status'] == "1" && $gamestatus == 1) {
                                 $html .= '<div class="pick-card" style="margin-bottom: 20px;padding-top:1em">';
 
                                 $select = 'Make A Pick';
