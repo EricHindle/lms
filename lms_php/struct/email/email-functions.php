@@ -44,8 +44,8 @@ function replacemarkers($input, $player, $game, $team, $values)
 
     $output = $input;
     if (is_array($player)) {
-        $output = str_replace('$email', $player['lms_player_email'], $output);
-        $output = str_replace('$name', $player['lms_player_forename'] . ' ' . $player['lms_player_surname'], $output);
+        $output = str_replace('$email', decrypt($player['lms_player_email']), $output);
+        $output = str_replace('$name', decrypt($player['lms_player_forename']) . ' ' . decrypt($player['lms_player_surname']), $output);
         $output = str_replace('$screenname', $player['lms_player_screen_name'], $output);
     }
     if (is_array($game)) {

@@ -19,11 +19,11 @@ if (login_check($mypdo) == true) {
         } else {
             if (isset($_POST['userid'], $_POST['email'], $_POST['fname'], $_POST['sname'], $_POST['screenname'])) {
                 $userid = sanitize_int($_POST['userid']);
-                $fname = $_POST['fname'];
-                $sname = $_POST['sname'];
+                $fname = encrypt($_POST['fname']);
+                $sname = encrypt($_POST['sname']);
                 $screenname = $_POST['screenname'];
-                $email = $_POST['email'];
-                $mobile = $_POST['mobile'];
+                $email = encrypt($_POST['email']);
+                $mobile = '';
                 $html = "";
                 if ($userid) {
 
@@ -36,11 +36,8 @@ if (login_check($mypdo) == true) {
 									</script>";
                     } else {
                         if (isset($_POST['mobile'])) {
-                            $mobile = $_POST['mobile'];
-
+                            $mobile = encrypt($_POST['mobile']);
                             $player = get_player_by_mobile($mobile);
-                        } else {
-                            $mobile = '';
                         }
                         if ($player && $player['lms_player_id'] != $userid) {
                             $html .= "<script>

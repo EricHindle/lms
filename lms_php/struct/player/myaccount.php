@@ -32,7 +32,16 @@ if (login_check($mypdo) == true) {
                 if ($usercount > 0) {
                     $key = $formKey->outputKey();
                     $userfetch = $userquery->fetch(PDO::FETCH_ASSOC);
-
+                    $forename = $userfetch['lms_player_forename'];
+                    $surname = $userfetch['lms_player_surname'];
+                    $email = $userfetch['lms_player_email'];
+                    $forename = decrypt($forename);
+                    $surname = decrypt($surname);
+                    $email = decrypt($email);
+                    $mobile = '';
+                    if (strlen($userfetch['lms_player_mobile']) > 0){
+                        $mobile = decrypt($userfetch['lms_player_mobile']);
+                    }
                     echo '
 								<!doctype html>
 								<html>
@@ -58,19 +67,19 @@ if (login_check($mypdo) == true) {
                         					<h2>Account Details</h2>
                                             <div class="form-group" style="text-align:left">
                                                 <label for="fname" class="form-text">Forename:</label><br>
-                                                <input type="text"  class="form-field" id="fname" name="fname" value="' . $userfetch['lms_player_forename'] . '">
+                                                <input type="text"  class="form-field" id="fname" name="fname" value="' . $forename . '">
                                             </div>
                                             <div class="form-group" style="text-align:left">
                                                 <label for="sname" class="form-text">Surname:</label><br>
-                                                <input type="text"  class="form-field" id="sname" name="sname" value="' . $userfetch['lms_player_surname'] . '">
+                                                <input type="text"  class="form-field" id="sname" name="sname" value="' . $surname . '">
                                             </div>
                                             <div class="form-group" style="text-align:left">
                                                 <label for="mobile" class="form-text">Phone number:</label><br>
-                                                <input type="text"  class="form-field" id="mobile" name="mobile" value="' . $userfetch['lms_player_mobile'] . '">
+                                                <input type="text"  class="form-field" id="mobile" name="mobile" value="' . $mobile . '">
                                             </div>
                                             <div class="form-group" style="text-align:left">
                                                 <label for="email" class="form-text">Email:</label><br>
-                                                <input type="text"  class="form-field" name="email"  id="email" value="' . $userfetch['lms_player_email'] . '">
+                                                <input type="text"  class="form-field" name="email"  id="email" value="' . $email . '">
                                             </div>
                                             <div class="form-group" style="text-align:left">
                                             	<label  for="screenname" class="form-text">Screen name:</label><br>

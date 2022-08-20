@@ -19,11 +19,14 @@ if (login_check($mypdo) == true && $access > 900) {
         } else {
             if (isset($_POST['userid'], $_POST['email'], $_POST['fname'], $_POST['sname'], $_POST['screenname'])) {
                 $userid = sanitize_int($_POST['userid']);
-                $fname = sanitize_paranoid_string($_POST['fname']);
-                $sname = sanitize_paranoid_string($_POST['sname']);
+                $fname = encrypt(sanitize_paranoid_string($_POST['fname']));
+                $sname = encrypt(sanitize_paranoid_string($_POST['sname']));
                 $screenname = $_POST['screenname'];
-                $email = $_POST['email'];
-                $mobile = $_POST['mobile'];
+                $email = encrypt($_POST['email']);
+                $mobile = '';
+                if (isset($_POST['mobile'])) {
+                    $mobile = $_POST['mobile'];
+                }
                 $isadmin = (isset($_POST['isadmin']) ? $_POST['isadmin'] : "false");
                 $isactive = (isset($_POST['isactive']) ? $_POST['isactive'] : "false");
 
@@ -44,8 +47,7 @@ if (login_check($mypdo) == true && $access > 900) {
 									</script>";
                     } else {
                         if (isset($_POST['mobile']) && strlen($_POST['mobile']) > 0) {
-                            $mobile = $_POST['mobile'];
-
+                            $mobile = encrypt($_POST['mobile']);
                             $player = get_player_by_mobile($mobile);
                         } else {
                             $mobile = '';

@@ -13,7 +13,7 @@ function createtemppassword($email)
     $hash = password_hash($newpwd, PASSWORD_DEFAULT, [
         'cost' => 10
     ]);
-    $player = get_player_by_userid($email);
+    $player = get_player_by_userid(encrypt($email));
     if ($player) {
         $playerid = $player['lms_player_id'];
         $istempalready = gettemppasswordcount($playerid);

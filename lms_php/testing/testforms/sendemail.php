@@ -1,5 +1,5 @@
 <?php
-$myPath = '../';
+$myPath = '../../';
 
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
@@ -26,25 +26,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($sentOk) {
                 $html .= "<script>
 							alert('Email sent OK');
-							window.location.href='" . $myPath . "testing/emailtest.php';
+							window.location.href='" . $myPath . "testing/testforms/emailtest.php';
 						</script>";
             } else {
                 $html .= "<script>
 							alert('Email failed');
-							window.location.href='" . $myPath . "testing/emailtest.php';
+							window.location.href='" . $myPath . "testing/testforms/emailtest.php';
 						</script>";
             }
         } else {
             $html .= "<script>
 							alert('Missing values in POST');
-							window.location.href='" . $myPath . "testing/emailtest.php';
+							window.location.href='" . $myPath . "testing/testforms/emailtest.php';
 						</script>";
         }
     }
 } else {
     $html .= "<script>
 							alert('Not a POST');
-							window.location.href='" . $myPath . "testing/emailtest.php';
+							window.location.href='" . $myPath . "testing/testforms/emailtest.php';
 						</script>";
 }
 

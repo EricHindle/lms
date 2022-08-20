@@ -18,18 +18,22 @@ if (login_check($mypdo) == true && $access > 900) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
             if (isset($_POST['email'], $_POST['password'], $_POST['fname'], $_POST['sname'], $_POST['screenname'])) {
-                $email = $_POST['email'];
+                $email = encrypt($_POST['email']);
                 $password = $_POST['password'];
-                $fname = sanitize_message_string($_POST['fname']);
-                $sname = sanitize_message_string($_POST['sname']);
-                $mobile = $_POST['mobile'];
+                $fname = encrypt(sanitize_message_string($_POST['fname']));
+                $sname = encrypt(sanitize_message_string($_POST['sname']));
+                if (isset($_POST['mobile'])) {
+                    $mobile = encrypt($_POST['mobile']);
+                } else {
+                    $mobile = '';
+                }
                 $screenname = sanitize_message_string($_POST['screenname']);
                 $isadmin = (isset($_POST['isadmin']) ? $_POST['isadmin'] : "false");
                 $myaccess = ($isadmin == 'true' ? 999 : 0);
                 $isdupemail = false;
                 $isdupmobile = false;
                 if ($email) {
-                    
+
                     $isdupemail = get_player_by_email($email);
                 }
                 if ($mobile) {
@@ -64,12 +68,13 @@ if (login_check($mypdo) == true && $access > 900) {
                                 $hash = password_hash($password, PASSWORD_DEFAULT, [
                                     'cost' => 11
                                 ]);
-                                $sqladduser = "INSERT INTO lms_player (lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active, lms_player_created) VALUES (:username, :password, :fname, :sname, :screenname, :email, :retaccess, 1, :create)";
+                                $sqladduser = "INSERT INTO lms_player (lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_mobile, lms_player_screen_name, lms_player_email, lms_access, lms_active, lms_player_created) VALUES (:username, :password, :fname, :sname, :mobile, :screenname, :email, :retaccess, 1, :create)";
                                 $stmtadduser = $mypdo->prepare($sqladduser);
                                 $stmtadduser->bindParam(':username', $email);
                                 $stmtadduser->bindParam(':password', $hash);
                                 $stmtadduser->bindParam(':fname', $fname);
                                 $stmtadduser->bindParam(':sname', $sname);
+                                $stmtadduser->bindParam(':mobile', $mobile);
                                 $stmtadduser->bindParam(':screenname', $screenname);
                                 $stmtadduser->bindParam(':email', $email);
                                 $stmtadduser->bindParam(':retaccess', $myaccess, PDO::PARAM_INT);

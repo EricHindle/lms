@@ -18,11 +18,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Location: ' . $myPath . 'index.php?error=1');
     } else {
         if (isset($_POST['email'], $_POST['password'], $_POST['confirm'], $_POST['fname'], $_POST['sname'], $_POST['screenname'])) {
-            $email = $_POST['email'];
+            $_SESSION['hwkey'] = get_key();
+            $_SESSION['hwiv'] = get_iv();
+            $email = encrypt($_POST['email']);
             $password = $_POST['password'];
             $confirm = $_POST['confirm'];
-            $fname = sanitize_message_string($_POST['fname']);
-            $sname = sanitize_message_string($_POST['sname']);
+            $fname = encrypt(sanitize_message_string($_POST['fname']));
+            $sname = encrypt(sanitize_message_string($_POST['sname']));
             $screenname = sanitize_message_string($_POST['screenname']);
             $issendemail = (isset($_POST['issendemail']) ? $_POST['issendemail'] : false);
             $sendemail = ($issendemail ? 1 : 0);
@@ -47,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 									</script>";
                     } else {
                         if (isset($_POST['mobile']) && strlen($_POST['mobile']) > 0) {
-                            $mobile = $_POST['mobile'];
+                            $mobile = encrypt($_POST['mobile']);
                             
                             $isdupmobile = get_player_by_mobile($mobile);
                             
@@ -73,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 $hash = password_hash($password, PASSWORD_DEFAULT, [
                                     'cost' => 11
                                 ]);
-                                $sqladduser = "INSERT INTO lms_player (lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_player_phone, lms_access, lms_active, lms_player_send_email, lms_player_created) VALUES (:username, :password, :fname, :sname, :screenname, :email, :mobile, :retaccess, 1, :sendemail, :create)";
+                                $sqladduser = "INSERT INTO lms_player (lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_player_mobile, lms_access, lms_active, lms_player_send_email, lms_player_created) VALUES (:username, :password, :fname, :sname, :screenname, :email, :mobile, :retaccess, 1, :sendemail, :create)";
                                 $stmtadduser = $mypdo->prepare($sqladduser);
                                 $stmtadduser->bindParam(':username', $email);
                                 $stmtadduser->bindParam(':password', $hash);

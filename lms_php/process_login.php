@@ -10,10 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Location: index.php?error=1');
     } else {
         if (isset($_POST['username'], $_POST['password'])) {
-            $username = $_POST['username'];
-            $password = $_POST['password'];
             $_SESSION['hwkey'] = get_key();
             $_SESSION['hwiv'] = get_iv();
+            $username = encrypt($_POST['username']);
+            $password = $_POST['password'];
             if (strlen($username) > 5) {
                 if (login($username, $password, $mypdo) == true) {
                     header('Location: menus/home.php');

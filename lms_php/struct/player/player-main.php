@@ -127,7 +127,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                 <div class="form-group">
                     <select class="form-field" style="padding:10px" id="user" name="user">';
     foreach ($cafetch as $myUser) {
-        $html .= '      <option value="' . $myUser['lms_player_id'] . '">' . $myUser['lms_player_screen_name'] . ' <small>(' . $myUser['lms_player_email'] . ')<small></option>';
+        $html .= '      <option value="' . $myUser['lms_player_id'] . '">' . $myUser['lms_player_screen_name'] . ' <small>(' . decrypt($myUser['lms_player_email']) . ')<small></option>';
     }
     $html .= '	    </select>
                 </div>
@@ -145,7 +145,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 
                     <select class="form-field" style="padding:10px" id="user" name="user">';
     foreach ($cafetch as $myUser) {
-        $html .= '      <option value="' . $myUser['lms_player_id'] . '">' . $myUser['lms_player_screen_name'] . ' <small>(' . $myUser['lms_player_email'] . ')<small></option>';
+        $html .= '      <option value="' . $myUser['lms_player_id'] . '">' . $myUser['lms_player_screen_name'] . ' <small>(' . decrypt($myUser['lms_player_email']) . ')<small></option>';
     }
     $html .= '	    </select>
 				</div>
@@ -185,9 +185,9 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
         $rowcolor = ($rs['lms_access'] > 900 ? 'yellow' : $rowcolor);
         $html .= '
     				<tr style="color:' . $rowcolor . '">
-    					<td>' . $rs['lms_player_login'] . '</td>
-    					<td>' . $rs['lms_player_forename'] . '</td>
-    					<td>' . $rs['lms_player_surname'] . '</td>
+    					<td>' . decrypt($rs['lms_player_login']) . '</td>
+    					<td>' . decrypt($rs['lms_player_forename']) . '</td>
+    					<td>' . decrypt($rs['lms_player_surname']) . '</td>
     					<td>' . $rs['lms_player_screen_name'] . '</td>
     					<td>' . $rs['lms_access'] . '</td>
                         <td>' . $active . '</td>

@@ -58,7 +58,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
 			        	<div class = "row">';
 
     $html .= '			       <div class="well col-md-offset-1 col-md-8 col-sm-offset-1 col-sm-10 textDark">
-			                  <form class="form-group" role="form" name ="emailtest" method="post" action="' . $myPath . 'testing/sendemail.php">';
+			                  <form class="form-group" role="form" name ="emailtest" method="post" action="' . $myPath . 'testing/testforms/sendemail.php">';
     $html .= $key;
     $html .= '					     <h3 class="text-center">Enter Email Details</h3>
 			                     <br>
