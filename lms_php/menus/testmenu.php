@@ -54,6 +54,11 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
                                 <h3 style="color:white;" >Results</h3>
                             </a>
                         </div>
+//                         <div class="btn graybutton" style="padding:3px;margin:3px;width:100%;">
+//                             <a href="' . $myPath . 'testing/testforms/encrypt-players.php">
+//                                 <h3 style="color:white;" >Encrypt Players</h3>
+//                             </a>
+//                         </div>
                     </div>
                     <div class="box" style="padding:1em;margin:10px;">
                         <h3>Read a JSON file</h3>
