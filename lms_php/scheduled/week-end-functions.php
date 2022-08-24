@@ -8,6 +8,7 @@ require '/home/lastmanl/public_html/scheduled/email-functions.php';
 
 // require '../includes/db_connect.php';
 // require '../scheduled/email-functions.php';
+
 function activateGames($nextgameweek)
 {
     global $mypdo;
@@ -22,23 +23,30 @@ function activateGames($nextgameweek)
 function markup_outcomes()
 {
     global $mypdo;
+    /*
+     * get this week's picks
+     */
     $matchweek = $_SESSION['matchweek'];
     $picksql = "SELECT * FROM lastmanl_lms.v_lms_player_picks where lms_match_weekno = :weekno order by lms_pick_game_id";
     $pickquery = $mypdo->prepare($picksql);
     $pickquery->bindParam(':weekno', $matchweek);
     $pickquery->execute();
     $picklist = $pickquery->fetchAll(PDO::FETCH_ASSOC);
+    /*
+     * count the winning picks for each game
+     */
     if (count($picklist) > 0) {
         $currentgame = $picklist[0]['lms_pick_game_id'];
         $winct = 0;
         $gamepicks = array();
         foreach ($picklist as $pick) {
             if ($currentgame != $pick['lms_pick_game_id']) {
-                if ($winct == 1) {
-                    markup_gamePlayers($gamepicks, 2);
-                }
-                if ($winct == 0) {
-                    markup_gamePlayers($gamepicks, 1);
+                /*
+                 * if no winners left, all losers are joint last man
+                 * if only one winner, winner is last man
+                 */
+                if ($winct < 2) {
+                    markup_gamePlayers($gamepicks);
                 }
                 $winct = 0;
                 $currentgame = $pick['lms_pick_game_id'];
@@ -52,15 +60,20 @@ function markup_outcomes()
     }
 }
 
-function markup_gamePlayers($gamepicks, $outcome)
+function markup_gamePlayers($gamepicks)
 {
     global $mypdo;
+    if (count($gamepicks) > 1) {
+        $outcome = 1;
+    } else {
+        $outcome = 2;
+    }
     $updgamesql = "UPDATE lms_game_player SET lms_game_player_outcome = :outcome WHERE lms_game_id = :gameId AND lms_player_id = :playerId";
     foreach ($gamepicks as $gp) {
         $updgamequery = $mypdo->prepare($updgamesql);
-        $updgamequery->bindParam(':outcome', $outcome);
-        $updgamequery->bindParam(':gameId', $gp['lms_game_id']);
-        $updgamequery->bindParam(':playerId', $gp['lms_player_id']);
+        $updgamequery->bindParam(':outcome', $outcome, PDO::PARAM_INT);
+        $updgamequery->bindParam(':gameId', $gp['lms_pick_game_id'], PDO::PARAM_INT);
+        $updgamequery->bindParam(':playerId', $gp['lms_pick_player_id'], PDO::PARAM_INT);
         $updgamequery->execute();
     }
 }

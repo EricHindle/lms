@@ -147,11 +147,6 @@ if (check_start_date() == 1) {
              * Get this weeks picks and mark up any outcomes
              */
             markup_outcomes($_SESSION['matchweek']);
-            
-            
-            
-            
-            
             /*
              * Increment game week number and mark completed games (no remaining players)
              */
