@@ -144,6 +144,15 @@ if (check_start_date() == 1) {
             set_week_state($_SESSION['matchweek'], $weekstate);
             fwrite($logfile, "Week state 2\n");
             /*
+             * Get this weeks picks and mark up any outcomes
+             */
+            markup_outcomes($_SESSION['matchweek']);
+            
+            
+            
+            
+            
+            /*
              * Increment game week number and mark completed games (no remaining players)
              */
             $activegames = get_active_games();

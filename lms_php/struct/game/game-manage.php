@@ -98,7 +98,7 @@ if (login_check($mypdo) == true) {
                         <td width="50%">
                             <div class="table-columnTitle">Game Code:</div>
                             <div class="game-code">
-                                <input class="game-code" style="width:100%;text-align:center" type="text" onClick="javascript:return false;"  id="gamecode" name="gamecode" value="' . $myGame['lms_game_code'] . '">
+                                <input class="game-code" style="width:100%;text-align:center" type="text" onClick="javascript: return false;" id="gamecode" name="gamecode" value="' . $myGame['lms_game_code'] . '">
                             </div>
                         </td>
                         <td width="35%">';

@@ -49,7 +49,7 @@ if (login_check($mypdo) == true) {
         $selectweekpick = $pickquery->fetch(PDO::FETCH_ASSOC);
 
         $showthisweekspick = $rs['lms_game_status'] > 1;
-        $shownextweekspick = $rs['lms_game_player_status'] == 1;
+        $shownextweekspick = $rs['lms_game_player_status'] == 1 && $rs['lms_game_status'] < 3;
 
         $thispick = 'No Pick';
         $nextpick = '(make a pick now)';
@@ -74,7 +74,7 @@ if (login_check($mypdo) == true) {
          * If player is out (or left the game) this week - show the team
          */
         $displaynextweek = '';
-        if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
+        if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3 or $rs['lms_game_status'] == 4 ) {
             $playercolor = $rs['lms_game_player_status'] == 2 ? 'status-out' : 'cancelled';
             if ($rs['lms_game_player_status'] == 2) {
                 if ($matchcount > 0) {

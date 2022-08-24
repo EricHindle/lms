@@ -3,12 +3,11 @@
  * HINDLEWARE
  * Copyright (C) 2020-21 Eric Hindle. All rights reserved.
  */
-
 require '/home/lastmanl/public_html/includes/db_connect.php';
 require '/home/lastmanl/public_html/scheduled/email-functions.php';
+
 // require '../includes/db_connect.php';
 // require '../scheduled/email-functions.php';
-
 function activateGames($nextgameweek)
 {
     global $mypdo;
@@ -18,6 +17,52 @@ function activateGames($nextgameweek)
     $updgamequery->execute();
     $upCount = $updgamequery->rowCount();
     return $upCount;
+}
+
+function markup_outcomes()
+{
+    global $mypdo;
+    $matchweek = $_SESSION['matchweek'];
+    $picksql = "SELECT * FROM lastmanl_lms.v_lms_player_picks where lms_match_weekno = :weekno order by lms_pick_game_id";
+    $pickquery = $mypdo->prepare($picksql);
+    $pickquery->bindParam(':weekno', $matchweek);
+    $pickquery->execute();
+    $picklist = $pickquery->fetchAll(PDO::FETCH_ASSOC);
+    if (count($picklist) > 0) {
+        $currentgame = $picklist[0]['lms_pick_game_id'];
+        $winct = 0;
+        $gamepicks = array();
+        foreach ($picklist as $pick) {
+            if ($currentgame != $pick['lms_pick_game_id']) {
+                if ($winct == 1) {
+                    markup_gamePlayers($gamepicks, 2);
+                }
+                if ($winct == 0) {
+                    markup_gamePlayers($gamepicks, 1);
+                }
+                $winct = 0;
+                $currentgame = $pick['lms_pick_game_id'];
+                $gamepicks = array();
+            }
+            $gamepicks[] = $pick;
+            if ($pick['lms_pick_wl'] == 'w') {
+                $winct += 1;
+            }
+        }
+    }
+}
+
+function markup_gamePlayers($gamepicks, $outcome)
+{
+    global $mypdo;
+    $updgamesql = "UPDATE lms_game_player SET lms_game_player_outcome = :outcome WHERE lms_game_id = :gameId AND lms_player_id = :playerId";
+    foreach ($gamepicks as $gp) {
+        $updgamequery = $mypdo->prepare($updgamesql);
+        $updgamequery->bindParam(':outcome', $outcome);
+        $updgamequery->bindParam(':gameId', $gp['lms_game_id']);
+        $updgamequery->bindParam(':playerId', $gp['lms_player_id']);
+        $updgamequery->execute();
+    }
 }
 
 function check_start_date()
@@ -215,7 +260,9 @@ function get_week_state($weekno)
 function notify_loser($playerid, $gameid, $teamid, $matchid)
 {
     $result = get_match_result($matchid);
-    sendemailusingtemplate('teamlose', $playerid, $gameid, $teamid, array($result), true);
+    sendemailusingtemplate('teamlose', $playerid, $gameid, $teamid, array(
+        $result
+    ), true);
 }
 
 function notify_postponed($playerid, $gameid, $teamid)
@@ -226,7 +273,9 @@ function notify_postponed($playerid, $gameid, $teamid)
 function notify_winner($playerid, $gameid, $teamid, $matchid)
 {
     $result = get_match_result($matchid);
-    sendemailusingtemplate('teamwin', $playerid, $gameid, $teamid, array($result), true);
+    sendemailusingtemplate('teamwin', $playerid, $gameid, $teamid, array(
+        $result
+    ), true);
 }
 
 function notify_no_pick($playerid, $gameid)

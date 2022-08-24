@@ -66,7 +66,6 @@ function get_game_player_status($game, $player) {
     return $mygamesfetch;
 }
 
-
 function get_current_game_status($game) {
     global $mypdo;
     $mygamessql = "SELECT lms_game_status FROM lms_game WHERE lms_game_id = :game LIMIT 1";
