@@ -43,8 +43,7 @@ if (login_check($mypdo) == true && $access > 900) {
                         if (strlen($userfetch['lms_player_mobile']) > 0){
                             $mobile = decrypt($userfetch['lms_player_mobile']);
                         }
-                        $isadmin = ($userfetch['lms_access'] == '999' ? 'checked' : '');
-                        $isadmin = ($userfetch['lms_access'] == '901' ? 'checked' : '');
+                        $isadmin = ($userfetch['lms_access'] > '900' ? 'checked' : '');
                         $isactive = ($userfetch['lms_active'] == '1' ? 'checked' : '');
                         echo '
 							<!doctype html>';

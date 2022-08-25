@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['hwiv'] = get_iv();
             $username = encrypt($_POST['username']);
             $password = $_POST['password'];
-            if (strlen($username) > 5) {
+            if (strlen($_POST['username']) > 5) {
                 if (login($username, $password, $mypdo) == true) {
                     header('Location: menus/home.php');
                 } else {
