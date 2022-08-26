@@ -1,4 +1,8 @@
 <?php
+/*
+ * HINDLEWARE
+ * Copyright (C) 2022 Eric Hindle. All rights reserved.
+ */
 require 'db_connect.php';
 require 'info_functions.php';
 
@@ -34,29 +38,6 @@ function sec_session_start()
     session_regenerate_id(true);
 }
 
-/*
- * function check_password($username, $password)
- * {
- * global $mypdo;
- * $sql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_access, lms_active FROM lms_player WHERE lms_player_login = :username LIMIT 1";
- * $query = $mypdo->prepare($sql);
- * $query->execute(array(
- * ':username' => $username
- * ));
- * $fetch = $query->fetch(PDO::FETCH_ASSOC);
- * if ($fetch) {
- * $db_password = $fetch['lms_player_password'];
- * $check = password_verify($password, $db_password);
- * if ($check) {
- * return true;
- * } else {
- * return false;
- * }
- * } else {
- * return false;
- * }
- * }
- */
 function gettemppassword($playerid)
 {
     global $mypdo;

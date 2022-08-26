@@ -1,4 +1,8 @@
 <?php
+/*
+ * HINDLEWARE
+ * Copyright (C) 2022 Eric Hindle. All rights reserved.
+ */
 require 'includes/functions.php';
 sec_session_start();
 

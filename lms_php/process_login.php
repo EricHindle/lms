@@ -1,4 +1,8 @@
 <?php
+/*
+ * HINDLEWARE
+ * Copyright (C) 2022 Eric Hindle. All rights reserved.
+ */
 require 'includes/db_connect.php';
 require 'includes/functions.php';
 require 'includes/formkey.class.php';

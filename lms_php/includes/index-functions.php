@@ -1,4 +1,8 @@
 <?php
+/*
+ * HINDLEWARE
+ * Copyright (C) 2022 Eric Hindle. All rights reserved.
+ */
 date_default_timezone_set('Europe/London');
 
 function get_current_deadline_date($selectweekkey)
@@ -52,8 +56,7 @@ function process_week_end()
     if ($rowcount == 1) {
         $weekfetch = $weekquery->fetchAll(PDO::FETCH_ASSOC);
         $actualmatchwk = $weekfetch['lms_week_no'];
-        if ($actualmatchwk > $_SESSION['matchweek']) {
-        }
+        if ($actualmatchwk > $_SESSION['matchweek']) {}
     }
 }
 

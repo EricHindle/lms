@@ -1,7 +1,7 @@
 <?php
 /*
  * HINDLEWARE
- * Copyright (C) 2021 Eric Hindle. All rights reserved.
+ * Copyright (C) 2022 Eric Hindle. All rights reserved.
  */
 $myPath = '../';
 require $myPath . 'includes/db_connect.php';
@@ -53,12 +53,13 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
                             <a href="' . $myPath . 'struct/match/show-results.php">
                                 <h3 style="color:white;" >Results</h3>
                             </a>
-                        </div>
-                        <div class="btn graybutton" style="padding:3px;margin:3px;width:100%;">
-                            <a href="' . $myPath . 'testing/testforms/encrypt-players.php">
-                                <h3 style="color:white;" >Encrypt Players</h3>
-                            </a>
-                        </div>
+                        </div>';
+    // <div class="btn graybutton" style="padding:3px;margin:3px;width:100%;">
+    // <a href="' . $myPath . 'testing/testforms/encrypt-players.php">
+    // <h3 style="color:white;" >Encrypt Players</h3>
+    // </a>
+    // </div>
+    $html .= '
                         <div class="btn graybutton" style="padding:3px;margin:3px;width:100%;">
                             <a href="' . $myPath . 'testing/testforms/testrig.php">
                                 <h3 style="color:white;" >Test a function</h3>

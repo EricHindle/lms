@@ -1,5 +1,8 @@
 <?php
-
+/*
+ * HINDLEWARE
+ * Copyright (C) 2022 Eric Hindle. All rights reserved.
+ */
 require 'includes/db_connect.php';
 require 'includes/functions.php';
 require 'includes/formkey.class.php';
@@ -33,35 +36,35 @@ if (login_check($mypdo) == true) {
       <body>
       <div class="container">
           <div class="box">
-              <img src="img/LastmanLogo-650.png" alt="logo" class="logo" />
-              <form role="form" autocomplete="off" name="form1" method="post" action="process_login.php" class="form-group">
+                <img src="img/LastmanLogo-650.png" alt="logo" class="logo" />
+                <form role="form" autocomplete="off" name="form1" method="post" action="process_login.php" class="form-group">
     ';
     $html .= $formKey->outputKey();
     $html .= '
-    <input class="form-field" name="username"  id="username" placeholder="email/phone no." autocomplete="on">
-            
-    <input type="password" class="form-field" name="password" id="password" placeholder="password" autocomplete="on">
-    
-    <button class="btn" type="submit">Sign in</button>
-    </form>
-<br/>
-    <div class="dark-text">
-        <a href="struct/player/new-password.php">Forgotten Password</a>
-     </div>
-<br/>
-    <div class="light-text">
-    <a href="struct/player/new-player.php" role="button">Create Account</a>
-</div>
-</div>
+                    <input class="form-field" name="username"  id="username" placeholder="email/phone no." autocomplete="on">
+                            
+                    <input type="password" class="form-field" name="password" id="password" placeholder="password" autocomplete="on">
+                    
+                    <button class="btn" type="submit">Sign in</button>
+                </form>
+                <br/>
+                <div class="dark-text">
+                    <a href="struct/player/new-password.php">Forgotten Password</a>
+                </div>
+                <br/>
+                <div class="light-text">
+                    <a href="struct/player/new-player.php" role="button">Create Account</a>
+                </div>
+            </div>
                                 ';
     if (isset($_GET['error'])) {
         $html .= '<div class="error-message">Your email and password combination is incorrect.</div>';
     }
     $html .= '            
 
-</div>
-</body>
-</html>
+            </div>
+        </body>
+    </html>
     ';
     echo $html;
 }

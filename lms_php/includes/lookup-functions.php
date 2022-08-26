@@ -1,8 +1,11 @@
 <?php
+/*
+ * HINDLEWARE
+ * Copyright (C) 2022 Eric Hindle. All rights reserved.
+ */
 $myPath = '../../';
 
 require $myPath . 'includes/db_connect.php';
-
 
 function get_player_status($code)
 {
@@ -55,7 +58,8 @@ function get_game_name($code)
     return $text;
 }
 
-function get_game_player_status($game, $player) {
+function get_game_player_status($game, $player)
+{
     global $mypdo;
     $mygamessql = "SELECT lms_game_player_status, lms_game_player_status_text FROM v_lms_player_games WHERE lms_player_id = :player and lms_game_id = :game LIMIT 1";
     $mygamesquery = $mypdo->prepare($mygamessql);
@@ -66,7 +70,8 @@ function get_game_player_status($game, $player) {
     return $mygamesfetch;
 }
 
-function get_current_game($game) {
+function get_current_game($game)
+{
     global $mypdo;
     $mygamessql = "SELECT * FROM lms_game WHERE lms_game_id = :game LIMIT 1";
     $mygamesquery = $mypdo->prepare($mygamessql);
@@ -76,10 +81,10 @@ function get_current_game($game) {
     return $mygamesfetch;
 }
 
-function get_remaining_weeks($includecurrentweek){
-    
+function get_remaining_weeks($includecurrentweek)
+{
     global $mypdo;
-    
+
     $weeksql = "SELECT lms_week_no, lms_week, lms_year, lms_week_start FROM lms_week WHERE lms_week > :week and lms_year = :season";
     if ($includecurrentweek) {
         $weeksql = "SELECT lms_week_no, lms_week, lms_year, lms_week_start FROM lms_week WHERE lms_week >= :week and lms_year = :season";
@@ -92,7 +97,8 @@ function get_remaining_weeks($includecurrentweek){
     return $weekfetch;
 }
 
-function get_deadline_date() {
+function get_deadline_date()
+{
     global $mypdo;
     $weeksql = "SELECT lms_week_deadline FROM lms_week WHERE lms_week = :week and lms_year = :season LIMIT 1";
     $weekquery = $mypdo->prepare($weeksql);
@@ -102,6 +108,5 @@ function get_deadline_date() {
     $weekfetch = $weekquery->fetch(PDO::FETCH_ASSOC);
     return $weekfetch['lms_week_deadline'];
 }
-
 
 ?>
