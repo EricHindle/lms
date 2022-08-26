@@ -56,7 +56,9 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
         <div class="box"  style="padding:1em;">
             <h2>Player Encryption</h2>
         </div>';
+
     if (! $_SESSION['encrypted']) {
+        $_SESSION['encrypted'] = true;
         $html .= '        <div class="box" style="text-align:left;width:850px;padding:1em;margin:10px;">
     		<h3 style="text-align:center">All Players</h3>
         	<table class="table table-bordered" id="keywords">
@@ -122,7 +124,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
             // ';
         }
         set_global_value('encrypt', 'true', false);
-        $_SESSION['encrypt'] = true;
+
         $html .= '
 			     </tbody>
 		      </table>
