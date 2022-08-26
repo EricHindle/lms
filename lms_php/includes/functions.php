@@ -299,7 +299,7 @@ function get_global_value($valuename)
     $infoquery->execute();
     $infofetch = $infoquery->fetch(PDO::FETCH_ASSOC);
     $infovalue = $infofetch['lms_info_value'];
-    if ($infofetch['lms_info_enc'] == 1){
+    if ($infofetch['lms_info_enc'] == 1) {
         $infovalue = decrypt($infofetch['lms_info_value']);
     }
     return $infovalue;
@@ -308,7 +308,7 @@ function get_global_value($valuename)
 function set_global_value($valuename, $infovalue, $enc)
 {
     $infoenc = 0;
-    if ($enc){
+    if ($enc) {
         $infovalue = encrypt($infovalue);
         $infoenc = 1;
     }
@@ -374,13 +374,19 @@ function get_iv()
 
 function decrypt($encstring)
 {
-    $decstring = combobulate($encstring, 'd', $_SESSION['hwkey'], $_SESSION['hwiv']);
+    $decstring = $encstring;
+    if ($_SESSION['encrypted']) {
+        $decstring = combobulate($encstring, 'd', $_SESSION['hwkey'], $_SESSION['hwiv']);
+    }
     return $decstring;
 }
 
 function encrypt($decstring)
 {
-    $encstring = combobulate($decstring, 'e', $_SESSION['hwkey'], $_SESSION['hwiv']);
+    $encstring = $decstring;
+    if ($_SESSION['encrypted']) {
+        $encstring = combobulate($decstring, 'e', $_SESSION['hwkey'], $_SESSION['hwiv']);
+    }
     return $encstring;
 }
 

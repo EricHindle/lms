@@ -19,7 +19,7 @@ if (login_check($mypdo) == true) {
     $_SESSION['selectweekkey'] = $_SESSION['currentseason'] . $_SESSION['selectweek'];
     $_SESSION['selperiod']=   $_SESSION['selectweek'] . '/' .$_SESSION['currentseason'] ;
     $_SESSION['deadline'] = get_current_deadline_date($_SESSION['selectweekkey']);   
-    
+    $_SESSION['encrypted'] = filter_var(get_global_value('encrypt'), FILTER_VALIDATE_BOOLEAN);
     $html = '
     <!DOCTYPE html>
     <html lang="en">

@@ -11,7 +11,7 @@ sec_session_start();
 $currentPage = '';
 if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $formKey = new formKey();
-    $key = $formKey->outputKey();	
+    $key = $formKey->outputKey();
 
     $playerchangesql = "SELECT * FROM lms_player ORDER BY lms_player_screen_name ASC";
     $playerchangequery = $mypdo->prepare($playerchangesql);
@@ -54,10 +54,10 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $html .= '
 <div class="container">
         <div class="box"  style="padding:1em;">
-            <h2>Player Admin</h2>
-        </div>
-
-        <div class="box" style="text-align:left;width:850px;padding:1em;margin:10px;">
+            <h2>Player Encryption</h2>
+        </div>';
+    if (! $_SESSION['encrypted']) {
+        $html .= '        <div class="box" style="text-align:left;width:850px;padding:1em;margin:10px;">
     		<h3 style="text-align:center">All Players</h3>
         	<table class="table table-bordered" id="keywords">
 				<thead>
@@ -70,36 +70,36 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 			    </thead>
 			    <tbody>
 									';
-    foreach ($cafetch as $rs) {
-        $userid = $rs['lms_player_id'];
-        $email = $rs['lms_player_login'];
-        $fname = $rs['lms_player_forename'];
-        $sname = $rs['lms_player_surname'];
-        $mobile = $rs['lms_player_mobile'];
+        foreach ($cafetch as $rs) {
+            $userid = $rs['lms_player_id'];
+            $email = $rs['lms_player_login'];
+            $fname = $rs['lms_player_forename'];
+            $sname = $rs['lms_player_surname'];
+            $mobile = $rs['lms_player_mobile'];
 
-        $email_e = encrypt($email);
-        $fname_e = encrypt($fname);
-        $sname_e = encrypt($sname);
-        $mobile_e = encrypt($mobile);
+            $email_e = encrypt($email);
+            $fname_e = encrypt($fname);
+            $sname_e = encrypt($sname);
+            $mobile_e = encrypt($mobile);
 
-        $upsql = "UPDATE lms_player SET lms_player_email = :email, lms_player_login = :username, lms_player_forename = :forename,  lms_player_surname = :surname, lms_player_mobile = :mobile WHERE lms_player_id = :id";
-        $upduser = $mypdo->prepare($upsql);
-        $upduser->bindParam(':username', $email_e);
-        $upduser->bindParam(':forename', $fname_e);
-        $upduser->bindParam(':surname', $sname_e);
-        $upduser->bindParam(':email', $email_e);
-        $upduser->bindParam(':mobile', $mobile_e);
-        $upduser->bindParam(':id', $userid, PDO::PARAM_INT);
-        $upduser->execute();
+            $upsql = "UPDATE lms_player SET lms_player_email = :email, lms_player_login = :username, lms_player_forename = :forename,  lms_player_surname = :surname, lms_player_mobile = :mobile WHERE lms_player_id = :id";
+            $upduser = $mypdo->prepare($upsql);
+            $upduser->bindParam(':username', $email_e);
+            $upduser->bindParam(':forename', $fname_e);
+            $upduser->bindParam(':surname', $sname_e);
+            $upduser->bindParam(':email', $email_e);
+            $upduser->bindParam(':mobile', $mobile_e);
+            $upduser->bindParam(':id', $userid, PDO::PARAM_INT);
+            $upduser->execute();
 
-        // $email_d = decrypt($email);
-        // $fname_d = decrypt($fname);
-        // $sname_d = decrypt($sname);
+            // $email_d = decrypt($email);
+            // $fname_d = decrypt($fname);
+            // $sname_d = decrypt($sname);
 
-        $active = ($rs['lms_active'] == 1 ? 'Yes' : 'No');
-        $rowcolor = ($rs['lms_active'] == 1 ? 'white' : 'silver');
-        $rowcolor = ($rs['lms_access'] > 900 ? 'yellow' : $rowcolor);
-        $html .= '
+            $active = ($rs['lms_active'] == 1 ? 'Yes' : 'No');
+            $rowcolor = ($rs['lms_active'] == 1 ? 'white' : 'silver');
+            $rowcolor = ($rs['lms_access'] > 900 ? 'yellow' : $rowcolor);
+            $html .= '
     				<tr style="color:' . $rowcolor . '">
     					<td>' . $rs['lms_player_screen_name'] . '</td>
     					<td>' . $email . '</td>
@@ -113,21 +113,26 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     					<td>' . $fname_e . '</td>
     					<td>' . $sname_e . '</td>
     				</tr>';
-        // <tr style="color:' . $rowcolor . '">
-        // <td>' . $rs['lms_player_screen_name'] . '</td>
-        // <td>' . $email_d . '</td>
-        // <td>' . $fname_d . '</td>
-        // <td>' . $sname_d . '</td>
-        // </tr>
-        // ';
-    }
-    $html .= '
+            // <tr style="color:' . $rowcolor . '">
+            // <td>' . $rs['lms_player_screen_name'] . '</td>
+            // <td>' . $email_d . '</td>
+            // <td>' . $fname_d . '</td>
+            // <td>' . $sname_d . '</td>
+            // </tr>
+            // ';
+        }
+        set_global_value('encrypt', 'true', false);
+        $_SESSION['encrypt'] = true;
+        $html .= '
 			     </tbody>
 		      </table>
-        </div>
-        <div style="padding:2em;">
+        </div>';
+    }
+    $html .= '       <div style="padding:2em;">
             <a href="' . $myPath . 'menus/home.php" class="btn" style="padding:15px;" role="button">Back</a>
         </div>
+    </div>
+</body>
         ';
     echo $html;
 } else {
