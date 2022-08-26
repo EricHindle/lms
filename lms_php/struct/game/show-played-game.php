@@ -280,8 +280,10 @@ if (login_check($mypdo) == true) {
                         $availfetch = $availquery->fetchAll(PDO::FETCH_ASSOC);
 
                         $gps = get_game_player_status($gameid, $player);
-                        $gamestatus = get_current_game_status($gameid)['lms_game_status'];
-                        
+                        $game = get_current_game($gameid);
+                        $gamestatus = $game['lms_game_status'];
+                        $gamestartwk = $game['lms_game_start_wkno'];
+
                         $html .= '<div>';
                         foreach ($availfetch as $mypick) {
                             $teampair = "";
@@ -293,29 +295,41 @@ if (login_check($mypdo) == true) {
                             $html .= '<p hidden id="' . $mypick['lms_match_id'] . '">' . $teampair . '</p>';
                         }
                         $html .= '</div>';
+                        /*
+                         * If too early (game status 1 and selection week < game start week), no pick allowed
+                         */
+                        if ($gamestatus == 1 && $gamestartwk > $_SESSION['selectweekkey']) {
+                            $selectionstart = get_selection_start_date($gamestartwk);
+                            $msg = 'Team selection begins ' . date_format(date_create($selectionstart), 'd M Y');
+                            
+                            $html .= '  <div class="pick-card" style="margin-bottom: 20px;padding-top:1em">
 
-                        if (time() < strtotime(get_deadline_date())) {
-                            if ($gps['lms_game_player_status'] == "1" && $gamestatus == 1) {
-                                $html .= '<div class="pick-card" style="margin-bottom: 20px;padding-top:1em">';
+                                            <div><h3>' . $msg . '</h3></div>
 
-                                $select = 'Make A Pick';
-                                if ($currentpickmatch > 0) {
-                                    $select = 'Change Pick';
+                                        </div>';
+                        } else {
+                            if (time() < strtotime(get_deadline_date())) {
+                                if ($gps['lms_game_player_status'] == "1" && $gamestatus < 3) {
+                                    $html .= '<div class="pick-card" style="margin-bottom: 20px;padding-top:1em">';
 
-                                    $html .= '<div class="table-columnTitle" style="text-align:center;"> Current pick: ' . $currentteampair . '</div>';
-                                }
+                                    $select = 'Make A Pick';
+                                    if ($currentpickmatch > 0) {
+                                        $select = 'Change Pick';
 
-                                $html .= '<form role="form" name ="editpick" method="post" action="' . $myPath . 'struct/picks/process-pick.php">
+                                        $html .= '<div class="table-columnTitle" style="text-align:center;"> Current pick: ' . $currentteampair . '</div>';
+                                    }
+
+                                    $html .= '<form role="form" name ="editpick" method="post" action="' . $myPath . 'struct/picks/process-pick.php">
                                     <div><h2>' . $select . '</h2></div>
                                     <div id="divider" style="background-color:#CC1417; height: 3px; width:25%; margin-top:2px; margin-bottom:17px;"></div>';
-                                $html .= $key;
-                                $html .= '
+                                    $html .= $key;
+                                    $html .= '
     				                <div class="form-group">
     		                            <select class="form-dropdown" style="margin-bottom:10px;" id="matchid" name="matchid" onChange="javascript:getMatch()">';
-                                foreach ($availfetch as $mypick) {
-                                    $html .= '  <option value="' . $mypick['lms_match_id'] . '">' . date_format(date_create($mypick['lms_match_date']), 'd-M') . '&nbsp;&nbsp;&nbsp;&nbsp;' . $mypick['lms_team_name'] . '</option>';
-                                }
-                                $html .= '</select>
+                                    foreach ($availfetch as $mypick) {
+                                        $html .= '  <option value="' . $mypick['lms_match_id'] . '">' . date_format(date_create($mypick['lms_match_date']), 'd-M') . '&nbsp;&nbsp;&nbsp;&nbsp;' . $mypick['lms_team_name'] . '</option>';
+                                    }
+                                    $html .= '</select>
                                     </div>
                                     <div style="text-align:center;margin-bottom:10px;"><p id="matchteams">&nbsp;</p></div>
                                     <div>
@@ -328,6 +342,7 @@ if (login_check($mypdo) == true) {
                                     </div>
                                 </form>
                         </div>';
+                                }
                             }
                         }
 
