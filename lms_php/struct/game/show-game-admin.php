@@ -107,58 +107,50 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                                          </table>
                                            </div>';
                         /* players */
-                        $html .= '            <div class="box" style="padding:1em;margin:10px">
-			        	                         <table class="table table-bordered center" id="keywords">
-							                        <thead>
-                                            		   <tr>
-                        							      <th>Player Name</th>
-                        								  <th>Player Status</th>
-                                                          <th>Current picks</th>
-                         							   </tr>
-                    							    </thead>
-							                     <tbody>';
+                        $html .= '
+                                                    <div class="game-pick-card" style="margin-bottom: 20px;">
+                                                        <table style="padding-bottom: 3em;" class="game-table" id="keywords">
+                                                            <tr>
+                                                                <th colspan="3" border="0">
+                                                                    <div><h2>Players</h2></div>
+                                                                    <div id="divider" style="background-color:#CC1417; height: 3px; width:25%; margin-top:2px; margin-bottom:7px;"></div>
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td width="24%"><div class="table-columnTitle">Name</div></td>
+                                                                <td width="38%"><div class="table-columnTitle">This Weeks Pick</div></td>
+                                                                <td width="38%"><div class="table-columnTitle">Next Pick</div></td>
+                                                            </tr>
+                                                            <tbody>';
                         foreach ($gameplayerfetch as $rs) {
                             $pickfetch = get_current_player_pick($gameid, $rs['lms_player_id']);
                             $nextpickfetch = get_next_player_pick($gameid, $rs['lms_player_id']);
-                            $currentpick = '';
-                            $thispick = '';
+                            $nodate = ' <br><span class="table-columnTitle">&nbsp;</span>';
+                            $thispick = 'No Pick' . $nodate;
                             $nextpick = '';
-                            $rowcolor = 'white';
-                            $selcolor = 'white';
-                            if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
-                                $rowcolor = $rs['lms_game_player_status'] == 2 ? 'red' : 'silver';
+                            if ($pickfetch || $nextpickfetch) {
+                                if ($pickfetch) {
+                                    $thispick = $pickfetch['lms_team_name'] . ' <br><span class="table-columnTitle">(' . date_format(date_create($pickfetch['lms_match_date']), 'd M') . ')</span>';
+                                }
+                                if ($nextpickfetch && $rs['lms_game_player_status'] == 1) {
+                                    $nextpick = $nextpickfetch['lms_team_name'] . ' <br><span class="table-columnTitle">(' . date_format(date_create($nextpickfetch['lms_match_date']), 'd M') . ')</span>';
+                                }
                             } else {
-                                if ($pickfetch || $nextpickfetch) {
-                                    $newline = '';
-                                    if ($pickfetch && $nextpickfetch) {
-                                        $newline = '</br>';
-                                    }
-                                    if ($pickfetch) {
-                                        $thispick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd M Y') . ')';
-                                    }
-                                    if ($nextpickfetch) {
-                                        $nextpick = $nextpickfetch['lms_team_name'] . ' (' . date_format(date_create($nextpickfetch['lms_match_date']), 'd M Y') . ')';
-                                    }
-                                    $currentpick = $thispick . $newline . $nextpick;
-                                } else {
-                                    if ($gamefetch['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
-                                        $currentpick = '(waiting)';
-                                        $selcolor = 'crimson';
-                                    }
+                                if ($gamefetch['lms_game_start_wkno'] <= $_SESSION['matchweek'] && $rs['lms_game_player_status'] == 1) {
+                                    $thispick = '(waiting)' . $nodate;
                                 }
                             }
-                            
                             $html .= '
-                            				        <tr style="color:' . $rowcolor . '">
-                            					       <td>' . $rs['lms_player_screen_name'] . '</td>
-                                                       <td>' . $rs['lms_game_player_status_text'] . '</td>
-                                                       <td style="color:' . $selcolor . '">' . $currentpick . '</td>
-                            					    </tr>';
+                                                            <tr>
+                                                               <td><b>' . $rs['lms_player_screen_name'] . '</b><br><span class="table-columnTitle">' . $rs['lms_game_player_status_text'] . '</span></td>
+                                                               <td>' . $thispick . '</td>
+                                                               <td>' . $nextpick . '</td>
+                                                            </tr>';
                         }
-                        $html .= '		         </tbody>
-							                  </table>
-						                   </div>
-                                           <div class="box" style="padding:1em;margin:10px">';
+                        $html .= '		                 </tbody>
+                                                      </table>
+                                                   </div>';
+                        $html .= '<div class="box" style="padding:1em;margin:10px">';
                         if ($gamefetch['lms_game_status'] < 3) {
                             $html .= '	         <h3 class="text-center">Cancel Game</h3>
                 						         <form class="form-horizontal" style="margin-left:24px; margin-right:30px" role="form" name ="edit" method="post" action="process-cancel-game.php">';
