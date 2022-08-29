@@ -328,10 +328,10 @@ function get_rescheduled_match($matchweek, $matchdate, $teamid, $oppid)
 function transfer_picks($matchid, $altmatchid)
 {
     global $mypdo;
-    $transsql = "UPDATE lms_pick SET lms_pick_match_id= :altmatchid  WHERE lms_pick_match_id = :matchid";
+    $transsql = "UPDATE lms_pick SET lms_pick_match_id = :altmatchid  WHERE lms_pick_match_id = :matchid";
     $transquery = $mypdo->prepare($transsql);
-    $transquery->bindParam(':matchId', $matchid, PDO::PARAM_INT);
-    $transquery->bindParam(':altmatchId', $altmatchid, PDO::PARAM_INT);
+    $transquery->bindParam(':matchid', $matchid, PDO::PARAM_INT);
+    $transquery->bindParam(':altmatchid', $altmatchid, PDO::PARAM_INT);
     return $transquery->execute();
 }
 ?>

@@ -119,6 +119,8 @@ function scraping_generic($url, $search, $logfile, $leagueId)
                 $transresult = transfer_picks($matchid,$altmatch['lms_match_id']);
                 if ($transresult != false){
                     fwrite($logfile, "Transferred " . strval($transresult) . " picks \n");
+                } else {
+                    fwrite($logfile, "Transfer picks failed \n");
                 }
             }
             
