@@ -10,6 +10,10 @@ require $myPath . 'scheduled/simple_html_dom.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'scheduled/results-functions.php';
 
+$_SESSION['encrypted'] = filter_var(get_global_value('encrypt'), FILTER_VALIDATE_BOOLEAN);
+$_SESSION['hwkey'] = get_key();
+$_SESSION['hwiv'] = get_iv();
+
 function scraping_generic($url, $search, $logfile)
 {
     fwrite($logfile, "Reading the url: " . $url . "\n");

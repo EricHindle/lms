@@ -19,6 +19,10 @@ $_SESSION['selectweekkey'] = $_SESSION['currentseason'] . $_SESSION['selectweek'
 $_SESSION['selperiod'] = $_SESSION['selectweek'] . '/' . $_SESSION['currentseason'];
 $_SESSION['deadline'] = get_current_deadline_date($_SESSION['selectweekkey']);
 
+$_SESSION['encrypted'] = filter_var(get_global_value('encrypt'), FILTER_VALIDATE_BOOLEAN);
+$_SESSION['hwkey'] = get_key();
+$_SESSION['hwiv'] = get_iv();
+
 $logfile = fopen($myPath . "logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a");
 fwrite($logfile, "Weekend Processing --------------------------------------\n");
 fwrite($logfile, date("Y-m-d H:i:s") . "\n");
