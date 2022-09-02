@@ -143,9 +143,9 @@ if (login_check($mypdo) == true && $access > 900) {
              * Rolling week forward
              */
             $nextWeek = $_SESSION['currentweek'] + 1;
-            set_global_value('currweek', sprintf('%02d', $nextWeek));
+            set_global_value('currweek', sprintf('%02d', $nextWeek),0);
             $newSelectWeek = $_SESSION['selectweek'] + 1;
-            set_global_value('selectweek', sprintf('%02d', $newSelectWeek));
+            set_global_value('selectweek', sprintf('%02d', $newSelectWeek),0);
             
             
             set_week_state($_SESSION['matchweek'], 5);

@@ -195,11 +195,11 @@ if (check_start_date() == 1) {
              * Rolling week forward
              */
             $nextWeek = $_SESSION['currentweek'] + 1;
-            set_global_value('currweek', sprintf('%02d', $nextWeek));
+            set_global_value('currweek', sprintf('%02d', $nextWeek),0);
             fwrite($logfile, "Updated match week\n");
 
             $newSelectWeek = $_SESSION['selectweek'] + 1;
-            set_global_value('selectweek', sprintf('%02d', $newSelectWeek));
+            set_global_value('selectweek', sprintf('%02d', $newSelectWeek),0);
             fwrite($logfile, "Updated selection week\n");
 
             set_week_state($_SESSION['matchweek'], 5);
