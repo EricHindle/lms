@@ -29,7 +29,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
         }
     }
 
-    $gamesql = "SELECT lms_game_id, lms_game_start_wkno, lms_game_name, lms_game_code, lms_game_status, lms_game_status_text, lms_game_total_players, lms_game_still_active, lms_week, lms_year, lms_player_screen_name FROM v_lms_game ORDER BY lms_game_start_wkno, lms_game_name";
+    $gamesql = "SELECT lms_game_id, lms_game_start_wkno, lms_game_name, lms_game_code, lms_game_status, lms_game_status_text, lms_game_total_players, lms_game_still_active, lms_week, lms_year, lms_player_screen_name FROM v_lms_game ORDER BY lms_game_status, lms_game_start_wkno, lms_game_name";
     $gamequery = $mypdo->prepare($gamesql);
     $gamequery->bindParam(":manager", $_SESSION['user_id'], PDO::PARAM_INT);
     $gamequery->execute();
