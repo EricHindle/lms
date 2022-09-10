@@ -87,12 +87,18 @@ if (login_check($mypdo) == true) {
 
         $hometeam =  $result['home_team_name'];
         $awayteam =  $result['away_team_name'];
+        $homescore = $result['home_score'];
+        $awayscore = $result['away_score'];
+        if($result['home_result'] == 'p'){
+            $homescore = 'p';
+            $awayscore = 'p';
+        }
         $html .= '<tr style="height: 25px;">
                     <td style="width:40%;height: 25px;text-align:right;">' . $hometeam . '</td>
 
-                    <td style="width:5%;height: 25px;text-align:right;">  ' . $result['home_score'] . ' </td>
+                    <td style="width:5%;height: 25px;text-align:right;">  ' . $homescore . ' </td>
                     <td style="height: 25px;text-align:center;"> - </td>
-                    <td style="width:5%;height: 25px;">  ' . $result['away_score'] . '  </td>
+                    <td style="width:5%;height: 25px;">  ' . $awayscore . '  </td>
                     <td  style="width:40%;height: 25px;">' . $awayteam . '</td>
                     </tr>
         ';
