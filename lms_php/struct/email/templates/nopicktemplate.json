@@ -5,5 +5,5 @@
 "fromName": "$adminName",
 "bcc": "$bcc",
 "subject": "You missed out",
-"body": "You have failed to make a pick in the Last Man Live game <span style='color:blue'>$gameName</span> this week.<br><br> Sorry but you are out of the game.<br><br> Why not login at $url and join another game or start your own.<br><br><img src='https://lastmanlive.co.uk/img/lml_logo.jpg' width='40' height='40' >"
+"body": "You have failed to make a pick in the <b>Last Man Live</b> game <span style='color:blue'>$gameName</span> this week.<br><br> Sorry but you are out of the game.<br><br> Why not login at $url and join another game or start your own.<br><br><img src='https://lastmanlive.co.uk/img/lml_logo.jpg' width='40' height='40' >"
 }
