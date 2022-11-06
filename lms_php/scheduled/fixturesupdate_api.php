@@ -213,8 +213,8 @@ function update_no_results($noresults, $logfile)
         $resultupdated = false;
         $homescore = 0;
         $awayscore = 0;
-        $resultupdated = save_result($hometeam, $matchdate, $homescore, "w", $logfile) || $resultupdated;
-        $resultupdated = save_result($awayteam, $matchdate, $awayscore, "l", $logfile) || $resultupdated;
+        $resultupdated = save_result($hometeam, $matchdate, $homescore, "p", $logfile) || $resultupdated;
+        $resultupdated = save_result($awayteam, $matchdate, $awayscore, "p", $logfile) || $resultupdated;
 
         if ($resultupdated) {
             fwrite($logfile, $matchdatelogtext);
