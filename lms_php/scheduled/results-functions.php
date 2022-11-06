@@ -129,20 +129,15 @@ function save_match($teamabbr, $matchdate, $logfile, $oppabbr, $homeaway)
         $matchId = get_matchId($teamId, $matchdate);
         // insert match
         if ($matchId > 0) {
-            // $logtext .= "Match exists for " . $teamabbr . " on " . $mdt . "\n";
         } else {
-            // fwrite($logfile, "** Match not found for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
             if (insert_match($teamId, $matchdate, $wkno, '', $leagueId, $oppid, $homeaway) == false) {
                 $isOK = false;
             } else {
-           //     fwrite($logfile, "** Match inserted for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
                 $logtext .= "** Match inserted for " . $teamabbr . " on " . $mdt . "\n";
             }
         }
     } else {
-        // fwrite($logfile, "** No team found for " . $teamabbr . "\n");
         $logtext .= "** No team found for " . $teamabbr . "\n";
-        
         $isOK = false;
     }
     return $isOK;

@@ -265,6 +265,17 @@ function get_current_period($phptime, $mypdo)
     return $periodfetch['period'];
 }
 
+function get_result_type_desc($resulttype, $mypdo)
+{
+    $rtsql = "SELECT * FROM lastmanl_lms.lms_result_type WHERE lms_result_type = :type LIMIT 1";
+    $rtquery = $mypdo->prepare($rtsql);
+    $rtquery->execute(array(
+        ':type' => $resulttype
+    ));
+    $rtfetch = $rtquery->fetch(PDO::FETCH_ASSOC);
+    return $rtfetch['lms_result_type_desc'];
+}
+
 function get_current_period_start()
 {
     $phptime = time();
