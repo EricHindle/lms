@@ -85,26 +85,26 @@ if (check_start_date() == 1) {
                     fwrite($logfile, "Player " . strval($playerid) . " Game " . strval($gameid) . " Match " . strval($matchid) . "\n");
                     if ($gameplayer['lms_game_player_status'] == 1) {
                         fwrite($logfile, "Player still active in this game\n");
+                        $result_type = get_result_type($rs['lms_match_result'], $mypdo);
                         $pickwl = '';
-                        if ($rs['lms_match_result'] == 'l' or $rs['lms_match_result'] == 'd') {
+                        if ($result_type) {
+                            $pickwl = $result_type['lms_result_type_wl'];
+                        }
+
+                        if ($pickwl == '') {
+                            /* no result */
+                            fwrite($logfile, "Error !! Pick has unrecognised result (" . $rs['lms_match_result'] . ")\n");
+                        } elseif ($pickwl == 'l') {
                             set_game_player_out($gameid, $playerid, $_SESSION['matchweek']);
-                            fwrite($logfile, "Player out of game\n");
-                            $pickwl = 'l';
+                            fwrite($logfile, "Player out of game (" . $rs['lms_match_result'] . ")\n");
                             notify_loser($playerid, $gameid, $teamid, $matchid);
-                        } else {
-                            $pickwl = 'w';
-                            if ($rs['lms_match_result'] == 'p') {
-                                notify_postponed($playerid, $gameid, $teamid);
-                                fwrite($logfile, "Match postponed\n");
+                        } elseif ($pickwl == 'w') {
+                            if ($rs['lms_match_result'] == 'w') {
+                                notify_winner($playerid, $gameid, $teamid, $matchid);
+                                fwrite($logfile, "Winning pick\n");
                             } else {
-                                if ($rs['lms_match_result'] == 'w') {
-                                    notify_winner($playerid, $gameid, $teamid, $matchid);
-                                    fwrite($logfile, "Winning pick\n");
-                                } else {
-                                    /* no result */
-                                    fwrite($logfile, "Error !! Pick has not been resulted\n");
-                                    $pickwl = '';
-                                }
+                                notify_postponed($playerid, $gameid, $teamid, $result_type['lms_result_type_desc']);
+                                fwrite($logfile, "Match " . $result_type['lms_result_type_desc'] . "\n");
                             }
                         }
                         set_pick_wl($gameid, $playerid, $matchid, $pickwl);
@@ -195,11 +195,11 @@ if (check_start_date() == 1) {
              * Rolling week forward
              */
             $nextWeek = $_SESSION['currentweek'] + 1;
-            set_global_value('currweek', sprintf('%02d', $nextWeek),0);
+            set_global_value('currweek', sprintf('%02d', $nextWeek), 0);
             fwrite($logfile, "Updated match week\n");
 
             $newSelectWeek = $_SESSION['selectweek'] + 1;
-            set_global_value('selectweek', sprintf('%02d', $newSelectWeek),0);
+            set_global_value('selectweek', sprintf('%02d', $newSelectWeek), 0);
             fwrite($logfile, "Updated selection week\n");
 
             set_week_state($_SESSION['matchweek'], 5);

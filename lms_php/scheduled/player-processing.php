@@ -14,7 +14,7 @@ require $myPath . 'scheduled/week-end-functions.php';
 $_SESSION['currentweek'] = get_global_value('currweek');
 $_SESSION['currentseason'] = get_global_value('currseason');
 $_SESSION['selectweek'] = get_global_value('selectweek');
-/* 
+/*
  * Match week yyyyww is the current season and week
  * Select week is the week that is open for picks
  */
@@ -26,6 +26,8 @@ $_SESSION['deadline'] = get_current_deadline_date($_SESSION['selectweekkey']);
 $_SESSION['encrypted'] = filter_var(get_global_value('encrypt'), FILTER_VALIDATE_BOOLEAN);
 $_SESSION['hwkey'] = get_key();
 $_SESSION['hwiv'] = get_iv();
+
+global $mypdo;
 
 $logfile = fopen($myPath . "logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a");
 fwrite($logfile, "Player Processing --------------------------------------\n");
@@ -42,7 +44,7 @@ foreach ($picks as $rs) {
     /*
      * Ignore games not in-play
      */
-    if($rs['lms_game_status'] != 2){
+    if ($rs['lms_game_status'] != 2) {
         continue;
     }
     /*
@@ -59,28 +61,29 @@ foreach ($picks as $rs) {
         $gameplayer = get_game_player($gameid, $playerid);
         if ($gameplayer['lms_game_player_status'] == 1) {
             fwrite($logfile, "Player " . strval($playerid) . " " . $screenname . " Game " . strval($gameid) . " " . $gamename . " Match " . strval($matchid) . " " . $teamname . "\n");
+            $result_type = get_result_type($rs['lms_match_result'], $mypdo);
             $pickwl = '';
-            if ($rs['lms_match_result'] == 'l' or $rs['lms_match_result'] == 'd') {
+            if ($result_type) {
+                $pickwl = $result_type['lms_result_type_wl'];
+            }
+
+            if ($pickwl == '') {
+                /* no result */
+                fwrite($logfile, "Error !! Pick has unrecognised result (" . $rs['lms_match_result'] . ")\n");
+            } elseif ($pickwl == 'l') {
                 set_game_player_out($gameid, $playerid, $_SESSION['matchweek']);
-                fwrite($logfile, "Player out of game (".  $rs['lms_match_result'] .")\n");
-                $pickwl = 'l';
+                fwrite($logfile, "Player out of game (" . $rs['lms_match_result'] . ")\n");
                 notify_loser($playerid, $gameid, $teamid, $matchid);
-            } else {
-                $pickwl = 'w';
-                if ($rs['lms_match_result'] == 'p') {
-                    notify_postponed($playerid, $gameid, $teamid);
-                    fwrite($logfile, "Match postponed\n");
+            } elseif ($pickwl == 'w') {
+                if ($rs['lms_match_result'] == 'w') {
+                    notify_winner($playerid, $gameid, $teamid, $matchid);
+                    fwrite($logfile, "Winning pick\n");
                 } else {
-                    if ($rs['lms_match_result'] == 'w') {
-                        notify_winner($playerid, $gameid, $teamid, $matchid);
-                        fwrite($logfile, "Winning pick\n");
-                    } else {
-                        /* no result */
-                        fwrite($logfile, "Error !! Pick has unrecognised result (" . $rs['lms_match_result'] . ")\n");
-                        $pickwl = '';
-                    }
+                    notify_postponed($playerid, $gameid, $teamid, $result_type['lms_result_type_desc']);
+                    fwrite($logfile, "Match " . $result_type['lms_result_type_desc'] . "\n");
                 }
             }
+
             set_pick_wl($gameid, $playerid, $matchid, $pickwl);
             fwrite($logfile, "Pick result set\n");
         }
@@ -90,7 +93,7 @@ $activeGames = get_active_games();
 fwrite($logfile, "Active games\n");
 foreach ($activeGames as $game) {
     /*
-     * Check if this game has no matches this week. 
+     * Check if this game has no matches this week.
      */
     $playingteams = get_count_of_playing_teams_this_week($game['lms_game_id'], $_SESSION['matchweek']);
 
@@ -106,7 +109,7 @@ foreach ($activeGames as $game) {
     foreach ($activePlayers as $activePlayer) {
         $gameid = $game['lms_game_id'];
         $playerid = $activePlayer['lms_player_id'];
-        $screenname =  $activePlayer['lms_player_screen_name'];
+        $screenname = $activePlayer['lms_player_screen_name'];
         fwrite($logfile, "Player " . strval($playerid) . " " . $screenname . " \n");
         if (get_game_player_pick_count($gameid, $playerid) == 0) {
             set_game_player_out($gameid, $playerid, $_SESSION['matchweek']);

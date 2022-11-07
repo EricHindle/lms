@@ -98,6 +98,8 @@ if (login_check($mypdo) == true && $access > 900) {
                     $dresult = '';
                     $nresult = '';
                     $presult = '';
+                    $aresult = '';
+                    $cresult = '';
                     switch ($rs['lms_match_result']) {
                         case 'w':
                             $wresult = 'selected';
@@ -114,6 +116,12 @@ if (login_check($mypdo) == true && $access > 900) {
                         case 'p':
                             $presult = 'selected';
                             break;
+                        case 'a':
+                            $aresult = 'selected';
+                            break;
+                        case 'c':
+                            $cresult = 'selected';
+                            break;
                     }
                     $md = date_create($rs['lms_match_date']);
                     $kodate = date_format($md, 'd-M-Y');
@@ -126,6 +134,8 @@ if (login_check($mypdo) == true && $access > 900) {
                                                                     <option ' . $dresult . ' value="d">Draw</option>
                                                                     <option ' . $lresult . ' value="l">Lose</option>
                                                                     <option ' . $presult . ' value="p">Postponed</option>
+                                                                    <option ' . $aresult . ' value="a">Abandoned</option>
+                                                                    <option ' . $cresult . ' value="c">Cancelled</option>
                                                                     <option ' . $nresult . ' value="">No result</option>
                                                                 </select></tr>';
                 }

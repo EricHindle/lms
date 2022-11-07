@@ -106,19 +106,10 @@ if (login_check($mypdo) == true) {
 									';
                     foreach ($pickfetch as $rs) {
                         $result = 'no result';
-                        switch ($rs['lms_match_result']) {
-                            case 'w':
-                                $result = 'win';
-                                break;
-                            case 'l':
-                                $result = 'lose';
-                                break;
-                            case 'd':
-                                $result = 'draw';
-                                break;
-                            case 'p':
-                                $result = 'postponed';
-                                break;
+                        $result_type = get_result_type($rs['lms_match_result'], $mypdo);
+                        
+                        if ($result_type) {
+                            $result = $result_type['lms_result_type_desc'];
                         }
 
                         $html .= '

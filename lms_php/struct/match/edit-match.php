@@ -38,6 +38,8 @@ if (login_check($mypdo) == true && $access > 900) {
                     $dresult = '';
                     $nresult = '';
                     $presult = '';
+                    $aresult = '';
+                    $cresult = '';
                     if ($matchcount > 0) {
                         $key = $formKey->outputKey();
                         $matchfetch = $matchquery->fetch(PDO::FETCH_ASSOC);
@@ -57,6 +59,12 @@ if (login_check($mypdo) == true && $access > 900) {
                                 break;
                             case 'p':
                                 $presult = 'selected';
+                                break;
+                            case 'a':
+                                $aresult = 'selected';
+                                break;
+                            case 'c':
+                                $cresult = 'selected';
                                 break;
                         }
                         echo '
@@ -120,6 +128,8 @@ if (login_check($mypdo) == true && $access > 900) {
                                                                     <option ' . $dresult . ' value="d">Draw</option>
                                                                     <option ' . $lresult . ' value="l">Lose</option>
                                                                     <option ' . $presult . ' value="p">Postponed</option>
+                                                                    <option ' . $aresult . ' value="a">Abandoned</option>
+                                                                    <option ' . $cresult . ' value="c">Cancelled</option>
                                                                     <option ' . $nresult . ' value="">No result</option>
                                                                </select>
 															   <input type= "hidden" name= "id" value="' . $gameid . '" />

@@ -278,9 +278,9 @@ function notify_loser($playerid, $gameid, $teamid, $matchid)
     ), true);
 }
 
-function notify_postponed($playerid, $gameid, $teamid)
+function notify_postponed($playerid, $gameid, $teamid, $type)
 {
-    sendemailusingtemplate('postponed', $playerid, $gameid, $teamid, '', true);
+    sendemailusingtemplate('postponed', $playerid, $gameid, $teamid, $type, true);
 }
 
 function notify_winner($playerid, $gameid, $teamid, $matchid)

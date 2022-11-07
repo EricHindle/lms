@@ -110,22 +110,20 @@ function update_notplayed($noresults, $logfile)
         switch ($rtcode) {
             case "PST":
                 $wl = "p";
-                $resultType = get_result_type_desc($wl, $mypdo);
-                $logresulttext .= " Match " . $resultType;
                 break;
             case "CANC":
                 $wl = "c";
-                $resultType = get_result_type_desc($wl, $mypdo);
-                $logresulttext .= " Match " . $resultType;
                 break;
             case "ABD":
                 $wl = "a";
-                $resultType = get_result_type_desc($wl, $mypdo);
-                $logresulttext .= " Match " . $resultType;
                 break;
         }
-
-        $logresulttext .= "\n";
+        $resultType = get_result_type($wl, $mypdo);
+        $rtdesc = 'not played';
+        if ($resultType) {
+            $rtdesc = $resultType['lms_result_type_desc'];
+        }
+        $logresulttext .= " Match " . $rtdesc . "\n";
         $resultupdated = false;
         $homescore = 0;
         $awayscore = 0;

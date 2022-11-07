@@ -85,14 +85,15 @@ if (login_check($mypdo) == true) {
                 </tr>';
         }
 
-        $hometeam =  $result['home_team_name'];
-        $awayteam =  $result['away_team_name'];
+        $hometeam = $result['home_team_name'];
+        $awayteam = $result['away_team_name'];
         $homescore = $result['home_score'];
         $awayscore = $result['away_score'];
-        if($result['home_result'] == 'p'){
-            $homescore = 'p';
-            $awayscore = 'p';
+        if ($result['home_result'] == 'p' || $result['home_result'] == 'a' || $result['home_result'] == 'c') {
+            $homescore = $result['home_result'];
+            $awayscore = $result['home_result'];
         }
+
         $html .= '<tr style="height: 25px;">
                     <td style="width:40%;height: 25px;text-align:right;">' . $hometeam . '</td>
 

@@ -120,19 +120,10 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 
         if ($rs['lms_match_weekno'] == $tableselect) {
             $result = 'no result';
-            switch ($rs['lms_match_result']) {
-                case 'w':
-                    $result = 'won';
-                    break;
-                case 'l':
-                    $result = 'lost';
-                    break;
-                case 'd':
-                    $result = 'drew';
-                    break;
-                case 'p':
-                    $result = 'postponed';
-                    break;
+            $result_type = get_result_type($rs['lms_match_result'], $mypdo);
+            
+            if ($result_type) {
+                $result = $result_type['lms_result_type_desc'];
             }
 
             $stDate = date_format(date_create($rs['lms_match_date']), 'd-M-Y');
