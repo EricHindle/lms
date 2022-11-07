@@ -276,6 +276,15 @@ function get_result_type($resulttype, $mypdo)
     return $rtfetch;
 }
 
+function get_all_result_types($mypdo)
+{
+    $rtsql = "SELECT * FROM lastmanl_lms.lms_result_type";
+    $rtquery = $mypdo->prepare($rtsql);
+    $rtquery->execute();
+    $rtfetch = $rtquery->fetchall(PDO::FETCH_ASSOC);
+    return $rtfetch;
+}
+
 function get_current_period_start()
 {
     $phptime = time();

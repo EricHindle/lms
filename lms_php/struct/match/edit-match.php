@@ -33,40 +33,11 @@ if (login_check($mypdo) == true && $access > 900) {
                         ':id' => $gameid
                     ));
                     $matchcount = $matchquery->rowCount();
-                    $wresult = '';
-                    $lresult = '';
-                    $dresult = '';
-                    $nresult = '';
-                    $presult = '';
-                    $aresult = '';
-                    $cresult = '';
+                    $resulttypes = get_all_result_types($mypdo);
                     if ($matchcount > 0) {
                         $key = $formKey->outputKey();
                         $matchfetch = $matchquery->fetch(PDO::FETCH_ASSOC);
 
-                        switch ($matchfetch['lms_match_result']) {
-                            case 'w':
-                                $wresult = 'selected';
-                                break;
-                            case 'l':
-                                $lresult = 'selected';
-                                break;
-                            case 'd':
-                                $dresult = 'selected';
-                                break;
-                            case '':
-                                $nresult = 'selected';
-                                break;
-                            case 'p':
-                                $presult = 'selected';
-                                break;
-                            case 'a':
-                                $aresult = 'selected';
-                                break;
-                            case 'c':
-                                $cresult = 'selected';
-                                break;
-                        }
                         echo '
 								<!doctype html>
 								<html>
@@ -123,15 +94,16 @@ if (login_check($mypdo) == true && $access > 900) {
 										                    <div class="form-group">
                                                                <label for="matchdate">New match date:</label>
                     					                       <input type="text" class="form-control" id="matchdate" name="matchdate" value="' . date_format(date_create($matchfetch['lms_match_date']), 'Y-m-d') . '" placeholder="yyyy-mm-dd"><br>
-                                                               <select class="form-control" id="result" name="result">
-                                                                    <option ' . $wresult . ' value="w">Win</option>
-                                                                    <option ' . $dresult . ' value="d">Draw</option>
-                                                                    <option ' . $lresult . ' value="l">Lose</option>
-                                                                    <option ' . $presult . ' value="p">Postponed</option>
-                                                                    <option ' . $aresult . ' value="a">Abandoned</option>
-                                                                    <option ' . $cresult . ' value="c">Cancelled</option>
-                                                                    <option ' . $nresult . ' value="">No result</option>
-                                                               </select>
+                                                               <select class="form-control" id="result" name="result">';
+                        foreach ($resulttypes as $rt) {
+                            $sel = '';
+                            if ($rt['lms_result_type'] == $matchfetch['lms_match_result']) {
+                                $sel = 'selected';
+                            }
+                            $html .= ' <option ' . $sel . ' value="' . $rt['lms_result_type'] . '">' . $rt['lms_result_type_desc'] . '</option>';
+                        }
+
+                        $html .= '                           </select>
 															   <input type= "hidden" name= "id" value="' . $gameid . '" />
                                                                <input type= "hidden" name= "matchperiod" value="' . $matchperiod . '" />
 										                    </div>

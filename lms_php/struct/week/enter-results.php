@@ -32,6 +32,7 @@ if (login_check($mypdo) == true && $access > 900) {
 
             $week = 0;
             $year = 0;
+            $resulttypes = get_all_result_types($mypdo);
             ;
             if ($weekcount > 0) {
                 $key = $formKey->outputKey();
@@ -93,50 +94,23 @@ if (login_check($mypdo) == true && $access > 900) {
                     									';
 
                 foreach ($matchfetch as $rs) {
-                    $wresult = '';
-                    $lresult = '';
-                    $dresult = '';
-                    $nresult = '';
-                    $presult = '';
-                    $aresult = '';
-                    $cresult = '';
-                    switch ($rs['lms_match_result']) {
-                        case 'w':
-                            $wresult = 'selected';
-                            break;
-                        case 'l':
-                            $lresult = 'selected';
-                            break;
-                        case 'd':
-                            $dresult = 'selected';
-                            break;
-                        case '':
-                            $nresult = 'selected';
-                            break;
-                        case 'p':
-                            $presult = 'selected';
-                            break;
-                        case 'a':
-                            $aresult = 'selected';
-                            break;
-                        case 'c':
-                            $cresult = 'selected';
-                            break;
-                    }
+
                     $md = date_create($rs['lms_match_date']);
                     $kodate = date_format($md, 'd-M-Y');
                     $html .= '
 									                   <tr>
                                                             <td>' . $rs['lms_team_name'] . '</td>
             										        <td>' . $kodate . '</td>
-                                                            <td><select class="form-control" name="res-' . $rs['lms_match_id'] . '" id="res-' . $rs['lms_match_id'] . '">
-                                                                    <option ' . $wresult . ' value="w">Win</option>
-                                                                    <option ' . $dresult . ' value="d">Draw</option>
-                                                                    <option ' . $lresult . ' value="l">Lose</option>
-                                                                    <option ' . $presult . ' value="p">Postponed</option>
-                                                                    <option ' . $aresult . ' value="a">Abandoned</option>
-                                                                    <option ' . $cresult . ' value="c">Cancelled</option>
-                                                                    <option ' . $nresult . ' value="">No result</option>
+                                                            <td><select class="form-control" name="res-' . $rs['lms_match_id'] . '" id="res-' . $rs['lms_match_id'] . '">';
+                    foreach ($resulttypes as $rt) {
+                        $sel = '';
+                        if ($rt['lms_result_type'] == $matchfetch['lms_match_result']) {
+                            $sel = 'selected';
+                        }
+                        $html .= ' <option ' . $sel . ' value="' . $rt['lms_result_type'] . '">' . $rt['lms_result_type_desc'] . '</option>';
+                    }
+
+                    $html .= '                           
                                                                 </select></tr>';
                 }
                 $html .= '

@@ -77,19 +77,25 @@ if (login_check($mypdo) == true && $access > 900) {
                 $gameid = $rs['lms_pick_game_id'];
                 $playerid = $rs['lms_pick_player_id'];
                 $matchid = $rs['lms_pick_match_id'];
+                $result_type = get_result_type($rs['lms_match_result'], $mypdo);
                 $pickwl = '';
-                if ($rs['lms_match_result'] == 'l' or $rs['lms_match_result'] == 'd') {
-                    set_game_player_out($gameid, $playerid);
-                    $pickwl = 'l';
-                    notify_loser($playerid, $gameid);
-                } else {
-                    $pickwl = 'w';
-                    if ($rs['lms_match_result'] == 'p') {
-                        notify_postponed($playerid, $gameid);
+                if ($result_type) {
+                    $pickwl = $result_type['lms_result_type_wl'];
+                }
+                
+                if ($pickwl == '') {
+                    /* no result */
+                } elseif ($pickwl == 'l') {
+                    set_game_player_out($gameid, $playerid, $_SESSION['matchweek']);
+                    notify_loser($playerid, $gameid, $teamid, $matchid);
+                } elseif ($pickwl == 'w') {
+                    if ($rs['lms_match_result'] == 'w') {
+                        notify_winner($playerid, $gameid, $teamid, $matchid);
                     } else {
-                        notify_winner($playerid, $gameid);
+                        notify_postponed($playerid, $gameid, $teamid, $result_type['lms_result_type_desc']);
                     }
                 }
+                
                 set_pick_wl($gameid, $playerid, $matchid, $pickwl);
             }
             $activeGames = get_active_games();
