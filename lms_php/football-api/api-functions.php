@@ -19,18 +19,20 @@ function get_api_url($season, $league)
     return $url;
 }
 
-function get_api_league_id($leagueAbbr){
+function get_api_league_id($leagueAbbr)
+{
     $apiLeagueId = - 1;
     $league = get_league_from_abbr($leagueAbbr);
-    if ($league){
+    if ($league) {
         $apiLeagueId = $league['lms_league_api_id'];
     }
     return $apiLeagueId;
 }
 
-function get_team_abbr_by_api_id($apiteamid){
+function get_team_abbr_by_api_id($apiteamid)
+{
     $teamabbr = "";
-    
+
     global $mypdo;
     $teamsql = "SELECT * FROM lastmanl_lms.lms_team WHERE lms_team_api_id = :apiId LIMIT 1";
     $teamquery = $mypdo->prepare($teamsql);
@@ -54,6 +56,7 @@ function get_league_fixtures($leagueId, $log)
 
 function get_fixtures_by_curl($api_url, $log)
 {
+    fwrite($log, "--- Calling api ---\n");
     $curl = curl_init();
 
     $headers = array(
@@ -69,6 +72,7 @@ function get_fixtures_by_curl($api_url, $log)
 
     $fixtures = "";
     if ($curl_errno == 0) {
+        fwrite($log, "--- Decoding the response ---\n");
         $fixtures = json_decode($curl_response);
     } else {
         fwrite($log, "Curl error : " . strval($curl_errno) . "\n");
@@ -79,34 +83,38 @@ function get_fixtures_by_curl($api_url, $log)
     return $fixtures->response;
 }
 
-function split_fixtures($fixtures, &$scheduled, &$results, &$noresult, $log){
-    $sched_status = array(
-        "TBD",
-        "NS"
-    );
-    $fin_status = array(
-        "FT",
-        "AET",
-        "PEN"
-    );
-    $nores_status = array(
-        "PST",
-        "CANC",
-        "ABD"
-    );
+function split_fixtures($fixtures, $status)
+{
+    $matches = array();
 
-    
-    foreach ($fixtures as $fixture) {
-        if (in_array($fixture->fixture->status->short, $sched_status)) {
-            $scheduled[] = $fixture;
-        } elseif (in_array($fixture->fixture->status->short, $fin_status)) {
-            $results[] = $fixture;
-        } elseif (in_array($fixture->fixture->status->short, $nores_status)) {
-            $noresult[] = $fixture;
-        }
-        
+    switch ($status) {
+        case "scheduled":
+            $statuscodes = array(
+                "TBD",
+                "NS"
+            );
+            break;
+        case "played":
+            $statuscodes = array(
+                "FT",
+                "AET",
+                "PEN"
+            );
+            break;
+        case "not played":
+            $statuscodes = array(
+                "PST",
+                "CANC",
+                "ABD"
+            );
+            break;
     }
-    
-    
+
+    foreach ($fixtures as $fixture) {
+        if (in_array($fixture->fixture->status->short, $statuscodes)) {
+            $matches[] = $fixture;
+        }
+    }
+    return $matches;
 }
 ?>
