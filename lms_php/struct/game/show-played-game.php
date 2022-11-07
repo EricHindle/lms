@@ -3,6 +3,7 @@
  * HINDLEWARE
  * Copyright (C) 2022 Eric Hindle. All rights reserved.
  */
+
 $myPath = '../../';
 
 require $myPath . 'includes/db_connect.php';

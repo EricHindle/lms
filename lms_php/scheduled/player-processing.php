@@ -5,6 +5,7 @@ namespace scheduled;
  * HINDLEWARE
  * Copyright (C) 2021 Eric Hindle. All rights reserved.
  */
+
 $myPath = '/home/lastmanl/public_html/';
 // $myPath = "../";
 require $myPath . 'includes/db_connect.php';

@@ -3,6 +3,7 @@
  * HINDLEWARE
  * Copyright (C) 2020-21 Eric Hindle. All rights reserved.
  */
+
 require '/home/lastmanl/public_html/includes/db_connect.php';
 require '/home/lastmanl/public_html/scheduled/email-functions.php';
 

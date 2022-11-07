@@ -275,7 +275,6 @@ function get_result_type($resulttype, $mypdo)
     $rtfetch = $rtquery->fetch(PDO::FETCH_ASSOC);
     return $rtfetch;
 }
-
 function get_all_result_types($mypdo)
 {
     $rtsql = "SELECT * FROM lastmanl_lms.lms_result_type";

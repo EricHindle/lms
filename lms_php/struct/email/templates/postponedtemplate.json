@@ -6,4 +6,5 @@
 	"bcc": "$bcc",
 	"subject": "You are still in the game",
 	"body": "The team you picked this week ($teamName) in the <b>Last Man Live</b> game <span style='color:blue'>$gameName</span> did not play (match $value0).<br><br> You are still in the game.<br> Do not forget to make a pick for the new week.<br>Login at $url<br><br><img src='https://lastmanlive.co.uk/img/lml_logo.jpg' width='40' height='40' >"
+
 }
