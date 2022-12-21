@@ -17,12 +17,17 @@ if (login_check($mypdo) == true && $access > 900) {
         if (! isset($_POST['form_key']) || ! $formKey->validate()) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
-            if (isset($_POST['weekyear'], $_POST['weeknumber'], $_POST['weekstart'], $_POST['weekcount'])) {
-
-                $weekyear = sanitize_int($_POST['weekyear'], 2020);
+            if (isset($_POST['weeknumber'], $_POST['weekstart'], $_POST['weekcount'])) {
                 $weeknumber = sanitize_int($_POST['weeknumber'], 1);
                 $weekstart = sanitize_datetime($_POST['weekstart']);
                 $weekcount = sanitize_int($_POST['weekcount'], 1, 52);
+                $calid = $_POST['cal'];
+                $calsql = "SELECT * FROM lms_calendar WHERE lms_calendar_id = :calid LIMIT 1";
+                $calquery = $mypdo->prepare($calsql);
+                $calquery->bindParam(':calid', $calid, PDO::PARAM_INT);
+                $calquery->execute();
+                $calfetch = $calquery->fetch(PDO::FETCH_ASSOC);
+                $weekyear = $calfetch['lms_calendar_season'];
                 if ($weekyear && $weeknumber && $weekcount && $weekstart) {
                     $totaladded = 0;
                     $lastweek = $weeknumber + $weekcount;
@@ -30,13 +35,14 @@ if (login_check($mypdo) == true && $access > 900) {
                     $ed = date_create($weekstart);
                     $sd = date_create($weekstart);
                     for ($wkno = $weeknumber; $wkno < $lastweek; $wkno += 1) {
-                        $weekyr = sprintf('%04d', sanitize_int($_POST['weekyear']));
+                        $weekyr = $weekyear;
                         $weekno = sprintf('%02d', $wkno);
                         $weekid = $weekyr . $weekno;
                         $html = "";
-                        $cusql = "SELECT lms_week_no FROM lms_week WHERE lms_week_no = :weekid LIMIT 1";
+                        $cusql = "SELECT lms_week_no FROM lms_week WHERE lms_week_no = :weekid AND lms_week_calendar = :weekcal LIMIT 1";
                         $cuquery = $mypdo->prepare($cusql);
                         $cuquery->bindParam(':weekid', $weekid);
+                        $cuquery->bindParam(':weekcal', $calid, PDO::PARAM_INT);
                         $cuquery->execute();
                         $cucount = $cuquery->rowCount();
 
@@ -58,7 +64,7 @@ if (login_check($mypdo) == true && $access > 900) {
                             $startdate = date_format($sd, "Y-m-d H:i:s");
 
                             date_default_timezone_set('Europe/London');
-                            $sqladdweek = "INSERT INTO lms_week (lms_week_no, lms_week, lms_year, lms_week_start, lms_week_end, lms_week_deadline) VALUES (:weekid, :weeknumber, :weekyear, :weekstart, :weekend, :weekdeadline)";
+                            $sqladdweek = "INSERT INTO lms_week (lms_week_no, lms_week, lms_year, lms_week_start, lms_week_end, lms_week_deadline, lms_week_calendar) VALUES (:weekid, :weeknumber, :weekyear, :weekstart, :weekend, :weekdeadline, :weekcal)";
                             $stmtaddweek = $mypdo->prepare($sqladdweek);
                             $stmtaddweek->bindParam(':weekid', $weekid);
                             $stmtaddweek->bindParam(':weeknumber', $weekno, PDO::PARAM_INT);
@@ -66,7 +72,7 @@ if (login_check($mypdo) == true && $access > 900) {
                             $stmtaddweek->bindParam(':weekstart', $startdate);
                             $stmtaddweek->bindParam(':weekend', $enddate);
                             $stmtaddweek->bindParam(':weekdeadline', $deadline);
-
+                            $stmtaddweek->bindParam(':weekcal', $calid, PDO::PARAM_INT);
                             $stmtaddweek->execute();
                             $added = $stmtaddweek->rowCount();
                             $totaladded += $added;

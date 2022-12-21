@@ -25,36 +25,37 @@ if (login_check($mypdo) == true) {
                 if ($gameid) {
                     $deadline = get_deadline_date();
                     $html = "";
-                    $gamesql = "SELECT lms_game_start_wkno, lms_game_name, lms_week, lms_year, lms_game_status_text, lms_game_status, lms_week_start FROM v_lms_game WHERE lms_game_id = :id";
+                    $gamesql = "SELECT lms_game_start_wkno, lms_game_name, lms_week, lms_year, lms_game_status_text, lms_game_status, lms_week_start, lms_game_calendar FROM v_lms_game WHERE lms_game_id = :id";
                     $gamequery = $mypdo->prepare($gamesql);
                     $gamequery->execute(array(
                         ':id' => $gameid
                     ));
                     $gamecount = $gamequery->rowCount();
-
+                  
                     if ($gamecount > 0) {
-
+                        $game = $gamequery->fetch(PDO::FETCH_ASSOC);
+                        $game_calendar = $game['lms_game_calendar'];
+                        $enabled = "";
+                        if ($game['lms_game_status'] > 1) {
+                            $enabled = "disabled";
+                        }
+                        $gamename = $game['lms_game_name'];
                         $allleaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr FROM lms_league
-                                            WHERE lms_league_supported = 1
+                                            WHERE lms_league_supported = 1 AND lms_league_current_calendar = :cal
                                                 AND lms_league_id NOT IN
                                                 (SELECT lms_game_league_league_id from lms_game_league where lms_game_league_game_id = :gameid)
                                             ORDER BY lms_league_id ASC";
                         $allleaguequery = $mypdo->prepare($allleaguesql);
-                        $allleaguequery->execute(array(
-                            ':gameid' => $gameid
-                        ));
+                        $allleaguequery->bindParam(":cal", $game_calendar, PDO::PARAM_INT);
+                        $allleaguequery->bindParam(":gameid", $gameid, PDO::PARAM_INT);
+                        $allleaguequery->execute();
                         $allleaguefetch = $allleaguequery->fetchAll(PDO::FETCH_ASSOC);
 
                         $key = $formKey->outputKey();
-                        $gamefetch = $gamequery->fetch(PDO::FETCH_ASSOC);
 
-                        $enabled = "";
-                        if ($gamefetch['lms_game_status'] > 1) {
-                            $enabled = "disabled";
-                        }
 
-                        $gamename = $gamefetch['lms_game_name'];
-                        $remainingweeks = get_remaining_weeks(false);
+                        //TODO calendar
+                        $remainingweeks = get_remaining_weeks(false,1);
 
                         $gameplayersql = "SELECT lms_game_player_status, lms_player_screen_name, lms_game_player_status_text, lms_player_id FROM v_lms_player_games WHERE lms_game_id = :game";
                         $gameplayerquery = $mypdo->prepare($gameplayersql);
@@ -77,7 +78,7 @@ if (login_check($mypdo) == true) {
 		<html>
 			<head>
  			    <meta charset="UTF-8">
-			    <title>Manage ' . $gamefetch['lms_game_name'] . ' - Last Man Live</title>
+			    <title>Manage ' . $game['lms_game_name'] . ' - Last Man Live</title>
 			    <meta name="viewport" content="width=device-width, initial-scale=1">
                 <link rel="stylesheet" href="' . $myPath . 'css/style.css" type="text/css">
                 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
@@ -88,11 +89,11 @@ if (login_check($mypdo) == true) {
                         $html .= '
                 <div class="container">
                     <div  class="game-pick-card" style="margin-bottom: 20px; margin-top:20px;">
-                        <div class="status-bar cancelled">Game Status: ' . $gamefetch['lms_game_status_text'] . '</div>
+                        <div class="status-bar cancelled">Game Status: ' . $game['lms_game_status_text'] . '</div>
                             <table class="game-table">
                                 <tr>
                                     <th>
-                                        <h2>Manage ' . $gamefetch['lms_game_name'] . '</h2>
+                                        <h2>Manage ' . $game['lms_game_name'] . '</h2>
                                         <div id="divider" style="background-color:#CC1417; height: 3px; width:25%; margin-top:2px; margin-bottom:7px;"></div>
                                     </th>
                                 </tr>               
@@ -102,12 +103,12 @@ if (login_check($mypdo) == true) {
                                         Game start week:
                                     </td>
                                     <td>
-                                        ' . sprintf("%02d", $gamefetch['lms_week']) . '
+                                        ' . sprintf("%02d", $game['lms_week']) . '
                                     </td>
                                 </tr>
                                 <tr>                      
                                     <td>Start date:</td>
-                                    <td>' . date_format(date_create($gamefetch['lms_week_start']), 'd M Y') . '</td>
+                                    <td>' . date_format(date_create($game['lms_week_start']), 'd M Y') . '</td>
                                 </tr>
 
                         <form role="form" name ="edit" method="post" action="process-edit-game.php">';
@@ -117,11 +118,11 @@ if (login_check($mypdo) == true) {
                                 <tr>
                                     <td colspan="2">
                                         <div class="table-columnTitle">New name:</div>
-                                        <input type="text" class="form-field" id="gamename" name="gamename" value="' . $gamefetch['lms_game_name'] . '">
+                                        <input type="text" class="form-field" id="gamename" name="gamename" value="' . $game['lms_game_name'] . '">
                                     </td>
                                 </tr>';
                                     
-                        if ($gamefetch['lms_game_status'] == 1) {
+                        if ($game['lms_game_status'] == 1) {
                                         $html .= '
                                 <tr>
                                     <td colspan="2"><div  class="table-columnTitle">New start week:</div>
@@ -133,7 +134,7 @@ if (login_check($mypdo) == true) {
                                         } 
                                         
                                         else {
-                            $html .= '<input type= "hidden" name= "gamestartweek" value="' . $gamefetch['lms_game_start_wkno'] . '" />';
+                            $html .= '<input type= "hidden" name= "gamestartweek" value="' . $game['lms_game_start_wkno'] . '" />';
                         }
                         $html .= '    <input type= "hidden" name= "id" value="' . $gameid . '" />
                                 
@@ -173,11 +174,11 @@ if (login_check($mypdo) == true) {
 
                         if (! empty($allleaguefetch)) {
                             $html .= '
-                            <div class="form-group">
-                                  <label for="addleague">&nbsp; Add league &nbsp;&nbsp;</label>
+                            <div class="form-group" style="padding-left:3em;">
+                                  <label for="addleague">Add league &nbsp;&nbsp;</label>
 								  <input type= "checkbox" name= "addleague" id="addleague" value="true" />
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="padding-left:3em;">
                                 <select class="form-dropdown" style="width:70%" id="leagueid" name="leagueid" ' . $enabled . '>';
                             foreach ($allleaguefetch as $myLeague) {
                                 $html .= ' <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
@@ -257,7 +258,7 @@ if (login_check($mypdo) == true) {
 					        </div>	
 		                </form>
                     </div>';
-                        if ($gamefetch['lms_game_status'] == 1) {
+                        if ($game['lms_game_status'] == 1) {
                             $html .= '
                             <div class="game-pick-card">
                             <table class="game-table">

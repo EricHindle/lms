@@ -17,7 +17,8 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $leaguequery = $mypdo->prepare($leaguesql);
     $leaguequery->execute();
     $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
-
+    
+    $calrows = get_all_calendars();
     $html = "";
 
     echo '
@@ -49,13 +50,21 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                     <div class="box" style="padding:1em;margin:10px;">
                         <h3>Add League</h3>
                         <form role="form" name ="addleague" method="post" action="add-league.php">';
-      $html .= $key;
+    $html .= $key;
     $html .= '              <div class="form-group" style="margin:12px">
                                 <div>
 		                            <input type="text" class="form-field" id="leaguename" name="leaguename" placeholder="League name" />
                                 </div>
     	                    	<div>
     		                        <input type="text" class="form-field" id="leagueabbr" name="leagueabbr" placeholder="Abbreviation" />
+                                </div>
+    	                    	<div>
+                                    Calendar
+			                     <select class="form-dropdown" style="padding:10px;" id="cal" name="cal">';
+    foreach ($calrows as $mycal) {
+        $html .= '                  <option value="' . $mycal['lms_calendar_id'] . '">' . $mycal['lms_calendar_name'] . '</option>';
+    }
+    $html .= '	                     </select>
                                 </div>
 			                </div>
                             <div class="form-group" style="margin-left:16px;margin-right:16px">
@@ -73,7 +82,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     foreach ($leaguefetch as $myLeague) {
         $html .= '                  <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
     }
-$html .= '	                     </select>
+    $html .= '	                     </select>
                             </div>
                             <div class="form-group" style="margin-left:16px;margin-right:16px">
 					            <input id="submit" name="submit" type="submit" value="Select" class="btn graybutton" style="padding:5px;width:50%;">
@@ -92,16 +101,16 @@ $html .= '	                     </select>
 						  </thead>
 						  <tbody>
 									';
-foreach ($leaguefetch as $rs) {
-    $supported = ($rs['lms_league_supported'] == 1 ? 'Yes' : 'No');
-    $html .= '
+    foreach ($leaguefetch as $rs) {
+        $supported = ($rs['lms_league_supported'] == 1 ? 'Yes' : 'No');
+        $html .= '
 									<tr>
 										<td>' . $rs['lms_league_name'] . '</td>
                                         <td>' . $rs['lms_league_abbr'] . '</td>
 										<td>' . $supported . '</td>
 									</tr>';
-}
-$html .= '
+    }
+    $html .= '
 						  </tbody>
                         </table>
     				</div>

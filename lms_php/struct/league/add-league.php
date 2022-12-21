@@ -20,6 +20,7 @@ if (login_check($mypdo) == true && $access > 900) {
             if (isset($_POST['leaguename'], $_POST['leagueabbr'])) {
                 $leaguename = sanitize_message_string($_POST['leaguename']);
                 $leagueabbr = $_POST['leagueabbr'];
+                $leaguecal = $_POST['cal'];
                 if ($leaguename && $leagueabbr && strlen($leagueabbr) < 5) {
                     $html = "";
                     $cusql = "SELECT lms_league_id FROM lms_league WHERE lms_league_name = :leaguename LIMIT 1";
@@ -37,12 +38,12 @@ if (login_check($mypdo) == true && $access > 900) {
                         date_default_timezone_set('Europe/London');
                         $phptime = time();
                         $mysqltime = date("Y-m-d H:i:s", $phptime);
-                        $sqladdleague = "INSERT INTO lms_league (lms_league_name, lms_league_abbr, lms_league_supported) VALUES (:leaguename, :leagueabbr, 1)";
+                        $sqladdleague = "INSERT INTO lms_league (lms_league_name, lms_league_abbr, lms_league_supported, lms_league_current_calendar) VALUES (:leaguename, :leagueabbr, 1, :cal)";
                         $stmtaddleague = $mypdo->prepare($sqladdleague);
-                        $stmtaddleague->execute(array(
-                            ':leaguename' => $leaguename,
-                            ':leagueabbr' => $leagueabbr
-                        ));
+                        $stmtaddleague->bindParam(':leaguename', $leaguename);
+                        $stmtaddleague->bindParam(':leagueabbr', $leagueabbr);
+                        $stmtaddleague->bindParam(':cal', $leaguecal, PDO::PARAM_INT);
+                        $stmtaddleague->execute();
                         $added = $stmtaddleague->rowCount();
                         $html .= "<script>
 											alert('" . $added . " leagues added.');

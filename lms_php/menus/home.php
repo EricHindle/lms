@@ -40,15 +40,10 @@ if (login_check($mypdo) == true) {
     include $myPath . 'globNAV.php';
     echo '
                 <div class="container">
-                    <div  class="box" style="margin-top:20px;">
+                    <div  class="box" style="margin-top:20px;margin-bottom:10px;padding:1em;">
                         <h2>Welcome, ' . $_SESSION['nickname'] . '</h2>
-                        Current Match Week: <b>';
-    $html .= $_SESSION['currentweek'];
-    $html .= '          </b>
                     </div>
-                    <div class="status-bar-deadline-home">Deadline for week ' . sprintf('%02d', $_SESSION['currentweek'] + 1) . ' pick is: ' . date_format(date_create($_SESSION['deadline']), 'd M Y');
-    $html .= '      </div>
-                    <div class="box">
+                    <div class="box" style="padding-top:1em;">
                         <h2>Join a Game</h2>
                         <p>Enter a code to join an already existing game.</p><br>
                         <form class="form-horizontal" role="form" name ="edit" method="post" action="' . $myPath . 'struct/game/process-join-game.php">';
@@ -61,6 +56,7 @@ if (login_check($mypdo) == true) {
             ';
     foreach ($gamefetch as $rs) {
         $gameid = $rs['lms_game_id'];
+        set_game_session_values($gameid);
         $pickquery = $mypdo->prepare($picksql);
         $pickquery->bindParam(':player', $playerid, PDO::PARAM_INT);
         $pickquery->bindParam(':game', $gameid, PDO::PARAM_INT);
@@ -80,7 +76,9 @@ if (login_check($mypdo) == true) {
 
         $thispick = 'No Pick';
         $nextpick = '(make a pick now)';
-
+       
+        $deadline = $rs['lms_select_deadline'];
+        $nextpick = '(make a pick by ' . date_format(date_create($deadline), 'd M Y') . ')';
         $rowcolor = 'black';
         $playercolor = 'status-playing';
         switch ($rs['lms_game_status']) {
@@ -164,7 +162,7 @@ if (login_check($mypdo) == true) {
         if ($shownextweekspick) {
 
             $html .= '                      <div class="table-columnTitle">Next Week\'s Pick ' . $displaynextweek . ':</div>
-                                            <div><h3><b>' . $nextpick . '</b></h3></div>';
+                                            <div><h4>' . $nextpick . '</h4></div>';
             if ($selectcount > 0) {
                 $html .= '                  <div class="table-columnTitle">Fixture: (' . date_format(date_create($selectweekpick['lms_match_date']), 'd M Y') . ')</div>';
             }

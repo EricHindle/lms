@@ -16,28 +16,36 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $formKey = new formKey();
     $key = $formKey->outputKey();
     $matchperiod = '';
+    $matchcal = '';
     if (isset($_POST['matchperiod'])) {
         $matchperiod = $_POST['matchperiod'];
     }
     if (isset($_GET['matchperiod'])) {
         $matchperiod = $_GET['matchperiod'];
     }
+    if (isset($_POST['cal'])) {
+        $matchcal = $_POST['cal'];
+    }
+    if (isset($_GET['cal'])) {
+        $matchcal = $_GET['cal'];
+    }
     if (strlen($matchperiod) != 6){
          $matchperiod = '';
     }
     $tableperiod = substr($matchperiod,4,2) . '/' . substr($matchperiod,0,4);
     $tableselect = $matchperiod;
-    $matchsql = "SELECT * FROM v_lms_match WHERE lms_match_weekno = :weekno ORDER BY lms_team_name, lms_match_date  ASC ";
+    $matchsql = "SELECT * FROM v_lms_match WHERE lms_match_weekno = :weekno AND lms_match_calendar = :matchcal ORDER BY lms_team_name, lms_match_date  ASC ";
     if ($matchperiod == '') {
         $tableperiod = $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'];
          $tableselect = $_SESSION['matchweek'] ;
-        $matchsql = "SELECT * FROM v_lms_match WHERE lms_match_weekno <> :weekno ORDER BY lms_team_name, lms_match_date  ASC ";
+        $matchsql = "SELECT * FROM v_lms_match WHERE lms_match_weekno <> :weekno AND lms_match_calendar = :matchcal ORDER BY lms_team_name, lms_match_date  ASC ";
     }
     $matchquery = $mypdo->prepare($matchsql);
     $matchquery->bindParam(':weekno', $matchperiod);
+    $matchquery->bindParam(':matchcal', $matchcal, PDO::PARAM_INT);
     $matchquery->execute();
     $matchfetch = $matchquery->fetchAll(PDO::FETCH_ASSOC);
-    $remainingweeks = get_remaining_weeks(false);
+    $remainingweeks = get_remaining_weeks(false, $matchcal);
     $html = "";
 
     echo '

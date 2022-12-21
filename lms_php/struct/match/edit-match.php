@@ -3,7 +3,6 @@
  * HINDLEWARE
  * Copyright (C) 2020 Eric Hindle. All rights reserved.
  */
-
 $myPath = '../../';
 
 require $myPath . 'includes/db_connect.php';
@@ -101,10 +100,10 @@ if (login_check($mypdo) == true && $access > 900) {
                             if ($rt['lms_result_type'] == $matchfetch['lms_match_result']) {
                                 $sel = 'selected';
                             }
-                            $html .= ' <option ' . $sel . ' value="' . $rt['lms_result_type'] . '">' . $rt['lms_result_type_desc'] . '</option>';
+                            $html .= '                              <option ' . $sel . ' value="' . $rt['lms_result_type'] . '">' . $rt['lms_result_type_desc'] . '</option>';
                         }
 
-                        $html .= '                           </select>
+                        $html .= '                             </select>
 															   <input type= "hidden" name= "id" value="' . $gameid . '" />
                                                                <input type= "hidden" name= "matchperiod" value="' . $matchperiod . '" />
 										                    </div>

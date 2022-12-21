@@ -425,4 +425,58 @@ function get_player_by_mobile($mobile)
     $player = $playerquery->fetch(PDO::FETCH_ASSOC);
     return $player;
 }
+function get_calendar_row($calid)
+{
+    global $mypdo;
+    $calsql = "SELECT * FROM lms_calendar WHERE lms_calendar_id = :cal LIMIT 1";
+    $calquery = $mypdo->prepare($calsql);
+    $calquery->bindParam(':cal', $calid, PDO::PARAM_INT);
+    $calquery->execute();
+    $calrow = $calquery->fetch(PDO::FETCH_ASSOC);
+    return $calrow;
+}
+
+function get_all_calendars()
+{
+    global $mypdo;
+    $calsql = "SELECT * FROM lms_calendar ORDER BY lms_calendar_season, lms_calendar_name";
+    $calquery = $mypdo->prepare($calsql);
+    $calquery->execute();
+    $calrows = $calquery->fetchAll(PDO::FETCH_ASSOC);
+    return $calrows;
+}
+
+function set_game_session_values($gameid)
+{
+    global $mypdo;
+    $gamesql = "SELECT * FROM v_lms_game WHERE lms_game_id = :gameid LIMIT 1";
+    $gamequery= $mypdo->prepare($gamesql);
+    $gamequery->bindParam(":gameid", $gameid, PDO::PARAM_INT);
+    $gamequery->execute();
+    $game = $gamequery->fetch(PDO::FETCH_ASSOC);
+
+    $_SESSION['currentseason'] = $game['lms_calendar_season'];
+    $_SESSION['currentweek'] = $game['lms_calendar_current_week'];
+    $_SESSION['selectweek'] = $game['lms_calendar_select_week'];
+    $currentweek = sprintf('%02d', $_SESSION['currentweek']) ;     
+    $selectweek = sprintf('%02d', $_SESSION['selectweek']) ;
+    $_SESSION['matchweek'] = $_SESSION['currentseason'] . $currentweek;
+    $_SESSION['selectweekkey'] = $_SESSION['currentseason'] . $selectweek;
+    $_SESSION['selperiod'] =   $selectweek . '/' .$_SESSION['currentseason'] ;
+    $_SESSION['deadline'] = $game['lms_select_deadline'];
+    return $game;
+}
+
+function get_week_row($year, $week, $cal)
+{
+    global $mypdo;
+    $weeksql = 'SELECT * FROM lastmanl_lms.lms_week where lms_year = :season and lms_week = :week and lms_week_calendar = :cal';
+    $weekquery = $mypdo->prepare($weeksql);
+    $weekquery->bindParam(':season', $year, PDO::PARAM_INT);
+    $weekquery->bindParam(':week', $week, PDO::PARAM_INT);
+    $weekquery->bindParam(':cal', $cal, PDO::PARAM_INT);
+    $weekquery->execute();
+    $weekrow = $weekquery->fetch(PDO::FETCH_ASSOC);
+    return $weekrow;
+}
 ?>

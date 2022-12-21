@@ -55,8 +55,15 @@ if (login_check($mypdo) == true) {
         $shownextweekspick = $rs['lms_game_player_status'] == 1 && $rs['lms_game_status'] < 3;
 
         $thispick = 'No Pick';
-        $nextpick = '(make a pick now)';
-
+        $calrow = get_calendar_row($rs['lms_game_calendar']);
+        
+        $gameselectweek = $calrow['lms_calendar_current_week'] + 1;
+        
+        $weekrow = get_week_row($rs['lms_year'],$gameselectweek,$rs['lms_game_calendar']);
+        
+        $deadline = $weekrow['lms_week_deadline'];
+        $nextpick = '(make a pick by ' . date_format(date_create($deadline), 'd M Y') . ')';
+        
         $rowcolor = 'black';
         $playercolor = 'status-playing';
         switch ($rs['lms_game_status']) {
@@ -141,7 +148,7 @@ if (login_check($mypdo) == true) {
         if ($shownextweekspick) {
 
             $html .= '                  <div class="table-columnTitle">Next Week\'s Pick ' . $displaynextweek . ':</div>
-                                        <div><h3><b>' . $nextpick . '</b></h3></div>';
+                                        <div><h4>' . $nextpick . '</h4></div>';
             if ($selectcount > 0) {
                 $html .= '              <div class="table-columnTitle">Fixture: (' . date_format(date_create($selectweekpick['lms_match_date']), 'd M Y') . ')</div>';
             }

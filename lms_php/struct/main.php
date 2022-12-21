@@ -17,7 +17,8 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $statusquery = $mypdo->prepare($statussql);
     $statusquery->execute();
     $statuslist = $statusquery->fetchAll(PDO::FETCH_ASSOC);
-
+  
+    $calrows = get_all_calendars();
     $html = '';
     echo '
 		<!doctype html>
@@ -67,8 +68,21 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                         <h3>Matches for :</h3>
                         <form role="form" name ="matchmain" method="post" action="' . $myPath . 'struct/match/match-main.php">';
     $html .= $key;
-    $html .= '              <div class="form-group " style="margin-left:16px;margin-right:16px">
+    $html .= '              
+
+<div class="form-group " style="margin-left:16px;margin-right:16px">
+    	                    	<div>
+                                    <label class="form-text" style="display:inline-block;width:40%;text-align:left">Calendar</label>
+			                     <select class="form-dropdown" style="padding:10px;" id="cal" name="cal">';
+    foreach ($calrows as $mycal) {
+        $html .= '                  <option value="' . $mycal['lms_calendar_id'] . '">' . $mycal['lms_calendar_name'] . '</option>';
+    }
+    $html .= '	                     </select>
+                                </div>
+<div>
+                                <label class="form-text" style="display:inline-block;width:40%;text-align:left">Week</label>
                                 <input type="text" class="form-control" id="matchperiod" name="matchperiod" placeholder="yyyyww">
+</div>
 					        </div>
                             <div class="form-group" style="margin-left:16px;margin-right:16px">
 					            <input id="submit" name="submit" type="submit" value="Submit" class="btn graybutton" style="margin:10px;padding:5px;width:50%;">

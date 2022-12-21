@@ -21,6 +21,7 @@ if (login_check($mypdo) == true && $access > 900) {
                 $leagueid = sanitize_int($_POST['id']);
                 $leaguename = $_POST['leaguename'];
                 $leagueabbr = $_POST['leagueabbr'];
+                $leaguecal = $_POST['cal'];
                 $issupported = (isset($_POST['issupported']) ? $_POST['issupported'] : "false");
                 $mysupported = ($issupported == "true" ? 1 : 0);
 
@@ -37,11 +38,12 @@ if (login_check($mypdo) == true && $access > 900) {
                         date_default_timezone_set('Europe/London');
                         $phptime = time();
                         $mysqltime = date("Y-m-d H:i:s", $phptime);
-                        $upsql = "UPDATE lms_league SET lms_league_name = :leaguename, lms_league_abbr = :leagueabbr, lms_league_supported = :supported WHERE lms_league_id = :id";
+                        $upsql = "UPDATE lms_league SET lms_league_name = :leaguename, lms_league_abbr = :leagueabbr, lms_league_supported = :supported, lms_league_current_calendar = :cal WHERE lms_league_id = :id";
                         $upquery = $mypdo->prepare($upsql);
                         $upquery->bindParam(':id', $leagueid, PDO::PARAM_INT);
                         $upquery->bindParam(':leaguename', $leaguename);
                         $upquery->bindParam(':leagueabbr', $leagueabbr);
+                        $upquery->bindParam(':cal', $leaguecal, PDO::PARAM_INT);
                         $upquery->bindParam(':supported', $mysupported, PDO::PARAM_INT);
                         $upquery->execute();
                         $upcount = $upquery->rowCount();

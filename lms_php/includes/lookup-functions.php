@@ -81,17 +81,18 @@ function get_current_game($game)
     return $mygamesfetch;
 }
 
-function get_remaining_weeks($includecurrentweek)
+function get_remaining_weeks($includecurrentweek, $calendar)
 {
     global $mypdo;
 
-    $weeksql = "SELECT lms_week_no, lms_week, lms_year, lms_week_start FROM lms_week WHERE lms_week > :week and lms_year = :season";
+    $weeksql = "SELECT lms_week_no, lms_week, lms_year, lms_week_start FROM lms_week WHERE lms_week > :week and lms_year = :season and lms_week_calendar = :cal";
     if ($includecurrentweek) {
-        $weeksql = "SELECT lms_week_no, lms_week, lms_year, lms_week_start FROM lms_week WHERE lms_week >= :week and lms_year = :season";
+        $weeksql = "SELECT lms_week_no, lms_week, lms_year, lms_week_start FROM lms_week WHERE lms_week >= :week and lms_year = :season and lms_week_calendar = :cal";
     }
     $weekquery = $mypdo->prepare($weeksql);
     $weekquery->bindParam(":week", $_SESSION['currentweek'], PDO::PARAM_INT);
     $weekquery->bindParam(":season", $_SESSION['currentseason'], PDO::PARAM_INT);
+    $weekquery->bindParam(":cal", $calendar, PDO::PARAM_INT);
     $weekquery->execute();
     $weekfetch = $weekquery->fetchAll(PDO::FETCH_ASSOC);
     return $weekfetch;

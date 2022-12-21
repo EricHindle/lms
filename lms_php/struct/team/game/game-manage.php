@@ -13,8 +13,8 @@ if (login_check($mypdo) == true) {
     $gamequery->bindParam(":manager", $_SESSION['user_id'], PDO::PARAM_INT);
     $gamequery->execute();
     $gamefetch = $gamequery->fetchAll(PDO::FETCH_ASSOC);
-
-    $remainingweeks = get_remaining_weeks(false);
+// TODO calendar
+    $remainingweeks = get_remaining_weeks(false,1);
 
     $mygamessql = "SELECT lms_game_id, lms_game_id, lms_game_name FROM v_lms_player_games WHERE lms_player_id = :player and lms_game_player_status = 1 ORDER BY lms_game_name";
     $mygamesquery = $mypdo->prepare($mygamessql);

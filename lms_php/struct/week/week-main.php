@@ -18,6 +18,8 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $weekquery->bindParam(":week", $_SESSION['currentweek'], PDO::PARAM_INT);
     $weekquery->execute();
     $remainingweeks = $weekquery->fetchAll(PDO::FETCH_ASSOC);
+
+    $calrows = get_all_calendars();
     $html = "";
     echo '
 		<!doctype html>
@@ -50,14 +52,26 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $html .= $key;
     $html .= '	
 		                    <div class="form-group"  style="padding-left:10px;text-align:left;">
-                                <label class="form-text" style="display:inline-block;width:40%;text-align:left">Season:</label>
-					            <input type="text" class="form-field" id="weekyear" name="weekyear" placeholder="Season YYyy" />
+    	                    	<div>
+                                    <label class="form-text" style="display:inline-block;width:40%;text-align:left">Calendar</label>
+			                     <select class="form-dropdown" style="padding:10px;" id="cal" name="cal">';
+    foreach ($calrows as $mycal) {
+        $html .= '                  <option value="' . $mycal['lms_calendar_id'] . '">' . $mycal['lms_calendar_name'] . '</option>';
+    }
+    $html .= '	                     </select>
+                                </div>
+<div>
                                 <label class="form-text" style="display:inline-block;width:40%;text-align:left">Week:</label>
 					            <input type="text" class="form-field" id="weeknumber" name="weeknumber" placeholder="Week" />
+</div>
+<div>
                                 <label class="form-text" style="display:inline-block;width:40%;text-align:left">Week start date:</label>
                                 <input type="text" class="form-field" id="weekstart" name="weekstart" placeholder="yyyy-mm-dd" />
+</div>
+<div>
                                 <label class="form-text" style="display:inline-block;width:40%;text-align:left">Number of weeks:</label>
                                 <input type="text" class="form-field" id="weekcount" name="weekcount" placeholder="##" value = 1 />
+</div>
 				            </div>
                             <div class="form-group" style="margin-left:16px;margin-right:16px">
 					            <input id="submit" name="submit" type="submit" value="Add Weeks" class="btn graybutton" style="padding:5px;width:50%;">

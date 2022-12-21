@@ -24,8 +24,8 @@ if (login_check($mypdo) == true) {
     $leaguequery = $mypdo->prepare($leaguesql);
     $leaguequery->execute();
     $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
-
-    $remainingweeks = get_remaining_weeks(false);
+// TODO calendar
+    $remainingweeks = get_remaining_weeks(false,1);
 
     $html = "";
     $key = $formKey->outputKey();

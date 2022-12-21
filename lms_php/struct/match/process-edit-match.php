@@ -28,12 +28,15 @@ if (login_check($mypdo) == true && $access > 900) {
                 if ($gameid && $matchdate) {
                     $html = "";
 
-                    $matchsql = "SELECT lms_match_id FROM lms_match WHERE lms_match_id = :id LIMIT 1";
+                    $matchsql = "SELECT lms_match_id, lms_match_calendar FROM lms_match WHERE lms_match_id = :id LIMIT 1";
                     $matchquery = $mypdo->prepare($matchsql);
                     $matchquery->bindParam(':id', $gameid);
                     $matchquery->execute();
+                    $matchfetch = $matchquery->fetch(PDO::FETCH_ASSOC);
                     $matchcount = $matchquery->rowCount();
+
                     if ($matchcount > 0) {
+                        $cal = $matchfetch['lms_match_calendar'];
                         date_default_timezone_set('Europe/London');
                         $phptime = time();
                         $mysqltime = date("Y-m-d H:i:s", $phptime);
@@ -47,12 +50,12 @@ if (login_check($mypdo) == true && $access > 900) {
                         if ($upcount > 0) {
                             $html .= "<script>
 											alert('Details updated successfully.');
-											window.location.href='match-main.php?matchperiod=" . $matchperiod . "';
+											window.location.href='match-main.php?matchperiod=" . $matchperiod . "&cal=" . $cal . "';
 										</script>";
                         } else {
                             $html .= "<script>
 										alert('Details not altered.');
-										window.location.href='match-main.php?matchperiod=" . $matchperiod . "';
+										window.location.href='match-main.php?matchperiod=" . $matchperiod . "&cal=" . $cal . "';
 									</script>";
                         }
                     } else {

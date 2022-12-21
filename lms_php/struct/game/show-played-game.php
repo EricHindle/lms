@@ -23,6 +23,9 @@ if (login_check($mypdo) == true) {
             if (isset($_POST['gameid'])) {
                 $gameid = sanitize_int($_POST['gameid']);
                 if ($gameid) {
+                    
+                    set_game_session_values($gameid);
+                    
                     $deadline = get_deadline_date();
                     $html = "";
 
