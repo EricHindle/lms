@@ -10,6 +10,7 @@ require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
 require $myPath . 'includes/lookup-functions.php';
 require $myPath . 'struct/picks/pick-functions.php';
+require 'game-lookup.php';
 
 sec_session_start();
 $currentPage = 'manage';
@@ -23,23 +24,17 @@ if (login_check($mypdo) == true) {
 
                 $gameid = sanitize_int($_POST['gameid']);
                 if ($gameid) {
-                    $deadline = get_deadline_date();
                     $html = "";
-                    $gamesql = "SELECT lms_game_start_wkno, lms_game_name, lms_week, lms_year, lms_game_status_text, lms_game_status, lms_week_start, lms_game_calendar FROM v_lms_game WHERE lms_game_id = :id";
-                    $gamequery = $mypdo->prepare($gamesql);
-                    $gamequery->execute(array(
-                        ':id' => $gameid
-                    ));
-                    $gamecount = $gamequery->rowCount();
-                  
-                    if ($gamecount > 0) {
-                        $game = $gamequery->fetch(PDO::FETCH_ASSOC);
+                    $game = get_game($gameid);
+
+                    if ($game) {
                         $game_calendar = $game['lms_game_calendar'];
                         $enabled = "";
                         if ($game['lms_game_status'] > 1) {
                             $enabled = "disabled";
                         }
                         $gamename = $game['lms_game_name'];
+                        $deadline = $game['lms_select_deadline'];
                         $allleaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr FROM lms_league
                                             WHERE lms_league_supported = 1 AND lms_league_current_calendar = :cal
                                                 AND lms_league_id NOT IN
@@ -50,12 +45,7 @@ if (login_check($mypdo) == true) {
                         $allleaguequery->bindParam(":gameid", $gameid, PDO::PARAM_INT);
                         $allleaguequery->execute();
                         $allleaguefetch = $allleaguequery->fetchAll(PDO::FETCH_ASSOC);
-
-                        $key = $formKey->outputKey();
-
-
-                        //TODO calendar
-                        $remainingweeks = get_remaining_weeks(false,1);
+                        $remainingweeks = get_remaining_weeks(false, $game_calendar);
 
                         $gameplayersql = "SELECT lms_game_player_status, lms_player_screen_name, lms_game_player_status_text, lms_player_id FROM v_lms_player_games WHERE lms_game_id = :game";
                         $gameplayerquery = $mypdo->prepare($gameplayersql);
@@ -121,19 +111,24 @@ if (login_check($mypdo) == true) {
                                         <input type="text" class="form-field" id="gamename" name="gamename" value="' . $game['lms_game_name'] . '">
                                     </td>
                                 </tr>';
-                                    
+
                         if ($game['lms_game_status'] == 1) {
-                                        $html .= '
+
+                            $html .= '
                                 <tr>
                                     <td colspan="2"><div  class="table-columnTitle">New start week:</div>
                                 <select class="form-dropdown" id="gamestartweek" name="gamestartweek">';
                             foreach ($remainingweeks as $wk) {
-                                $html .= '<option value="' . $wk['lms_week_no'] . '">' . $wk['lms_week'] . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
+                                $select = '';
+                                if ($game['lms_week'] == $wk['lms_week'] && $game['lms_year'] == $wk['lms_year']) {
+                                    $select = 'selected';
+                                }
+
+                                $html .= '<option value="' . $wk['lms_week_no'] . '" ' . $select . '>' . $wk['lms_week'] . ' : ' . date_format(date_create($wk['lms_week_start']), 'd-M-Y') . '</option>';
                             }
-                                            $html .= '</select>';
-                                        } 
-                                        
-                                        else {
+                            $html .= '</select>';
+                        } 
+                        else {
                             $html .= '<input type= "hidden" name= "gamestartweek" value="' . $game['lms_game_start_wkno'] . '" />';
                         }
                         $html .= '    <input type= "hidden" name= "id" value="' . $gameid . '" />
@@ -169,9 +164,6 @@ if (login_check($mypdo) == true) {
                         $html .= '  
                             </table>';
 
-
-
-
                         if (! empty($allleaguefetch)) {
                             $html .= '
                             <div class="form-group" style="padding-left:3em;">
@@ -187,73 +179,7 @@ if (login_check($mypdo) == true) {
                                 </select>
                             </div>';
                         }
-
-
-                                    // if ($gamefetch['lms_game_status'] == 2) {
-                                    //     $html .= ' 
-                                    //     <div style="padding:25px;text-align:left;">
-                                    //         <div>
-                                    //             <label class="form-text">Current week selection deadline: </label>' . date_format(date_create($deadline), 'd M Y') . '
-                                    //         </div>
-                                    //         ';
-                                    // } else {
-                                    //     $html .= '
-                                    //     <div style="padding:25px;text-align:left;margin-bottom:20px;">
-                                    //         ';
-                                    // }
-                            // $html .= ' 
-                            //         <table class="table table-bordered" id="picks">
-                            //             <thead>
-                            //                 <tr class="info">
-                            //                     <th>Player Name</th>
-                            //                     <th>Player Status</th>
-                            //                     <th>Current picks</th>
-                            //                 </tr>
-                            //             </thead>
-                            //             <tbody>
-                            //                 ';
-                            // foreach ($gameplayerfetch as $rs) {
-                            //     $pickfetch = get_current_player_pick($gameid, $rs['lms_player_id']);
-                            //     $nextpickfetch = get_next_player_pick($gameid, $rs['lms_player_id']);
-                            //     $currentpick = '';
-                            //     $thispick = '';
-                            //     $nextpick = '';
-                            //     $rowcolor = 'white';
-                            //     $selcolor = 'white';
-                            //     if ($rs['lms_game_player_status'] == 2 or $rs['lms_game_player_status'] == 3) {
-                            //         $rowcolor = $rs['lms_game_player_status'] == 2 ? 'lightred' : 'silver';
-                            //     } else {
-                            //         if ($pickfetch || $nextpickfetch) {
-                            //             $newline = '';
-                            //             if ($pickfetch && $nextpickfetch) {
-                            //                 $newline = '</br>';
-                            //             }
-                            //             if ($pickfetch) {
-                            //                 $thispick = $pickfetch['lms_team_name'] . ' (' . date_format(date_create($pickfetch['lms_match_date']), 'd M Y') . ')';
-                            //             }
-                            //             if ($nextpickfetch) {
-                            //                 $nextpick = $nextpickfetch['lms_team_name'] . ' (' . date_format(date_create($nextpickfetch['lms_match_date']), 'd M Y') . ')';
-                            //             }
-                            //             $currentpick = $thispick . $newline . $nextpick;
-                            //         } else {
-                            //             if ($gamefetch['lms_game_start_wkno'] <= $_SESSION['matchweek']) {
-                            //                 $currentpick = '(waiting)';
-                            //                 $selcolor = 'crimson';
-                            //             }
-                            //         }
-                            //     }
-                            //     $html .= '
-                            //                 <tr style="color:' . $rowcolor . '">
-                            //                     <td>' . $rs['lms_player_screen_name'] . '</td>
-                            //                     <td>' . $rs['lms_game_player_status_text'] . '</td>
-                            //                     <td style="color:' . $selcolor . '">' . $currentpick . '</td>
-                            //                 </tr>';
-                            // }
-                            // $html .= '
-                            //             </tbody>
-                            //         </table>
-                                // </div>
-                                $html .= '<div class="form-group">
+                        $html .= '<div class="form-group">
                                     <input id="submit" name="submit" type="submit" value="Update" class="btn">
 					        </div>	
 		                </form>

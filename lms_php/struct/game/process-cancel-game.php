@@ -23,21 +23,9 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                 if ($gameid) {
                     $html = "";
 
-                    $gamesql = "SELECT lms_game_id, lms_game_name FROM lms_game WHERE lms_game_id = :id LIMIT 1";
-                    $gamequery = $mypdo->prepare($gamesql);
-                    $gamequery->execute(array(
-                        ':id' => $gameid
-                    ));
-                    $gamecount = $gamequery->rowCount();
+                    $gamecount = check_game_exists($gameid);
                     if ($gamecount > 0) {
-                        $upsql = "";
-
-                        $upsql = "UPDATE lms_game SET lms_game_status = 4 WHERE lms_game_id = :id";
-
-                        $upquery = $mypdo->prepare($upsql);
-                        $upquery->bindParam(':id', $gameid, PDO::PARAM_INT);
-                        $upquery->execute();
-                        $upcount = $upquery->rowCount();
+                        $upcount = set_game_cancelled($gameid);
                         if ($upcount > 0) {
                             sendcancelemailsforgame($gameid);
                             $html .= "<script>

@@ -390,13 +390,14 @@ function encrypt($decstring)
     return $encstring;
 }
 
-function get_selection_start_date($gamestartweek)
+function get_selection_start_date($gamestartweek, $calid)
 {
     global $mypdo;
     $previousweek = $gamestartweek - 1;
-    $weeksql = "SELECT lms_week_start FROM lms_week WHERE lms_week_no = :weekno LIMIT 1";
+    $weeksql = "SELECT lms_week_start FROM lms_week WHERE lms_week_no = :weekno AND lms_week_calendar = :cal LIMIT 1";
     $weekquery = $mypdo->prepare($weeksql);
     $weekquery->bindParam(":weekno", $previousweek, PDO::PARAM_INT);
+    $weekquery->bindParam(":cal", $calid, PDO::PARAM_INT);
     $weekquery->execute();
     $weekfetch = $weekquery->fetch(PDO::FETCH_ASSOC);
     return $weekfetch['lms_week_start'];
@@ -425,6 +426,7 @@ function get_player_by_mobile($mobile)
     $player = $playerquery->fetch(PDO::FETCH_ASSOC);
     return $player;
 }
+
 function get_calendar_row($calid)
 {
     global $mypdo;
@@ -432,14 +434,23 @@ function get_calendar_row($calid)
     $calquery = $mypdo->prepare($calsql);
     $calquery->bindParam(':cal', $calid, PDO::PARAM_INT);
     $calquery->execute();
-    $calrow = $calquery->fetch(PDO::FETCH_ASSOC);
-    return $calrow;
+    return $calquery->fetch(PDO::FETCH_ASSOC);
 }
 
 function get_all_calendars()
 {
     global $mypdo;
     $calsql = "SELECT * FROM lms_calendar ORDER BY lms_calendar_season, lms_calendar_name";
+    $calquery = $mypdo->prepare($calsql);
+    $calquery->execute();
+    $calrows = $calquery->fetchAll(PDO::FETCH_ASSOC);
+    return $calrows;
+}
+
+function get_current_calendars()
+{
+    global $mypdo;
+    $calsql = "SELECT * from lms_calendar WHERE lms_calendar_id IN (SELECT lms_league_current_calendar FROM v_lms_league_calendar ORDER BY lms_league_current_calendar)";
     $calquery = $mypdo->prepare($calsql);
     $calquery->execute();
     $calrows = $calquery->fetchAll(PDO::FETCH_ASSOC);
@@ -454,17 +465,34 @@ function set_game_session_values($gameid)
     $gamequery->bindParam(":gameid", $gameid, PDO::PARAM_INT);
     $gamequery->execute();
     $game = $gamequery->fetch(PDO::FETCH_ASSOC);
+    set_session_from_calendar($game);
+    return $game;
+}
 
-    $_SESSION['currentseason'] = $game['lms_calendar_season'];
-    $_SESSION['currentweek'] = $game['lms_calendar_current_week'];
-    $_SESSION['selectweek'] = $game['lms_calendar_select_week'];
-    $currentweek = sprintf('%02d', $_SESSION['currentweek']) ;     
+function set_session_from_calendar($row){
+    $_SESSION['currentseason'] = $row['lms_calendar_season'];
+    $_SESSION['currentweek'] = $row['lms_calendar_current_week'];
+    $_SESSION['selectweek'] = $row['lms_calendar_select_week'];
+    $currentweek = sprintf('%02d', $_SESSION['currentweek']) ;
     $selectweek = sprintf('%02d', $_SESSION['selectweek']) ;
     $_SESSION['matchweek'] = $_SESSION['currentseason'] . $currentweek;
     $_SESSION['selectweekkey'] = $_SESSION['currentseason'] . $selectweek;
     $_SESSION['selperiod'] =   $selectweek . '/' .$_SESSION['currentseason'] ;
-    $_SESSION['deadline'] = $game['lms_select_deadline'];
-    return $game;
+    if (isset($row['lms_select_deadline'])) {
+        $_SESSION['deadline'] = $row['lms_select_deadline'];
+    }
+}
+
+function set_session_from_week($row){
+    $_SESSION['currentseason'] = $row['lms_year'];
+    $_SESSION['currentweek'] = $row['lms_week'];
+    $_SESSION['selectweek'] = $row['lms_calendar_select_week'];
+    $currentweek = sprintf('%02d', $_SESSION['currentweek']) ;
+    $selectweek = sprintf('%02d', $_SESSION['selectweek']) ;
+    $_SESSION['matchweek'] = $_SESSION['currentseason'] . $currentweek;
+    $_SESSION['selectweekkey'] = $_SESSION['currentseason'] . $selectweek;
+    $_SESSION['selperiod'] =   $selectweek . '/' .$_SESSION['currentseason'] ;
+    $_SESSION['deadline'] = $row['lms_week_deadline'];
 }
 
 function get_week_row($year, $week, $cal)
@@ -478,5 +506,27 @@ function get_week_row($year, $week, $cal)
     $weekquery->execute();
     $weekrow = $weekquery->fetch(PDO::FETCH_ASSOC);
     return $weekrow;
+}
+
+function get_league($leagueId)
+{
+    global $mypdo;
+    $leaguesql = "SELECT * FROM v_lms_league_calendar WHERE lms_league_id =  :leagueId LIMIT 1";
+    $leaguequery = $mypdo->prepare($leaguesql);
+    $leaguequery->bindParam(":leagueId", $leagueId, PDO::PARAM_INT);
+    $leaguequery->execute();
+    $leagueRow = $leaguequery->fetch(PDO::FETCH_ASSOC);
+    return $leagueRow;
+}
+
+function remove_available_picks_for_team_game($gameid, $teamid)
+{
+    global $mypdo;
+    $deletesql = "DELETE FROM lms_available_picks
+                    WHERE lms_available_picks_game = :gameid AND lms_available_picks_team = :teamid";
+    $deletequery = $mypdo->prepare($deletesql);
+    $deletequery->bindparam(":gameid", $gameid, PDO::PARAM_INT);
+    $deletequery->bindparam(":teamid", $teamid, PDO::PARAM_INT);
+    $deletequery->execute();
 }
 ?>

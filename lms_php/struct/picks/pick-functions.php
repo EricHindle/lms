@@ -91,7 +91,7 @@ function get_next_player_pick($gameid, $playerid)
 function get_current_week_picks()
 {
     global $mypdo;
-    $picksql = "SELECT lms_pick_game_id, lms_pick_player_id, lms_pick_match_id, lms_match_result FROM v_lms_player_picks WHERE lms_match_weekno = :matchwk";
+    $picksql = "SELECT * FROM v_lms_player_picks WHERE lms_match_weekno = :matchwk";
     $pickquery = $mypdo->prepare($picksql);
     $pickquery->bindParam(':matchwk', $_SESSION['matchweek']);
     $pickquery->execute();

@@ -9,6 +9,7 @@ require_once $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
 require $myPath . 'struct/game/game-functions.php';
+require $myPath . 'includes/lookup-functions.php';
 
 sec_session_start();
 $formKey = new formKey();
@@ -25,13 +26,7 @@ if (login_check($mypdo) == true) {
                 $iscancel = (isset($_POST['iscancel']) ? $_POST['iscancel'] : "false");
                 if ($gameid && $gamename) {
                     $html = "";
-
-                    $gamesql = "SELECT lms_game_id, lms_game_name FROM lms_game WHERE lms_game_id = :id LIMIT 1";
-                    $gamequery = $mypdo->prepare($gamesql);
-                    $gamequery->execute(array(
-                        ':id' => $gameid
-                    ));
-                    $gamecount = $gamequery->rowCount();
+                    $gamecount = check_game_exists($gameid);
                     $alerttext = "";
                     if ($gamecount > 0) {
                         $upsql = "";
@@ -57,15 +52,25 @@ if (login_check($mypdo) == true) {
                             $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
                             foreach ($leaguefetch as $rs) {
                                 $rmvid = $rs['lms_league_id'];
-                                $postrmv = $_POST["rmv-" . $rmvid];
-                                if ($postrmv == "true") {
+                                if (array_key_exists("rmv-" . $rmvid, $_POST)) {
                                     $sqlrmvteamleague = "DELETE FROM lms_game_league WHERE lms_game_league_league_id = :leagueid AND lms_game_league_game_id = :gameid";
                                     $sqlrmvteamleague = $mypdo->prepare($sqlrmvteamleague);
-                                    $sqlrmvteamleague->execute(array(
-                                        ':gameid' => $gameid,
-                                        ':leagueid' => $rmvid
-                                    ));
+                                    $sqlrmvteamleague->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+                                    $sqlrmvteamleague->bindParam(':leagueid', $rmvid, PDO::PARAM_INT);
+                                    $sqlrmvteamleague->execute();
                                     $leaguermv = $sqlrmvteamleague->rowCount();
+                                    if ($leaguermv > 0) {
+                                        $alerttext .= "League removed from game.";
+                                    }
+                                    
+                                    /*
+                                     * Get all teams in the league
+                                     * Remove all available picks for game/team
+                                     */
+                                    $teamlist = get_active_teams_for_league($rmvid);
+                                    foreach ($teamlist as $team) {
+                                        remove_available_picks_for_team_game($gameid, $team['lms_team_id']);
+                                    }
                                 }
                             }
                         }
@@ -74,13 +79,25 @@ if (login_check($mypdo) == true) {
                             $leagueId = sanitize_int($_POST['leagueid']);
                             $sqladdteamleague = "INSERT INTO lms_game_league (lms_game_league_league_id, lms_game_league_game_id) VALUES (:leagueid, :gameid)";
                             $sqladdteamleague = $mypdo->prepare($sqladdteamleague);
-                            $sqladdteamleague->execute(array(
-                                ':gameid' => $gameid,
-                                ':leagueid' => $leagueId
-                            ));
+                            $sqladdteamleague->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+                            $sqladdteamleague->bindParam(':leagueid', $leagueId, PDO::PARAM_INT);
+                            $sqladdteamleague->execute();
                             $leagueadded = $sqladdteamleague->rowCount();
                             if ($leagueadded > 0) {
-                                $alerttext .= "League successfully added to game.";
+                                $alerttext .= "League added to game.";
+                            }
+                            
+                            /*
+                             * Get all players in the game
+                             * Get all teams in the league
+                             * Add all teams to all players available picks for game
+                             */
+                            $playerlist = get_players_for_game($gameid);
+                            $teamlist = get_active_teams_for_league($leagueId);
+                            foreach($playerlist as $player) {
+                                foreach($teamlist as $team) {
+                                    insert_available_team($player['lms_player_id'], $gameid, $team['lms_team_id']);
+                                }
                             }
                         }
                         

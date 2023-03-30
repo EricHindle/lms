@@ -5,16 +5,17 @@
  */
 date_default_timezone_set('Europe/London');
 
-function get_current_deadline_date($selectweekkey)
+/* function get_current_deadline_date($selectweekkey, $calid)
 {
     global $mypdo;
-    $weeksql = "SELECT lms_week_deadline FROM lms_week WHERE lms_week_no = :week LIMIT 1";
+    $weeksql = "SELECT lms_week_deadline FROM lms_week WHERE lms_week_no = :week AND lms_week_calendar = :cal LIMIT 1";
     $weekquery = $mypdo->prepare($weeksql);
     $weekquery->bindParam(":week", $selectweekkey, PDO::PARAM_INT);
+    $weekquery->bindParam(":cal", $calid, PDO::PARAM_INT);
     $weekquery->execute();
     $weekfetch = $weekquery->fetch(PDO::FETCH_ASSOC);
     return $weekfetch['lms_week_deadline'];
-}
+} */
 
 function get_current_matchweek()
 {

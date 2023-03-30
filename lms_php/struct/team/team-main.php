@@ -52,46 +52,45 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                     </div>
                     <div class="box" style="padding:1em;margin:10px;">
                         <h3>Add Team</h3>
-			                	<form role="form" name ="addteam" method="post" action="add-team.php">';
+			            <form role="form" name ="addteam" method="post" action="add-team.php">';
     $html .= $key;
-    $html .= '					<div class="form-group" style="margin:12px">
+    $html .= '			   <div class="form-group" style="margin:12px">
                                 <div>
-					                    <input type="text" class="form-field" id="teamname" name="teamname" placeholder="Team name" />
-				                    </div>
-					                <div >
-			                            <select class="form-dropdown" id="leagueid" name="leagueid">';
+					                   <input type="text" class="form-field" id="teamname" name="teamname" placeholder="Team name" />
+				                </div>
+					            <div>
+			                           <select class="form-dropdown" id="leagueid" name="leagueid">';
     foreach ($leaguefetch as $myLeague) {
         $html .= '                        <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
     }
     $html .= '	                        </select>
-                                    </div>
-</div>
-             <div class="form-group" style="margin-left:16px;margin-right:16px">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-left:16px;margin-right:16px">
 					            <input id="submit" name="submit" type="submit" value="Add Team" class="btn graybutton" style="padding:5px;width:50%;">
 					        </div>
 
-				                </form>
-				            </div>
-     <div class="box" style="padding:1em;margin:10px;">
+				        </form>
+                    </div>
+                    <div class="box" style="padding:1em;margin:10px;">
                         <h3>Edit Team</h3>
 
-			                	<form role="form" name ="editteam" method="post" action="edit-team.php">';
+			                 <form role="form" name ="editteam" method="post" action="edit-team.php">';
     $html .= $key;
     $html .= '				
-				                  <div class="form-group" style="margin:12px">
+				                    <div class="form-group" style="margin:12px">
 			                        	<select class="form-dropdown" id="team" name="team">';
     foreach ($teamfetch as $myTeam) {
         $html .= '<option value="' . $myTeam['lms_team_id'] . '">' . $myTeam['lms_team_name'] . '</option>';
     }
-    $html .= '	                    </select>
+    $html .= '	                         </select>
 				                    </div>
-                            <div class="form-group" style="margin-left:16px;margin-right:16px">
-					            <input id="submit" name="submit" type="submit" value="Select" class="btn graybutton" style="padding:5px;width:50%;">
-					        </div>
+                                    <div class="form-group" style="margin-left:16px;margin-right:16px">
+        					            <input id="submit" name="submit" type="submit" value="Select" class="btn graybutton" style="padding:5px;width:50%;">
+        					        </div>
 				                </form>
 				            </div>
-                    <div class="box" style="padding:1em;padding-left:100px;margin:10px;text-align:left">
-
+                            <div class="box" style="padding:1em;padding-left:100px;margin:10px;text-align:left">
 				        		<h3>All Teams</h3>
 					        	<table class="table table-bordered" id="keywords">
 									<thead>

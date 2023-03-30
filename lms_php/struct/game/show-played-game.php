@@ -24,12 +24,9 @@ if (login_check($mypdo) == true) {
                 $gameid = sanitize_int($_POST['gameid']);
                 if ($gameid) {
                     
-                    set_game_session_values($gameid);
-                    
-                    $deadline = get_deadline_date();
                     $html = "";
 
-                    $gamesql = "SELECT lms_game_start_wkno, lms_game_name, lms_week, lms_year, lms_game_status_text, lms_game_status, lms_week_start, lms_game_code FROM v_lms_game WHERE lms_game_id = :id";
+                    $gamesql = "SELECT * FROM v_lms_game WHERE lms_game_id = :id";
                     $gamequery = $mypdo->prepare($gamesql);
                     $gamequery->execute(array(
                         ':id' => $gameid
@@ -39,7 +36,9 @@ if (login_check($mypdo) == true) {
 
                         $key = $formKey->outputKey();
                         $gamefetch = $gamequery->fetch(PDO::FETCH_ASSOC);
+                        set_session_from_calendar($gamefetch);
                         $gamename = $gamefetch['lms_game_name'];
+                        $deadline = $gamefetch['lms_select_deadline'];
                         $gameplayersql = "SELECT lms_game_player_status, lms_player_screen_name, lms_game_player_status_text, lms_player_id, lms_game_code FROM v_lms_player_games WHERE lms_game_id = :game";
                         $gameplayerquery = $mypdo->prepare($gameplayersql);
                         $gameplayerquery->bindParam(":game", $gameid, PDO::PARAM_INT);
@@ -178,7 +177,7 @@ if (login_check($mypdo) == true) {
                         $game = get_current_game($gameid);
                         $gamestatus = $game['lms_game_status'];
                         $gamestartwk = $game['lms_game_start_wkno'];
-
+                        $calid = $game['lms_game_calendar'];
                         $html .= '          <div>';
                         foreach ($availfetch as $mypick) {
                             $teampair = "";
@@ -194,14 +193,14 @@ if (login_check($mypdo) == true) {
                          * If too early (game status 1 and selection week < game start week), no pick allowed
                          */
                         if ($gamestatus == 1 && $gamestartwk > $_SESSION['selectweekkey']) {
-                            $selectionstart = get_selection_start_date($gamestartwk);
+                            $selectionstart = get_selection_start_date($gamestartwk, $calid);
                             $msg = 'Team selection begins ' . date_format(date_create($selectionstart), 'd M Y');
 
                             $html .= '      <div class="pick-card" style="margin-bottom: 20px;padding-top:1em">
                                                 <div><h3>' . $msg . '</h3></div>
                                             </div>';
                         } else {
-                            if (time() < strtotime(get_deadline_date())) {
+                            if (time() < strtotime($deadline)) {
                                 if ($gps['lms_game_player_status'] == "1" && $gamestatus < 3) {
                                     $html .= '<div class="pick-card" style="margin-bottom: 20px;padding-top:1em">';
 

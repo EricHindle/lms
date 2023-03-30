@@ -6,7 +6,7 @@
 require 'includes/db_connect.php';
 require 'includes/functions.php';
 require 'includes/formkey.class.php';
-require 'includes/index-functions.php';
+// require 'includes/index-functions.php';
 
 sec_session_start();
 $formKey = new formKey();
@@ -15,13 +15,14 @@ if (login_check($mypdo) == true) {
     header('Location: logout.php');
 } else {
 
-    $_SESSION['currentweek'] = get_global_value('currweek');
+/*     $_SESSION['currentweek'] = get_global_value('currweek');
     $_SESSION['currentseason'] = get_global_value('currseason');
     $_SESSION['selectweek'] = get_global_value('selectweek');
     $_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
     $_SESSION['selectweekkey'] = $_SESSION['currentseason'] . $_SESSION['selectweek'];
     $_SESSION['selperiod']=   $_SESSION['selectweek'] . '/' .$_SESSION['currentseason'] ;
-    $_SESSION['deadline'] = get_current_deadline_date($_SESSION['selectweekkey']);   
+    $_SESSION['deadline'] = get_current_deadline_date($_SESSION['selectweekkey']); */  
+    
     $_SESSION['encrypted'] = filter_var(get_global_value('encrypt'), FILTER_VALIDATE_BOOLEAN);
     $html = '
     <!DOCTYPE html>

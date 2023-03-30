@@ -30,21 +30,21 @@ function update_results($results, $logfile)
 
         $matchdate = strtotime(substr($result->fixture->date, 0, 10));
         if ($matchdate != $lastdate) {
-            $matchdatelogtext = "----- Match date: " . date('d-m-Y', $matchdate) . " -----\n";
+            $matchdatelogtext = "=============== Match date: " . date('d-m-Y', $matchdate) . " ===============\n";
             $lastdate = $matchdate;
         }
 
         $hometeamApiId = $result->teams->home->id;
         $awayteamApiId = $result->teams->away->id;
 
-        $hometeam = get_team_abbr_by_api_id($hometeamApiId);
-        $awayteam = get_team_abbr_by_api_id($awayteamApiId);
+        $hometeam = get_team_id_by_api_id($hometeamApiId);
+        $awayteam = get_team_id_by_api_id($awayteamApiId);
 
         $logresulttext = "";
 
         $homescore = $result->goals->home;
         $awayscore = $result->goals->away;
-        $logresulttext = "  " . $hometeam . " " . $homescore . " - " . $awayscore . " " . $awayteam;
+        $logresulttext = "  " . $result->teams->home->name . " " . $homescore . " - " . $awayscore . " " . $result->teams->away->name;
         switch ($result->fixture->status->short) {
             case "FT":
                 break;
@@ -96,15 +96,15 @@ function update_notplayed($noresults, $logfile)
 
         $matchdate = strtotime(substr($result->fixture->date, 0, 10));
         if ($matchdate != $lastdate) {
-            $matchdatelogtext = "----- Match date: " . date('d-m-Y', $matchdate) . " -----\n";
+            $matchdatelogtext = "=============== Match date: " . date('d-m-Y', $matchdate) . " ===============\n";
             $lastdate = $matchdate;
         }
 
         $hometeamApiId = $result->teams->home->id;
         $awayteamApiId = $result->teams->away->id;
 
-        $hometeam = get_team_abbr_by_api_id($hometeamApiId);
-        $awayteam = get_team_abbr_by_api_id($awayteamApiId);
+        $hometeam = get_team_id_by_api_id($hometeamApiId);
+        $awayteam = get_team_id_by_api_id($awayteamApiId);
         $wl = "";
         $logresulttext = "  " . $hometeam . " - " . $awayteam;
         $rtcode = $result->fixture->status->short;
@@ -142,31 +142,31 @@ function update_notplayed($noresults, $logfile)
 /*
  * =========== Update Scheduled fixtures ==========
  */
-function update_fixtures($fixtures, $logfile)
+function update_fixtures($fixtures, $logfile, $calid)
 {
     global $logtext;
-    fwrite($logfile, "----- Updating fixtures -----\n");
+    fwrite($logfile, "--------------- Updating fixtures ----------------\n");
     $errormsg = '';
     $matchlist = array();
     foreach ($fixtures as $fixture) {
         $logtext = '';
         $matchdate = strtotime(substr($fixture->fixture->date, 0, 10));
-        $matchdatetext = "----- Match date: " . date('d-m-Y', $matchdate) . " -----\n";
+        $matchdatetext = "=============== Match date: " . date('d-m-Y', $matchdate) . " ===============\n";
         $hometeamApiId = $fixture->teams->home->id;
         $awayteamApiId = $fixture->teams->away->id;
 
-        $hometeam = get_team_abbr_by_api_id($hometeamApiId);
-        $awayteam = get_team_abbr_by_api_id($awayteamApiId);
-        $matchlist[] = $hometeam . date('d-m-Y', $matchdate);
-        $matchlist[] = $awayteam . date('d-m-Y', $matchdate);
+        $hometeam = get_team_id_by_api_id($hometeamApiId);
+        $awayteam = get_team_id_by_api_id($awayteamApiId);
+        $matchlist[] = strval($hometeam) . "|" . date('d-m-Y', $matchdate);
+        $matchlist[] = strval($awayteam) . "|" . date('d-m-Y', $matchdate);
 
         $dt = new DateTime("@$matchdate");
-        if (save_match($hometeam, $matchdate, $logfile, $awayteam, 'h') == false) {
+        if (save_match($hometeam, $matchdate, $logfile, $awayteam, 'h', $calid) == false) {
             $thiserror = "** Unable to insert match : " . $hometeam . " " . date_format($dt, 'd-m-Y') . "\n";
             $logtext .= $thiserror;
             $errormsg .= $thiserror;
         }
-        if (save_match($awayteam, $matchdate, $logfile, $hometeam, 'a') == false) {
+        if (save_match($awayteam, $matchdate, $logfile, $hometeam, 'a', $calid) == false) {
             $thiserror = "** Unable to insert match : " . $awayteam . " " . date_format($dt, 'd-m-Y') . "\n";
             $logtext .= $thiserror;
             $errormsg .= $thiserror;
@@ -188,7 +188,7 @@ function check_dup_fixtures($matchlist, $leagueId, $logfile)
 {
     $errormsg = '';
     fwrite($logfile, "----- Checking for duplicate matches -----\n");
-    $matchdata = get_all_future_matches();
+    $matchdata = get_all_future_matches($leagueId);
     foreach ($matchdata as $mch) {
         $teamabbr = $mch['lms_team_abbr'];
         $teamid = $mch['lms_match_team'];
@@ -199,7 +199,7 @@ function check_dup_fixtures($matchlist, $leagueId, $logfile)
         $matchid = $mch['lms_match_id'];
         $matchweek = $mch['lms_match_weekno'];
         $matchleague = $mch['lms_match_league'];
-        $found = in_array($teamabbr . $matchdate, $matchlist) && $matchleague == $leagueId;
+        $found = in_array(strval($teamid) . "|" . $matchdate, $matchlist) && $matchleague == $leagueId;
         if ($found == false) {
             // match no longer taking place
 
@@ -234,16 +234,16 @@ function check_dup_fixtures($matchlist, $leagueId, $logfile)
  * =========== Main ==========
  */
 
-$_SESSION['currentweek'] = get_global_value('currweek');
-$_SESSION['currentseason'] = get_global_value('currseason');
-$_SESSION['matchweek'] = $_SESSION['currentseason'] . $_SESSION['currentweek'];
 global $argv;
-$logfile = fopen($myPath . "logs/lml-log-" . $_SESSION['matchweek'] . ".log", "a");
+$logfile = fopen($myPath . "logs/lml-log-apiupdate-" . date("m-d") . ".log", "a");
 
 $matchlist = array();
 
 fwrite($logfile, "Fixtures Update --------------------------------------\n");
 fwrite($logfile, date("Y-m-d H:i:s") . "\n");
+
+$updFixtures = false;
+$updResults = false;
 
 // Get league from parameter
 $urlId = 'epl';
@@ -252,15 +252,31 @@ foreach ($argv as $param) {
         fwrite($logfile, "param : " . $param . "\n");
         $urlId = substr($param, 2);
     }
+
+    if (substr($param, 0, 4) == '-fix') {
+        fwrite($logfile, "param : " . $param . "\n");
+        $updFixtures = true;
+    }
+
+    if (substr($param, 0, 4) == '-res') {
+        fwrite($logfile, "param : " . $param . "\n");
+        $updResults = true;
+    }
 }
 
 /*
  * =========== Find league record ==========
  */
 $league = get_league_from_abbr($urlId);
+$calid = $league['lms_calendar_id'];
 $leagueId = $league['lms_league_id'];
 $apiLeagueId = $league['lms_league_api_id'];
 fwrite($logfile, "League: " . $league['lms_league_name'] . "\n");
+
+/*
+ * =========== Set session for league =====
+ */
+set_session_from_calendar($league);
 
 /*
  * =========== Get fixtures via api ==========
@@ -274,23 +290,27 @@ fwrite($logfile, strval(count($fixtures)) . " fixtures found\n");
  */
 fwrite($logfile, "--- Update Fixtures by status ---\n");
 
-fwrite($logfile, "--- Played matches ---\n");
-$played = split_fixtures($fixtures, "played");
+if ($updFixtures) {
+    fwrite($logfile, "--- Scheduled matches ---\n");
+    $scheduled = split_fixtures($fixtures, "scheduled");
 
-fwrite($logfile, strval(count($played)) . " results found\n");
-update_results($played, $logfile);
+    fwrite($logfile, strval(count($scheduled)) . " scheduled matches found\n");
+    $matchlist = update_fixtures($scheduled, $logfile, $calid);
+}
 
-fwrite($logfile, "--- Matches not played ---\n");
-$notplayed = split_fixtures($fixtures, "not played");
+if ($updResults) {
+    fwrite($logfile, "--- Played matches ---\n");
+    $played = split_fixtures($fixtures, "played");
 
-fwrite($logfile, strval(count($notplayed)) . " postponed/cancelled/abandoned matches found\n");
-update_notplayed($notplayed, $logfile);
+    fwrite($logfile, strval(count($played)) . " results found\n");
+    update_results($played, $logfile);
 
-fwrite($logfile, "--- Scheduled matches ---\n");
-$scheduled = split_fixtures($fixtures, "scheduled");
+    fwrite($logfile, "--- Matches not played ---\n");
+    $notplayed = split_fixtures($fixtures, "not played");
 
-fwrite($logfile, strval(count($scheduled)) . " scheduled matches found\n");
-$matchlist = update_fixtures($scheduled, $logfile);
+    fwrite($logfile, strval(count($notplayed)) . " postponed/cancelled/abandoned matches found\n");
+    update_notplayed($notplayed, $logfile);
+}
 
 check_dup_fixtures($matchlist, $leagueId, $logfile);
 

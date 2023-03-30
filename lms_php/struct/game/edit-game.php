@@ -3,11 +3,15 @@
  * HINDLEWARE
  * Copyright (C) 2020 Eric Hindle. All rights reserved.
  */
+
+// Can't find it being used
+
 $myPath = '../../';
 
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'includes/formkey.class.php';
+require 'game-lookup.php';
 
 sec_session_start();
 $formKey = new formKey();
@@ -19,23 +23,19 @@ if (login_check($mypdo) == true) {
             if (isset($_POST['gameid'])) {
                 $gameid = sanitize_int($_POST['gameid']);
                 if ($gameid) {
-
                     $html = "";
-                    $gamesql = "SELECT lms_game_id, lms_game_name, lms_game_start_wkno, lms_week, lms_year, lms_week_start FROM v_lms_game WHERE lms_game_id = :id";
-                    $gamequery = $mypdo->prepare($gamesql);
-                    $gamequery->execute(array(
-                        ':id' => $gameid
-                    ));
-                    $gamecount = $gamequery->rowCount();
-
-                    if ($gamecount > 0) {
+                    $game = get_game($gameid);
+                    if ($game) {
                         $key = $formKey->outputKey();
-                        $gamefetch = $gamequery->fetch(PDO::FETCH_ASSOC);
-
-                        $weeksql = "SELECT lms_week_no, lms_week, lms_week, lms_week_start FROM lms_week WHERE lms_week > :week and lms_year = :season";
+                        $calid = $game['lms_game_calendar'];
+                        $calendar = get_calendar_row($calid);
+                        set_session_from_calendar($calendar);
+                        $_SESSION['calendar'] = $calid;
+                        $weeksql = "SELECT lms_week_no, lms_week, lms_week, lms_week_start FROM lms_week WHERE lms_week > :week AND lms_year = :season AND lms_week_calendar = :cal";
                         $weekquery = $mypdo->prepare($weeksql);
                         $weekquery->bindParam(":week", $_SESSION['currentweek'], PDO::PARAM_INT);
                         $weekquery->bindParam(":season", $_SESSION['currentseason'], PDO::PARAM_INT);
+                        $weekquery->bindParam(":cal", $_SESSION['calendar'], PDO::PARAM_INT);
                         $weekquery->execute();
                         $remainingweeks = $weekquery->fetchAll(PDO::FETCH_ASSOC);
                         echo '
@@ -74,25 +74,25 @@ if (login_check($mypdo) == true) {
                         $html .= '					       <h3 class="text-center">Edit Game</h3>
 								                     	    <div class="row">
 																<label class="control-label col-sm-4" for="name">Name:</label>
-																<div class="col-sm-6 form-control-static" name="name">' . $gamefetch['lms_game_name'] . '
+																<div class="col-sm-6 form-control-static" name="name">' . $game['lms_game_name'] . '
 																</div>
                                                             </div>
                                                             <div class="row">
 																<label class="control-label col-sm-4" for="oweek">Start week:</label>
 																<div class="col-sm-4">
-					                                               <p class="form-control-static" name="oweek">' . $gamefetch['lms_week'] . '</p>
+					                                               <p class="form-control-static" name="oweek">' . $game['lms_week'] . '</p>
 				                                                </div>
                                                             </div>
                                                             <div class="row">
 																<label class="control-label col-sm-4" for="odate">Start date:</label>
 																<div class="col-sm-4">
-					                                               <p class="form-control-static" name="odate">' . date_format(date_create($gamefetch['lms_week_start']), 'd-M-Y') . '</p>
+					                                               <p class="form-control-static" name="odate">' . date_format(date_create($game['lms_week_start']), 'd-M-Y') . '</p>
 				                                                </div>
 															</div>
                                                             <br>
 										                    <div class="row">
                                                                <label for="gamename">New name:</label>
-                    					                       <input type="text" class="form-control" id="gamename" name="gamename" value="' . $gamefetch['lms_game_name'] . '"><br>
+                    					                       <input type="text" class="form-control" id="gamename" name="gamename" value="' . $game['lms_game_name'] . '"><br>
                                                             </div>
                                                             <div class="row">
                                                                <label for="gamestartweek">New start week:</label>

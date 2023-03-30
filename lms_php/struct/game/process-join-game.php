@@ -41,66 +41,56 @@ if (login_check($mypdo) == true) {
 								<!doctype html>
 								<html>
 									<head>
-                <meta charset="UTF-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-			    <link rel="stylesheet" href="' . $myPath . 'css/style.css">
-                <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
-
+                                        <meta charset="UTF-8" />
+                                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        			    <link rel="stylesheet" href="' . $myPath . 'css/style.css">
+                                        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
 									    <title>Confirm Join Game</title>
-									    
-
 									</head>
-
 									<body>';
                                 include $myPath . 'globNAV.php';
                                 $html .= '
-		      <div class="container" style="min-height:50vh;">
-                <div  class="box" style="padding:1em;width:400px;margin:10px;">
-									                    <h2>Confirmation</h2>
-									                </div>
-
-									     <div class="box" style="padding:1em;width:400px;margin:10px;">';
+                                        <div class="container" style="min-height:50vh;">
+                                            <div  class="box" style="padding:1em;width:400px;margin:10px;">
+                                                <h2>Confirmation</h2>
+                                            </div>
+                                        <div class="box" style="padding:1em;width:400px;margin:10px;">';
 
                                 $html .= '	<form class="form-horizontal" role="form" name ="edit" method="post" action="process-confirm-join-game.php">';
                                 $html .= $key;
-                                $html .= '					<h3 class="text-center">Confirm That You Want To Join This Game</h3>
-									                    	<br>
-									                    	<div class="form-group">
-																<label class="control-label col-sm-2" for="name" id="name">Name:</label>
-																<div class="col-sm-3">
-																 	<p class="form-control-static" name="name">' . $gamefetch['lms_game_name'] . '</p>
-																</div>
+                                $html .= '	     <h3 class="text-center">Confirm That You Want To Join This Game</h3>
+									             <br>
+									             <div class="form-group">
+												    <label class="control-label col-sm-2" for="name" id="name">Name:</label>
+													<div class="col-sm-3">
+													 	<p class="form-control-static" name="name">' . $gamefetch['lms_game_name'] . '</p>
+													</div>
 
-																<label class="control-label col-sm-3" for="stwk" id="stwk">Starting Week:</label>
-																<div class="col-sm-3">
-																 	<p class="form-control-static" name="stwk">' . $gamefetch['lms_game_start_wkno'] . '</p>
-																</div>
-															</div>
+													<label class="control-label col-sm-3" for="stwk" id="stwk">Starting Week:</label>
+													<div class="col-sm-3">
+													 	<p class="form-control-static" name="stwk">' . $gamefetch['lms_game_start_wkno'] . '</p>
+													</div>
+												 </div>
 
-										                    <div class="form-group">
-																<label class="control-label col-sm-2" for="manager">Manager:</label>
-																<div class="col-sm-4">
-																 	<p class="form-control-static" name="manager" id="manager">' . $gamefetch['lms_player_screen_name'] . '</p>
-																</div>
-															   <input type= "hidden" name= "gameid" value="' . $gamefetch['lms_game_id'] . '" />
-										                    </div>
-                                                            <div class="text-center">
-										                    	<br>
-										                        <input id="submit" name="submit" type="submit" value="Confirm" class="btn btn-primary">
-                                                            </div>
-										                </form>
-								
-										        </div>
-
-
-<div style="padding:2em;">
+							                     <div class="form-group">
+													<label class="control-label col-sm-2" for="manager">Manager:</label>
+													<div class="col-sm-4">
+													 	<p class="form-control-static" name="manager" id="manager">' . $gamefetch['lms_player_screen_name'] . '</p>
+													</div>
+												   <input type= "hidden" name= "gameid" value="' . $gamefetch['lms_game_id'] . '" />
+							                     </div>
+                                                 <div class="text-center">
+							                    	<br>
+							                        <input id="submit" name="submit" type="submit" value="Confirm" class="btn btn-primary">
+                                                 </div>
+									        </form>
+								        </div>
+                                        <div style="padding:2em;">
 						  <a href="' . $myPath . 'struct/game/game-manage.php" class="btn" style="padding:15px;" role="button">Back</a>
-				     </div>
-
-
-									    	</div>
-									</body>
-								</html>
+		                                </div>
+							    	</div>
+								</body>
+							</html>
 									            ';
                             } else {
                                 $html .= "<script>

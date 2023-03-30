@@ -19,6 +19,14 @@ if (login_check($mypdo) == true && $access > 900) {
         } else {
             if (isset($_POST['teamname'], $_POST['leagueid'])) {
                 $teamname = sanitize_message_string($_POST['teamname']);
+                $teamabbr = "";
+                $teamnamearray = explode(" ", $teamname);
+                if (count($teamnamearray) == 1) {
+                    $teamabbr = substr($teamname, 0, 3);
+                } elseif (count($teamnamearray) > 1) {
+                    $teamabbr = substr($teamnamearray[0], 0, 1) . substr($teamnamearray[1], 0, 2);
+                }
+                $teamabbr = strtoupper($teamabbr);
                 $leagueId = $_POST['leagueid'];
                 if ($teamname) {
                     $html = "";
@@ -37,11 +45,11 @@ if (login_check($mypdo) == true && $access > 900) {
                         date_default_timezone_set('Europe/London');
                         $phptime = time();
                         $mysqltime = date("Y-m-d H:i:s", $phptime);
-                        $sqladdteam = "INSERT INTO lms_team (lms_team_name, lms_team_active) VALUES (:teamname, 1)";
+                        $sqladdteam = "INSERT INTO lms_team (lms_team_name, lms_team_active, lms_team_abbr) VALUES (:teamname, 1, :abbr)";
                         $stmtaddteam = $mypdo->prepare($sqladdteam);
-                        $stmtaddteam->execute(array(
-                            ':teamname' => $teamname
-                        ));
+                        $stmtaddteam->bindParam(":abbr", $teamabbr);
+                        $stmtaddteam->bindParam(":teamname", $teamname);
+                        $stmtaddteam->execute();
                         $stmt = $mypdo->query("SELECT LAST_INSERT_ID()");
                         $teamid = $stmt->fetchColumn();
                         $added = $stmtaddteam->rowCount();
@@ -53,6 +61,11 @@ if (login_check($mypdo) == true && $access > 900) {
                                 ':leagueid' => $leagueId
                             ));
                             $leagueadded = $stmtaddteamleague->rowCount();
+                            $sqladdteamabbr = "INSERT INTO lms_team_abbr (lms_team_abbr_team_id, lms_team_abbr_abbr) VALUES (:teamid, :teamabbr)";
+                            $stmtaddteamabbr = $mypdo->prepare($sqladdteamabbr);
+                            $stmtaddteamabbr->bindParam(":teamid", $teamid, PDO::PARAM_INT);
+                            $stmtaddteamabbr->bindParam(":teamabbr", $teamabbr);
+                            $stmtaddteamabbr->execute();
                         }
 
                         $html .= "<script>

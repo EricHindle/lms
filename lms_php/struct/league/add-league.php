@@ -17,7 +17,7 @@ if (login_check($mypdo) == true && $access > 900) {
         if (! isset($_POST['form_key']) || ! $formKey->validate()) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
-            if (isset($_POST['leaguename'], $_POST['leagueabbr'])) {
+            if (isset($_POST['leaguename'], $_POST['leagueabbr'], $_POST['cal'])) {
                 $leaguename = sanitize_message_string($_POST['leaguename']);
                 $leagueabbr = $_POST['leagueabbr'];
                 $leaguecal = $_POST['cal'];

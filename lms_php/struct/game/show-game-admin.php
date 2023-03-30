@@ -23,10 +23,9 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 
                 $gameid = sanitize_int($_POST['gameid']);
                 if ($gameid) {
-                    $deadline = get_deadline_date();
                     $html = "";
                     
-                    $gamesql = "SELECT lms_game_start_wkno, lms_game_name, lms_week, lms_year, lms_game_status_text, lms_game_status, lms_week_start FROM v_lms_game WHERE lms_game_id = :id";
+                    $gamesql = "SELECT * FROM v_lms_game WHERE lms_game_id = :id";
                     $gamequery = $mypdo->prepare($gamesql);
                     $gamequery->execute(array(
                         ':id' => $gameid
@@ -36,7 +35,9 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                         
                         $key = $formKey->outputKey();
                         $gamefetch = $gamequery->fetch(PDO::FETCH_ASSOC);
+                        set_session_from_calendar($gamefetch);
                         $gamename = $gamefetch['lms_game_name'];
+                        $deadline = $gamefetch['lms_select_deadline'];
                         $gameplayersql = "SELECT lms_game_player_status, lms_player_screen_name, lms_game_player_status_text, lms_player_id FROM v_lms_player_games WHERE lms_game_id = :game";
                         $gameplayerquery = $mypdo->prepare($gameplayersql);
                         $gameplayerquery->bindParam(":game", $gameid, PDO::PARAM_INT);

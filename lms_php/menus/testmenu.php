@@ -40,6 +40,11 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
                             </a>	
                         </div>
                         <div class="btn graybutton" style="padding:3px;margin:3px;width:100%;">
+                            <a href="' . $myPath . 'testing/testforms/viewapilog.php">
+                                <h3 style="color:white;">API Log</h3>
+                            </a>	
+                        </div>
+                        <div class="btn graybutton" style="padding:3px;margin:3px;width:100%;">
                             <a href="' . $myPath . 'testing/testforms/emailtest.php">
                                 <h3 style="color:white;">Email test</h3>
                             </a>	

@@ -10,12 +10,13 @@ require '/home/lastmanl/public_html/scheduled/email-functions.php';
 // require '../includes/db_connect.php';
 // require '../scheduled/email-functions.php';
 
-function activateGames($nextgameweek)
+function activateGames($nextgameweek, $calid)
 {
     global $mypdo;
-    $updgamesql = "UPDATE lms_game SET lms_game_status = 2, lms_game_week_count = 1 WHERE lms_game_start_wkno = :weekno";
+    $updgamesql = "UPDATE lms_game SET lms_game_status = 2, lms_game_week_count = 1 WHERE lms_game_start_wkno = :weekno AND lms_game_calendar = :cal";
     $updgamequery = $mypdo->prepare($updgamesql);
     $updgamequery->bindParam(':weekno', $nextgameweek);
+    $updgamequery->bindParam(':cal', $calid , PDO::PARAM_INT);
     $updgamequery->execute();
     $upCount = $updgamequery->rowCount();
     return $upCount;
@@ -28,9 +29,11 @@ function markup_outcomes()
      * get this week's picks
      */
     $matchweek = $_SESSION['matchweek'];
-    $picksql = "SELECT * FROM lastmanl_lms.v_lms_player_picks where lms_match_weekno = :weekno order by lms_pick_game_id";
+    $calid = $_SESSION['calendar'];
+    $picksql = "SELECT * FROM lastmanl_lms.v_lms_player_picks where lms_match_weekno = :weekno AND lms_game_calendar = :cal order by lms_pick_game_id";
     $pickquery = $mypdo->prepare($picksql);
     $pickquery->bindParam(':weekno', $matchweek);
+    $pickquery->bindParam(':cal', $calid , PDO::PARAM_INT);
     $pickquery->execute();
     $picklist = $pickquery->fetchAll(PDO::FETCH_ASSOC);
     /*
@@ -79,6 +82,8 @@ function markup_gamePlayers($gamepicks)
     }
 }
 
+
+// should be obsolete
 function check_start_date()
 {
     global $mypdo;
@@ -89,6 +94,17 @@ function check_start_date()
     $weekquery->execute();
     $rowcount = $weekquery->rowCount();
     return $rowcount;
+}
+
+function get_starting_weeks()
+{
+    global $mypdo;
+    $today = date("Y-m-d");
+    $weeksql = "SELECT * FROM lms_week WHERE lms_week_start = :today";
+    $weekquery = $mypdo->prepare($weeksql);
+    $weekquery->bindParam(":today", $today);
+    $weekquery->execute();
+    return $weekquery->fetchAll();
 }
 
 function delete_pick($playerid, $gameid, $matchid)
@@ -108,8 +124,9 @@ function delete_pick($playerid, $gameid, $matchid)
 function get_active_games()
 {
     global $mypdo;
-    $gamesql = "SELECT * FROM lms_game WHERE lms_game_status = 2";
+    $gamesql = "SELECT * FROM lms_game WHERE lms_game_status = 2 AND lms_game_calendar = :cal";
     $gamequery = $mypdo->prepare($gamesql);
+    $gamequery->bindParam(':cal', $_SESSION['calendar'] , PDO::PARAM_INT);
     $gamequery->execute();
     $gamefetch = $gamequery->fetchAll(PDO::FETCH_ASSOC);
     return $gamefetch;
@@ -118,11 +135,11 @@ function get_active_games()
 function get_count_of_matches_with_no_result()
 {
     global $mypdo;
-    $selectsql = "SELECT lms_match_id, lms_team_name FROM v_lms_match WHERE lms_match_weekno = :weekno and lms_match_result = ''";
+    $selectsql = "SELECT lms_match_id, lms_team_name FROM v_lms_match WHERE lms_match_weekno = :weekno and lms_match_calendar = :cal and lms_match_result = ''";
     $selectquery = $mypdo->prepare($selectsql);
-    $selectquery->execute(array(
-        ':weekno' => $_SESSION['matchweek']
-    ));
+    $selectquery->bindParam(':cal', $_SESSION['calendar'] , PDO::PARAM_INT);
+    $selectquery->bindParam(':weekno', $_SESSION['matchweek']);
+    $selectquery->execute();
     $selectcount = $selectquery->rowCount();
     return $selectcount;
 }
@@ -141,23 +158,25 @@ function get_count_of_playing_teams_this_week($gameid, $matchweek)
     return $selectcount;
 }
 
-function get_current_deadline_date($selectweekkey)
+/* function get_current_deadline_date($selectweekkey, $calid)
 {
     global $mypdo;
-    $weeksql = "SELECT lms_week_deadline FROM lms_week WHERE lms_week_no = :week LIMIT 1";
+    $weeksql = "SELECT lms_week_deadline FROM lms_week WHERE lms_week_no = :week AND lms_week_calendar = :cal LIMIT 1";
     $weekquery = $mypdo->prepare($weeksql);
     $weekquery->bindParam(":week", $selectweekkey, PDO::PARAM_INT);
+    $weekquery->bindParam(":cal", $calid, PDO::PARAM_INT);
     $weekquery->execute();
     $weekfetch = $weekquery->fetch(PDO::FETCH_ASSOC);
     return $weekfetch['lms_week_deadline'];
-}
+} */
 
 function get_current_week_picks()
 {
     global $mypdo;
-    $picksql = "SELECT * FROM v_lms_player_picks WHERE lms_match_weekno = :matchwk";
+    $picksql = "SELECT * FROM v_lms_player_picks WHERE lms_match_weekno = :matchwk AND lms_game_calendar = :cal";
     $pickquery = $mypdo->prepare($picksql);
     $pickquery->bindParam(':matchwk', $_SESSION['matchweek']);
+    $pickquery->bindParam(':cal', $_SESSION['calendar']);
     $pickquery->execute();
     $pickfetch = $pickquery->fetchAll(PDO::FETCH_ASSOC);
     return $pickfetch;
@@ -241,17 +260,6 @@ function get_team($teamid)
     $teamquery->execute();
     $teamfetch = $teamquery->fetch(PDO::FETCH_ASSOC);
     return $teamfetch;
-}
-
-function get_week($weekno)
-{
-    global $mypdo;
-    $lookupsql = "SELECT * FROM lms_week WHERE lms_week_no = :weekno LIMIT 1";
-    $lookupquery = $mypdo->prepare($lookupsql);
-    $lookupquery->execute(array(
-        ':weekno' => $weekno
-    ));
-    return $lookupquery->fetch(PDO::FETCH_ASSOC);
 }
 
 function get_week_state($weekno)
@@ -384,13 +392,14 @@ function set_pick_wl($gameid, $playerid, $matchid, $wl)
     return $upCount;
 }
 
-function set_week_state($weekid, $newstate)
+function set_week_state($weekid, $calid, $newstate)
 {
     global $mypdo;
-    $upsql = "UPDATE lms_week SET lms_week_state = :newstate WHERE lms_week_no = :weekid";
+    $upsql = "UPDATE lms_week SET lms_week_state = :newstate WHERE lms_week_no = :weekid AND lms_week_calendar = :calid";
     $upquery = $mypdo->prepare($upsql);
     $upquery->bindParam(':weekid', $weekid);
     $upquery->bindParam(':newstate', $newstate, PDO::PARAM_INT);
+    $upquery->bindParam(':calid', $calid, PDO::PARAM_INT);
     $upquery->execute();
     $upcount = $upquery->rowCount();
     return $upcount;
@@ -415,6 +424,17 @@ function get_match_result($matchid)
         $resulttext = $bteam . ' ' . $bscore . ' - ' . $ascore . ' ' . $ateam;
     }
     return $resulttext;
+}
+
+function update_calendar_weeks($calid, $nextWeek, $newSelectWeek){
+    global $mypdo;
+    $updcalsql = "UPDATE lms_calendar SET lms_calendar_current_week = :newweek, lms_calendar_select_week = :selweek WHERE lms_calendar_id = :cal";
+    $updcalquery = $mypdo->prepare($updcalsql);
+    $updcalquery->bindParam(':newweek', $nextWeek);
+    $updcalquery->bindParam(':selweek', $newSelectWeek);
+    $updcalquery->bindParam(':cal', $calid, PDO::PARAM_INT);
+    $updcalquery->execute();
+    return $updcalquery->rowCount();
 }
 
 ?>

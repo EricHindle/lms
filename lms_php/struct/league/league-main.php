@@ -6,18 +6,14 @@
 $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
+require $myPath . 'includes/lookup-functions.php';
 require $myPath . 'includes/formkey.class.php';
 sec_session_start();
 $currentPage = '';
 if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $formKey = new formKey();
     $key = $formKey->outputKey();
-
-    $leaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr, lms_league_supported FROM lms_league ORDER BY lms_league_id ASC";
-    $leaguequery = $mypdo->prepare($leaguesql);
-    $leaguequery->execute();
-    $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
-    
+    $leaguerows = get_all_leagues(true);   
     $calrows = get_all_calendars();
     $html = "";
 
@@ -79,7 +75,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $html .= ' 
 			                <div class="form-group" style="margin:12px">
 			                     <select class="form-dropdown" id="league" name="league">';
-    foreach ($leaguefetch as $myLeague) {
+    foreach ($leaguerows as $myLeague) {
         $html .= '                  <option value="' . $myLeague['lms_league_id'] . '">' . $myLeague['lms_league_name'] . '</option>';
     }
     $html .= '	                     </select>
@@ -101,7 +97,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 						  </thead>
 						  <tbody>
 									';
-    foreach ($leaguefetch as $rs) {
+    foreach ($leaguerows as $rs) {
         $supported = ($rs['lms_league_supported'] == 1 ? 'Yes' : 'No');
         $html .= '
 									<tr>

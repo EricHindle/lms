@@ -74,8 +74,7 @@ if (login_check($mypdo) == true && $access > 900) {
                                 $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
                                 foreach ($leaguefetch as $rs) {
                                     $rmvid = $rs['lms_league_id'];
-                                    $postrmv = $_POST["rmv-" . $rmvid];
-                                    if ($postrmv == "true") {
+                                    if (array_key_exists("rmv-" . $rmvid, $_POST)) {
                                         $sqlrmvteamleague = "DELETE FROM lms_league_team WHERE lms_league_team_league_id = :leagueid AND lms_league_team_team_id = :teamid";
                                         $sqlrmvteamleague = $mypdo->prepare($sqlrmvteamleague);
                                         $sqlrmvteamleague->execute(array(

@@ -10,13 +10,13 @@ require $myPath . 'includes/formkey.class.php';
 sec_session_start();
 $formKey = new formKey();
 $playerid = $_SESSION['user_id'];
-$gamesql = "SELECT * FROM v_lms_player_games WHERE lms_player_id = :player ORDER BY lms_game_player_status, lms_game_name ASC";
+$gamesql = "SELECT * FROM v_lms_player_games WHERE lms_player_id = :player AND lms_game_status != 4 ORDER BY lms_game_player_status, lms_game_name ASC";
 $gamequery = $mypdo->prepare($gamesql);
 $gamequery->bindParam(':player', $playerid, PDO::PARAM_INT);
 $gamequery->execute();
 $gamefetch = $gamequery->fetchAll(PDO::FETCH_ASSOC);
 $currentPage = 'games';
-$picksql = "SELECT lms_team_name, lms_match_date, lms_week  FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game and lms_match_weekno = :matchwk LIMIT 1";
+$picksql = "SELECT lms_team_name, lms_match_date, lms_week, lms_game_calendar  FROM v_lms_player_picks WHERE lms_pick_player_id = :player and lms_pick_game_id = :game and lms_match_weekno = :matchwk LIMIT 1";
 $key = $formKey->outputKey();
 $html = '';
 if (login_check($mypdo) == true) {
@@ -37,6 +37,8 @@ if (login_check($mypdo) == true) {
         ';
     foreach ($gamefetch as $rs) {
         $gameid = $rs['lms_game_id'];
+        set_session_from_calendar($rs);
+
         $pickquery = $mypdo->prepare($picksql);
         $pickquery->bindParam(':player', $playerid, PDO::PARAM_INT);
         $pickquery->bindParam(':game', $gameid, PDO::PARAM_INT);
@@ -55,31 +57,11 @@ if (login_check($mypdo) == true) {
         $shownextweekspick = $rs['lms_game_player_status'] == 1 && $rs['lms_game_status'] < 3;
 
         $thispick = 'No Pick';
-        $calrow = get_calendar_row($rs['lms_game_calendar']);
-        
-        $gameselectweek = $calrow['lms_calendar_current_week'] + 1;
-        
-        $weekrow = get_week_row($rs['lms_year'],$gameselectweek,$rs['lms_game_calendar']);
-        
-        $deadline = $weekrow['lms_week_deadline'];
+        $deadline = $rs['lms_select_deadline'];
         $nextpick = '(make a pick by ' . date_format(date_create($deadline), 'd M Y') . ')';
-        
-        $rowcolor = 'black';
+
         $playercolor = 'status-playing';
-        switch ($rs['lms_game_status']) {
-            case 1:
-                $rowcolor = 'status-recruiting';
-                break;
-            case 2:
-                $rowcolor = 'status-playing';
-                break;
-            case 3:
-                $rowcolor = 'status-out';
-                break;
-            case 4:
-                $rowcolor = 'cancelled';
-                break;
-        }
+
         /*
          * If player is out (or left the game) this week - show the team
          */
@@ -93,7 +75,7 @@ if (login_check($mypdo) == true) {
             }
         } else {
             if ($rs['lms_game_start_wkno'] > $_SESSION['selectweekkey']) {
-                $selectionstart = get_selection_start_date($rs['lms_game_start_wkno']);
+                $selectionstart = get_selection_start_date($rs['lms_game_start_wkno'], $rs['lms_game_calendar']);
                 $nextpick = 'Team selection begins ' . date_format(date_create($selectionstart), 'd M Y');
             } else {
                 if ($matchcount > 0) {

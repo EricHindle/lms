@@ -1,7 +1,7 @@
 <?php
 /*
  * HINDLEWARE
- * Copyright (C) 2020 Eric Hindle. All rights reserved.
+ * Copyright (C) 2020-23 Eric Hindle. All rights reserved.
  */
 $myPath = '../../';
 
