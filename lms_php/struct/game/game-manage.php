@@ -13,21 +13,9 @@ sec_session_start();
 $currentPage = 'manage';
 $formKey = new formKey();
 if (login_check($mypdo) == true) {
-    $gamesql = "SELECT lms_game_id, lms_game_start_wkno, lms_game_name, lms_game_code, lms_game_status, lms_game_status_text, 
-                lms_game_total_players, lms_game_still_active, lms_week, lms_year FROM v_lms_game WHERE lms_game_manager = :manager  
+    $gamesql = "SELECT * FROM v_lms_game WHERE lms_game_manager = :manager  
                 ORDER BY lms_game_start_wkno DESC, lms_game_name";
-    $gamequery = $mypdo->prepare($gamesql);
-    $gamequery->bindParam(":manager", $_SESSION['user_id'], PDO::PARAM_INT);
-    $gamequery->execute();
-    $gamefetch = $gamequery->fetchAll(PDO::FETCH_ASSOC);
-
-    $leaguesql = "SELECT lms_league_id, lms_league_name, lms_league_abbr FROM lms_league WHERE lms_league_supported = 1 ORDER BY lms_league_id ASC";
-    $leaguequery = $mypdo->prepare($leaguesql);
-    $leaguequery->execute();
-    $leaguefetch = $leaguequery->fetchAll(PDO::FETCH_ASSOC);
-// TODO calendar
-    $remainingweeks = get_remaining_weeks(false,1);
-
+    $gamefetch = get_games_for_current_user($gamesql);
     $html = "";
     $key = $formKey->outputKey();
     echo '
@@ -125,9 +113,7 @@ if (login_check($mypdo) == true) {
                 </table>
             </button>
             </div>
-            
-            
-									';
+							';
         }
     }
     $html .= '

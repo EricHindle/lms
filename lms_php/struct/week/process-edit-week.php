@@ -17,28 +17,31 @@ if (login_check($mypdo) == true && $access > 900) {
         if (! isset($_POST['form_key']) || ! $formKey->validate()) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
-            if (isset($_POST['id'], $_POST['startdate'], $_POST['enddate'], $_POST['deadline'])) {
+            if (isset($_POST['id'], $_POST['startdate'], $_POST['enddate'], $_POST['deadline'], $_POST['cal'])) {
                 $gameid = $_POST['id'];
                 $startdate = sanitize_datetime($_POST['startdate']);
                 $enddate = sanitize_datetime($_POST['enddate']);
-                $deadline = sanitize_datetime($_POST['deadline'] . " 23:59:59");
-                if ($gameid && $startdate && $enddate && $deadline) {
+                $deadline = sanitize_datetime($_POST['deadline']);
+                $calid = $_POST['cal'];
+                if ($gameid && $startdate && $enddate && $deadline && $calid) {
                     $html = "";
-                    $weeksql = "SELECT lms_week_no FROM lms_week WHERE lms_week_no = :id LIMIT 1";
+                    $weeksql = "SELECT lms_week_no FROM lms_week WHERE lms_week_no = :id AND lms_week_calendar = :cal LIMIT 1";
                     $weekquery = $mypdo->prepare($weeksql);
                     $weekquery->bindParam(':id', $gameid);
+                    $weekquery->bindParam(":cal", $calid, PDO::PARAM_INT);
                     $weekquery->execute();
                     $weekcount = $weekquery->rowCount();
                     if ($weekcount > 0) {
                         date_default_timezone_set('Europe/London');
                         $phptime = time();
                         $mysqltime = date("Y-m-d H:i:s", $phptime);
-                        $upsql = "UPDATE lms_week SET lms_week_start = :startdt, lms_week_deadline = :deadln, lms_week_end = :enddt  WHERE lms_week_no = :id";
+                        $upsql = "UPDATE lms_week SET lms_week_start = :startdt, lms_week_deadline = :deadln, lms_week_end = :enddt  WHERE lms_week_no = :id AND lms_week_calendar = :cal";
                         $upquery = $mypdo->prepare($upsql);
                         $upquery->bindParam(':id', $gameid);
                         $upquery->bindParam(':startdt', $startdate);
                         $upquery->bindParam(':deadln', $deadline);
                         $upquery->bindParam(':enddt', $enddate);
+                        $upquery->bindParam(":cal", $calid, PDO::PARAM_INT);
                         $upquery->execute();
                         $upcount = $upquery->rowCount();
                         if ($upcount > 0) {

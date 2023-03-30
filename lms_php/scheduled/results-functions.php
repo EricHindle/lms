@@ -59,7 +59,7 @@ function get_team_abbreviation($teamtext)
     } elseif (count($teamnamearray) > 1) {
         $teamabbr = substr($teamnamearray[0], 0, 1) . substr($teamnamearray[1], 0, 2);
     }
-    
+
     global $mypdo;
     $teamsql = "SELECT * FROM v_lms_team_lookup WHERE lms_team_abbr_abbr = :abbr LIMIT 1";
     $teamquery = $mypdo->prepare($teamsql);
@@ -72,72 +72,81 @@ function get_team_abbreviation($teamtext)
     return strtoupper($teamabbr);
 }
 
-function save_result($teamabbr, $matchdate, $score, $wl, $logfile)
+function save_result($teamId, $matchdate, $score, $wl, $logfile)
 {
     $isResultUpdated = false;
     // get team id
-    $teamId = get_teamId_from_abbr($teamabbr);
+    // $teamId = get_teamId_from_abbr($teamabbr);
+
     if ($teamId > 0) {
-        // get result (team/matchdate)
-        $result = get_result($teamId, $matchdate);
-        $isResultUpdated = false;
-        if (! $result) {
-            insert_result($teamId, $matchdate, $score, $wl);
-            fwrite($logfile, "Inserted result as " . $wl . " with " . $score . " goals on " . date('d-m-Y', $matchdate) . " for " . $teamabbr . "\n");
-            $isResultUpdated = true;
-        } else {
-            $oldscore = $result['lms_match_team_score'];
-            $oldwl = $result['lms_match_team_wl'];
-            if ($score != $oldscore || $wl != $oldwl) {
-                update_result($teamId, $matchdate, $score, $wl);
-                fwrite($logfile, "Updated result as " . $wl . " with " . $score . " goals on " . date('d-m-Y', $matchdate) . " for " . $teamabbr . "\n");
+        $team = get_team($teamId);
+        if (isset($team)) {
+            // get result (team/matchdate)
+            $result = get_result($teamId, $matchdate);
+            $isResultUpdated = false;
+            if (count($result) == 0) {
+                insert_result($teamId, $matchdate, $score, $wl);
+                fwrite($logfile, "Inserted result as " . $wl . " with " . $score . " goals on " . date('d-m-Y', $matchdate) . " for " . $team['lms_team_name'] . "\n");
                 $isResultUpdated = true;
             } else {
-                /* fwrite($logfile, "Already resulted " . $teamabbr . " for " . date('d-m-Y', $matchdate) . "\n"); */
+                $oldscore = $result['lms_match_team_score'];
+                $oldwl = $result['lms_match_team_wl'];
+                if ($score != $oldscore || $wl != $oldwl) {
+                    update_result($teamId, $matchdate, $score, $wl);
+                    fwrite($logfile, "Updated result as " . $wl . " with " . $score . " goals on " . date('d-m-Y', $matchdate) . " for " . $team['lms_team_name'] . "\n");
+                    $isResultUpdated = true;
+                } else {
+                    /* fwrite($logfile, "Already resulted " . $teamabbr . " for " . date('d-m-Y', $matchdate) . "\n"); */
+                }
             }
-        }
-        if ($isResultUpdated) {
-            // get match (team/matchdate)
-            $matchId = get_matchId($teamId, $matchdate);
-            // update match with match result
-            if ($matchId > 0) {
-                update_match_wl($matchId, $wl);
-                fwrite($logfile, "Updated match as " . $wl . " for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
-            } else {
-                fwrite($logfile, "** Match not found for " . $teamabbr . " on " . date('d-m-Y', $matchdate) . "\n");
+            if ($isResultUpdated) {
+                // get match (team/matchdate)
+                $matchId = get_matchId($teamId, $matchdate);
+                // update match with match result
+                if ($matchId > 0) {
+                    update_match_wl($matchId, $wl);
+                    fwrite($logfile, "Updated match as " . $wl . " for " . $team['lms_team_name'] . " on " . date('d-m-Y', $matchdate) . "\n");
+                } else {
+                    fwrite($logfile, "** Match not found for " . $team['lms_team_name'] . " on " . date('d-m-Y', $matchdate) . "\n");
+                }
             }
+        } else {
+            fwrite($logfile, "** No team found for " . $teamid . "\n");
         }
-    } else {
-        fwrite($logfile, "** No team found for " . $teamabbr . "\n");
     }
     return $isResultUpdated;
 }
 
-function save_match($teamabbr, $matchdate, $logfile, $oppabbr, $homeaway)
+function save_match($teamId, $matchdate, $logfile, $oppid, $homeaway, $calid)
 {
     global $logtext;
     $mdt = date("Y-m-d", $matchdate);
     $isOK = true;
-    $wkno = get_match_week($matchdate);
+    $wkno = get_match_week($matchdate, $calid);
     // get team id
-    $teamId = get_teamId_from_abbr($teamabbr);
-    $oppid = get_teamId_from_abbr($oppabbr);
+    // $teamId = get_teamId_from_abbr($teamabbr);
+    // $oppid = get_teamId_from_abbr($oppabbr);
     if ($teamId > 0) {
-        // get league
-        $leagueId = get_leagueId($teamId);
-        // get match (team/matchdate)
-        $matchId = get_matchId($teamId, $matchdate);
-        // insert match
-        if ($matchId > 0) {
-        } else {
-            if (insert_match($teamId, $matchdate, $wkno, '', $leagueId, $oppid, $homeaway) == false) {
-                $isOK = false;
-            } else {
-                $logtext .= "** Match inserted for " . $teamabbr . " on " . $mdt . "\n";
+        $team = get_team($teamId);
+        $oppteam = get_team($oppid);
+        if (isset($team)) {
+            // get league
+            $leagueId = get_leagueId($teamId);
+            // get match (team/matchdate)
+            $matchId = get_matchId($teamId, $matchdate);
+            // insert match
+            if ($matchId <= 0) {
+                if (insert_match($teamId, $matchdate, $wkno, '', $leagueId, $oppid, $homeaway, $calid) == false) {
+                    $isOK = false;
+                } else {
+                    $logtext .= "** Match inserted for " . $team['lms_team_name'] . " on " . $mdt . "\n";
+                }
             }
+        } else {
+            $logtext .= "** No team found for " . $teamid . "\n";
+            $isOK = false;
         }
     } else {
-        $logtext .= "** No team found for " . $teamabbr . "\n";
         $isOK = false;
     }
     return $isOK;
@@ -158,13 +167,29 @@ function get_teamId_from_abbr($teamabbr)
     return $teamId;
 }
 
-function get_all_future_matches()
+function get_teamId_from_apiid($apiId)
+{
+    $teamId = - 1;
+    global $mypdo;
+    $teamsql = "SELECT * FROM lms_team WHERE lms_team_api_id = :apiid LIMIT 1";
+    $teamquery = $mypdo->prepare($teamsql);
+    $teamquery->bindParam(":apiid", $apiId, PDO::PARAM_INT);
+    $teamquery->execute();
+    $teamfetch = $teamquery->fetch(PDO::FETCH_ASSOC);
+    if ($teamquery->rowCount() == 1) {
+        $teamId = $teamfetch['lms_team_id'];
+    }
+    return $teamId;
+}
+
+function get_all_future_matches($leagueId)
 {
     $today = date("Y-m-d");
     global $mypdo;
-    $matchsql = "SELECT lms_match_id,lms_match_team, lms_match_date, lms_team_abbr, lms_match_opp, lms_opp_abbr, lms_match_weekno, lms_match_league FROM v_lms_fixture WHERE lms_match_date > :today";
+    $matchsql = "SELECT lms_match_id,lms_match_team, lms_match_date, lms_team_abbr, lms_match_opp, lms_opp_abbr, lms_match_weekno, lms_match_league FROM v_lms_fixture WHERE lms_match_date > :today AND lms_match_league = :league ";
     $matchquery = $mypdo->prepare($matchsql);
     $matchquery->bindParam(":today", $today);
+    $matchquery->bindParam(":league", $leagueId, PDO::PARAM_INT);
     $matchquery->execute();
     $matchdata = $matchquery->fetchAll(PDO::FETCH_ASSOC);
     return $matchdata;
@@ -190,6 +215,9 @@ function get_result($teamId, $matchdate)
     $resultquery->bindParam(":matchdate", $mdt);
     $resultquery->execute();
     $resultfetch = $resultquery->fetch(PDO::FETCH_ASSOC);
+    if ($resultquery->rowCount() == 0) {
+        $resultfetch = [];
+    }
     return $resultfetch;
 }
 
@@ -249,11 +277,11 @@ function update_match_wl($matchid, $matchresult)
     return;
 }
 
-function insert_match($teamId, $matchdate, $wkno, $wl, $league, $oppId, $homeaway)
+function insert_match($teamId, $matchdate, $wkno, $wl, $league, $oppId, $homeaway, $calid)
 {
     global $mypdo;
     $mdt = date("Y-m-d", $matchdate);
-    $insertresult = "INSERT INTO lms_match (lms_match_weekno, lms_match_team, lms_match_date, lms_match_result, lms_match_league, lms_match_opp, lms_match_ha) VALUES (:weekno, :teamId, :matchdate, :wl, :league, :oppId, :homeaway)";
+    $insertresult = "INSERT INTO lms_match (lms_match_weekno, lms_match_team, lms_match_date, lms_match_result, lms_match_league, lms_match_opp, lms_match_ha, lms_match_calendar) VALUES (:weekno, :teamId, :matchdate, :wl, :league, :oppId, :homeaway, :cal)";
     $insertquery = $mypdo->prepare($insertresult);
     $insertquery->bindParam(':weekno', $wkno);
     $insertquery->bindParam(':matchdate', $mdt);
@@ -262,6 +290,7 @@ function insert_match($teamId, $matchdate, $wkno, $wl, $league, $oppId, $homeawa
     $insertquery->bindParam(':oppId', $oppId, PDO::PARAM_INT);
     $insertquery->bindParam(':wl', $wl);
     $insertquery->bindParam(':homeaway', $homeaway);
+    $insertquery->bindParam(':cal', $calid, PDO::PARAM_INT);
     return $insertquery->execute();
 }
 
@@ -283,7 +312,7 @@ function get_leagueId($teamId)
 function get_league_from_abbr($abbr)
 {
     global $mypdo;
-    $leaguesql = "SELECT * FROM lms_league WHERE lms_league_abbr = :abbr LIMIT 1";
+    $leaguesql = "SELECT * FROM v_lms_league_calendar WHERE lms_league_abbr =  :abbr LIMIT 1";
     $leaguequery = $mypdo->prepare($leaguesql);
     $leaguequery->bindParam(":abbr", $abbr);
     $leaguequery->execute();
@@ -291,14 +320,15 @@ function get_league_from_abbr($abbr)
     return $leagueRow;
 }
 
-function get_match_week($matchdate)
+function get_match_week($matchdate, $calid)
 {
     $mdt = date("Y-m-d", $matchdate);
     $matchweek = "";
     global $mypdo;
-    $weeksql = "SELECT * FROM lastmanl_lms.lms_week WHERE lms_week_start <= :matchdate order by lms_week_no asc";
+    $weeksql = "SELECT * FROM lastmanl_lms.lms_week WHERE lms_week_start <= :matchdate and lms_week_calendar = :cal order by lms_week_no asc";
     $weekquery = $mypdo->prepare($weeksql);
     $weekquery->bindParam(":matchdate", $mdt);
+    $weekquery->bindParam(":cal", $calid, PDO::PARAM_INT);
     $weekquery->execute();
     $weekfetch = $weekquery->fetchAll(PDO::FETCH_ASSOC);
     $lastweek = $weekfetch[$weekquery->rowCount() - 1];

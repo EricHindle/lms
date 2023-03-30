@@ -7,7 +7,7 @@
 function get_game($gameid)
 {
     global $mypdo;
-    $gamesql = "SELECT * FROM lms_game WHERE lms_game_id = :id LIMIT 1";
+    $gamesql = "SELECT * FROM v_lms_game WHERE lms_game_id = :id LIMIT 1";
     $gamequery = $mypdo->prepare($gamesql);
     $gamequery->bindParam(":id", $gameid, PDO::PARAM_INT);
     $gamequery->execute();

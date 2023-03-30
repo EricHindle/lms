@@ -3,7 +3,6 @@
  * HINDLEWARE
  * Copyright (C) 2020 Eric Hindle. All rights reserved.
  */
-
 $myPath = '../../';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
@@ -29,16 +28,16 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     if (isset($_GET['cal'])) {
         $matchcal = $_GET['cal'];
     }
-    if (strlen($matchperiod) != 6){
-         $matchperiod = '';
+    if (strlen($matchperiod) != 6) {
+        $matchperiod = '';
     }
-    $tableperiod = substr($matchperiod,4,2) . '/' . substr($matchperiod,0,4);
+    $tableperiod = substr($matchperiod, 4, 2) . '/' . substr($matchperiod, 0, 4);
     $tableselect = $matchperiod;
-    $matchsql = "SELECT * FROM v_lms_match WHERE lms_match_weekno = :weekno AND lms_match_calendar = :matchcal ORDER BY lms_team_name, lms_match_date  ASC ";
+    $matchsql = "SELECT * FROM v_lms_match WHERE lms_match_weekno = :weekno AND lms_week_calendar = :matchcal ORDER BY lms_team_name, lms_match_date  ASC ";
     if ($matchperiod == '') {
         $tableperiod = $_SESSION['currentweek'] . '/' . $_SESSION['currentseason'];
-         $tableselect = $_SESSION['matchweek'] ;
-        $matchsql = "SELECT * FROM v_lms_match WHERE lms_match_weekno <> :weekno AND lms_match_calendar = :matchcal ORDER BY lms_team_name, lms_match_date  ASC ";
+        $tableselect = $_SESSION['matchweek'];
+        $matchsql = "SELECT * FROM v_lms_match WHERE lms_match_weekno <> :weekno AND lms_week_calendar = :matchcal ORDER BY lms_team_name, lms_match_date  ASC ";
     }
     $matchquery = $mypdo->prepare($matchsql);
     $matchquery->bindParam(':weekno', $matchperiod);
@@ -74,25 +73,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                     <div class="box" style="padding:1em;">
                         <h2>Matches</h2>
                     </div>
-                    <div class="box" style="padding:1em;margin:10px;">
-                        <h3>Generate Matches</h3>
-			            <form role="form" name ="genmatch" method="post" action="gen-match.php">';
-    $html .= $key;
-    $html .= '					
-				            <div class="form-group">
-			                        	<label class="form-text" for="weekid">Choose period:</label>
-			                            <select class="form-dropdown" id="weekid" name="weekid">';
-    foreach ($remainingweeks as $myweek) {
-        $html .= '                          <option value="' . $myweek['lms_week_no'] . '">' . $myweek['lms_year'] . '/' . sprintf('%02d', $myweek['lms_week']) . '&nbsp&nbsp&nbsp->&nbsp&nbsp&nbsp' . date_format(date_create($myweek['lms_week_start']), 'd-M-Y') . '</option>';
-    }
-    $html .= '	                         </select>
-				                    </div>
-                                    <div class="form-group" style="margin-left:16px;margin-right:16px">
-        					            <input id="submit" name="submit" type="submit" value="Add Matches" class="btn graybutton" style="padding:5px;width:50%;">
-        					        </div>
-                                </form>
-                            </div>
-                            <div class="box" style="padding:1em;margin:10px">
+                    <div class="box" style="padding:1em;margin:10px">
                                 <h3>Edit Match</h3>
 			                	<form role="form" name ="editmatch" method="post" action="edit-match.php">';
     $html .= $key;
@@ -105,6 +86,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     }
     $html .= '	                         </select>   
                                          <input type= "hidden" name= "matchperiod" value="' . $matchperiod . '" />
+                                         <input type= "hidden" name= "matchcal" value="' . $matchcal . '" />
 				                    </div>
                                     <div class="form-group" style="margin-left:16px;margin-right:16px">
         					            <input id="submit" name="submit" type="submit" value="Select" class="btn graybutton" style="padding:5px;width:50%;">
@@ -130,7 +112,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
         if ($rs['lms_match_weekno'] == $tableselect) {
             $result = 'no result';
             $result_type = get_result_type($rs['lms_match_result'], $mypdo);
-            
+
             if ($result_type) {
                 $result = $result_type['lms_result_type_desc'];
             }

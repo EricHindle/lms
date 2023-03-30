@@ -17,16 +17,12 @@ if (login_check($mypdo) == true && $access > 900) {
         if (! isset($_POST['form_key']) || ! $formKey->validate()) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
-            if (isset($_POST['weeknumber'], $_POST['weekstart'], $_POST['weekcount'])) {
+            if (isset($_POST['weeknumber'], $_POST['weekstart'], $_POST['weekcount'], $_POST['cal'])) {
                 $weeknumber = sanitize_int($_POST['weeknumber'], 1);
                 $weekstart = sanitize_datetime($_POST['weekstart']);
                 $weekcount = sanitize_int($_POST['weekcount'], 1, 52);
                 $calid = $_POST['cal'];
-                $calsql = "SELECT * FROM lms_calendar WHERE lms_calendar_id = :calid LIMIT 1";
-                $calquery = $mypdo->prepare($calsql);
-                $calquery->bindParam(':calid', $calid, PDO::PARAM_INT);
-                $calquery->execute();
-                $calfetch = $calquery->fetch(PDO::FETCH_ASSOC);
+                $calfetch = get_calendar_row($calid);
                 $weekyear = $calfetch['lms_calendar_season'];
                 if ($weekyear && $weeknumber && $weekcount && $weekstart) {
                     $totaladded = 0;
