@@ -32,18 +32,25 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
 			     <div class="container">
                     <div class="box" style="padding:1em;">
                         <h2>Development and Testing</h2>
-                    </div>
+                    </div>                     
                     <div class="box" style="padding:1em;padding-left:10%;padding-right:10%;margin:10px;">
-                        <div class="btn graybutton" style="padding:3px;margin:3px;width:100%;">
-                            <a href="' . $myPath . 'testing/testforms/viewlog.php">
-                                <h3 style="color:white;">View Log</h3>
-                            </a>	
-                        </div>
                         <div class="btn graybutton" style="padding:3px;margin:3px;width:100%;">
                             <a href="' . $myPath . 'testing/testforms/viewapilog.php">
                                 <h3 style="color:white;">API Log</h3>
                             </a>	
                         </div>
+                        <div class="btn graybutton" style="padding:3px;margin:3px;width:100%;">
+                            <a href="' . $myPath . 'testing/testforms/viewplayerlog.php">
+                                <h3 style="color:white;">Player Log</h3>
+                            </a>	
+                        </div>
+                        <div class="btn graybutton" style="padding:3px;margin:3px;width:100%;">
+                            <a href="' . $myPath . 'testing/testforms/viewwendlog.php">
+                                <h3 style="color:white;">Weekend Log</h3>
+                            </a>	
+                        </div>
+                    </div>
+                    <div class="box" style="padding:1em;padding-left:10%;padding-right:10%;margin:10px;">
                         <div class="btn graybutton" style="padding:3px;margin:3px;width:100%;">
                             <a href="' . $myPath . 'testing/testforms/emailtest.php">
                                 <h3 style="color:white;">Email test</h3>
@@ -58,13 +65,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
                             <a href="' . $myPath . 'struct/match/show-results.php">
                                 <h3 style="color:white;" >Results</h3>
                             </a>
-                        </div>';
-    // <div class="btn graybutton" style="padding:3px;margin:3px;width:100%;">
-    // <a href="' . $myPath . 'testing/testforms/encrypt-players.php">
-    // <h3 style="color:white;" >Encrypt Players</h3>
-    // </a>
-    // </div>
-    $html .= '
+                        </div>
                         <div class="btn graybutton" style="padding:3px;margin:3px;width:100%;">
                             <a href="' . $myPath . 'testing/testforms/testrig.php">
                                 <h3 style="color:white;" >Test a function</h3>

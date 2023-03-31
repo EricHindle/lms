@@ -2,3 +2,16 @@
 /phpinfo.php
 /ret-config.php
 /ret-config.php.server
+/api-functions.php
+/db_connect.php
+/dbquery.php
+/fixturesupdate-new.php
+/fixturesupdate_api-old-v2.php
+/fixturesupdate_api.php.bak
+/functions.php
+/info_functions.php
+/lookup-functions.php
+/results-functions-v2.php
+/results-functions.php.bak
+/ret-config_localhost.php
+/show-results.php
