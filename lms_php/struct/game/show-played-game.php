@@ -237,49 +237,6 @@ if (login_check($mypdo) == true) {
                                 }
                             }
                         }
-                        $html .= '
-                                                    <div class="game-pick-card" style="margin-bottom: 20px;">
-                                                        <table style="padding-bottom: 3em;" class="game-table" id="keywords">
-                                                            <tr>
-                                                                <th colspan="3" border="0">                            
-                                                                    <div><h2>Players</h2></div>
-                                                                    <div id="divider" style="background-color:#CC1417; height: 3px; width:25%; margin-top:2px; margin-bottom:7px;"></div>
-                                                                </th>
-                                                            </tr>                
-                                                            <tr>
-                                                                <td width="24%"><div class="table-columnTitle">Name</div></td>
-                                                                <td width="38%"><div class="table-columnTitle">This Weeks Pick</div></td>                                
-                                                                <td width="38%"><div class="table-columnTitle">Next Pick</div></td>
-                                                            </tr>
-                                                            <tbody>';
-                        foreach ($gameplayerfetch as $rs) {
-                            $pickfetch = get_current_player_pick($gameid, $rs['lms_player_id']);
-                            $nextpickfetch = get_next_player_pick($gameid, $rs['lms_player_id']);
-                            $nodate = ' <br><span class="table-columnTitle">&nbsp;</span>';
-                            $thispick = 'No Pick' . $nodate;
-                            $nextpick = '';
-                            if ($pickfetch || $nextpickfetch) {
-                                if ($pickfetch) {
-                                    $thispick = $pickfetch['lms_team_name'] . ' <br><span class="table-columnTitle">(' . date_format(date_create($pickfetch['lms_match_date']), 'd M') . ')</span>';
-                                }
-                                if ($nextpickfetch && $rs['lms_game_player_status'] == 1) {
-                                    $nextpick = $nextpickfetch['lms_team_name'] . ' <br><span class="table-columnTitle">(' . date_format(date_create($nextpickfetch['lms_match_date']), 'd M') . ')</span>';
-                                }
-                            } else {
-                                if ($gamefetch['lms_game_start_wkno'] <= $_SESSION['matchweek'] && $rs['lms_game_player_status'] == 1) {
-                                    $thispick = '(waiting)' . $nodate;
-                                }
-                            }
-                            $html .= '
-                                                            <tr>
-                                                               <td><b>' . $rs['lms_player_screen_name'] . '</b><br><span class="table-columnTitle">' . $rs['lms_game_player_status_text'] . '</span></td>
-                                                               <td>' . $thispick . '</td>
-                                                               <td>' . $nextpick . '</td>
-                                                            </tr>';
-                        }
-                        $html .= '		                 </tbody>
-                                                      </table>
-                                                   </div>';
                         /* Selection history */
                         $html .= '         
                                                    <div class="game-pick-card" style="margin-bottom: 20px;">
@@ -337,6 +294,49 @@ if (login_check($mypdo) == true) {
                         $html .= '			                      </tbody>
                                                                </table>
                                                             </div>
+                                                    <div class="game-pick-card" style="margin-bottom: 20px;">
+                                                        <table style="padding-bottom: 3em;" class="game-table" id="keywords">
+                                                            <tr>
+                                                                <th colspan="3" border="0">                            
+                                                                    <div><h2>Players</h2></div>
+                                                                    <div id="divider" style="background-color:#CC1417; height: 3px; width:25%; margin-top:2px; margin-bottom:7px;"></div>
+                                                                </th>
+                                                            </tr>                
+                                                            <tr>
+                                                                <td width="24%"><div class="table-columnTitle">Name</div></td>
+                                                                <td width="38%"><div class="table-columnTitle">This Weeks Pick</div></td>                                
+                                                                <td width="38%"><div class="table-columnTitle">Next Pick</div></td>
+                                                            </tr>
+                                                            <tbody>';
+                        foreach ($gameplayerfetch as $rs) {
+                            $pickfetch = get_current_player_pick($gameid, $rs['lms_player_id']);
+                            $nextpickfetch = get_next_player_pick($gameid, $rs['lms_player_id']);
+                            $nodate = ' <br><span class="table-columnTitle">&nbsp;</span>';
+                            $thispick = 'No Pick' . $nodate;
+                            $nextpick = '';
+                            if ($pickfetch || $nextpickfetch) {
+                                if ($pickfetch) {
+                                    $thispick = $pickfetch['lms_team_name'] . ' <br><span class="table-columnTitle">(' . date_format(date_create($pickfetch['lms_match_date']), 'd M') . ')</span>';
+                                }
+                                if ($nextpickfetch && $rs['lms_game_player_status'] == 1) {
+                                    $nextpick = $nextpickfetch['lms_team_name'] . ' <br><span class="table-columnTitle">(' . date_format(date_create($nextpickfetch['lms_match_date']), 'd M') . ')</span>';
+                                }
+                            } else {
+                                if ($gamefetch['lms_game_start_wkno'] <= $_SESSION['matchweek'] && $rs['lms_game_player_status'] == 1) {
+                                    $thispick = '(waiting)' . $nodate;
+                                }
+                            }
+                            $html .= '
+                                                            <tr>
+                                                               <td><b>' . $rs['lms_player_screen_name'] . '</b><br><span class="table-columnTitle">' . $rs['lms_game_player_status_text'] . '</span></td>
+                                                               <td>' . $thispick . '</td>
+                                                               <td>' . $nextpick . '</td>
+                                                            </tr>';
+                        }
+                        $html .= '		                 </tbody>
+                                                      </table>
+                                                   </div>
+
                                                         </div>
                                                         <script>
                                                             function getMatch()

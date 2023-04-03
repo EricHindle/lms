@@ -33,7 +33,7 @@ foreach ($calendars as $calendar) {
     set_session_from_calendar($calendar);
     $_SESSION['calendar'] = $calendar['lms_calendar_id'];
     fwrite($logfile,"Match week: " .    $_SESSION['matchweek'] . "\n");
-        fwrite($logfile, "Calendar : " .  $_SESSION['calendar'] . "\n");
+    fwrite($logfile, "Calendar : " .  $_SESSION['calendar'] . "\n");
     $picks = get_current_week_picks();
     fwrite($logfile,count($picks) .  " Current week picks for active players\n");
     foreach ($picks as $rs) {
