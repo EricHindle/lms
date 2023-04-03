@@ -31,8 +31,11 @@ $calendars = get_current_calendars();
 foreach ($calendars as $calendar) {
     fwrite($logfile, "calendar ". strval($calendar['lms_calendar_id']) . "\n");
     set_session_from_calendar($calendar);
+    $_SESSION['calendar'] = $calendar['lms_calendar_id'];
+    fwrite($logfile,"Match week: " .    $_SESSION['matchweek'] . "\n");
+        fwrite($logfile, "Calendar : " .  $_SESSION['calendar'] . "\n");
     $picks = get_current_week_picks();
-    fwrite($logfile, "Current week picks for active players\n");
+    fwrite($logfile,count($picks) .  " Current week picks for active players\n");
     foreach ($picks as $rs) {
         /*
          * Ignore games not in-play
@@ -85,6 +88,7 @@ foreach ($calendars as $calendar) {
     $activeGames = get_active_games();
     fwrite($logfile, "Active games\n");
     foreach ($activeGames as $game) {
+        fwrite($logfile,"Active game : " . $game['lms_game_name'] . "\n");
         /*
          * Check if this game has no matches this week.
          */
