@@ -22,7 +22,7 @@ function get_api_url($season, $league, $key)
 
 function get_api_league_id($leagueAbbr)
 {
-    $apiLeagueId = - 1;
+    $apiLeagueId = -1;
     $league = get_league_from_abbr($leagueAbbr);
     if ($league) {
         $apiLeagueId = $league['lms_league_api_id'];
@@ -32,7 +32,7 @@ function get_api_league_id($leagueAbbr)
 
 function get_team_id_by_api_id($apiteamid)
 {
-    $teamid = - 1;
+    $teamid = -1;
     global $mypdo;
     $teamsql = "SELECT * FROM lms_team WHERE lms_team_api_id = :apiId LIMIT 1";
     $teamquery = $mypdo->prepare($teamsql);
@@ -58,7 +58,7 @@ function get_league_teams($leagueId, $log)
 {
     global $myPath;
     $api_url = get_api_url(get_global_value('api_season'), $leagueId, 'api_teams_url');
-    fwrite($log, "Url : " . $api_url);
+    fwrite($log, "Url : " . $api_url . "\n");
     $league_teams = get_fixtures_by_curl($api_url, $log);
     return $league_teams;
 }
@@ -171,6 +171,15 @@ function delete_league_team_for_team($teamid)
     $delsql = "DELETE FROM lms_league_team WHERE lms_league_team_team_id =:teamid";
     $delquery = $mypdo->prepare($delsql);
     $delquery->bindParam(":teamid", $teamid, PDO::PARAM_INT);
+    $delquery->execute();
+}
+
+function delete_league_team_for_league($leagueid)
+{
+    global $mypdo;
+    $delsql = "DELETE FROM lms_league_team WHERE lms_league_team_league_id =:leagueid";
+    $delquery = $mypdo->prepare($delsql);
+    $delquery->bindParam(":leagueid", $leagueid, PDO::PARAM_INT);
     $delquery->execute();
 }
 
