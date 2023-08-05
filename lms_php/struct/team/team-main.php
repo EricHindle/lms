@@ -13,7 +13,11 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $formKey = new formKey();
     $key = $formKey->outputKey();
 
-    $teamsql = "SELECT lms_team_id, lms_team_name, lms_team_active, lms_team_abbr FROM lms_team ORDER BY lms_team_name ASC";
+    $teamsql = "SELECT lms_team_id, lms_team_name, lms_team_active, lms_team_abbr, lms_league_abbr
+                FROM lms_team t
+                JOIN lms_league_team lt on t.lms_team_id = lt.lms_league_team_team_id
+                JOIN lms_league l on lt.lms_league_team_league_id = l.lms_league_id
+                ORDER BY lms_team_name ASC";
     $teamquery = $mypdo->prepare($teamsql);
     $teamquery->execute();
     $teamfetch = $teamquery->fetchAll(PDO::FETCH_ASSOC);
@@ -90,14 +94,15 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
         					        </div>
 				                </form>
 				            </div>
-                            <div class="box" style="padding:1em;padding-left:100px;margin:10px;text-align:left">
+                            <div class="box" style="padding:1em;padding-left:80px;margin:10px;text-align:left">
 				        		<h3>All Teams</h3>
 					        	<table class="table table-bordered" id="keywords">
 									<thead>
 									<tr class="info">
-										<th>Name</th>
-                                        <th>Abbr</th>
-										<th>Active</th>
+										<th style="width:40%">Name</th>
+                                        <th style="width:8%">Abbr </th>
+                                        <th style="width:8%">Lg </th>
+										<th style="width:8%">Active</th>
 									</tr>
 									</thead>
 									<tbody>
@@ -108,6 +113,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 									<tr>
 										<td>' . $rs['lms_team_name'] . '</td>
                                         <td>' . $rs['lms_team_abbr'] . '</td>
+                                        <td>' . $rs['lms_league_abbr'] . '</td>
 										<td>' . $active . '</td>
 									</tr>';
     }
