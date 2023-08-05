@@ -25,6 +25,8 @@ if (login_check($mypdo) == true) {
             }
             $leaguerow = get_league($leagueid);
             $leaguename = $leaguerow['lms_league_name'];
+            $calrow = get_calendar_row($leaguerow['lms_league_current_calendar']);
+            set_session_from_calendar($calrow);           
             $html = "";
             $thisweek = $_SESSION['matchweek'];
             $lastweek = $thisweek - 1;
