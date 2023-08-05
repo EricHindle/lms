@@ -10,14 +10,20 @@ $myPath = '/home/lastmanl/public_html/';
 require $myPath . 'includes/db_connect.php';
 require $myPath . 'includes/functions.php';
 require $myPath . 'scheduled/week-end-functions.php';
-
+$welogfile = fopen($myPath . "logs/lml-log-weekend.log", "a");
+fwrite($welogfile, "Weekend Processing " . date("Y-m-d H:i:s") . " ---------------------------\n");
 $startingweeks = get_starting_weeks();
+if (count($startingweeks) == 0) {
+    fwrite($welogfile, "No weeks start today \n");
+}
 foreach ($startingweeks as $newweek) {
     $msg = '';
     
     $calid = $newweek['lms_week_calendar'];
     $calrow = get_calendar_row($calid);
 
+    fwrite($welogfile, "Calendar " . strval($calid) . " - " . $calrow['lms_calendar_name'] . "\n");
+    
     $calyear = $calrow['lms_calendar_season'];
     $calweek = $calrow['lms_calendar_current_week'];
     $wkyear = $newweek['lms_year'];
@@ -32,6 +38,8 @@ foreach ($startingweeks as $newweek) {
     $_SESSION['matchweek'] = $_SESSION['currentseason'] . $currentweek;
     $_SESSION['selectweekkey'] = $_SESSION['currentseason'] . $selectweek;
     $_SESSION['selperiod'] = $selectweek . '/' . $_SESSION['currentseason'];
+    
+    fwrite($welogfile, "Processing End of Week " . $_SESSION['currentweek'] . " : ");
 
     $logfile = fopen($myPath . "logs/lml-log-cal" . strval($calid) . "-wk" . $_SESSION['matchweek'] . ".log", "a");
     fwrite($logfile, "Weekend Processing --------------------------------------\n");
@@ -50,10 +58,10 @@ foreach ($startingweeks as $newweek) {
             $_SESSION['hwiv'] = get_iv();
 
             $weekstate = $week['lms_week_state'];
-
-            $timenow = strtotime("now");
-            $timeweekend = strtotime($week['lms_week_end']);
-
+            
+            fwrite($welogfile, "Current state " . $weekstate . " \n");
+            
+            fwrite($logfile, $calrow['lms_calendar_name'] . "\n");
             fwrite($logfile, "Weekend processing for match week " . $_SESSION['matchweek'] . "\n");
             fwrite($logfile, "Week state " . strval($weekstate) . "\n");
             /*
@@ -77,7 +85,10 @@ foreach ($startingweeks as $newweek) {
                  * Mark players with no pick as out
                  */
                 $picks = get_current_week_picks();
-                fwrite($logfile, "Current week picks\n");
+                fwrite($logfile, "Current week has " . strval(count($picks)) . " picks\n");
+                if (count($picks) > 0){
+                    fwrite($logfile, "Marking up picks and notifying players\n");
+                }
                 foreach ($picks as $rs) {
                     /*
                      * Ignore games not in-play
@@ -125,7 +136,7 @@ foreach ($startingweeks as $newweek) {
                     }
                 }
                 $activeGames = get_active_games();
-                fwrite($logfile, "Active games\n");
+                fwrite($logfile, strval(count($activeGames)) . " Active games\n");
                 foreach ($activeGames as $game) {
                     /*
                      * Check if this game has no matches this week.
@@ -137,7 +148,7 @@ foreach ($startingweeks as $newweek) {
                         continue;
                     }
                     $activePlayers = get_still_active_game_players($game['lms_game_id']);
-                    fwrite($logfile, "Active players for " . strval($game['lms_game_id']) . "\n");
+                    fwrite($logfile, strval(count($activePlayers)) . " Active players for " . strval($game['lms_game_id']) . "\n");
                     foreach ($activePlayers as $activePlayer) {
                         $gameid = $game['lms_game_id'];
                         $playerid = $activePlayer['lms_player_id'];
@@ -162,12 +173,17 @@ foreach ($startingweeks as $newweek) {
                 /*
                  * Get this weeks picks and mark up any outcomes
                  */
+                fwrite($logfile, "Marking up winners\n");
+                
                 markup_outcomes($_SESSION['matchweek']);
                 /*
                  * Increment game week number and mark completed games (no remaining players)
                  */
                 $activegames = get_active_games();
-                fwrite($logfile, "Active games\n");
+                fwrite($logfile, strval(count($activegames)) . " Active games\n");
+                if (count($activegames) > 0){
+                    fwrite($logfile, "Marking up completed games\n");
+                }
                 foreach ($activegames as $game) {
                     fwrite($logfile, "Game " . strval($game['lms_game_id']) . "\n");
                     if ($game['lms_game_still_active'] == 0) {
@@ -191,10 +207,11 @@ foreach ($startingweeks as $newweek) {
                 /*
                  * Marking up starting games as in-play
                  */
+                
                 $nextWeek = $_SESSION['currentweek'] + 1;
                 $nextmatchweek = $_SESSION['currentseason'] . sprintf('%02d', $nextWeek);
-                activateGames($nextmatchweek, $calid);
-                fwrite($logfile, "Activated games starting this week (" . $nextmatchweek . ")\n");
+                $activatedGames = activateGames($nextmatchweek, $calid);
+                fwrite($logfile, strval($activatedGames) . " Activated games starting this week (" . $nextmatchweek . ")\n");
                 set_week_state($_SESSION['matchweek'], $calid, 4);
                 fwrite($logfile, "Marked up starting games as in-play\n");
             }
@@ -221,9 +238,11 @@ foreach ($startingweeks as $newweek) {
                 fwrite($logfile, "Week state 5\n");
             }
         } else {
-            fwrite($logfile, "No week record for week ending." . "\n");
+            fwrite($welogfile, "No week record found" . "\n");
+            fwrite($logfile, "No week record found" . "\n");
         }
     } else {
+        fwrite($welogfile, "Week already processed." . "\n");
         fwrite($logfile, "Week already processed." . "\n");
     }
 
@@ -235,4 +254,5 @@ foreach ($startingweeks as $newweek) {
     }
     fclose($logfile);
 }
+fclose($welogfile);
 ?>
