@@ -59,7 +59,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
 					            <input id="submit" name="submit" type="submit" value="View Logfile" class="btn graybutton" style="width:250px;margin:10px;padding:5px;">
                                 <table class="center" style="width:50%">
                                     <tr>
-                                        <td style="width:80px;">Date</td>
+                                        <td style="width:90px;">Date</td>
                                         <td><input type="date" class="form-control" style="width:150px;" id="mth" name="mth" value="' . $dt . '"></td>
                                     </tr>
                                 </table>
