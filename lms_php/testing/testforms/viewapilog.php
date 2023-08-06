@@ -17,12 +17,13 @@ $key = $formKey->outputKey();
 if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
     $mth = date("m");
     $dy = date("d");
-
+    $dt = "";
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST['form_key'])) {
-            if (isset($_POST['mth'],$_POST['dy'])) {
-                $mth = $_POST['mth'];
-                $dy = $_POST['dy'];
+            if (isset($_POST['mth'])) {
+                $dt = $_POST['mth'];
+                $mth = substr($_POST['mth'],5,2);
+                $dy = substr($_POST['mth'],8,2);
             }
         }
     }
@@ -51,19 +52,15 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] == $devlevelneeded) {
     $html .= '
 			     <div class="container">
 			         <div class="box" style="width:350px;padding: 0.5em;">
-                       <form role="form" name ="json" method="post" action="' . $myPath . 'testing/testforms/viewplayerlog.php">';
+                       <form role="form" name ="json" method="post" action="' . $myPath . 'testing/testforms/viewapilog.php">';
     $html .= $key;
     $html .= '
                             <div class="form-group" style="margin-left:16px;margin-right:16px">
 					            <input id="submit" name="submit" type="submit" value="View Logfile" class="btn graybutton" style="width:250px;margin:10px;padding:5px;">
                                 <table class="center" style="width:50%">
                                     <tr>
-                                        <td style="width:80px;">Month</td>
-                                        <td><input type="text" class="form-control" style="width:50px;" id="mth" name="mth" placeholder="month" value="' . $mth .'"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Day</td>
-                                        <td><input type="text" class="form-control" style="width:50px;" id="dy" name="dy" placeholder="day" value="' . $dy .'"></td>
+                                        <td style="width:80px;">Date</td>
+                                        <td><input type="date" class="form-control" style="width:150px;" id="mth" name="mth" value="' . $dt . '"></td>
                                     </tr>
                                 </table>
 					        </div>
