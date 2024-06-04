@@ -64,7 +64,6 @@ foreach ($argv as $param) {
         fwrite($logfile, "param : " . $param . "\n");
         $urlId = substr($param, 2);
     }
-
 }
 
 /*
@@ -85,9 +84,12 @@ fwrite($logfile, strval(count($teams)) . " teams found\n");
 /*
  * =========== Update teams ==========
  */
-fwrite($logfile, "--- Update teams ---\n");
-update_teams($teams,$leagueId ,$logfile);
-
+if (count($teams) > 0) {
+    fwrite($logfile, "--- Update teams ---\n");
+    update_teams($teams,$leagueId ,$logfile);
+} else {
+    fwrite($logfile, "No teams found. Old teams left unchanged.\n");
+}
 
 /*
  * =========== End ==========
