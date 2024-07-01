@@ -4,7 +4,7 @@
  * HINDLEWARE
  * Copyright (C) 2020 Eric Hindle. All rights reserved.
  */
-function combobulate($string, $action = 'e', $secret_key, $secret_iv)
+function combobulate($string, $secret_key, $secret_iv, $action = 'e')
 {
     $output = false;
     $encrypt_method = "AES-256-CBC";

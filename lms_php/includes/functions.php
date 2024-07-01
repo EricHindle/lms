@@ -127,17 +127,17 @@ function login($username, $password, $mypdo)
 
             // Login successful.
             return true;
-        } else {
+//         } else {
 
-            // FAILED LOGIN
-            $now = time();
-            $sql2 = "INSERT INTO loginattempts(userid, time) VALUES (:user_id, :time)";
-            $stmt2 = $mypdo->prepare($sql2);
-            $stmt2->execute(array(
-                ':user_id' => $user_id,
-                ':time' => $now
-            ));
-            return false;
+//             // FAILED LOGIN
+//             $now = time();
+//             $sql2 = "INSERT INTO loginattempts(userid, time) VALUES (:user_id, :time)";
+//             $stmt2 = $mypdo->prepare($sql2);
+//             $stmt2->execute(array(
+//                 ':user_id' => $user_id,
+//                 ':time' => $now
+//             ));
+//             return false;
         }
     } else {
         return false;
@@ -359,7 +359,7 @@ function get_key()
     $pre = get_global_value('hw_pre_length');
     $post = get_global_value('hw_post_length');
     $dkeye = get_global_value('hw_1') . get_global_value('hw_2');
-    $dkeyd = combobulate(substr($dkeye, $pre, strlen($dkeye) - $pre - $post), 'd', get_ekey(), get_eiv());
+    $dkeyd = combobulate(substr($dkeye, $pre, strlen($dkeye) - $pre - $post), get_ekey(), get_eiv(), 'd');
     return $dkeyd;
 }
 
@@ -368,7 +368,7 @@ function get_iv()
     $pre = get_global_value('hw_pre_length');
     $post = get_global_value('hw_post_length');
     $dive = get_global_value('hw_3') . get_global_value('hw_4');
-    $divd = combobulate(substr($dive, $pre, strlen($dive) - $pre - $post), 'd', get_ekey(), get_eiv());
+    $divd = combobulate(substr($dive, $pre, strlen($dive) - $pre - $post), get_ekey(), get_eiv(), 'd');
     return $divd;
 }
 
@@ -376,7 +376,7 @@ function decrypt($encstring)
 {
     $decstring = $encstring;
     if ($_SESSION['encrypted']) {
-        $decstring = combobulate($encstring, 'd', $_SESSION['hwkey'], $_SESSION['hwiv']);
+        $decstring = combobulate($encstring, $_SESSION['hwkey'], $_SESSION['hwiv'], 'd');
     }
     return $decstring;
 }
@@ -385,7 +385,7 @@ function encrypt($decstring)
 {
     $encstring = $decstring;
     if ($_SESSION['encrypted']) {
-        $encstring = combobulate($decstring, 'e', $_SESSION['hwkey'], $_SESSION['hwiv']);
+        $encstring = combobulate($decstring, $_SESSION['hwkey'], $_SESSION['hwiv'], 'e');
     }
     return $encstring;
 }

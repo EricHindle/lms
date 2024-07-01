@@ -1,0 +1,25 @@
+New season / add league processing
+
+lms_league
+	Add league if necessary
+	
+lms_calendar
+	Add calendar for each league
+
+lms_info
+	Edit api_season
+	Edit currseason
+	Edit currweek
+	
+lms_week
+For each league
+	Add week 0
+	Add all weeks
+
+Check if new season teams are available for all leagues in https://www.api-football.com/
+	
+Run teamsupdate_api for each league
+
+Check if new season matches are available in https://www.api-football.com/
+
+Run fixturesupdate_api -fix for each league	

@@ -49,7 +49,7 @@ function get_league_fixtures($leagueId, $log)
 {
     global $myPath;
     $api_url = get_api_url(get_global_value('api_season'), $leagueId, 'api_fixtures_url');
-    $league_fixtures = get_fixtures_by_curl($api_url, $log);
+    $league_fixtures = get_api_data_by_curl($api_url, $log);
 
     return $league_fixtures;
 }
@@ -59,11 +59,11 @@ function get_league_teams($leagueId, $log)
     global $myPath;
     $api_url = get_api_url(get_global_value('api_season'), $leagueId, 'api_teams_url');
     fwrite($log, "Url : " . $api_url . "\n");
-    $league_teams = get_fixtures_by_curl($api_url, $log);
+    $league_teams = get_api_data_by_curl($api_url, $log);
     return $league_teams;
 }
 
-function get_fixtures_by_curl($api_url, $log)
+function get_api_data_by_curl($api_url, $log)
 {
     fwrite($log, "--- Calling api ---\n");
     $curl = curl_init();
