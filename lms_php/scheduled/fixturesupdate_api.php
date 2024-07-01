@@ -296,6 +296,8 @@ if ($updFixtures) {
 
     fwrite($logfile, strval(count($scheduled)) . " scheduled matches found\n");
     $matchlist = update_fixtures($scheduled, $logfile, $calid);
+    
+    check_dup_fixtures($matchlist, $leagueId, $logfile);
 }
 
 if ($updResults) {
@@ -311,8 +313,6 @@ if ($updResults) {
     fwrite($logfile, strval(count($notplayed)) . " postponed/cancelled/abandoned matches found\n");
     update_notplayed($notplayed, $logfile);
 }
-
-check_dup_fixtures($matchlist, $leagueId, $logfile);
 
 /*
  * =========== End ==========
