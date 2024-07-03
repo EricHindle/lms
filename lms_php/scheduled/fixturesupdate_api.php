@@ -44,7 +44,6 @@ function update_results($results, $logfile)
 
         $homescore = $result->goals->home;
         $awayscore = $result->goals->away;
-        $logresulttext = "  " . $result->teams->home->name . " " . $homescore . " - " . $awayscore . " " . $result->teams->away->name;
         switch ($result->fixture->status->short) {
             case "FT":
                 break;
@@ -53,9 +52,12 @@ function update_results($results, $logfile)
                 break;
             case "PEN":
                 $logresulttext .= " on penalties";
+                $homescore = $result->score->penalty->home;
+                $awayscore = $result->score->penalty->away;                
                 break;
         }
-
+        $logresulttext = "  " . $result->teams->home->name . " " . $homescore . " - " . $awayscore . " " . $result->teams->away->name;
+        
         $logresulttext .= "\n";
         $resultupdated = false;
 
