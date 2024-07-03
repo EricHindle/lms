@@ -44,7 +44,8 @@ function update_results($results, $logfile)
 
         $homescore = $result->goals->home;
         $awayscore = $result->goals->away;
-        switch ($result->fixture->status->short) {
+        $rtcode = $result->fixture->status->short;
+        switch ($rtcode) {
             case "FT":
                 break;
             case "AET":
@@ -62,18 +63,18 @@ function update_results($results, $logfile)
         $resultupdated = false;
 
         if ($homescore > $awayscore) {
-            $resultupdated = save_result($hometeam, $matchdate, $homescore, "w", $logfile) || $resultupdated;
-            $resultupdated = save_result($awayteam, $matchdate, $awayscore, "l", $logfile) || $resultupdated;
+            $resultupdated = save_result($hometeam, $matchdate, $homescore, "w", $rtcode, $logfile) || $resultupdated;
+            $resultupdated = save_result($awayteam, $matchdate, $awayscore, "l", $rtcode, $logfile) || $resultupdated;
         }
 
         if ($homescore < $awayscore) {
-            $resultupdated = save_result($hometeam, $matchdate, $homescore, "l", $logfile) || $resultupdated;
-            $resultupdated = save_result($awayteam, $matchdate, $awayscore, "w", $logfile) || $resultupdated;
+            $resultupdated = save_result($hometeam, $matchdate, $homescore, "l", $rtcode, $logfile) || $resultupdated;
+            $resultupdated = save_result($awayteam, $matchdate, $awayscore, "w", $rtcode, $logfile) || $resultupdated;
         }
 
         if ($homescore == $awayscore) {
-            $resultupdated = save_result($hometeam, $matchdate, $homescore, "d", $logfile) || $resultupdated;
-            $resultupdated = save_result($awayteam, $matchdate, $awayscore, "d", $logfile) || $resultupdated;
+            $resultupdated = save_result($hometeam, $matchdate, $homescore, "d", $rtcode, $logfile) || $resultupdated;
+            $resultupdated = save_result($awayteam, $matchdate, $awayscore, "d", $rtcode, $logfile) || $resultupdated;
         }
 
         if ($resultupdated) {
@@ -130,8 +131,8 @@ function update_notplayed($noresults, $logfile)
         $resultupdated = false;
         $homescore = 0;
         $awayscore = 0;
-        $resultupdated = save_result($hometeam, $matchdate, $homescore, $wl, $logfile) || $resultupdated;
-        $resultupdated = save_result($awayteam, $matchdate, $awayscore, $wl, $logfile) || $resultupdated;
+        $resultupdated = save_result($hometeam, $matchdate, $homescore, $wl, $rtcode, $logfile) || $resultupdated;
+        $resultupdated = save_result($awayteam, $matchdate, $awayscore, $wl, $rtcode, $logfile) || $resultupdated;
 
         if ($resultupdated) {
             fwrite($logfile, $matchdatelogtext);

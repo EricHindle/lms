@@ -72,7 +72,7 @@ function get_team_abbreviation($teamtext)
     return strtoupper($teamabbr);
 }
 
-function save_result($teamId, $matchdate, $score, $wl, $logfile)
+function save_result($teamId, $matchdate, $score, $wl, $status, $logfile)
 {
     $isResultUpdated = false;
     // get team id
@@ -85,14 +85,14 @@ function save_result($teamId, $matchdate, $score, $wl, $logfile)
             $result = get_result($teamId, $matchdate);
             $isResultUpdated = false;
             if (count($result) == 0) {
-                insert_result($teamId, $matchdate, $score, $wl);
+                insert_result($teamId, $matchdate, $score, $wl, $status);
                 fwrite($logfile, "Inserted result as " . $wl . " with " . $score . " goals on " . date('d-m-Y', $matchdate) . " for " . $team['lms_team_name'] . "\n");
                 $isResultUpdated = true;
             } else {
                 $oldscore = $result['lms_match_team_score'];
                 $oldwl = $result['lms_match_team_wl'];
                 if ($score != $oldscore || $wl != $oldwl) {
-                    update_result($teamId, $matchdate, $score, $wl);
+                    update_result($teamId, $matchdate, $score, $wl, $status);
                     fwrite($logfile, "Updated result as " . $wl . " with " . $score . " goals on " . date('d-m-Y', $matchdate) . " for " . $team['lms_team_name'] . "\n");
                     $isResultUpdated = true;
                 } else {
@@ -221,30 +221,32 @@ function get_result($teamId, $matchdate)
     return $resultfetch;
 }
 
-function insert_result($teamId, $matchdate, $score, $wl)
+function insert_result($teamId, $matchdate, $score, $wl, $status)
 {
     global $mypdo;
     $mdt = date("Y-m-d", $matchdate);
-    $insertresult = "INSERT INTO lms_results (lms_match_date,lms_match_team,lms_match_team_score,lms_match_team_wl) VALUES (:matchdate,:teamId,:score,:wl)";
+    $insertresult = "INSERT INTO lms_results (lms_match_date,lms_match_team,lms_match_team_score,lms_match_team_wl, lms_match_status) VALUES (:matchdate,:teamId,:score,:wl,:status)";
     $stmtaddweek = $mypdo->prepare($insertresult);
     $stmtaddweek->bindParam(':matchdate', $mdt);
     $stmtaddweek->bindParam(':teamId', $teamId, PDO::PARAM_INT);
     $stmtaddweek->bindParam(':score', $score, PDO::PARAM_INT);
     $stmtaddweek->bindParam(':wl', $wl);
+    $stmtaddweek->bindParam(':status', $status);
     $stmtaddweek->execute();
     return;
 }
 
-function update_result($teamId, $matchdate, $score, $wl)
+function update_result($teamId, $matchdate, $score, $wl, $status)
 {
     global $mypdo;
     $mdt = date("Y-m-d", $matchdate);
-    $updresultsql = "UPDATE lms_results SET lms_match_team_score = :score, lms_match_team_wl = :wl WHERE lms_match_date = :matchdate AND lms_match_team = :teamId";
+    $updresultsql = "UPDATE lms_results SET lms_match_team_score = :score, lms_match_team_wl = :wl, lms_match_status = :status WHERE lms_match_date = :matchdate AND lms_match_team = :teamId";
     $updresultquery = $mypdo->prepare($updresultsql);
     $updresultquery->bindParam(':matchdate', $mdt);
     $updresultquery->bindParam(':teamId', $teamId, PDO::PARAM_INT);
     $updresultquery->bindParam(':score', $score, PDO::PARAM_INT);
     $updresultquery->bindParam(':wl', $wl);
+    $updresultquery->bindParam(':status', $status);
     $updresultquery->execute();
     return;
 }

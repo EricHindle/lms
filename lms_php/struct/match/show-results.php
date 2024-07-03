@@ -118,6 +118,7 @@ if (login_check($mypdo) == true) {
                     $awayteam = $result['away_team_name'];
                     $homescore = $result['home_score'];
                     $awayscore = $result['away_score'];
+                    $status = $result['match_status'];
 
                     $html .= '              <tr style="height: 25px;">
                                     <td style="width:40%;height: 25px;text-align:right;">' . $hometeam . '</td>';
@@ -126,7 +127,7 @@ if (login_check($mypdo) == true) {
                         $html .= '              <td colspan="3" style="height: 25px;text-align:center;">' . $result['home_result_type'] . ' </td>';
                     } else {
                         $html .= '              <td style="width:5%;height: 25px;text-align:right;">  ' . $homescore . ' </td>
-                                    <td style="height: 25px;text-align:center;"> - </td>
+                                    <td style="height: 25px;text-align:center;"> ' . $status . ' </td>
                                     <td style="width:5%;height: 25px;">  ' . $awayscore . '  </td>';
                     }
 
