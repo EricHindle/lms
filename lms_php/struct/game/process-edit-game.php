@@ -26,9 +26,10 @@ if (login_check($mypdo) == true) {
                 $iscancel = (isset($_POST['iscancel']) ? $_POST['iscancel'] : "false");
                 if ($gameid && $gamename) {
                     $html = "";
-                    $gamecount = check_game_exists($gameid);
+                 //   $gamecount = check_game_exists($gameid);
+                    $game = get_game($gameid);
                     $alerttext = "";
-                    if ($gamecount > 0) {
+                    if ($game) {
                         $upsql = "";
                         if ($iscancel == "true") {
                             $upsql = "UPDATE lms_game SET lms_game_name = :gamename, lms_game_start_wkno = :startwk, lms_game_status = 4 WHERE lms_game_id = :id";
@@ -96,7 +97,7 @@ if (login_check($mypdo) == true) {
                             $teamlist = get_active_teams_for_league($leagueId);
                             foreach($playerlist as $player) {
                                 foreach($teamlist as $team) {
-                                    insert_available_team($player['lms_player_id'], $gameid, $team['lms_team_id']);
+                                    insert_available_team($player['lms_player_id'], $gameid, $team['lms_team_id'], $game['lms_game_pick_count']);
                                 }
                             }
                         }

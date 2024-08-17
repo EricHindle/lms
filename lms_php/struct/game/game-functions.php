@@ -22,7 +22,7 @@ function add_player_to_game($gameid, $playerid)
     $joinok = false;
     if ($joincount > 0) {
         $joinok = true;
-        $gamesql = "SELECT lms_game_id, lms_game_total_players, lms_game_still_active FROM lms_game WHERE lms_game_id = :id";
+        $gamesql = "SELECT lms_game_id, lms_game_total_players, lms_game_still_active, lms_game_pick_count FROM lms_game WHERE lms_game_id = :id";
         $gamequery = $mypdo->prepare($gamesql);
         $gamequery->execute(array(
             ':id' => $gameid
@@ -33,6 +33,7 @@ function add_player_to_game($gameid, $playerid)
             $gamefetch = $gamequery->fetch(PDO::FETCH_ASSOC);
             $total = $gamefetch['lms_game_total_players'] + 1;
             $active = $gamefetch['lms_game_still_active'] + 1;
+            $pickcount = $gamefetch['lms_game_pick_count'];
             $upsql = "UPDATE lms_game SET lms_game_total_players = :total, lms_game_still_active = :active WHERE lms_game_id = :id";
             $upquery = $mypdo->prepare($upsql);
             $upquery->bindParam(':id', $gameid, PDO::PARAM_INT);
@@ -53,7 +54,7 @@ function add_player_to_game($gameid, $playerid)
             $teamfetch = $teamquery->fetchAll(PDO::FETCH_ASSOC);
 
             foreach ($teamfetch as $rs) {
-                insert_available_team($playerid, $gameid, $rs['lms_team_id']);
+                insert_available_team($playerid, $gameid, $rs['lms_team_id'], $pickcount);
             }
         }
     }

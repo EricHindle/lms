@@ -20,6 +20,18 @@ function delete_pick($playerid, $gameid, $matchid)
     return $isdeleted;
 }
 
+function decrement_available_team($playerid, $gameid, $teamid) {
+    $pick = get_available_pick($playerid, $gameid, $teamid);
+    if ($pick) {
+        $count = $pick['lms_available_picks_count'] - 1;
+        if ($count < 1) {
+            delete_available_team($playerid, $gameid, $teamid);
+        } else {
+            update_pick_count($playerid, $gameid, $teamid, $count);     
+        }
+    }
+}
+
 function delete_available_team($playerid, $gameid, $teamid)
 {
     global $mypdo;
@@ -34,18 +46,41 @@ function delete_available_team($playerid, $gameid, $teamid)
     return $isdeleted;
 }
 
-function insert_available_team($playerid, $gameid, $teamid)
+function increment_available_team($playerid, $gameid, $teamid)
+{
+    $pick = get_available_pick($playerid, $gameid, $teamid);
+    if ($pick) {
+        $count = $pick['lms_available_picks_count'] + 1;
+        update_pick_count($playerid, $gameid, $teamid, $count);
+    } else {
+        insert_available_team($playerid, $gameid, $teamid, 1);
+    }
+}
+
+function insert_available_team($playerid, $gameid, $teamid, $pickcount)
 {
     global $mypdo;
-    $inssql = "INSERT INTO lms_available_picks (lms_available_picks_game, lms_available_picks_player_id, lms_available_picks_team) VALUES (:gameid, :playerid, :teamid)";
+    $inssql = "INSERT INTO lms_available_picks (lms_available_picks_game, lms_available_picks_player_id, lms_available_picks_team, lms_available_picks_count) VALUES (:gameid, :playerid, :teamid, :pickcount)";
     $insquery = $mypdo->prepare($inssql);
     $insquery->bindParam(":gameid", $gameid, PDO::PARAM_INT);
     $insquery->bindParam(":playerid", $playerid, PDO::PARAM_INT);
     $insquery->bindParam(":teamid", $teamid, PDO::PARAM_INT);
+    $insquery->bindParam(":pickcount", $pickcount, PDO::PARAM_INT);
     $insquery->execute();
     $inscount = $insquery->rowCount();
     $isinserted = ($inscount > 0) ? true : false;
     return $isinserted;
+}
+
+function update_pick_count($playerid, $gameid, $teamid, $count) {
+    global $mypdo;
+    $updsql = "UPDATE lms_available_picks SET lms_available_picks_count = :count WHERE lms_available_picks_player_id = :playerid AND lms_available_picks_game = :gameid AND lms_available_picks_team = :teamid;";
+    $updquery = $mypdo->prepare($updsql);
+    $updquery->bindParam(':playerid', $playerid, PDO::PARAM_INT);
+    $updquery->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+    $updquery->bindParam(':teamid', $teamid, PDO::PARAM_INT);
+    $updquery->bindParam(':count', $count, PDO::PARAM_INT);    
+    $updquery->execute();
 }
 
 function insert_pick($playerid, $gameid, $matchid)
@@ -110,6 +145,18 @@ function get_game_player_pick_count($gameid, $playerid)
     $pickquery->execute();
     $pickcount = $pickquery->rowCount();
     return $pickcount;
+}
+
+function get_available_pick( $playerid, $gameid, $teamid){
+    global $mypdo;
+    $picksql = "SELECT * FROM lms_available_picks WHERE lms_available_picks_player_id = :playerid and lms_available_picks_game = :gameid and lms_available_picks_team = :teamid";
+    $pickquery = $mypdo->prepare($picksql);
+    $pickquery->bindParam(':gameid', $gameid, PDO::PARAM_INT);
+    $pickquery->bindParam(':playerid', $playerid, PDO::PARAM_INT);
+    $pickquery->bindParam(':teamid', $teamid, PDO::PARAM_INT);
+    $pickquery->execute();
+    $pickfetch = $pickquery->fetch(PDO::FETCH_ASSOC);
+    return $pickfetch;
 }
 
 function set_pick_wl($gameid, $playerid, $matchid, $wl)

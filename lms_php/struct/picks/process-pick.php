@@ -21,23 +21,23 @@ if (login_check($mypdo) == true) {
             if (isset($_POST['matchid'], $_POST['gameid'], $_POST['currentpickteam'], $_POST['currentpickmatch'])) {
                 $matchid = sanitize_int($_POST['matchid']);
                 $player = $_SESSION['user_id'];
-                $game = sanitize_int($_POST['gameid']);
+                $gameid = sanitize_int($_POST['gameid']);
                 $currentpickteam = sanitize_int($_POST['currentpickteam']);
                 $currentpickmatch = sanitize_int($_POST['currentpickmatch']);
-                if ($game && $matchid && $player) {
+                if ($gameid && $matchid && $player) {
                     $html = "";
 
                     if ($currentpickmatch != 0) {
                         /*
                          * Remove current pick and make team available again
                          */
-                        delete_pick($player, $game, $currentpickmatch);
-                        insert_available_team($player, $game, $currentpickteam);
+                        delete_pick($player, $gameid, $currentpickmatch);
+                        increment_available_team($player, $gameid, $currentpickteam);
                     }
 
-                    if (insert_pick($player, $game, $matchid)) {
-                        delete_available_team($player, $game, get_team_from_match($matchid));
-
+                    if (insert_pick($player, $gameid, $matchid)) {
+                        $teamid = get_team_from_match($matchid);
+                        decrement_available_team($player, $gameid, $teamid);
                         $html .= "<script>
 									alert('Selection updated successfully.');
 									window.location.href='" . $myPath . "menus/game-list.php';

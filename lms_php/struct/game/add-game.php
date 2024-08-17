@@ -19,10 +19,11 @@ if (login_check($mypdo) == true) {
             header('Location: ' . $myPath . 'index.php?error=1');
         } else {
             // if (isset($_POST['gamename'], $_POST['gamestartweek'], $_POST['leagueid'])) {
-            if (isset($_POST['gamename'], $_POST['leagueid'])) {
+            if (isset($_POST['gamename'], $_POST['leagueid'], $_POST['pickcount'])) {
                 $gamename = $_POST['gamename'];
                 // $gamestartweek = $_POST['gamestartweek'];
                 $leagueId = $_POST['leagueid'];
+                $pickcount = $_POST['pickcount'];
                 $leaguesql = "SELECT * FROM v_lms_league_calendar WHERE lms_league_id = :leagueid LIMIT 1";
                 $leaguequery = $mypdo->prepare($leaguesql);
                 $leaguequery->bindParam(':leagueid', $leagueId);
@@ -47,20 +48,21 @@ if (login_check($mypdo) == true) {
                     } else {
                         $playerid = $_SESSION['user_id'];
                         $gamecode = generate_game_code();
-                        $sqladdgame = "INSERT INTO lms_game (lms_game_start_wkno, lms_game_name, lms_game_status, lms_game_week_count, lms_game_total_players, lms_game_still_active, lms_game_manager, lms_game_code, lms_game_calendar) 
-                                                    VALUES (:startwkno, :gamename, 1, 0, 0, 0, :playerid, :gamecode, :gamecal)";
+                        $sqladdgame = "INSERT INTO lms_game (lms_game_start_wkno, lms_game_name, lms_game_status, lms_game_week_count, lms_game_total_players, lms_game_still_active, lms_game_manager, lms_game_code, lms_game_calendar, lms_game_pick_count) 
+                                                    VALUES (:startwkno, :gamename, 1, 0, 0, 0, :playerid, :gamecode, :gamecal, :pickcount)";
                         $stmtaddgame = $mypdo->prepare($sqladdgame);
                         $stmtaddgame->bindParam(":startwkno", $gamestartweek);
                         $stmtaddgame->bindParam(":gamename", $gamename);
                         $stmtaddgame->bindParam(":playerid", $playerid, PDO::PARAM_INT);
                         $stmtaddgame->bindParam(":gamecode", $gamecode);
                         $stmtaddgame->bindParam(":gamecal", $leaguecurrcal, PDO::PARAM_INT);
+                        $stmtaddgame->bindParam(":pickcount", $pickcount, PDO::PARAM_INT);                        
                         $stmtaddgame->execute();
                         $added = $stmtaddgame->rowCount();
                         $gameid = $mypdo->lastInsertId();
                         if ($added == 1) {
                             insert_game_league($gameid, $leagueId);
-                            add_player_to_game($gameid, $_SESSION['user_id']);
+                            add_player_to_game($gameid, $_SESSION['user_id'], $pickcount);
                             sendemailusingtemplate('newgame', $playerid, $gameid, 0, '', true);
                             $key = $formKey->outputKey();
                             echo '

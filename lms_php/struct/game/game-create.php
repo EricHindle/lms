@@ -74,6 +74,14 @@ if (login_check($mypdo) == true) {
     }
     $html .= '	        
                             </select>
+                            Number of times each team can be picked :
+                            <select class="form-dropdown" id="pickcount" name="pickcount" style="width: 25%;padding:10px;">';
+                            for ($i = 1; $i <= 10; $i++){
+                                $html .= '<option value='.$i.'>'.$i.'</option>';	   
+                            }
+   
+    $html .= '           
+                            </select>
 	                        <button type="submit" name="submit" id="submit" value="Submit" class="btn">Create</button>
                         </form>
 		          </div>
