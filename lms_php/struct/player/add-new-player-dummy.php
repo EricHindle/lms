@@ -20,12 +20,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST['email'], $_POST['password'], $_POST['confirm'], $_POST['fname'], $_POST['sname'], $_POST['screenname'])) {
             $_SESSION['hwkey'] = get_key();
             $_SESSION['hwiv'] = get_iv();
-            $values = array($_POST['email'], $_POST['password'], $_POST['confirm'], $_POST['fname'], $_POST['sname'], $_POST['screenname']);
+//             $values = array($_POST['email'], $_POST['password'], $_POST['confirm'], $_POST['fname'], $_POST['sname'], $_POST['screenname']);
             echo "<script>
 					alert('Account added.');
 					window.location.href='" . $myPath . "index.php';
 				  </script>";
-            sendemailusingtemplate('newplayertrap', '0000000', 0, 0, $values, false);
+            $infovalue = get_global_value('newplayertrap') + 1;
+            set_global_value('newplayertrap', $infovalue, false);
+//             sendemailusingtemplate('newplayertrap', '0000000', 0, 0, $values, false);
         } else {
             header('Location: ' . $myPath . 'index.php?error=1');
         }
