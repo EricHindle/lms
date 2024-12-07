@@ -27,7 +27,7 @@ echo '
 <div class="container">
         	<div class="box">	
 		      <h1 style="margin-bottom:10px">Create account</h1>
-		      <form class="form-group" role="form" name ="addplayer" autocomplete="off" method="post" action="' . $myPath . 'struct/player/add-new-player.php">';
+		      <form class="form-group" role="form" name ="addplayer" autocomplete="off" method="post" action="' . $myPath . 'struct/player/add-new-player-dummy.php">';
 $html .= $key;
 $html .= '					
         		<input type="text" class="form-field" name="email"  id="email" placeholder="email address"  value="" >

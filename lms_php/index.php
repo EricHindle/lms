@@ -52,9 +52,12 @@ if (login_check($mypdo) == true) {
                 <div class="dark-text">
                     <a href="struct/player/new-password.php">Forgotten Password</a>
                 </div>
+                <div class="black-text">
+                    <a href="struct/player/new-player.php" role="button" style="float: right;">Create Account</a>
+                </div>
                 <br/>
                 <div class="light-text">
-                    <a href="struct/player/new-player.php" role="button">Create Account</a>
+                    <a href="struct/player/new-member.php" role="button">New Member</a>
                 </div>
             </div>
                                 ';

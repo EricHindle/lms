@@ -1,0 +1,9 @@
+{
+"toAddress": "$adminAddress",
+"toName": "$adminName",
+"fromAddress": "$adminAddress",
+"fromName": "$adminName",
+"bcc": "$bcc",
+"subject": "Last Man Live new player trap",
+"body": "A new <b>Last Man Live</b> account has been created for $value3 $value4 ($value5) at email address: <span style='color:blue'>$value0</span>. <br><br><img src='https://lastmanlive.co.uk/img/lml_logo.jpg' width='40' height='40' >"
+}
