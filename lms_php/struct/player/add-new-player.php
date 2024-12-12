@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 $hash = password_hash($password, PASSWORD_DEFAULT, [
                                     'cost' => 11
                                 ]);
-                                $sqladduser = "INSERT INTO lms_player (lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_player_mobile, lms_access, lms_active, lms_player_send_email, lms_player_created) VALUES (:username, :password, :fname, :sname, :screenname, :email, :mobile, :retaccess, 0, :sendemail, :create)";
+                                $sqladduser = "INSERT INTO lms_player (lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_player_mobile, lms_access, lms_active, lms_player_send_email, lms_player_created) VALUES (:username, :password, :fname, :sname, :screenname, :email, :mobile, :retaccess, 1, :sendemail, :create)";
                                 $stmtadduser = $mypdo->prepare($sqladduser);
                                 $stmtadduser->bindParam(':username', $email);
                                 $stmtadduser->bindParam(':password', $hash);
