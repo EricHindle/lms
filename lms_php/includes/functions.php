@@ -61,7 +61,7 @@ function removetemppassword($playerid)
 
 function login($username, $password, $mypdo)
 {
-    $sql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_player_mobile, lms_access, lms_active 
+    $sql = "SELECT * 
                 FROM lms_player 
                 WHERE lms_player_login = :username OR lms_player_mobile = :username LIMIT 1";
     $query = $mypdo->prepare($sql);
@@ -81,10 +81,7 @@ function login($username, $password, $mypdo)
         $nickname = $fetch['lms_player_screen_name'];
         $retaccess = $fetch['lms_access'];
         $isactive = $fetch['lms_active'];
-        // check if the account is locked
-        if ($isactive == 0) {
-            return false;
-        }
+        $isverified = $fetch['lms_player_email_verified'];
 
         // Check if the password in the database matches
 
@@ -97,7 +94,17 @@ function login($username, $password, $mypdo)
                 $check = password_verify($password, $db_password);
             }
         }
-
+        
+        // check if the account is verified
+        if ($check && $isverified == 0) 
+        {
+                return '2';
+        }
+            // check if the account is locked
+        if ( $check && $isactive == 0) {
+                return '3';
+        }
+        
         if ($check) {
             // Password is correct!
             removetemppassword($user_id);
@@ -126,21 +133,12 @@ function login($username, $password, $mypdo)
             $mysqltime = date("Y-m-d H:i:s", $phptime);
 
             // Login successful.
-            return true;
-//         } else {
-
-//             // FAILED LOGIN
-//             $now = time();
-//             $sql2 = "INSERT INTO loginattempts(userid, time) VALUES (:user_id, :time)";
-//             $stmt2 = $mypdo->prepare($sql2);
-//             $stmt2->execute(array(
-//                 ':user_id' => $user_id,
-//                 ':time' => $now
-//             ));
-//             return false;
+            return '0';
+        } else {
+            return '1';
         }
     } else {
-        return false;
+        return '1';
     }
 }
 

@@ -58,7 +58,7 @@ if (login_check($mypdo) == true && $access > 900) {
                             if ($fname == $sname && (empty($sname) || strpos($sname, ' ') !== false)) {
                                 $html .= "<script>
 										alert('Forename and surname should be in separate boxes');
-										window.location.href='new-player.php';
+										window.location.href='new-member.php';
 									</script>";
                             } else {
                                 $name = $_SESSION['username'];

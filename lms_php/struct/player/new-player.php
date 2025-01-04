@@ -2,6 +2,10 @@
 /*
  * HINDLEWARE
  * Copyright (C) 2020 Eric Hindle. All rights reserved.
+ * 
+ * 
+ * !! links to add-new-player dummy
+ * 
  */
 $myPath = '../../';
 require $myPath . 'includes/db_connect.php';

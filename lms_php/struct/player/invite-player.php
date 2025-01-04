@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             echo "<script>
 						alert('There was a problem. Please check details and try again.');
-						window.location.href='new-player.php';
+						window.location.href='new-member.php';
 					</script>";
         }
     }

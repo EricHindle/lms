@@ -19,10 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $username = encrypt($_POST['username']);
             $password = $_POST['password'];
             if (strlen($_POST['username']) > 5) {
-                if (login($username, $password, $mypdo) == true) {
+                $loginvalue = login($username, $password, $mypdo);
+                if ($loginvalue == 0) {
                     header('Location: menus/home.php');
                 } else {
-                    header('Location: index.php?error=1');
+                    header('Location: index.php?error='.$loginvalue);
                 }
             } else {
                 header('Location: index.php?error=1');

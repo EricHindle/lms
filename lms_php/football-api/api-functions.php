@@ -34,7 +34,7 @@ function get_team_id_by_api_id($apiteamid)
 {
     $teamid = -1;
     global $mypdo;
-    $teamsql = "SELECT * FROM lms_team WHERE lms_team_api_id = :apiId LIMIT 1";
+    $teamsql = "SELECT TOP 1 * FROM lms_team WHERE lms_team_api_id = :apiId";
     $teamquery = $mypdo->prepare($teamsql);
     $teamquery->bindParam(":apiId", $apiteamid, PDO::PARAM_INT);
     $teamquery->execute();

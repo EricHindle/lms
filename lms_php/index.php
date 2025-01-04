@@ -58,7 +58,15 @@ if (login_check($mypdo) == true) {
                 </div>
             </div> ';
     if (isset($_GET['error'])) {
-        $html .= '<div class="error-message">Your email and password combination is incorrect.</div>';
+        if($_GET['error'] == 2) {
+            $html .= '<div class="error-message">Your email has not been verified.</div>';
+        } elseif ($_GET['error'] == 3) {
+            $html .= '<div class="error-message">Your account has not been activated.</div>';
+        } elseif ($_GET['error'] == 4) {
+            $html .= '<div class="error-message">Unable to verify email address.</div>';
+        } else {
+            $html .= '<div class="error-message">Your email and password combination is incorrect.</div>';
+        }
     }
     $html .= '            
 
