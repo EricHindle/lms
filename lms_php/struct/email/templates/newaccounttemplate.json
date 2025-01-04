@@ -5,5 +5,5 @@
 "fromName": "$adminName",
 "bcc": "$bcc",
 "subject": "Last Man Live account created",
-"body": "A new <b>Last Man Live</b> account has been created for $name ($screenname) at email address: <span style='color:blue'>$email</span>. <br><br>Confirm this email address at $url$value0$value1<br><br><img src='https://lastmanlive.co.uk/img/lml_logo.jpg' width='40' height='40' >"
+"body": "A new <b>Last Man Live</b> account has been created for $name ($screenname) at email address: <span style='color:blue'>$email</span>. <br><br>Confirm this email address at $url$value0$value1<br><br>If you did not create an account on <b>Last Man Live</b>, you can ignore this email. <br><br><img src='https://lastmanlive.co.uk/img/lml_logo.jpg' width='40' height='40' >"
 }
