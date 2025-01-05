@@ -88,9 +88,9 @@ button {
   color: #ffffffc9;
 }
 
-.black-text a {
+.not-visible-text a {
   text-decoration: none;
-  color: #00000000;
+  color: #2b2c2d;
 }
 
 .error-message {
