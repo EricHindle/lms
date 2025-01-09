@@ -13,7 +13,10 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     $formKey = new formKey();
     $key = $formKey->outputKey();
 
-    $playerchangesql = "SELECT lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_player_mobile, lms_access, lms_active FROM lms_player ORDER BY lms_player_screen_name ASC";
+    $playerchangesql = "SELECT 
+                        lms_player_id, lms_player_login, lms_player_password, lms_player_forename, lms_player_surname, lms_player_screen_name, lms_player_email, lms_player_mobile, lms_access, lms_active, lms_player_email_verified 
+                        FROM lms_player 
+                        ORDER BY lms_player_screen_name ASC";
     $playerchangequery = $mypdo->prepare($playerchangesql);
     $playerchangequery->execute();
     $cafetch = $playerchangequery->fetchAll(PDO::FETCH_ASSOC);
@@ -163,7 +166,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
                 </div>
             </form>
         </div>
-        <div class="box" style="text-align:left;width:850px;padding:1em;margin:10px;">
+        <div class="box" style="text-align:left;width:950px;padding:1em;margin:10px;">
     		<h3 style="text-align:center">All Players</h3>
         	<table class="table table-bordered" id="keywords">
 				<thead>
@@ -173,6 +176,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
 					   <th>Surname</th>
 					   <th>Screen Name</th>
 					   <th>Access</th>
+                       <th>Verified</th>
                        <th>Active</th>
 				    </tr>
 			    </thead>
@@ -181,6 +185,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     foreach ($cafetch as $rs) {
 
         $active = ($rs['lms_active'] == 1 ? 'Yes' : 'No');
+        $verified = ($rs['lms_player_email_verified'] == 1 ? 'Yes' : 'No');
         $rowcolor = ($rs['lms_active'] == 1 ? 'white' : 'silver');
         $rowcolor = ($rs['lms_access'] > 900 ? 'yellow' : $rowcolor);
         $html .= '
@@ -190,6 +195,7 @@ if (login_check($mypdo) == true && $_SESSION['retaccess'] > 900) {
     					<td>' . decrypt($rs['lms_player_surname']) . '</td>
     					<td>' . $rs['lms_player_screen_name'] . '</td>
     					<td>' . $rs['lms_access'] . '</td>
+                        <td>' . $verified . '</td>
                         <td>' . $active . '</td>
     				</tr>';
     }
