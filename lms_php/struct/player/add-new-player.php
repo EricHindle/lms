@@ -72,6 +72,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 										alert('Forename and surname should be in separate boxes');
 										window.location.href='new-member.php';
 									</script>";
+                            } elseif  ($plainfname == $plainsname && $screenname ==  $plainsname) {
+                                $html .= "<script>
+										alert('Invalid name values');
+										window.location.href='new-member.php';
+									</script>";
                             } elseif (empty(trim($plainfname)) && empty(trim($plainsname))) {
                                 $html .= "<script>
 										alert('No forename or surname supplied');
